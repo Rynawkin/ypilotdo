@@ -1,0 +1,209 @@
+workflows:
+  ios-workflow:
+    name: iOS Build
+    max_build_duration: 60
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.yolpilot.driver
+      vars:
+        CM_CERTIFICATE_PASSWORD: CrlsYPa1
+        TEAM_ID: 2TZQ3MY8AU
+      xcode: 16.1
+      node: 20
+    scripts:
+      - name: Install npm dependencies
+        script: npm ci
+      
+      - name: Update Info.plist permissions
+        script: |
+          echo "Updating Info.plist permissions..."
+          PLIST_PATH="ios/RotaAppMobile/Info.plist"
+          
+          /usr/libexec/PlistBuddy -c "Set :NSCameraUsageDescription 'YolPilot teslimat fotoğrafı çekmek için kameranıza erişim istiyor.'" "$PLIST_PATH" 2>/dev/null || /usr/libexec/PlistBuddy -c "Add :NSCameraUsageDescription string 'YolPilot teslimat fotoğrafı çekmek için kameranıza erişim istiyor.'" "$PLIST_PATH"
+          
+          /usr/libexec/PlistBuddy -c "Set :NSPhotoLibraryUsageDescription 'YolPilot teslimat fotoğraflarını kaydetmek için galerinize erişim istiyor.'" "$PLIST_PATH" 2>/dev/null || /usr/libexec/PlistBuddy -c "Add :NSPhotoLibraryUsageDescription string 'YolPilot teslimat fotoğraflarını kaydetmek için galerinize erişim istiyor.'" "$PLIST_PATH"
+          
+          /usr/libexec/PlistBuddy -c "Set :NSPhotoLibraryAddUsageDescription 'YolPilot teslimat fotoğraflarını galerinize kaydetmek istiyor.'" "$PLIST_PATH" 2>/dev/null || /usr/libexec/PlistBuddy -c "Add :NSPhotoLibraryAddUsageDescription string 'YolPilot teslimat fotoğraflarını galerinize kaydetmek istiyor.'" "$PLIST_PATH"
+          
+          echo "Info.plist permissions updated successfully"
+      
+      - name: Update Podfile for permissions
+        script: |
+          echo "Creating Podfile with permissions..."
+          cat > ios/Podfile <<'PODFILE_END'
+          platform :ios, '16.0'
+          
+          ENV['RCT_NEW_ARCH_ENABLED'] = '0'
+          
+          require Pod::Executable.execute_command('node', ['-p',
+            'require.resolve(
+              "react-native/scripts/react_native_pods.rb",
+              {paths: [process.argv[1]]},
+            )', __dir__]).strip
+          
+          prepare_react_native_project!
+          
+          use_frameworks! :linkage => :static
+          
+          def node_require(script)
+            require Pod::Executable.execute_command('node', ['-p',
+              "require.resolve(
+                '#{script}',
+                {paths: [process.argv[1]]},
+              )", __dir__]).strip
+          end
+          
+          node_require('react-native-permissions/scripts/setup.rb')
+          setup_permissions([
+            'Camera',
+            'PhotoLibrary',
+            'PhotoLibraryAddOnly',
+            'LocationAccuracy',
+            'LocationAlways',
+            'LocationWhenInUse',
+            'Microphone',
+            'Contacts'
+          ])
+          
+          target 'RotaAppMobile' do
+            config = use_native_modules!
+          
+            use_react_native!(
+              :path => config[:reactNativePath],
+              :hermes_enabled => true,
+              :fabric_enabled => false,
+              :app_path => "#{Pod::Config.instance.installation_root}/.."
+            )
+          
+            post_install do |installer|
+              react_native_post_install(
+                installer,
+                config[:reactNativePath],
+                :mac_catalyst_enabled => false
+              )
+              
+              installer.pods_project.targets.each do |t|
+                t.build_configurations.each do |c|
+                  c.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
+                  c.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'gnu++20'
+                  c.build_settings['GCC_C_LANGUAGE_STANDARD'] = 'gnu17'
+                end
+              end
+              
+              installer.aggregate_targets.each do |agg|
+                agg.user_project.native_targets.each do |nt|
+                  nt.build_configurations.each do |bc|
+                    bc.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
+                    bc.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'gnu++20'
+                  end
+                end
+              end
+            end
+          end
+          PODFILE_END
+          
+          echo "Podfile created successfully"
+      
+      - name: Copy iOS fonts for icons
+        script: |
+          cp -R node_modules/react-native-vector-icons/Fonts ios/
+      
+      - name: Create main.jsbundle for Release
+        script: |
+          npx react-native bundle \
+            --entry-file index.js \
+            --platform ios \
+            --dev false \
+            --bundle-output ios/main.jsbundle \
+            --assets-dest ios
+      
+      - name: Ensure correct AppDelegate.swift
+        script: |
+          cat > ios/RotaAppMobile/AppDelegate.swift <<'SWIFT'
+          import UIKit
+          import React
+          import React_RCTAppDelegate
+          
+          @main
+          class AppDelegate: RCTAppDelegate {
+            override func application(
+              _ application: UIApplication,
+              didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+            ) -> Bool {
+              self.moduleName = "YolPilotDriver"
+              self.initialProps = [:]
+              return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+            }
+            
+            override func sourceURL(for bridge: RCTBridge!) -> URL! {
+              #if DEBUG
+              return RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index")
+              #else
+              return Bundle.main.url(forResource: "main", withExtension: "jsbundle")
+              #endif
+            }
+          }
+          SWIFT
+      
+      - name: Clean and install pods
+        script: |
+          cd ios
+          rm -rf Pods Podfile.lock ~/Library/Developer/Xcode/DerivedData/*
+          rm -rf build
+          pod cache clean --all
+          pod repo update
+          pod install --repo-update --verbose
+          
+          echo "Verifying workspace creation..."
+          if [ -f "RotaAppMobile.xcworkspace/contents.xcworkspacedata" ]; then
+            echo "✓ Workspace created successfully"
+          else
+            echo "✗ Workspace not found!"
+            echo "Current directory contents:"
+            ls -la
+            exit 1
+          fi
+          
+          echo "Verifying permissions pods..."
+          ls -la Pods/ | grep Permission || echo "WARNING: Permission pods might not be installed!"
+      
+      - name: Setup code signing
+        script: |
+          keychain initialize
+          app-store-connect fetch-signing-files "com.yolpilot.driver" --type IOS_APP_STORE
+          keychain add-certificates --certificate-password="$CM_CERTIFICATE_PASSWORD"
+          xcode-project use-profiles
+      
+      - name: Build IPA with Codemagic command
+        script: |
+          cd ios
+          
+          if [ -f "RotaAppMobile.xcworkspace/contents.xcworkspacedata" ]; then
+            echo "Workspace found, building with workspace"
+            xcode-project build-ipa \
+              --workspace "RotaAppMobile.xcworkspace" \
+              --scheme "RotaAppMobile" \
+              --config "Release"
+          elif [ -f "RotaAppMobile.xcodeproj/project.pbxproj" ]; then
+            echo "Workspace not found, building with project"
+            xcode-project build-ipa \
+              --project "RotaAppMobile.xcodeproj" \
+              --scheme "RotaAppMobile" \
+              --config "Release"
+          else
+            echo "ERROR: Neither workspace nor project found!"
+            echo "Current directory contents:"
+            ls -la
+            exit 1
+          fi
+    
+    artifacts:
+      - ios/build/ios/ipa/*.ipa
+    
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true

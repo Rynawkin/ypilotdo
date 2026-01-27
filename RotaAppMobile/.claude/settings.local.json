@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git push)",
+      "Bash(git add ios/RotaAppMobile/Info.plist)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nchore: Bump iOS build number to 25\n\nApp Store Connect''te version 24 daha önce kullanıldığı için build number artırıldı.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git add ios/RotaAppMobile/Info.plist package.json)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nchore: Bump version to 1.1.0 (build 25)\n\nApp Store Connect''te 1.0.2 train''i kapatıldığı için versiyon 1.1.0''a yükseltildi.\nHer iki platform da artık 1.1.0 versiyonunda.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

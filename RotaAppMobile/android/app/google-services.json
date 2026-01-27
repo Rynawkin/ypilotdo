@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "137939211655",
+    "project_id": "yolpilot-app",
+    "storage_bucket": "yolpilot-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:137939211655:android:c9e6b11194271f76866f22",
+        "android_client_info": {
+          "package_name": "com.rotaapp.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe-_AI1jaUKF80-j-gGmXQiKwgr4lsm0k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

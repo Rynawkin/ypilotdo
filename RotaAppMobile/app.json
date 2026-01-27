@@ -1,0 +1,11 @@
+{
+  "name": "YolPilotDriver",
+  "displayName": "YolPilot Sürücü",
+  "version": "1.0.0",
+  "android": {
+    "package": "com.yolpilot.driver"
+  },
+  "ios": {
+    "bundleIdentifier": "com.yolpilot.driver"
+  }
+}

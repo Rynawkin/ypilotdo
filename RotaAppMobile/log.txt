@@ -1,0 +1,436 @@
+--------- beginning of main
+09-03 17:28:37.071   760   760 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-03 17:28:37.857   999   999 D TaplEvents: Main / Touch event: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=377.97363, y[0]=2025.8789, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=39983710, downTime=39983710, deviceId=4, source=0x5002, displayId=0, eventId=818825095 }
+09-03 17:28:37.857   999   999 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=377.97363, y[0]=2025.8789, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=39983710, downTime=39983710, deviceId=4, source=0x5002, displayId=0, eventId=818825095 }
+09-03 17:28:37.967   999   999 D TaplEvents: Main / Touch event: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=377.97363, y[0]=2025.8789, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=39983822, downTime=39983710, deviceId=4, source=0x5002, displayId=0, eventId=795108457 }
+09-03 17:28:37.968   999   999 D TaplEvents: TIS / TouchInteractionService.onInputEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=377.97363, y[0]=2025.8789, toolType[0]=TOOL_TYPE_FINGER, buttonState=0, classification=NONE, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=39983822, downTime=39983710, deviceId=4, source=0x5002, displayId=0, eventId=795108457 }
+09-03 17:28:37.969   999   999 D TaplEvents: Main / start: startAppShortcutOrInfoActivity
+09-03 17:28:37.970   999  1707 D EGL_emulation: app_time_stats: avg=2544.13ms min=15.90ms max=15182.04ms count=6
+09-03 17:28:37.971   423  1475 D audioserver: FGS Logger Transaction failed
+09-03 17:28:37.971   423  1475 D audioserver: -129
+--------- beginning of system
+09-03 17:28:37.975   549  2370 V SplashScreenExceptionList: SplashScreen checking exception for package com.yolpilot.driver (target sdk:34) -> false
+09-03 17:28:37.976   760   787 V WindowManagerShell: Transition requested: android.os.BinderProxy@faf1036 TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=199 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=com.yolpilot.driver/.MainActivity } baseActivity=ComponentInfo{com.yolpilot.driver/com.yolpilot.driver.MainActivity} topActivity=ComponentInfo{com.yolpilot.driver/com.yolpilot.driver.MainActivity} origActivity=null realActivity=ComponentInfo{com.yolpilot.driver/com.yolpilot.driver.MainActivity} numActivities=1 lastActiveTime=39983831 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{android.window.IWindowContainerToken$Stub$Proxy@43e8b37} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 128 - 0, 0) topActivityInfo=ActivityInfo{9638a4 com.yolpilot.driver.MainActivity} launchCookies=[android.os.BinderProxy@810460d] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isSleeping=false topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= false topActivityLetterboxed= false isFromDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 locusId=null displayAreaFeatureId=1 cameraCompatControlState=hidden}, remoteTransition = RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@f53f9c2, appThread = android.app.IApplicationThread$Stub$Proxy@ae6a3d3, debugName = QuickstepLaunch }, displayChange = null }
+09-03 17:28:37.977   760   787 V WindowManagerShell: RemoteTransition directly requested for android.os.BinderProxy@faf1036: RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@f53f9c2, appThread = android.app.IApplicationThread$Stub$Proxy@ae6a3d3, debugName = QuickstepLaunch }
+09-03 17:28:37.977   549  2370 I ActivityTaskManager: START u0 {act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=com.yolpilot.driver/.MainActivity bnds=[298,1916][540,2231]} with LAUNCH_SINGLE_TASK from uid 10168 (BAL_ALLOW_ALLOWLISTED_COMPONENT) result code=0
+09-03 17:28:37.978   549   572 D CompatibilityChangeReporter: Compat change id reported: 135634846; UID 10202; state: DISABLED
+09-03 17:28:37.979   549   582 D CompatibilityChangeReporter: Compat change id reported: 143937733; UID 10202; state: ENABLED
+09-03 17:28:37.980   549   572 W ProcessStats: Tracking association SourceState{719e7a8 com.google.android.apps.nexuslauncher/10168 BTop #12221} whose proc state 2 is better than process ProcessState{7e18809 com.google.android.googlequicksearchbox:search/10132 pkg=com.google.android.googlequicksearchbox} proc state 5 (3 skipped)
+09-03 17:28:37.983   760   812 D SplashScreenView: Build android.window.SplashScreenView{7faff1a V.E...... ......ID 0,0-0,0}
+09-03 17:28:37.983   760   812 D SplashScreenView: Icon: view: android.widget.ImageView{7b4ba4b V.ED..... ......I. 0,0-0,0 #10204f0 android:id/splashscreen_icon_view} drawable: com.android.wm.shell.startingsurface.SplashscreenIconDrawableFactory$ImmobileIconDrawable@9b85c28 size: 420
+09-03 17:28:37.983   760   812 D SplashScreenView: Branding: view: android.view.View{e839d41 G.ED..... ......I. 0,0-0,0 #10204ef android:id/splashscreen_branding_view} drawable: null size w: 0 h: 0
+09-03 17:28:37.983   359   359 D Zygote  : Forked child process 11292
+09-03 17:28:37.984   549   582 I ActivityManager: Start proc 11292:com.yolpilot.driver/u0a202 for next-top-activity {com.yolpilot.driver/com.yolpilot.driver.MainActivity}
+09-03 17:28:37.986   549  2392 D CoreBackPreview: Window{11a1936 u0 Splash Screen com.yolpilot.driver}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@6e692c2, mPriority=0, mIsAnimationCallback=false}
+09-03 17:28:38.002   426   426 I BpBinder: onLastStrongRef automatically unlinking death recipients: 
+09-03 17:28:38.021   760   824 E OpenGLRenderer: Unable to match the desired swap behavior.
+09-03 17:28:38.021 11292 11292 I yolpilot.driver: Late-enabling -Xcheck:jni
+09-03 17:28:38.030 11292 11292 I yolpilot.driver: Using CollectorTypeCC GC.
+09-03 17:28:38.030 11292 11292 W yolpilot.driver: Unexpected CPU variant for x86: x86_64.
+09-03 17:28:38.030 11292 11292 W yolpilot.driver: Known variants: atom, sandybridge, silvermont, goldmont, goldmont-plus, tremont, kabylake, default
+09-03 17:28:38.055   441   455 I adbd    : jdwp connection from 11292
+09-03 17:28:38.057   549  2360 I AppsFilter: interaction: PackageSetting{f7afc10 com.yolpilot.driver/10202} -> PackageSetting{15fc985 com.google.android.apps.nexuslauncher/10168} BLOCKED
+09-03 17:28:38.062   760   787 V WindowManagerShell: onTransitionReady android.os.BinderProxy@faf1036: {id=42 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{android.window.IWindowContainerToken$Stub$Proxy@82b7edc} m=OPEN f=NONE leash=Surface(name=Task=199)/@0xd046629 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{WCT{android.window.IWindowContainerToken$Stub$Proxy@5543be5} m=TO_BACK f=SHOW_WALLPAPER leash=Surface(name=Task=1)/@0xeb62dae sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+09-03 17:28:38.062 11292 11292 D CompatibilityChangeReporter: Compat change id reported: 171979766; UID 10202; state: ENABLED
+09-03 17:28:38.062   760   787 V WindowManagerShell: Playing animation for (#42)android.os.BinderProxy@faf1036@0
+09-03 17:28:38.062   760   787 V WindowManagerShell:  try firstHandler com.android.wm.shell.transition.DefaultMixedHandler@d0521f0
+09-03 17:28:38.062 11292 11292 D CompatibilityChangeReporter: Compat change id reported: 242716250; UID 10202; state: ENABLED
+09-03 17:28:38.062   760   787 V WindowManagerShell:  Delegate animation for #42 to RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@f53f9c2, appThread = android.app.IApplicationThread$Stub$Proxy@ae6a3d3, debugName = QuickstepLaunch }
+09-03 17:28:38.063   760   787 V WindowManagerShell:  animated by firstHandler
+09-03 17:28:38.067 11292 11292 W ziparchive: Unable to open '/data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/base.dm': No such file or directory
+09-03 17:28:38.067 11292 11292 W ziparchive: Unable to open '/data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/base.dm': No such file or directory
+09-03 17:28:38.074   549   569 V WindowManager: Sent Transition #42 createdAt=09-03 17:28:37.971 via request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=199 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=com.yolpilot.driver/.MainActivity } baseActivity=ComponentInfo{com.yolpilot.driver/com.yolpilot.driver.MainActivity} topActivity=ComponentInfo{com.yolpilot.driver/com.yolpilot.driver.MainActivity} origActivity=null realActivity=ComponentInfo{com.yolpilot.driver/com.yolpilot.driver.MainActivity} numActivities=1 lastActiveTime=39983831 supportsMultiWindow=true resizeMode=1 isResizeable=true minWidth=-1 minHeight=-1 defaultMinSize=220 token=WCT{RemoteToken{8fbc93c Task{d2b895b #199 type=standard A=10202:com.yolpilot.driver}}} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 128 - 0, 0) topActivityInfo=ActivityInfo{aed26c5 com.yolpilot.driver.MainActivity} launchCookies=[android.os.BinderProxy@a27b81a] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isSleeping=false topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= false topActivityLetterboxed= false isFromDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 locusId=null displayAreaFeatureId=1 cameraCompatControlState=hidden}, remoteTransition = RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@b1d7f4b, appThread = android.app.IApplicationThread$Stub$Proxy@75a3d28, debugName = QuickstepLaunch }, displayChange = null }
+09-03 17:28:38.074   549   569 V WindowManager:     startWCT=WindowContainerTransaction { changes = {} hops = [] errorCallbackToken=null taskFragmentOrganizer=null }
+09-03 17:28:38.074   549   569 V WindowManager:     info={id=42 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{RemoteToken{8fbc93c Task{d2b895b #199 type=standard A=10202:com.yolpilot.driver}}} m=OPEN f=NONE leash=Surface(name=Task=199)/@0x48a6309 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{WCT{RemoteToken{d62cb0d Task{e96a145 #1 type=home}}} m=TO_BACK f=SHOW_WALLPAPER leash=Surface(name=Task=1)/@0x8b2416a sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+09-03 17:28:38.134   423   513 D audioserver: FGS Logger Transaction failed
+09-03 17:28:38.134   423   513 D audioserver: -129
+09-03 17:28:38.168 11292 11292 D nativeloader: Configuring clns-6 for other apk /data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/base.apk. target_sdk_version=34, uses_libraries=, library_path=/data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/lib/x86_64:/data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/base.apk!/lib/x86_64, permitted_path=/data:/mnt/expand:/data/user/0/com.yolpilot.driver
+09-03 17:28:38.176 11292 11292 V GraphicsEnvironment: Currently set values for:
+09-03 17:28:38.176 11292 11292 V GraphicsEnvironment:   angle_gl_driver_selection_pkgs=[]
+09-03 17:28:38.176 11292 11292 V GraphicsEnvironment:   angle_gl_driver_selection_values=[]
+09-03 17:28:38.177 11292 11292 V GraphicsEnvironment: ANGLE GameManagerService for com.yolpilot.driver: false
+09-03 17:28:38.177 11292 11292 V GraphicsEnvironment: com.yolpilot.driver is not listed in per-application setting
+09-03 17:28:38.177 11292 11292 V GraphicsEnvironment: Neither updatable production driver nor prerelease driver is supported.
+09-03 17:28:38.216 11292 11292 W SoLoader: Initializing SoLoader: 0
+09-03 17:28:38.218 11292 11292 W SoLoader: Recording new base apk path: /data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/base.apk
+09-03 17:28:38.218 11292 11292 W SoLoader: Previously recorded 0 base apk paths.
+09-03 17:28:38.221 11292 11292 I SoLoader: Preparing SO source: DirectorySoSource[root = /vendor/lib64 flags = 2]
+09-03 17:28:38.222 11292 11292 I SoLoader: Preparing SO source: DirectorySoSource[root = /system/lib64 flags = 2]
+09-03 17:28:38.222 11292 11292 I SoLoader: Preparing SO source: DirectApkSoSource[root = [/data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/base.apk!/lib/x86_64]]
+09-03 17:28:38.259 11292 11292 I SoLoader: Preparing SO source: ApplicationSoSource[DirectorySoSource[root = /data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/lib/x86_64 flags = 0]]
+09-03 17:28:38.259 11292 11292 I SoLoader: init finish: 4 SO sources prepared
+09-03 17:28:38.260 11292 11292 W SoLoader: SoLoader initialized: 8
+09-03 17:28:38.260   549  2360 I ActivityManager: Flag disabled. Ignoring finishAttachApplication from uid: 10202. pid: 11292
+09-03 17:28:38.264 11292 11314 D libEGL  : loaded /vendor/lib64/egl/libEGL_emulation.so
+09-03 17:28:38.266 11292 11314 D libEGL  : loaded /vendor/lib64/egl/libGLESv1_CM_emulation.so
+09-03 17:28:38.268 11292 11314 D libEGL  : loaded /vendor/lib64/egl/libGLESv2_emulation.so
+09-03 17:28:38.312 11292 11292 D AppCompatDelegate: Checking for metadata for AppLocalesMetadataHolderService : Service not found
+09-03 17:28:38.454 11292 11292 D jni_lib_merge: Entering merged library JNI_OnLoad.
+09-03 17:28:38.454 11292 11292 D jni_lib_merge: Preparing 12 pre-merged libs (including stub)
+09-03 17:28:38.454 11292 11292 D jni_lib_merge: Preparing to register libfabricjni_so.  onload_func: 0x7101460bcdf0
+09-03 17:28:38.454 11292 11292 D jni_lib_merge: Preparing to register libreact_devsupportjni_so.  onload_func: 0x7101462ae680
+09-03 17:28:38.455 11292 11292 D jni_lib_merge: Preparing to register libreact_featureflagsjni_so.  onload_func: 0x7101462bbcf0
+09-03 17:28:38.455 11292 11292 D jni_lib_merge: Preparing to register libreact_newarchdefaults_so.  onload_func: 0x710146320720
+09-03 17:28:38.455 11292 11292 D jni_lib_merge: Preparing to register libreactnativeblob_so.  onload_func: 0x710146508930
+09-03 17:28:38.455 11292 11292 D jni_lib_merge: Preparing to register libreactnativejni_so.  onload_func: 0x7101465531e0
+09-03 17:28:38.455 11292 11292 D jni_lib_merge: Preparing to register libreactnativejni_common_so.  onload_func: 0x710146562fe0
+09-03 17:28:38.455 11292 11292 D jni_lib_merge: Preparing to register librninstance_so.  onload_func: 0x710146597a60
+09-03 17:28:38.455 11292 11292 D jni_lib_merge: Preparing to register libturbomodulejsijni_so.  onload_func: 0x7101466c6a30
+09-03 17:28:38.455 11292 11292 D jni_lib_merge: Preparing to register libuimanagerjni_so.  onload_func: 0x7101466decb0
+09-03 17:28:38.456 11292 11292 D jni_lib_merge: Preparing to register libyoga_so.  onload_func: 0x7101466edc40
+09-03 17:28:38.456 11292 11292 D jni_lib_merge: About to register 11 actual methods.
+09-03 17:28:38.495 11292 11292 W SoLoader: SoLoader already initialized
+09-03 17:28:38.496 11292 11292 W SoLoader: Running a recovery step for libhermes.so due to com.facebook.soloader.SoLoaderDSONotFoundError: couldn't find DSO to load: libhermes.so
+09-03 17:28:38.496 11292 11292 W SoLoader: 	existing SO sources: 
+09-03 17:28:38.496 11292 11292 W SoLoader: 		SoSource 0: ApplicationSoSource[DirectorySoSource[root = /data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/lib/x86_64 flags = 0]]
+09-03 17:28:38.496 11292 11292 W SoLoader: 		SoSource 1: DirectApkSoSource[root = [/data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/base.apk!/lib/x86_64]]
+09-03 17:28:38.496 11292 11292 W SoLoader: 		SoSource 2: DirectorySoSource[root = /system/lib64 flags = 2]
+09-03 17:28:38.496 11292 11292 W SoLoader: 		SoSource 3: DirectorySoSource[root = /vendor/lib64 flags = 2]
+09-03 17:28:38.496 11292 11292 W SoLoader: 	Native lib dir: /data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/lib/x86_64
+09-03 17:28:38.497 11292 11292 W soloader.recovery.CheckBaseApkExists: Base apk exists: /data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/base.apk
+09-03 17:28:38.497 11292 11292 W SoLoader: Running a recovery step for libhermes.so due to com.facebook.soloader.SoLoaderDSONotFoundError: couldn't find DSO to load: libhermes.so
+09-03 17:28:38.497 11292 11292 W SoLoader: 	existing SO sources: 
+09-03 17:28:38.497 11292 11292 W SoLoader: 		SoSource 0: ApplicationSoSource[DirectorySoSource[root = /data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/lib/x86_64 flags = 0]]
+09-03 17:28:38.497 11292 11292 W SoLoader: 		SoSource 1: DirectApkSoSource[root = [/data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/base.apk!/lib/x86_64]]
+09-03 17:28:38.497 11292 11292 W SoLoader: 		SoSource 2: DirectorySoSource[root = /system/lib64 flags = 2]
+09-03 17:28:38.497 11292 11292 W SoLoader: 		SoSource 3: DirectorySoSource[root = /vendor/lib64 flags = 2]
+09-03 17:28:38.497 11292 11292 W SoLoader: 	Native lib dir: /data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/lib/x86_64
+09-03 17:28:38.498 11292 11292 E SoLoader: Checking /data/app missing libraries.
+09-03 17:28:38.498 11292 11292 E SoLoader: Successfully recovered from /data/app disk failure.
+09-03 17:28:38.499 11292 11292 W SoLoader: Running a recovery step for libhermes.so due to com.facebook.soloader.SoLoaderDSONotFoundError: couldn't find DSO to load: libhermes.so
+09-03 17:28:38.499 11292 11292 W SoLoader: 	existing SO sources: 
+09-03 17:28:38.499 11292 11292 W SoLoader: 		SoSource 0: ApplicationSoSource[DirectorySoSource[root = /data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/lib/x86_64 flags = 0]]
+09-03 17:28:38.499 11292 11292 W SoLoader: 		SoSource 1: DirectApkSoSource[root = [/data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/base.apk!/lib/x86_64]]
+09-03 17:28:38.499 11292 11292 W SoLoader: 		SoSource 2: DirectorySoSource[root = /system/lib64 flags = 3]
+09-03 17:28:38.499 11292 11292 W SoLoader: 		SoSource 3: DirectorySoSource[root = /vendor/lib64 flags = 3]
+09-03 17:28:38.499 11292 11292 W SoLoader: 	Native lib dir: /data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/lib/x86_64
+09-03 17:28:38.499 11292 11292 E SoLoader: Checking /data/data missing libraries.
+09-03 17:28:38.499 11292 11292 E SoLoader: No libraries missing from unpacking so paths while recovering /data/data failure
+09-03 17:28:38.500 11292 11292 W SoLoader: Running a recovery step for libhermes.so due to com.facebook.soloader.SoLoaderDSONotFoundError: couldn't find DSO to load: libhermes.so
+09-03 17:28:38.500 11292 11292 W SoLoader: 	existing SO sources: 
+09-03 17:28:38.500 11292 11292 W SoLoader: 		SoSource 0: ApplicationSoSource[DirectorySoSource[root = /data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/lib/x86_64 flags = 0]]
+09-03 17:28:38.500 11292 11292 W SoLoader: 		SoSource 1: DirectApkSoSource[root = [/data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/base.apk!/lib/x86_64]]
+09-03 17:28:38.500 11292 11292 W SoLoader: 		SoSource 2: DirectorySoSource[root = /system/lib64 flags = 3]
+09-03 17:28:38.500 11292 11292 W SoLoader: 		SoSource 3: DirectorySoSource[root = /vendor/lib64 flags = 3]
+09-03 17:28:38.500 11292 11292 W SoLoader: 	Native lib dir: /data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/lib/x86_64
+09-03 17:28:38.500 11292 11292 W SoLoader: Failed to recover
+09-03 17:28:38.502 11292 11292 E unknown:ReactInstanceManagerBuilder: Unable to load Hermes. Your application is not built correctly and will fail to execute
+09-03 17:28:38.505 11292 11292 W SoLoader: SoLoader already initialized
+09-03 17:28:38.588   760   787 V WindowManagerShell: Transition animation finished (aborted=false), notifying core (#42)android.os.BinderProxy@faf1036@0
+09-03 17:28:38.589   549   569 V WindowManager: Finish Transition #42: created at 09-03 17:28:37.971 collect-started=0.025ms request-sent=4.528ms started=7.075ms ready=87.147ms sent=89.773ms finished=617.511ms
+09-03 17:28:38.590   760   787 V WindowManagerShell: Track 0 became idle
+09-03 17:28:38.590   760   787 V WindowManagerShell: All active transition animations finished
+09-03 17:28:38.619   999   999 D AutofillManager: view is not autofillable - activity denied for autofill
+09-03 17:28:38.656 11292 11322 D TrafficStats: tagSocket(84) with statsTag=0xffffffff, statsUid=-1
+09-03 17:28:38.656 11292 11323 D TrafficStats: tagSocket(83) with statsTag=0xffffffff, statsUid=-1
+09-03 17:28:38.657 11292 11324 D TrafficStats: tagSocket(85) with statsTag=0xffffffff, statsUid=-1
+09-03 17:28:38.665 11292 11292 W yolpilot.driver: Accessing hidden method Landroid/view/ViewGroup;->makeOptionalFitsSystemWindows()V (unsupported, reflection, allowed)
+09-03 17:28:38.674 11292 11292 D CompatibilityChangeReporter: Compat change id reported: 237531167; UID 10202; state: DISABLED
+09-03 17:28:38.679 11292 11292 W OpenGLRenderer: Unknown dataspace 0
+09-03 17:28:38.685 11292 11292 W unknown:ReactNative: Packager connection already open, nooping.
+09-03 17:28:38.686   549  2360 D CoreBackPreview: Window{7d14617 u0 com.yolpilot.driver/com.yolpilot.driver.MainActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@6ae9a22, mPriority=0, mIsAnimationCallback=false}
+09-03 17:28:38.719 11292 11313 W OpenGLRenderer: Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+09-03 17:28:38.719 11292 11313 W OpenGLRenderer: Failed to initialize 101010-2 format, error = EGL_SUCCESS
+--------- beginning of kernel
+09-03 17:28:38.741     0     0 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
+09-03 17:28:38.757   160   160 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
+09-03 17:28:38.758 11292 11313 I Gralloc4: mapper 4.x is not supported
+09-03 17:28:38.774 11292 11313 E OpenGLRenderer: Unable to match the desired swap behavior.
+09-03 17:28:38.816   549   569 W ziparchive: Unable to open '/data/app/~~xgC4IuhXXrbHUDJzsH-F5Q==/com.yolpilot.driver-puxkujINuYUgI8fR79gRag==/base.dm': No such file or directory
+09-03 17:28:38.818   549   569 I ActivityTaskManager: Displayed com.yolpilot.driver/.MainActivity for user 0: +845ms
+09-03 17:28:38.827 11292 11292 D CompatibilityChangeReporter: Compat change id reported: 210923482; UID 10202; state: ENABLED
+09-03 17:28:38.841   549  2370 D CompatibilityChangeReporter: Compat change id reported: 214016041; UID 10202; state: ENABLED
+09-03 17:28:38.841   549  2370 I ImeTracker: com.yolpilot.driver:a1c2d06e: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_UNSPECIFIED_WINDOW
+09-03 17:28:38.841   549  2370 I ImeTracker: com.yolpilot.driver:a1c2d06e: onCancelled at PHASE_SERVER_SHOULD_HIDE
+09-03 17:28:38.842  1331  1331 I GoogleInputMethodService: GoogleInputMethodService.onFinishInput():3227 
+09-03 17:28:38.843  1331  1331 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 0, unlocked = true
+09-03 17:28:38.843  1331  1331 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1877 onStartInput(EditorInfo{inputType=0x0(NULL) imeOptions=0x0 privateImeOptions=null actionName=UNSPECIFIED actionLabel=null actionId=0 initialSelStart=-1 initialSelEnd=-1 initialCapsMode=0x0 hintText=null label=null packageName=com.yolpilot.driver fieldId=0 fieldName=null extras=null}, false)
+09-03 17:28:38.843  1331  1331 I GoogleInputMethodService: GoogleInputMethodService.shouldHideHeaderOnInitialState():4008 ShouldHideHeaderOnInitialState = false
+09-03 17:28:38.844  1331  1331 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 2, unlocked = true
+09-03 17:28:38.854   549  2370 D CoreBackPreview: Window{f3d4b7a u0 PopupWindow:fe4808c}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@89a6a5d, mPriority=0, mIsAnimationCallback=false}
+09-03 17:28:38.857   760   824 D EGL_emulation: app_time_stats: avg=11767.89ms min=11767.89ms max=11767.89ms count=1
+09-03 17:28:38.860 11292 11313 E OpenGLRenderer: Unable to match the desired swap behavior.
+09-03 17:28:38.880   999  1886 D OneSearchSuggestProvider: Shut down the binder channel
+09-03 17:28:38.880   999  1022 I IPCThreadState: oneway function results for code 2 on binder at 0x7102b72f4e70 will be dropped but finished with status UNKNOWN_TRANSACTION
+09-03 17:28:38.881   999  1057 I ImeTracker: com.google.android.apps.nexuslauncher:d1102911: onRequestHide at ORIGIN_CLIENT_HIDE_SOFT_INPUT reason HIDE_SOFT_INPUT
+09-03 17:28:38.881   999  1057 I ImeTracker: com.google.android.apps.nexuslauncher:d1102911: onFailed at PHASE_CLIENT_VIEW_SERVED
+09-03 17:28:38.882  8101  8210 D BtGatt.ScanManager: uid 10131 isForeground true scanMode -1
+09-03 17:28:39.174   760   811 W WindowOnBackDispatcher: sendCancelIfRunning: isInProgress=falsecallback=android.view.ViewRootImpl$$ExternalSyntheticLambda17@939f2e6
+09-03 17:28:39.175   549  1729 W InputManager-JNI: Input channel object '11a1936 Splash Screen com.yolpilot.driver (client)' was disposed without first being removed with the input manager!
+09-03 17:28:39.176   549  2360 D CoreBackPreview: Window{11a1936 u0 Splash Screen com.yolpilot.driver EXITING}: Setting back callback null
+09-03 17:28:39.182  8101  8210 D BtGatt.ScanManager: uid 10131 isForeground true scanMode -1
+09-03 17:28:39.183  3092  3364 I FontLog : Received query Noto Color Emoji Compat, URI content://com.google.android.gms.fonts [CONTEXT service_id=132 ]
+09-03 17:28:39.183  3092  3364 I FontLog : Query [emojicompat-emoji-font] resolved to {Noto Color Emoji Compat, wdth 100.0, wght 400, ital 0.0, bestEffort false} [CONTEXT service_id=132 ]
+09-03 17:28:39.184  3092  3364 I FontLog : Fetch {Noto Color Emoji Compat, wdth 100.0, wght 400, ital 0.0, bestEffort false} end status Status{statusCode=SUCCESS, resolution=null} [CONTEXT service_id=132 ]
+09-03 17:28:39.191  3092  3364 I FontLog : Pulling font file for id = 34, cache size = 5 [CONTEXT service_id=132 ]
+09-03 17:28:39.192   760   824 D EGL_emulation: app_time_stats: avg=2278.33ms min=8.06ms max=92785.66ms count=41
+09-03 17:28:39.195  3092  3364 I FontLog : Pulling font file for id = 34, cache size = 5 [CONTEXT service_id=132 ]
+09-03 17:28:40.207   760   824 D EGL_emulation: app_time_stats: avg=16.85ms min=12.21ms max=32.55ms count=59
+09-03 17:28:40.404   760   760 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-03 17:28:41.012   364  4188 D android.hardware.audio@7.1-impl.ranchu: threadLoop: entering standby, frames: 2809216
+09-03 17:28:41.481   549  1626 E TaskPersister: File error accessing recents directory (directory doesn't exist?).
+09-03 17:28:42.406 11292 11313 D EGL_emulation: app_time_stats: avg=441.46ms min=14.18ms max=2431.29ms count=8
+09-03 17:28:43.425 11292 11313 D EGL_emulation: app_time_stats: avg=52.72ms min=2.93ms max=216.24ms count=18
+09-03 17:28:43.779   549   737 D androidtc: Initializing SystemTextClassifier, type = System
+09-03 17:28:43.780  1480  1480 I AiAiTextClassifier: onCreateTextClassificationSession = TextClassificationSessionId {cf37508a-0410-4956-94ed-44f46c6534c7}
+09-03 17:28:43.781   549   737 E ClipboardService: Denying clipboard access to com.android.chrome, application is not in focus nor is it a system service for user 0
+09-03 17:28:43.784  1480  1676 I AiAiTextClassifier: GenerateLinks did not find valid links, returning empty result
+09-03 17:28:43.784  1480  1648 I AiAiTranslate: C2T - not in a conversation
+09-03 17:28:43.785   549   738 E ClipboardService: Denying clipboard access to com.android.chrome, application is not in focus nor is it a system service for user 0
+09-03 17:28:43.788  1480  1676 I AiAiTextClassifier: GenerateLinks did not find valid links, returning empty result
+09-03 17:28:43.797   760   760 I ClipboardListener: Clipboard overlay suppressed.
+09-03 17:28:43.799   760   760 I ClipboardListener: Clipboard overlay suppressed.
+09-03 17:28:44.283 11292 11337 D ProfileInstaller: Installing profile for com.yolpilot.driver
+09-03 17:28:45.207  8101  8210 D BtGatt.ScanManager: uid 10131 isForeground true scanMode -1
+09-03 17:28:45.992 11292 11313 D EGL_emulation: app_time_stats: avg=363.23ms min=5.96ms max=2031.77ms count=7
+09-03 17:28:47.095   760   760 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-03 17:28:47.095   760   824 D EGL_emulation: app_time_stats: avg=915.26ms min=15.06ms max=8105.44ms count=9
+09-03 17:28:47.609   549   683 E WifiStaIfaceAidlImpl: installApfPacketFilter failed with service-specific exception: android.os.ServiceSpecificException:  (code 4)
+09-03 17:28:48.254 11292 11313 D EGL_emulation: app_time_stats: avg=154.42ms min=1.44ms max=1460.84ms count=13
+09-03 17:28:49.827   358   406 I netd    : tetherGetStats() -> {[]} <1.46ms>
+09-03 17:28:49.835   358   406 I netd    : bandwidthSetGlobalAlert(2097152) <0.09ms>
+09-03 17:28:49.840   358   406 I netd    : bandwidthRemoveInterfaceQuota(eth0) <0.78ms>
+09-03 17:28:49.842   358   406 I netd    : bandwidthSetInterfaceQuota(eth0, 9223372036854775807) <0.91ms>
+09-03 17:28:50.299 11292 11292 W WindowOnBackDispatcher: sendCancelIfRunning: isInProgress=falsecallback=android.view.ViewRootImpl$$ExternalSyntheticLambda17@655dadb
+09-03 17:28:50.300   549  2366 D CoreBackPreview: Window{f3d4b7a u0 PopupWindow:fe4808c}: Setting back callback null
+09-03 17:28:50.302   549  2366 W InputManager-JNI: Input channel object 'f3d4b7a PopupWindow:fe4808c (client)' was disposed without first being removed with the input manager!
+09-03 17:28:50.305 11292 11292 D AndroidRuntime: Shutting down VM
+--------- beginning of crash
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: FATAL EXCEPTION: main
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: Process: com.yolpilot.driver, PID: 11292
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: java.lang.AssertionError
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: 	at com.facebook.infer.annotation.Assertions.assertNotNull(Assertions.java:31)
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: 	at com.facebook.react.ReactInstanceManager$ReactContextInitParams.<init>(ReactInstanceManager.java:214)
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: 	at com.facebook.react.ReactInstanceManager.recreateReactContextInBackground(ReactInstanceManager.java:1171)
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: 	at com.facebook.react.ReactInstanceManager.onJSBundleLoadedFromServer(ReactInstanceManager.java:1162)
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: 	at com.facebook.react.ReactInstanceManager.-$$Nest$monJSBundleLoadedFromServer(Unknown Source:0)
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: 	at com.facebook.react.ReactInstanceManager$2.onJSBundleLoadedFromServer(ReactInstanceManager.java:332)
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: 	at com.facebook.react.devsupport.BridgeDevSupportManager.handleReloadJS$lambda$1$lambda$0(BridgeDevSupportManager.kt:89)
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: 	at com.facebook.react.devsupport.BridgeDevSupportManager.$r8$lambda$HgMla5uZ9LUekvxoo-y1fgz87CM(Unknown Source:0)
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: 	at com.facebook.react.devsupport.BridgeDevSupportManager$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:958)
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:205)
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:294)
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:8177)
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+09-03 17:28:50.306 11292 11292 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:971)
+09-03 17:28:50.309   549 11338 I DropBoxManagerService: add tag=data_app_crash isTagEnabled=true flags=0x2
+09-03 17:28:50.309   549  2366 W ActivityTaskManager:   Force finishing activity com.yolpilot.driver/.MainActivity
+09-03 17:28:50.310   760   787 V WindowManagerShell: Transition requested: android.os.BinderProxy@b6e331e TransitionRequestInfo { type = CLOSE, triggerTask = null, remoteTransition = null, displayChange = null }
+09-03 17:28:50.312   549   570 I ActivityManager: Showing crash dialog for package com.yolpilot.driver u0
+09-03 17:28:50.336   549   570 D CoreBackPreview: Window{8252e1 u0 Application Error: com.yolpilot.driver}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.WindowOnBackInvokedDispatcher$OnBackInvokedCallbackWrapper@78e11de, mPriority=0, mIsAnimationCallback=false}
+09-03 17:28:50.341   549  8886 W OpenGLRenderer: Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+09-03 17:28:50.342   549  8886 W OpenGLRenderer: Failed to initialize 101010-2 format, error = EGL_SUCCESS
+09-03 17:28:50.376   426   426 I BpBinder: onLastStrongRef automatically unlinking death recipients: 
+09-03 17:28:50.387   549  8886 E OpenGLRenderer: Unable to match the desired swap behavior.
+09-03 17:28:50.811   549   572 W ActivityTaskManager: Activity top resumed state loss timeout for ActivityRecord{27e606a u0 com.yolpilot.driver/.MainActivity t199 f}}
+09-03 17:28:50.811   549   572 W ActivityTaskManager: Activity pause timeout for ActivityRecord{27e606a u0 com.yolpilot.driver/.MainActivity t199 f}}
+09-03 17:28:50.815   549  1816 W ProcessStats: Tracking association SourceState{6f25b0e com.google.android.apps.nexuslauncher/10168 BTop #12241} whose proc state 2 is better than process ProcessState{7e18809 com.google.android.googlequicksearchbox:search/10132 pkg=com.google.android.googlequicksearchbox} proc state 5 (6 skipped)
+09-03 17:28:50.816  8101  8210 D BtGatt.ScanManager: uid 10131 isForeground true scanMode -1
+09-03 17:28:50.817   549  1550 W AppSearchIcing: icing-search-engine.cc:283: Error: 5, Message: Document (com.google.android.googlequicksearchbox$OneSearchZeroStateGoogleSuggestions/default, zp) not found.
+09-03 17:28:50.817   999  1886 D OneSearchSuggestProvider: Created the binder channel successfully for end point service =com.google.android.apps.search.googleapp.search.suggest.plugins.onesearch.server.OneSearchSuggestService , mChannel=z1{delegate=s1{logId=31, target=directaddress:///AndroidComponentAddress%5BIntent%20%7B%20act=grpc.io.action.BIND%20cmp=com.google.android.googlequicksearchbox/com.google.android.apps.search.googleapp.search.suggest.plugins.onesearch.server.OneSearchSuggestService%20%7D%5D}} , mOneSearchConnection=X1.T@cde6233
+09-03 17:28:50.819   999   999 D AutofillManager: view is not autofillable - activity denied for autofill
+09-03 17:28:50.820  1480  1590 I AiAiEcho: Predicting[0]: 
+09-03 17:28:50.820  1480  1590 I AiAiEcho: EchoTargets: 
+09-03 17:28:50.820  1480  1590 I AiAiEcho: Filtered by AiAi flag check: 
+09-03 17:28:50.820  1480  1590 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-03 17:28:50.826  1480  1590 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface home with targets# 0 (types=[])
+09-03 17:28:50.848  1805  2680 E OpenGLRenderer: Unable to match the desired swap behavior.
+09-03 17:28:50.875   999  1707 E OpenGLRenderer: Unable to match the desired swap behavior.
+09-03 17:28:50.876   549  1729 D ActivityManager: sync unfroze 5173 com.google.android.gms for 6
+09-03 17:28:50.907  1805  1805 I A       : Created gRPC endpoint to "search" for service class com.google.android.apps.search.googleapp.search.suggest.plugins.onesearch.server.OneSearchSuggestService
+09-03 17:28:50.908  1805  1805 W A       : Can't get WAA status for Mavatar!
+09-03 17:28:50.908  1805  1805 W A       : java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.Class java.lang.Object.getClass()' on a null object reference
+09-03 17:28:50.908  1805  1805 W A       : 	at com.google.apps.tiktok.dataservice.z.b(PG:1)
+09-03 17:28:50.908  1805  1805 W A       : 	at com.google.apps.tiktok.dataservice.at.a(PG:1)
+09-03 17:28:50.908  1805  1805 W A       : 	at com.google.apps.tiktok.tracing.ec.a(PG:2)
+09-03 17:28:50.908  1805  1805 W A       : 	at com.google.common.util.concurrent.aj.a(PG:2)
+09-03 17:28:50.908  1805  1805 W A       : 	at com.google.common.util.concurrent.ac.apply(PG:1)
+09-03 17:28:50.908  1805  1805 W A       : 	at com.google.common.util.concurrent.h.e(PG:2)
+09-03 17:28:50.908  1805  1805 W A       : 	at com.google.common.util.concurrent.j.run(PG:9)
+09-03 17:28:50.908  1805  1805 W A       : 	at com.google.common.util.concurrent.bf.execute(PG:1)
+09-03 17:28:50.908  1805  1805 W A       : 	at com.google.common.util.concurrent.d.i(PG:1)
+09-03 17:28:50.908  1805  1805 W A       : 	at com.google.common.util.concurrent.d.l(PG:12)
+09-03 17:28:50.908  1805  1805 W A       : 	at com.google.common.util.concurrent.d.n(PG:2)
+09-03 17:28:50.908  1805  1805 W A       : 	at com.google.common.util.concurrent.i.f(PG:1)
+09-03 17:28:50.908  1805  1805 W A       : 	at com.google.common.util.concurrent.j.run(PG:12)
+09-03 17:28:50.908  1805  1805 W A       : 	at com.google.android.libraries.i.ae.run(PG:1)
+09-03 17:28:50.908  1805  1805 W A       : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+09-03 17:28:50.908  1805  1805 W A       : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+09-03 17:28:50.908  1805  1805 W A       : 	at com.google.android.libraries.i.k.run(PG:2)
+09-03 17:28:50.908  1805  1805 W A       : 	at com.google.android.libraries.i.p.run(PG:4)
+09-03 17:28:50.908  1805  1805 W A       : 	at java.lang.Thread.run(Thread.java:1012)
+09-03 17:28:50.954   999   999 D SearchTargetUtil:  query= size=0
+09-03 17:28:50.995   760   787 V WindowManagerShell: onTransitionReady android.os.BinderProxy@b6e331e: {id=43 t=CLOSE f=0x10 trk=0 r=[0@Point(0, 0)] c=[{WCT{android.window.IWindowContainerToken$Stub$Proxy@52b351b} m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0x8b317ff sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{WCT{android.window.IWindowContainerToken$Stub$Proxy@b7606b8} m=CLOSE f=NONE leash=Surface(name=Task=199)/@0x3cb19cc sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{null m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{ddf47be token=android.os.Binder@8b85e79})/@0xf1e5415 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+09-03 17:28:50.995   760   787 V WindowManagerShell: Playing animation for (#43)android.os.BinderProxy@b6e331e@0
+09-03 17:28:50.995   549   569 V WindowManager: Sent Transition #43 createdAt=09-03 17:28:50.309 via request=TransitionRequestInfo { type = CLOSE, triggerTask = null, remoteTransition = null, displayChange = null }
+09-03 17:28:50.995   760   787 V WindowManagerShell:  try handler com.android.wm.shell.transition.DefaultMixedHandler@d0521f0
+09-03 17:28:50.995   549   569 V WindowManager:     startWCT=WindowContainerTransaction { changes = {} hops = [] errorCallbackToken=null taskFragmentOrganizer=null }
+09-03 17:28:50.995   760   787 V WindowManagerShell:  try handler com.android.wm.shell.keyguard.KeyguardTransitionHandler@b26c369
+09-03 17:28:50.995   760   787 V WindowManagerShell:  try handler com.android.wm.shell.activityembedding.ActivityEmbeddingController@b4161ee
+09-03 17:28:50.995   549   569 V WindowManager:     info={id=43 t=CLOSE f=0x10 trk=0 r=[0@Point(0, 0)] c=[{WCT{RemoteToken{d62cb0d Task{e96a145 #1 type=home}}} m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0x8b2416a sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{WCT{RemoteToken{8fbc93c Task{d2b895b #199 type=standard A=10202:com.yolpilot.driver}}} m=CLOSE f=NONE leash=Surface(name=Task=199)/@0x48a6309 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{null m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{ddf47be token=android.os.Binder@8b85e79})/@0xc15be0c sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+09-03 17:28:50.995   760   787 V WindowManagerShell:  try handler com.android.wm.shell.recents.RecentsTransitionHandler@2c1668f
+09-03 17:28:50.995   760   787 V ShellRecents: RecentsTransitionHandler.startAnimation: no controller found
+09-03 17:28:50.995   760   787 V WindowManagerShell:  try handler com.android.wm.shell.pip.PipTransition@b326d1c
+09-03 17:28:50.995   760   787 V WindowManagerShell:  try handler com.android.wm.shell.splitscreen.StageCoordinator@15f2d25
+09-03 17:28:50.996   760   787 V WindowManagerShell:  try handler com.android.wm.shell.transition.RemoteTransitionHandler@defe776
+09-03 17:28:50.996   760   787 V WindowManagerShell: Transition doesn't have explicit remote, search filters for match for {id=43 t=CLOSE f=0x10 trk=0 r=[0@Point(0, 0)] c=[{WCT{android.window.IWindowContainerToken$Stub$Proxy@52b351b} m=TO_FRONT f=SHOW_WALLPAPER|MOVE_TO_TOP leash=Surface(name=Task=1)/@0x8b317ff sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{WCT{android.window.IWindowContainerToken$Stub$Proxy@b7606b8} m=CLOSE f=NONE leash=Surface(name=Task=199)/@0x3cb19cc sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{null m=TO_FRONT f=IS_WALLPAPER leash=Surface(name=WallpaperWindowToken{ddf47be token=android.os.Binder@8b85e79})/@0xf1e5415 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+09-03 17:28:50.996   760   787 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x0 checks=[{atype=dream independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=ANY topActivity=null},{atype=home independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@ae69403, appThread = android.app.IApplicationThread$Stub$Proxy@2981f80, debugName = LauncherToDream }}
+09-03 17:28:50.996   760   787 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x100 checks=[{atype=home independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=TOP topActivity=ComponentInfo{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}},{atype=standard independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@15e99b9, appThread = android.app.IApplicationThread$Stub$Proxy@63401fe, debugName = QuickstepLaunchHome }}
+09-03 17:28:50.996   760   787 D RemoteTransitionHandler: Found filterPair{{types=[] flags=0x0] notFlags=0x100 checks=[{atype=home independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=TOP topActivity=ComponentInfo{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}},{atype=standard independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@15e99b9, appThread = android.app.IApplicationThread$Stub$Proxy@63401fe, debugName = QuickstepLaunchHome }}
+09-03 17:28:50.996   760   787 V WindowManagerShell:  Delegate animation for #43 to RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@15e99b9, appThread = android.app.IApplicationThread$Stub$Proxy@63401fe, debugName = QuickstepLaunchHome }
+09-03 17:28:50.998   760   787 V WindowManagerShell:  animated by com.android.wm.shell.transition.RemoteTransitionHandler@defe776
+09-03 17:28:51.210   358   406 I netd    : tetherGetStats() -> {[]} <0.24ms>
+09-03 17:28:51.215   358   406 I netd    : bandwidthSetGlobalAlert(2097152) <0.06ms>
+09-03 17:28:51.320   760   787 V WindowManagerShell: Transition animation finished (aborted=false), notifying core (#43)android.os.BinderProxy@b6e331e@0
+09-03 17:28:51.321   549   569 V WindowManager: Finish Transition #43: created at 09-03 17:28:50.309 collect-started=0.055ms request-sent=0.227ms started=3.222ms ready=503.343ms sent=684.686ms finished=1011.241ms
+09-03 17:28:51.321   760   787 V WindowManagerShell: Track 0 became idle
+09-03 17:28:51.322   760   787 V WindowManagerShell: All active transition animations finished
+09-03 17:28:52.363     0     0 I logd    : logdr: UID=2000 GID=2000 PID=11351 b tail=0 logMask=99 pid=0 start=0ns deadline=0ns
+09-03 17:28:55.342   549   650 W InputDispatcher: Window 7d14617 com.yolpilot.driver/com.yolpilot.driver.MainActivity (server) is unresponsive: 7d14617 com.yolpilot.driver/com.yolpilot.driver.MainActivity (server) is not responding. Waited 5005ms for FocusEvent(hasFocus=false)
+09-03 17:28:55.342   549   650 W InputDispatcher: Canceling events for 7d14617 com.yolpilot.driver/com.yolpilot.driver.MainActivity (server) because it is unresponsive
+09-03 17:28:55.343   549   650 I WindowManager: ANR in Window{7d14617 u0 com.yolpilot.driver/com.yolpilot.driver.MainActivity}. Reason:Input dispatching timed out (7d14617 com.yolpilot.driver/com.yolpilot.driver.MainActivity (server) is not responding. Waited 5005ms for FocusEvent(hasFocus=false))
+09-03 17:28:55.346   549 11356 D ActivityManager: created ANR temporary file:/data/anr/temp_anr_9146777620887627650.txt
+09-03 17:28:55.346   549 11356 I ActivityManager: Collecting stacks for pid 11292 into temporary file temp_anr_9146777620887627650.txt
+09-03 17:28:55.346   549 11356 I system_server: libdebuggerd_client: started dumping process 11292
+09-03 17:28:55.347   211   211 I tombstoned: registered intercept for pid 11292 and type kDebuggerdJavaBacktrace
+09-03 17:28:55.347 11292 11299 I yolpilot.driver: Thread[6,tid=11299,WaitingInMainSignalCatcherLoop,Thread*=0x7101c72afa60,peer=0x13780000,"Signal Catcher"]: reacting to signal 3
+09-03 17:28:55.347 11292 11299 I yolpilot.driver: 
+09-03 17:28:55.354   549 11357 I ActivityManager: Crashing app skipping ANR: com.android.server.am.ProcessErrorStateRecord@ad8bdb4 Input dispatching timed out (7d14617 com.yolpilot.driver/com.yolpilot.driver.MainActivity (server) is not responding. Waited 5005ms for FocusEvent(hasFocus=false))
+09-03 17:28:55.354   549 11357 D ActivityManager: Completed ANR of com.yolpilot.driver in 10ms, latency 1ms
+09-03 17:28:55.467   211   211 I tombstoned: received crash request for pid 11292
+09-03 17:28:55.468   211   211 I tombstoned: found intercept fd 512 for pid 11292 and type kDebuggerdJavaBacktrace
+09-03 17:28:55.468   211   211 W tombstoned: skipping tombstone file creation due to intercept
+09-03 17:28:55.468 11292 11299 I yolpilot.driver: Wrote stack traces to tombstoned
+09-03 17:28:55.473   549 11356 I system_server: libdebuggerd_client: done dumping process 11292
+09-03 17:28:57.070   760   760 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-03 17:29:00.006  1480  1590 I AiAiEcho: Predicting[0]: 
+09-03 17:29:00.006  1480  1590 I AiAiEcho: EchoTargets: 
+09-03 17:29:00.006  1480  1590 I AiAiEcho: Filtered by AiAi flag check: 
+09-03 17:29:00.006  1480  1590 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-03 17:29:00.008  1480  1590 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-03 17:29:00.023   760   760 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-03 17:29:00.025   760   824 D EGL_emulation: app_time_stats: avg=12929.56ms min=12929.56ms max=12929.56ms count=1
+09-03 17:29:01.328   549   572 W ActivityTaskManager: Activity destroy timeout for ActivityRecord{27e606a u0 com.yolpilot.driver/.MainActivity t199 f}}
+09-03 17:29:01.328   549   572 W InputManager-JNI: Input channel object '7d14617 com.yolpilot.driver/com.yolpilot.driver.MainActivity (client)' was disposed without first being removed with the input manager!
+09-03 17:29:01.360   549   638 D ActivityManager: freezing 11292 com.yolpilot.driver
+09-03 17:29:01.362   549   638 D ActivityManager: Reschedule freeze for process 11292 com.yolpilot.driver (outstanding txns), timeout=2410
+09-03 17:29:01.345     0     0 I binder  : 549:638 ioctl 400c620e 71012658d700 returned -11
+09-03 17:29:03.785   549   638 D ActivityManager: freezing 11292 com.yolpilot.driver
+09-03 17:29:03.786   549   638 D ActivityManager: Reschedule freeze for process 11292 com.yolpilot.driver (outstanding txns), timeout=1000
+09-03 17:29:03.770     0     0 I binder  : 549:638 ioctl 400c620e 71012658d700 returned -11
+09-03 17:29:04.335   549  1626 E TaskPersister: File error accessing recents directory (directory doesn't exist?).
+09-03 17:29:04.793   549   638 D ActivityManager: freezing 11292 com.yolpilot.driver
+09-03 17:29:04.794   549   638 D ActivityManager: Kill app due to repeated failure to freeze binder: 11292 com.yolpilot.driver
+09-03 17:29:04.795   549   581 I ActivityManager: Killing 11292:com.yolpilot.driver/u0a202 (adj 900): excessive binder traffic during cached
+09-03 17:29:04.796   549   583 I libprocessgroup: Successfully killed process cgroup uid 10202 pid 11292 in 0ms
+09-03 17:29:04.778     0     0 I binder  : 549:638 ioctl 400c620e 71012658d700 returned -11
+09-03 17:29:04.808   359   359 I Zygote  : Process 11292 exited due to signal 9 (Killed)
+09-03 17:29:04.793     0     0 W binder_debug: 126 callbacks suppressed
+09-03 17:29:04.793     0     0 I binder  : release 11292:11292 transaction 3196806 out, still active
+09-03 17:29:04.812   549  1816 I ImeTracker: com.yolpilot.driver:81f338d: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_REMOVE_CLIENT
+09-03 17:29:04.813   549   570 W WindowOnBackDispatcher: sendCancelIfRunning: isInProgress=falsecallback=android.view.ViewRootImpl$$ExternalSyntheticLambda17@f597d19
+09-03 17:29:04.813   549   570 D CoreBackPreview: Window{8252e1 u0 Application Error: com.yolpilot.driver}: Setting back callback null
+09-03 17:29:04.796     0     0 I binder  : undelivered TRANSACTION_COMPLETE
+09-03 17:29:04.815   549  1816 I ImeTracker: com.yolpilot.driver:81f338d: onCancelled at PHASE_SERVER_SHOULD_HIDE
+09-03 17:29:04.816   549  2392 W ProcessStats: Tracking association SourceState{719e7a8 com.google.android.apps.nexuslauncher/10168 BTop #12271} whose proc state 2 is better than process ProcessState{7e18809 com.google.android.googlequicksearchbox:search/10132 pkg=com.google.android.googlequicksearchbox} proc state 5 (44 skipped)
+09-03 17:29:04.817   549   572 W ActivityManager: setHasOverlayUi called on unknown pid: 11292
+09-03 17:29:04.818   549  2366 W ActivityManager: Ignoring remove of inactive process: ProcessRecord{ae6e9a4 0:com.yolpilot.driver/u0a202}
+09-03 17:29:04.818   426   426 E BpTransactionCompletedListener: Failed to transact (-32)
+09-03 17:29:04.803     0     0 I binder  : 2366:549 reply target not found
+09-03 17:29:04.804     0     0 I binder  : 549:2366 transaction reply to 0:0 failed 3198736/29189/0, size 4-0 line 3140
+09-03 17:29:04.805     0     0 I binder  : send failed reply for transaction 3196806, target dead
+09-03 17:29:04.824   549   570 W InputManager-JNI: Input channel object '8252e1 Application Error: com.yolpilot.driver (client)' was disposed without first being removed with the input manager!
+09-03 17:29:04.832   549   570 D DisplayManagerService: Drop pending events for gone uid 10202
+09-03 17:29:04.837   549   572 V WindowManager: Unknown focus tokens, dropping reportFocusChanged
+09-03 17:29:04.855   549  2392 I ImeTracker: com.google.android.apps.nexuslauncher:7540dca6: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_UNSPECIFIED_WINDOW
+09-03 17:29:04.855   549  2392 I ImeTracker: com.google.android.apps.nexuslauncher:7540dca6: onCancelled at PHASE_SERVER_SHOULD_HIDE
+09-03 17:29:04.857  1331  1331 I GoogleInputMethodService: GoogleInputMethodService.onFinishInput():3227 
+09-03 17:29:04.859  1331  1331 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 0, unlocked = true
+09-03 17:29:04.859  1331  1331 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1877 onStartInput(EditorInfo{inputType=0x0(NULL) imeOptions=0x0 privateImeOptions=null actionName=UNSPECIFIED actionLabel=null actionId=0 initialSelStart=-1 initialSelEnd=-1 initialCapsMode=0x0 hintText=null label=null packageName=com.google.android.apps.nexuslauncher fieldId=0 fieldName=null extras=null}, false)
+09-03 17:29:04.860  1331  1331 I GoogleInputMethodService: GoogleInputMethodService.shouldHideHeaderOnInitialState():4008 ShouldHideHeaderOnInitialState = false
+09-03 17:29:04.862  1331  1331 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 2, unlocked = true
+09-03 17:29:04.862   760   824 D EGL_emulation: app_time_stats: avg=4836.84ms min=4836.84ms max=4836.84ms count=1
+09-03 17:29:04.873   999  1707 D EGL_emulation: app_time_stats: avg=386.57ms min=13.35ms max=13300.92ms count=36
+09-03 17:29:04.976   760   824 D EGL_emulation: app_time_stats: avg=1375.86ms min=14.38ms max=24235.71ms count=18
+09-03 17:29:05.988   760   824 D EGL_emulation: app_time_stats: avg=16.27ms min=12.99ms max=19.48ms count=61
+09-03 17:29:07.071   760   760 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-03 17:29:07.928   549   638 D ActivityManager: freezing 5173 com.google.android.gms
+09-03 17:29:10.487   760   760 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-03 17:29:13.054   549   634 W CpuMonitorService: Current CPU frequency (4673668) is greater than maximum CPU frequency (2) for policy ID (0). Skipping CPU frequency policy
+09-03 17:29:13.055   549   634 W CpuMonitorService: Current CPU frequency (4643489) is greater than maximum CPU frequency (2) for policy ID (3). Skipping CPU frequency policy
+09-03 17:29:14.154   999  1707 D EGL_emulation: app_time_stats: avg=1324.59ms min=13.18ms max=9181.49ms count=7
+09-03 17:29:17.087   760   760 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-03 17:29:27.087   760   760 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-03 17:29:37.087   760   760 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-03 17:29:47.086   760   760 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-03 17:29:57.088   760   760 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-03 17:30:00.024  1480  1590 I AiAiEcho: Predicting[0]: 
+09-03 17:30:00.024  1480  1590 I AiAiEcho: EchoTargets: 
+09-03 17:30:00.024  1480  1590 I AiAiEcho: Filtered by AiAi flag check: 
+09-03 17:30:00.024   760   824 D EGL_emulation: app_time_stats: avg=5516.17ms min=12.10ms max=55017.92ms count=10
+09-03 17:30:00.025  1480  1590 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-03 17:30:00.026  1480  1590 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-03 17:30:00.037   760   760 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-03 17:30:04.587   760   760 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-03 17:30:07.088   760   760 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-03 17:30:07.587   760   760 D StatusBarIconController: ignoring old pipeline callback because the new wifi icon is enabled
+09-03 17:30:13.155   549   634 W CpuMonitorService: Current CPU frequency (4462258) is greater than maximum CPU frequency (2) for policy ID (2). Skipping CPU frequency policy
+09-03 17:30:13.155   549   634 W CpuMonitorService: Current CPU frequency (4698164) is greater than maximum CPU frequency (2) for policy ID (3). Skipping CPU frequency policy
+09-03 17:30:14.154   999  1707 D EGL_emulation: app_time_stats: avg=59999.75ms min=59999.75ms max=59999.75ms count=1
+09-03 17:30:17.075   760   760 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-03 17:30:18.090   549   737 D androidtc: Initializing SystemTextClassifier, type = System
+09-03 17:30:18.091  1480  1480 I AiAiTextClassifier: onCreateTextClassificationSession = TextClassificationSessionId {f1eed2ac-410a-4f1e-a491-3d34ef67e229}
+09-03 17:30:18.092   549   737 E ClipboardService: Denying clipboard access to com.android.chrome, application is not in focus nor is it a system service for user 0
+09-03 17:30:18.095  1480  1648 I AiAiTranslate: C2T - not in a conversation
+09-03 17:30:18.095  1480  1676 I AiAiTextClassifier: GenerateLinks did not find valid links, returning empty result
+09-03 17:30:18.096   549   738 E ClipboardService: Denying clipboard access to com.android.chrome, application is not in focus nor is it a system service for user 0
+09-03 17:30:18.098  1480  1676 I AiAiTextClassifier: GenerateLinks did not find valid links, returning empty result
+09-03 17:30:18.104   760   760 I ClipboardListener: Clipboard overlay suppressed.
+09-03 17:30:18.106   760   760 I ClipboardListener: Clipboard overlay suppressed.
+09-03 17:30:27.088   760   760 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-03 17:30:27.798   549  1816 D WifiNl80211Manager: Scan result ready event
+09-03 17:30:27.798   549  1816 D WifiNative: Scan result ready event
+09-03 17:30:37.087   760   760 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-03 17:30:41.213   549   737 E ClipboardService: Denying clipboard access to com.android.chrome, application is not in focus nor is it a system service for user 0
+09-03 17:30:41.215  1480  1648 I AiAiTranslate: C2T - not in a conversation
+09-03 17:30:41.220   760   760 I ClipboardListener: Clipboard overlay suppressed.
+09-03 17:30:41.224  1480  1676 I AiAiTextClassifier: GenerateLinks did not find valid links, returning empty result
+09-03 17:30:47.086   760   760 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-03 17:30:47.088   760   824 D EGL_emulation: app_time_stats: avg=47063.16ms min=47063.16ms max=47063.16ms count=1
+09-03 17:30:52.208   549   737 E ClipboardService: Denying clipboard access to com.android.chrome, application is not in focus nor is it a system service for user 0
+09-03 17:30:52.211  1480  1648 I AiAiTranslate: C2T - not in a conversation
+09-03 17:30:52.222  1480  1676 I AiAiTextClassifier: GenerateLinks did not find valid links, returning empty result
+09-03 17:30:52.224   760   760 I ClipboardListener: Clipboard overlay suppressed.
+09-03 17:30:57.088   760   760 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-03 17:31:00.022  1480  1590 I AiAiEcho: Predicting[0]: 
+09-03 17:31:00.022  1480  1590 I AiAiEcho: EchoTargets: 
+09-03 17:31:00.022  1480  1590 I AiAiEcho: Filtered by AiAi flag check: 
+09-03 17:31:00.023  1480  1590 I AiAiEcho: Ranked targets strategy: SORT, count: 0, ranking metadata: 
+09-03 17:31:00.024   760   824 D EGL_emulation: app_time_stats: avg=12934.99ms min=12934.99ms max=12934.99ms count=1
+09-03 17:31:00.024  1480  1590 I AiAiEcho: #postPredictionTargets: Sending updates to UISurface lockscreen with targets# 0 (types=[])
+09-03 17:31:00.037   760   760 W PageIndicator: Total number of pages invalid: 0. Assuming 1 page.
+09-03 17:31:04.208   549   737 D androidtc: Initializing SystemTextClassifier, type = System
+09-03 17:31:04.210   549   737 E ClipboardService: Denying clipboard access to com.android.chrome, application is not in focus nor is it a system service for user 0
+09-03 17:31:04.211  1480  1480 I AiAiTextClassifier: onCreateTextClassificationSession = TextClassificationSessionId {430176e2-9a71-4d39-a928-7128bd5f23f7}
+09-03 17:31:04.213  1480  1648 I AiAiTranslate: C2T - not in a conversation
+09-03 17:31:04.214  1480  1676 I AiAiTextClassifier: GenerateLinks did not find valid links, returning empty result
+09-03 17:31:04.216   549   738 E ClipboardService: Denying clipboard access to com.android.chrome, application is not in focus nor is it a system service for user 0
+09-03 17:31:04.217  1480  1676 I AiAiTextClassifier: GenerateLinks did not find valid links, returning empty result
+09-03 17:31:04.220   760   760 I ClipboardListener: Clipboard overlay suppressed.
+09-03 17:31:04.221   760   760 I ClipboardListener: Clipboard overlay suppressed.
+09-03 17:31:07.088   760   760 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled
+09-03 17:31:07.090   760   824 D EGL_emulation: app_time_stats: avg=7066.58ms min=7066.58ms max=7066.58ms count=1
+09-03 17:31:14.154   999  1707 D EGL_emulation: app_time_stats: avg=59999.28ms min=59999.28ms max=59999.28ms count=1
+09-03 17:31:15.835   549   737 D androidtc: Initializing SystemTextClassifier, type = System
+09-03 17:31:15.837  1480  1480 I AiAiTextClassifier: onCreateTextClassificationSession = TextClassificationSessionId {d575ccf0-3b09-4361-908b-aa6f1c380eba}
+09-03 17:31:15.837   549   737 E ClipboardService: Denying clipboard access to com.android.chrome, application is not in focus nor is it a system service for user 0
+09-03 17:31:15.839  1480  1648 I AiAiTranslate: C2T - not in a conversation
+09-03 17:31:15.840  1480  1676 I AiAiTextClassifier: GenerateLinks did not find valid links, returning empty result
+09-03 17:31:15.843   549   738 E ClipboardService: Denying clipboard access to com.android.chrome, application is not in focus nor is it a system service for user 0
+09-03 17:31:15.844  1480  1676 I AiAiTextClassifier: GenerateLinks did not find valid links, returning empty result
+09-03 17:31:15.855   760   760 I ClipboardListener: Clipboard overlay suppressed.
+09-03 17:31:15.857   760   760 I ClipboardListener: Clipboard overlay suppressed.
+09-03 17:31:17.087   760   760 D StatusBarIconController: ignoring old pipeline callbacks, because the new mobile icons are enabled

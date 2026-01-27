@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:getcircuit.com)",
+      "WebFetch(domain:route4me.com)",
+      "WebFetch(domain:www.optiyol.com)",
+      "Bash(dir:*)",
+      "Bash(npm run dev:*)",
+      "Read(//c/Projects/RotaAppMobile/**)",
+      "Read(//c/Users/QP/Desktop/rotaapp-frontend/**)",
+      "Read(//c/Users/QP/Desktop/monolith-master2/src/Monolith.WebAPI/Controllers//**)",
+      "Read(//c/Projects//**)",
+      "Read(//c/Users/QP/Desktop/monolith-master2/src/Monolith.WebAPI/Controllers/**)",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint)",
+      "Read(//c/Users/QP/Desktop/monolith-master2/**)",
+      "Bash(dotnet build)",
+      "Bash(dotnet ef migrations add:*)",
+      "Bash(dotnet run:*)",
+      "Bash(findstr:*)",
+      "Bash(git add:*)",
+      "Bash(git fetch:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(tree:*)",
+      "Bash(cat:*)",
+      "Bash(sed:*)",
+      "Bash(git config:*)",
+      "Bash(curl:*)",
+      "Bash(find:*)",
+      "Bash(del 20250928130924_AddMarketingLeadTable.cs)",
+      "Bash(del:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

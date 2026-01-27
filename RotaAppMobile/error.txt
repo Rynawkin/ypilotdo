@@ -1,0 +1,43 @@
+--------- beginning of main
+09-02 21:15:35.696 16575 16644 E OpenGLRenderer: Unable to match the desired swap behavior.
+--------- beginning of crash
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: FATAL EXCEPTION: main
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: Process: com.yolpilot.driver, PID: 20736
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: java.lang.UnsatisfiedLinkError: dlopen failed: library "libreact_featureflagsjni.so" not found
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at java.lang.Runtime.loadLibrary0(Runtime.java:1082)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at java.lang.Runtime.loadLibrary0(Runtime.java:1003)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at java.lang.System.loadLibrary(System.java:1661)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at com.facebook.soloader.nativeloader.SystemDelegate.loadLibrary(SystemDelegate.java:24)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at com.facebook.soloader.nativeloader.NativeLoader.loadLibrary(NativeLoader.java:52)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at com.facebook.soloader.nativeloader.NativeLoader.loadLibrary(NativeLoader.java:30)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at com.facebook.soloader.SoLoader.loadLibrary(SoLoader.java:812)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at com.facebook.react.internal.featureflags.ReactNativeFeatureFlagsCxxInterop.<clinit>(ReactNativeFeatureFlagsCxxInterop.kt:28)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at com.facebook.react.internal.featureflags.ReactNativeFeatureFlagsCxxAccessor.enableBridgelessArchitecture(ReactNativeFeatureFlagsCxxAccessor.kt:176)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at com.facebook.react.internal.featureflags.ReactNativeFeatureFlags.enableBridgelessArchitecture(ReactNativeFeatureFlags.kt:97)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at com.facebook.react.internal.featureflags.ReactNativeNewArchitectureFeatureFlags.enableBridgelessArchitecture(ReactNativeNewArchitectureFeatureFlags.kt:38)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at com.facebook.react.ReactActivityDelegate.lambda$onCreate$0(ReactActivityDelegate.java:147)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at com.facebook.react.ReactActivityDelegate.$r8$lambda$HPdXfLmAU1y4Wc1XbwAHziPP2WA(Unknown Source:0)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at com.facebook.react.ReactActivityDelegate$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at com.facebook.systrace.Systrace.traceSection(Systrace.kt:35)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at com.facebook.react.ReactActivityDelegate.onCreate(ReactActivityDelegate.java:130)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at com.facebook.react.ReactActivity.onCreate(ReactActivity.java:61)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at android.app.Activity.performCreate(Activity.java:8595)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at android.app.Activity.performCreate(Activity.java:8573)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1456)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:3764)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:3922)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at android.app.servertransaction.LaunchActivityItem.execute(LaunchActivityItem.java:103)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.executeCallbacks(TransactionExecutor.java:139)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.execute(TransactionExecutor.java:96)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2443)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:106)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:205)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:294)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:8177)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+09-02 21:15:36.096 20736 20736 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:971)
+--------- beginning of system
+09-02 21:15:38.910 16373 16556 E ClipboardService: Denying clipboard access to com.android.chrome, application is not in focus nor is it a system service for user 0
+09-02 21:15:38.913 16373 16557 E ClipboardService: Denying clipboard access to com.android.chrome, application is not in focus nor is it a system service for user 0
+09-02 21:15:39.149 16373 17327 E TaskPersister: File error accessing recents directory (directory doesn't exist?).

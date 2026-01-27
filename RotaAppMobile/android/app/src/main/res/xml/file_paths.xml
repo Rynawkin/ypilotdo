@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Cache dizini - fotoğraflar için -->
+    <cache-path 
+        name="cache" 
+        path="images/" />
+    
+    <!-- External cache - geçici dosyalar için -->
+    <external-cache-path 
+        name="external_cache" 
+        path="temp/" />
+    
+    <!-- Files dizini - uygulama dosyaları için -->
+    <files-path 
+        name="files" 
+        path="documents/" />
+    
+    <!-- External files - sadece Pictures dizini -->
+    <external-files-path 
+        name="external_pictures" 
+        path="Pictures/" />
+</paths>

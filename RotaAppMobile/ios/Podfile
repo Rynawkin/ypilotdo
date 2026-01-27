@@ -1,0 +1,71 @@
+platform :ios, '16.0'
+
+ENV['RCT_NEW_ARCH_ENABLED'] = '0'
+
+# Resolve react_native_pods.rb with node to allow for hoisting
+require Pod::Executable.execute_command('node', ['-p',
+  'require.resolve(
+    "react-native/scripts/react_native_pods.rb",
+    {paths: [process.argv[1]]},
+  )', __dir__]).strip
+
+prepare_react_native_project!
+
+use_frameworks! :linkage => :static
+
+# PERMISSIONS SETUP - BU KISIM EKLENMELİ
+def node_require(script)
+  require Pod::Executable.execute_command('node', ['-p',
+    "require.resolve(
+      '#{script}',
+      {paths: [process.argv[1]]},
+    )", __dir__]).strip
+end
+
+node_require('react-native-permissions/scripts/setup.rb')
+setup_permissions([
+  'Camera',
+  'PhotoLibrary',
+  'PhotoLibraryAddOnly',
+  'LocationAccuracy',
+  'LocationAlways',
+  'LocationWhenInUse',
+  'Microphone',
+  'Contacts'
+])
+
+target 'RotaAppMobile' do
+  config = use_native_modules!
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    :hermes_enabled => true,
+    :fabric_enabled => false,
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+
+  post_install do |installer|
+    react_native_post_install(
+      installer,
+      config[:reactNativePath],
+      :mac_catalyst_enabled => false
+    )
+    
+    installer.pods_project.targets.each do |t|
+      t.build_configurations.each do |c|
+        c.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
+        c.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'gnu++20'
+        c.build_settings['GCC_C_LANGUAGE_STANDARD'] = 'gnu17'
+      end
+    end
+    
+    installer.aggregate_targets.each do |agg|
+      agg.user_project.native_targets.each do |nt|
+        nt.build_configurations.each do |bc|
+          bc.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '16.0'
+          bc.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'gnu++20'
+        end
+      end
+    end
+  end
+end

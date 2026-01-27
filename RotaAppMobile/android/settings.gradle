@@ -1,0 +1,27 @@
+pluginManagement {
+  includeBuild("../node_modules/@react-native/gradle-plugin")
+  repositories {
+    gradlePluginPortal()
+    google()
+    mavenCentral()
+  }
+}
+
+plugins {
+  id("com.facebook.react.settings")
+}
+
+extensions.configure(com.facebook.react.ReactSettingsExtension) { ext ->
+  // RN 0.81 autolinking
+  ext.autolinkLibrariesFromCommand()
+}
+
+rootProject.name = "RotaAppMobile"
+include(":app")
+
+// --- Manuel link FALLBACK (autolinking kaçırırsa) ---
+include(":react-native-geolocation-service")
+project(":react-native-geolocation-service").projectDir = new File(
+  rootProject.projectDir,
+  "../node_modules/react-native-geolocation-service/android"
+)

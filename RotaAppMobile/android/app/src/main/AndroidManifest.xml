@@ -1,0 +1,131 @@
+<!-- C:\Projects\RotaAppMobile\android\app\src\main\AndroidManifest.xml -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Internet izni (zaten var) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    
+    <!-- Kamera izinleri -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    
+    <!-- Depolama izinleri -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" />
+    
+    <!-- Konum izinleri (harita ve tracking için) -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Telefon arama izni (müşteriyi aramak için) -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    
+    <!-- Titreşim izni (bildirimler için) -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    
+    <!-- Network durumu kontrolü -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
+    <!-- Wake lock (background tracking için) -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    
+    <!-- Foreground service (background tracking için) -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    
+    <!-- Kamera ve konum özellikleri (opsiyonel, Google Play filtreleme için) -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
+    <uses-feature android:name="android.hardware.location" android:required="false" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+
+    <!-- Navigasyon uygulamalarını sorgulamak için queries bloğu (Android 11+ için zorunlu) -->
+    <queries>
+        <!-- Google Maps -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="google.navigation" />
+        </intent>
+        
+        <!-- Yandex Navi -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="yandexnavi" />
+        </intent>
+        <package android:name="ru.yandex.yandexnavi" />
+        
+        <!-- Yandex Maps -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="yandexmaps" />
+        </intent>
+        <package android:name="ru.yandex.yandexmaps" />
+        
+        <!-- Waze -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="waze" />
+        </intent>
+        <package android:name="com.waze" />
+        
+        <!-- Genel HTTP/HTTPS için -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+
+    <application
+      android:name="com.yolpilot.driver.MainApplication"
+      android:label="@string/app_name"
+      android:icon="@mipmap/ic_launcher"
+      android:roundIcon="@mipmap/ic_launcher_round"
+      android:allowBackup="false"
+      android:theme="@style/AppTheme"
+      android:supportsRtl="true"
+      android:requestLegacyExternalStorage="true"
+      android:usesCleartextTraffic="false">
+      
+      <activity
+        android:name="com.yolpilot.driver.MainActivity"
+        android:label="@string/app_name"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+        android:launchMode="singleTask"
+        android:windowSoftInputMode="adjustResize"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        
+        <!-- Deep linking için (opsiyonel) -->
+        <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="rotaapp" android:host="journey" />
+        </intent-filter>
+      </activity>
+      
+      <!-- File Provider (kamera ve dosya paylaşımı için) -->
+      <provider
+        android:name="androidx.core.content.FileProvider"
+        android:authorities="${applicationId}.provider"
+        android:exported="false"
+        android:grantUriPermissions="true">
+        <meta-data
+          android:name="android.support.FILE_PROVIDER_PATHS"
+          android:resource="@xml/file_paths" />
+      </provider>
+      
+      <!-- Google Maps API Key (react-native-maps kullanılacaksa) -->
+      <!-- 
+      <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="YOUR_GOOGLE_MAPS_API_KEY_HERE"/>
+      -->
+      
+    </application>
+</manifest>

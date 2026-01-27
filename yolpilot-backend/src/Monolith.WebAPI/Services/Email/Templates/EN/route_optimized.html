@@ -1,0 +1,218 @@
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .timeline {
+        position: relative;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .timeline::after {
+        content: '';
+        position: absolute;
+        width: 6px;
+        background-color: #3c6ded;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        margin-left: -3px;
+    }
+
+    .container {
+        padding: 10px 40px;
+        position: relative;
+        background-color: inherit;
+        width: 50%;
+    }
+
+    .container::after {
+        content: '';
+        position: absolute;
+        width: 25px;
+        height: 25px;
+        right: -17px;
+        background-color: white;
+        border: 4px solid #3c6ded;
+        top: 15px;
+        border-radius: 50%;
+        z-index: 1;
+    }
+
+    .left {
+        left: 0;
+    }
+
+    .right {
+        left: 50%;
+    }
+
+    .left::before {
+        content: " ";
+        height: 0;
+        position: absolute;
+        top: 22px;
+        width: 0;
+        z-index: 1;
+        right: 30px;
+        border: medium solid #f7f7f7;
+        border-width: 10px 0 10px 10px;
+        border-color: transparent transparent transparent #f7f7f7;
+    }
+
+    .right::before {
+        content: " ";
+        height: 0;
+        position: absolute;
+        top: 22px;
+        width: 0;
+        z-index: 1;
+        left: 30px;
+        border: medium solid #f7f7f7;
+        border-width: 10px 10px 10px 0;
+        border-color: transparent #f7f7f7 transparent transparent;
+    }
+
+    .right::after {
+        left: -16px;
+    }
+
+    .content {
+        padding: 20px 30px;
+        background-color: #f7f7f7;
+        position: relative;
+        border-radius: 6px;
+    }
+
+    @media screen and (max-width: 600px) {
+        .timeline::after {
+            left: 31px;
+        }
+
+        .container {
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 25px;
+        }
+
+        .container::before {
+            left: 60px;
+            border: medium solid white;
+            border-width: 10px 10px 10px 0;
+            border-color: transparent white transparent transparent;
+        }
+
+        .left::after,
+        .right::after {
+            left: 15px;
+        }
+
+        .right {
+            left: 0%;
+        }
+    }
+</style>
+
+<div style="background-color: #cecece;">
+    <div style="height:100%;margin:0;padding:0;width:100%;background-color:#f5f4f2">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" style="border-collapse:collapse;height:100%;margin:0;padding:0;width:100%;background-color:#f5f4f2">
+            <tbody>
+            <tr>
+                <td align="center" valign="top" style="height:100%;margin:0;padding:8px;width:100%;border-top:0">
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;border:0;border-radius:16px;max-width:600px">
+                        <tbody>
+                        <tr>
+                            <td valign="top" style="background-color:#ffffff;border-top:0;border-bottom:0;padding-top:0px;padding-bottom:0px;border-radius:16px 16px 0 0">
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width:100%;border-collapse:collapse">
+                                    <tbody>
+                                    <tr>
+                                        <td valign="top" style="padding:16px;text-align:center">
+                                            <a href="#" target="_blank" style="line-height:inherit;color:#3c6ded;font-weight:normal;text-decoration:underline">
+                                                <img alt="Optifleet" src="https://i.hizliresim.com/pcdnb9u.png" width="190" style="width:35.4477%;max-width:380px;padding-bottom:0;vertical-align:bottom;border:0;height:auto;outline:none;text-decoration:none">
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top" style="background-color:#ffffff;border-top:0;border-bottom:0;padding-top:8px;padding-bottom:8px">
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width:100%;border-collapse:collapse;table-layout:fixed">
+                                    <tbody>
+                                    <tr>
+                                        <td style="min-width:100%;padding:0 32px 0px 32px">
+                                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width:100%;border-top:1px solid #f5f4f2;border-collapse:collapse">
+                                                <tbody>
+                                                <tr>
+                                                    <td><span></span></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width:100%;border-collapse:collapse">
+                                    <tbody>
+                                    <tr>
+                                        <td valign="top">
+                                            <table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" style="max-width:100%;min-width:100%;border-collapse:collapse">
+                                                <tbody>
+                                                <tr>
+                                                    <td valign="top" style="word-break:break-word;color:#0c0c14;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.5em;text-align:left;padding-top:32px;padding-bottom:16px;padding-right:32px;padding-left:32px">
+                                                        <h1 style="display:block;margin:0;padding:0;color:#0c0c14;font-family:Arial,Helvetica,sans-serif;font-size:24px;font-style:normal;font-weight:bold;line-height:1.25em;text-align:left">
+                                                            {{title}}
+                                                        </h1>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width:100%;border-collapse:collapse">
+                                    <tbody>
+                                    <tr>
+                                        <td valign="top">
+                                            <table align="left" width="100%" border="0" cellpadding="0" cellspacing="0" style="min-width:100%;border-collapse:collapse">
+                                                <tbody>
+                                                <tr>
+                                                    <td valign="top" style="text-align:center;padding-top:8px;padding-bottom:8px;padding-right:32px;padding-left:32px">
+                                                        <img alt="New Member" src="https://i.hizliresim.com/ksg7ua4.jpg" width="536" style="max-width:1072px;padding-bottom:0;vertical-align:bottom;border:0;height:auto;outline:none;border-radius:12px">
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width:100%;border-collapse:collapse">
+                                    <tr>
+                                        <td valign="top" align="center" width="100%" style="text-align:center; padding-left:32px;padding-right:32px;padding-top:0px;padding-bottom:32px">
+                                            <table border="0" cellpadding="0" cellspacing="0" style="border-collapse:separate">
+                                                <tbody>
+                                                <tr>
+                                                    <td align="center" width="100%" style="padding-top:32px;">
+                                                        <a href="#" style="font-family:Arial, Helvetica, sans-serif; font-size:16px; padding:12px 32px; background-color:#3c6ded; color:#ffffff; text-decoration:none; border-radius:8px; display:block;">View Route</a>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- Timeline Section -->
+                                <div class="timeline" style="font-family:Arial,Helvetica,sans-serif">
+                                    {{waypoints}}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top" style="background-color:#ffffff; padding:16px; border-radius:0 0 16px 16px;">
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-top:1px solid #f5f4f2; padding:24px 32px;">
+                                    <tbody>
+                     

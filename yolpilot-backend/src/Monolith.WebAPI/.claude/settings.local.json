@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build)",
+      "Read(//c/Users/QP/Desktop/rotaapp-frontend/**)",
+      "Read(//c/Users/QP/Desktop/AYAĞA KALKIYORUZ YEDEK/Monolith.WebAPI/Applications/Commands/Journeys/**)",
+      "Read(//c/Users/QP/Desktop/AYAĞA KALKIYORUZ YEDEK/Monolith.WebAPI/Data/Journeys/**)",
+      "Read(//c/Users/QP/Desktop/AYAĞA KALKIYORUZ YEDEK/rotaapp-frontend/src/components/routes/**)",
+      "Read(//c/Projects/RotaAppMobile/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

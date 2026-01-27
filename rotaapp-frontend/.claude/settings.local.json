@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Projects/RotaAppMobile/**)",
+      "Bash(npm install:*)",
+      "Bash(npx react-native start:*)",
+      "Read(//c/Projects/**)",
+      "Read(//c/Users/QP/Desktop/monolith-master2/src/Monolith.WebAPI/Controllers/**)",
+      "Read(//c/Users/QP/Desktop/monolith-master2/src/Monolith.WebAPI/**)",
+      "Read(//c/Users/QP/Desktop/monolith-master2/**)",
+      "Bash(dotnet build)",
+      "Bash(dotnet build:*)",
+      "Bash(npx tsc:*)",
+      "Bash(dotnet run:*)",
+      "Bash(timeout:*)",
+      "Bash(curl:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "Read(//c/Users/QP/Desktop/**)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(sed:*)",
+      "Bash(dir:*)",
+      "Bash(Select-String -Pattern \"error|warning|succeeded|failed\")",
+      "Bash(Select-Object -Last 20)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npx react-native:*)",
+      "Bash(./gradlew:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

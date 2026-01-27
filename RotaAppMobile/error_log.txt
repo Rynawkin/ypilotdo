@@ -1,0 +1,101 @@
+--------- beginning of main
+09-08 21:47:36.518 21410 22641 E ActivityManager: Sending non-protected broadcast com.android.settings.battery.action.PERIODIC_JOB_RECHECK from system 29050:com.android.settings/1000 pkg com.android.settings
+09-08 21:47:36.518 21410 22641 E ActivityManager: java.lang.Throwable
+09-08 21:47:36.518 21410 22641 E ActivityManager: 	at com.android.server.am.ActivityManagerService.checkBroadcastFromSystem(ActivityManagerService.java:14306)
+09-08 21:47:36.518 21410 22641 E ActivityManager: 	at com.android.server.am.ActivityManagerService.broadcastIntentLockedTraced(ActivityManagerService.java:15131)
+09-08 21:47:36.518 21410 22641 E ActivityManager: 	at com.android.server.am.ActivityManagerService.broadcastIntentLocked(ActivityManagerService.java:14370)
+09-08 21:47:36.518 21410 22641 E ActivityManager: 	at com.android.server.am.ActivityManagerService.broadcastIntentWithFeature(ActivityManagerService.java:15336)
+09-08 21:47:36.518 21410 22641 E ActivityManager: 	at android.app.IActivityManager$Stub.onTransact(IActivityManager.java:2653)
+09-08 21:47:36.518 21410 22641 E ActivityManager: 	at com.android.server.am.ActivityManagerService.onTransact(ActivityManagerService.java:2720)
+09-08 21:47:36.518 21410 22641 E ActivityManager: 	at android.os.Binder.execTransactInternal(Binder.java:1339)
+09-08 21:47:36.518 21410 22641 E ActivityManager: 	at android.os.Binder.execTransact(Binder.java:1275)
+09-08 21:47:36.521 29050 29171 E ndroid.settings: Invalid resource ID 0x00000000.
+09-08 21:47:36.522 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 04, 2025, 20:00:00
+09-08 21:47:36.522 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 04, 2025, 22:00:00
+09-08 21:47:36.522 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 05, 2025, 02:00:00
+09-08 21:47:36.522 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 05, 2025, 04:00:00
+09-08 21:47:36.523 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 05, 2025, 06:00:00
+09-08 21:47:36.523 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 05, 2025, 08:00:00
+09-08 21:47:36.523 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 05, 2025, 10:00:00
+09-08 21:47:36.523 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 05, 2025, 12:00:00
+09-08 21:47:36.523 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 05, 2025, 14:00:00
+09-08 21:47:36.523 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 05, 2025, 16:00:00
+09-08 21:47:36.524 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 05, 2025, 18:00:00
+09-08 21:47:36.524 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 05, 2025, 20:00:00
+09-08 21:47:36.524 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 05, 2025, 22:00:00
+09-08 21:47:36.524 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 06, 2025, 02:00:00
+09-08 21:47:36.524 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 06, 2025, 04:00:00
+09-08 21:47:36.525 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 06, 2025, 06:00:00
+09-08 21:47:36.525 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 06, 2025, 08:00:00
+09-08 21:47:36.525 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 06, 2025, 10:00:00
+09-08 21:47:36.525 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 06, 2025, 12:00:00
+09-08 21:47:36.526 29050 29177 E DataProcessor: abnormal entry list in the timestamp:Sep 06, 2025, 14:00:00
+09-08 21:47:36.536 29050 29069 E OpenGLRenderer: Unable to match the desired swap behavior.
+09-08 21:47:36.572 21410 21450 E system_server: Cannot read thread CPU times for PID 21410
+09-08 21:47:37.457 22682 23365 E OpenGLRenderer: Unable to match the desired swap behavior.
+09-08 21:47:37.471 21854 22658 E OpenGLRenderer: Unable to match the desired swap behavior.
+09-08 21:47:38.886 21854 22658 E OpenGLRenderer: Unable to match the desired swap behavior.
+09-08 21:47:38.887 22682 23365 E OpenGLRenderer: Unable to match the desired swap behavior.
+--------- beginning of system
+09-08 21:47:39.047 21410 21511 E HandwritingModeController: Cannot get requestId: Handwriting was not initialized.
+09-08 21:47:39.462 21410 22642 E Transition: Trying to add a ready-group twice: Display{#0 state=ON size=1080x2400 ROTATION_0}
+09-08 21:47:39.492 21610 21665 E OpenGLRenderer: Unable to match the desired swap behavior.
+09-08 21:47:39.582 21410 21450 E system_server: Cannot read thread CPU times for PID 21410
+09-08 21:47:39.815 29218 29218 E SoLoader: Checking /data/app missing libraries.
+09-08 21:47:39.815 29218 29218 E SoLoader: Successfully recovered from /data/app disk failure.
+09-08 21:47:39.816 29218 29218 E SoLoader: Checking /data/data missing libraries.
+09-08 21:47:39.816 29218 29218 E SoLoader: No libraries missing from unpacking so paths while recovering /data/data failure
+09-08 21:47:40.327 29218 29238 E OpenGLRenderer: Unable to match the desired swap behavior.
+09-08 21:47:40.374 29218 29238 E OpenGLRenderer: Unable to match the desired swap behavior.
+09-08 21:47:40.514 21410 22484 E TaskPersister: File error accessing recents directory (directory doesn't exist?).
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: Exception in native call
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: java.lang.RuntimeException: Could not invoke RNFusedLocation.getCurrentPosition
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	at com.facebook.react.bridge.JavaMethodWrapper.invoke(JavaMethodWrapper.kt:228)
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	at com.facebook.react.bridge.JavaModuleWrapper.invoke(JavaModuleWrapper.kt:134)
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	at com.facebook.jni.NativeRunnable.run(Native Method)
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	at android.os.Handler.handleCallback(Handler.java:958)
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	at com.facebook.react.bridge.queue.MessageQueueThreadHandler.dispatchMessage(MessageQueueThreadHandler.kt:21)
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	at android.os.Looper.loopOnce(Looper.java:205)
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	at android.os.Looper.loop(Looper.java:294)
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.startNewBackgroundThread$lambda$1(MessageQueueThreadImpl.kt:175)
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.$r8$lambda$ldnZnqelhYFctGaUKkOKYj5rxo4(Unknown Source:0)
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	at java.lang.Thread.run(Thread.java:1012)
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: Caused by: java.lang.reflect.InvocationTargetException
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	at java.lang.reflect.Method.invoke(Native Method)
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	at com.facebook.react.bridge.JavaMethodWrapper.invoke(JavaMethodWrapper.kt:217)
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	... 11 more
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: Caused by: java.lang.IncompatibleClassChangeError: Found interface com.google.android.gms.location.FusedLocationProviderClient, but class was expected (declaration of 'com.google.android.gms.location.FusedLocationProviderClient' appears in /data/app/~~YyDg8r9nodNAa6jMoiPsQw==/com.yolpilot.driver-GDUVFl9sKSZNto7tJlA64w==/base.apk!classes17.dex)
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	at com.agontuk.RNFusedLocation.FusedLocationProvider.getCurrentLocation(FusedLocationProvider.java:97)
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	at com.agontuk.RNFusedLocation.RNFusedLocationModule.getCurrentPosition(RNFusedLocationModule.java:112)
+09-08 21:47:48.837 29218 29268 E unknown:ReactNative: 	... 13 more
+09-08 21:47:48.868 29218 29268 E yolpilot.driver: No implementation found for void com.swmansion.rnscreens.ScreensModule.nativeUninstall() (tried Java_com_swmansion_rnscreens_ScreensModule_nativeUninstall and Java_com_swmansion_rnscreens_ScreensModule_nativeUninstall__) - is the library loaded, e.g. System.loadLibrary?
+--------- beginning of crash
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: FATAL EXCEPTION: mqt_native_modules
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: Process: com.yolpilot.driver, PID: 29218
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: java.lang.UnsatisfiedLinkError: No implementation found for void com.swmansion.rnscreens.ScreensModule.nativeUninstall() (tried Java_com_swmansion_rnscreens_ScreensModule_nativeUninstall and Java_com_swmansion_rnscreens_ScreensModule_nativeUninstall__) - is the library loaded, e.g. System.loadLibrary?
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: 	at com.swmansion.rnscreens.ScreensModule.nativeUninstall(Native Method)
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: 	at com.swmansion.rnscreens.ScreensModule.invalidate(ScreensModule.kt:43)
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: 	at com.facebook.react.bridge.ModuleHolder.destroy(ModuleHolder.kt:97)
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: 	at com.facebook.react.bridge.NativeModuleRegistry.notifyJSInstanceDestroy(NativeModuleRegistry.kt:77)
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: 	at com.facebook.react.bridge.CatalystInstanceImpl.lambda$destroy$2(CatalystInstanceImpl.java:372)
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: 	at com.facebook.react.bridge.CatalystInstanceImpl.$r8$lambda$Oa3wfVCkSpv9UbaDKR-owki1vUU(Unknown Source:0)
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: 	at com.facebook.react.bridge.CatalystInstanceImpl$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: 	at android.os.Handler.handleCallback(Handler.java:958)
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:99)
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadHandler.dispatchMessage(MessageQueueThreadHandler.kt:21)
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:205)
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:294)
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.startNewBackgroundThread$lambda$1(MessageQueueThreadImpl.kt:175)
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion.$r8$lambda$ldnZnqelhYFctGaUKkOKYj5rxo4(Unknown Source:0)
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: 	at com.facebook.react.bridge.queue.MessageQueueThreadImpl$Companion$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+09-08 21:47:48.869 29218 29268 E AndroidRuntime: 	at java.lang.Thread.run(Thread.java:1012)
+09-08 21:47:48.941 22682 23365 E OpenGLRenderer: Unable to match the desired swap behavior.
+09-08 21:47:48.951 21854 22658 E OpenGLRenderer: Unable to match the desired swap behavior.
+09-08 21:47:49.661   426   426 E BpTransactionCompletedListener: Failed to transact (-32)
+09-08 21:47:52.639 21410 22484 E TaskPersister: File error accessing recents directory (directory doesn't exist?).
+09-08 21:47:53.256 21410 21591 E ClipboardService: Denying clipboard access to com.android.chrome, application is not in focus nor is it a system service for user 0
+09-08 21:47:53.260 21410 21592 E ClipboardService: Denying clipboard access to com.android.chrome, application is not in focus nor is it a system service for user 0
+09-08 21:48:06.856 21410 21591 E ClipboardService: Denying clipboard access to com.android.chrome, application is not in focus nor is it a system service for user 0
+09-08 21:48:06.859 21410 21592 E ClipboardService: Denying clipboard access to com.android.chrome, application is not in focus nor is it a system service for user 0

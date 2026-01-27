@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>disable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>Monolith.WebAPI</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Azure.Communication.Email" Version="1.0.1" />
+        <PackageReference Include="Azure.Storage.Blobs" Version="12.25.0" />
+        <PackageReference Include="FluentValidation" Version="11.9.2" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.2" />
+        <PackageReference Include="Flurl" Version="4.0.0" />
+        <PackageReference Include="Flurl.Http" Version="4.0.2" />
+        <PackageReference Include="Google.OrTools" Version="9.10.4067" />
+        <PackageReference Include="MediatR" Version="13.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.8" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.8" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
+        <PackageReference Include="CloudinaryDotNet" Version="1.25.0" />
+
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
+        <PackageReference Include="sib_api_v3_sdk" Version="4.0.2" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.7.3" />
+        <PackageReference Include="Twilio" Version="6.15.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Services\Email\Templates\EN\" />
+      <Folder Include="Services\Email\Templates\TR\" />
+    </ItemGroup>
+
+    <!-- LaunchSettings.json'ı production build'den hariç tut -->
+    <ItemGroup>
+      <Content Remove="Properties\launchSettings.json" />
+      <None Include="Properties\launchSettings.json" CopyToPublishDirectory="Never" />
+    </ItemGroup>
+
+</Project>

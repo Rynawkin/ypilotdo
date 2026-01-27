@@ -1,0 +1,126 @@
+plugins {
+  id 'com.android.application'
+  id 'org.jetbrains.kotlin.android'
+  id 'com.facebook.react'
+}
+
+// Vector Icons fontları için
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+
+// RN konfig (opsiyonel, Hermes bayrağı)
+project.ext.react = [
+    enableHermes: true,
+]
+
+android {
+  namespace "com.yolpilot.driver"
+  compileSdk 35
+
+  signingConfigs {
+    release {
+      // local.properties dosyasından okuma
+      def localProperties = new Properties()
+      def localPropertiesFile = rootProject.file('local.properties')
+      if (localPropertiesFile.exists()) {
+        localProperties.load(new FileInputStream(localPropertiesFile))
+      }
+
+      // Signing bilgileri varsa kullan
+      if (localProperties.getProperty('YOLPILOT_UPLOAD_STORE_FILE')) {
+        storeFile file(localProperties.getProperty('YOLPILOT_UPLOAD_STORE_FILE'))
+        storePassword localProperties.getProperty('YOLPILOT_UPLOAD_STORE_PASSWORD')
+        keyAlias localProperties.getProperty('YOLPILOT_UPLOAD_KEY_ALIAS')
+        keyPassword localProperties.getProperty('YOLPILOT_UPLOAD_KEY_PASSWORD')
+      }
+    }
+  }
+
+  defaultConfig {
+    applicationId "com.yolpilot.driver"
+    minSdk 24
+    targetSdk 35
+
+    versionCode 10
+    versionName "1.1.3"
+
+    // ProGuard mapping vs. gerekirse buraya eklenir
+    multiDexEnabled true
+  }
+
+  buildTypes {
+    debug {
+      // Debug için shrink kapanır
+      shrinkResources false
+      minifyEnabled false
+    }
+    release {
+      // ProGuard/R8 etkin (uygulama boyutunu küçültür)
+      shrinkResources true
+      minifyEnabled true
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+      // İmzalama config
+      signingConfig signingConfigs.release
+    }
+  }
+
+  // Lint ayarları - Windows dosya kilit hatalarını önle
+  lint {
+    checkReleaseBuilds false
+    abortOnError false
+  }
+
+  packagingOptions {
+    jniLibs {
+      // modern packaging
+      useLegacyPackaging false
+    }
+    // Bazı cihazlarda aynı so dosyalarının birden fazla varyantını çözmek için
+    pickFirst '**/libc++_shared.so'
+    pickFirst '**/libjsc.so'
+    pickFirst '**/libhermes.so'
+    pickFirst '**/libreactnativejni.so'
+    pickFirst '**/libreact_featureflagsjni.so'
+    pickFirst '**/libfbjni.so'
+    pickFirst '**/libturbomodulejsijni.so'
+    pickFirst '**/libreact_nativemodule_core.so'
+    pickFirst '**/libreact_render_*.so'
+    exclude '**/libhermes-inspector.so'
+    exclude '**/libhermes-executor-debug.so'
+  }
+
+  // RN 0.81 plugin'i autolinking'i yönetir
+  react {
+    // Yeni mimari kapalı, Hermes açık
+  }
+
+  // NDK/ABI filtreleri gerekiyorsa:
+  // ndk { abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64" }
+}
+
+dependencies {
+  // RN çekirdek
+  implementation("com.facebook.react:react-android")
+
+  // Hermes (enableHermes = true ise)
+  implementation("com.facebook.react:hermes-android")
+
+  // Google Maps (Static/Services için)
+  implementation 'com.google.android.gms:play-services-maps:18.1.0'
+
+  // --- Manuel link FALLBACK (autolinking kaçırırsa) ---
+  implementation project(":react-native-geolocation-service")
+
+  // Projende hali hazırda kullanılan native modüller (manuel link ihtiyacı varsa)
+  implementation project(':react-native-async-storage_async-storage')
+  implementation project(':react-native-community_netinfo')
+  implementation project(':react-native-device-info')
+  implementation project(':react-native-fs')
+  implementation project(':react-native-gesture-handler')
+  implementation project(':react-native-image-picker')
+  implementation project(':react-native-permissions')
+  implementation project(':react-native-picker_picker')
+  implementation project(':react-native-safe-area-context')
+  implementation project(':react-native-screens')
+  implementation project(':react-native-vector-icons')
+  implementation project(':react-native-webview')
+}

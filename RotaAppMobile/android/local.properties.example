@@ -1,0 +1,8 @@
+# Bu dosyayı local.properties olarak kopyalayın
+# local.properties dosyası git'e commit edilmez (güvenlik için)
+
+# YolPilot Keystore bilgileri
+YOLPILOT_UPLOAD_STORE_FILE=yolpilot-release.keystore
+YOLPILOT_UPLOAD_KEY_ALIAS=yolpilot
+YOLPILOT_UPLOAD_STORE_PASSWORD=YolPilot2025!
+YOLPILOT_UPLOAD_KEY_PASSWORD=YolPilot2025!

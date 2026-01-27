@@ -1,0 +1,49 @@
+plugins {
+  id("com.android.application") version "8.5.0" apply false
+  id("com.android.library")     version "8.5.0" apply false
+  id("org.jetbrains.kotlin.android") version "1.9.24" apply false
+  id("com.facebook.react") apply false
+}
+
+// Tüm subprojectler için minimum SDK versiyonlarını zorla
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty("android")) {
+            android {
+                compileSdkVersion 35
+                
+                // react-native-screens için CMake'i devre dışı bırak
+                if (project.name == "react-native-screens") {
+                    buildFeatures {
+                        prefab false
+                        buildConfig false
+                    }
+                    // externalNativeBuild bloğunu kaldır
+                    if (android.hasProperty("externalNativeBuild")) {
+                        android.externalNativeBuild.cmake.path = null
+                    }
+                    packagingOptions {
+                        exclude '**/libc++_shared.so'
+                        exclude '**/libfbjni.so'
+                        exclude '**/libturbomodulejsijni.so'
+                        exclude '**/libhermes*.so'
+                    }
+                }
+                
+                if (project.name == "react-native-fs") {
+                    compileOptions {
+                        sourceCompatibility JavaVersion.VERSION_1_8
+                        targetCompatibility JavaVersion.VERSION_1_8
+                    }
+                }
+            }
+        }
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}

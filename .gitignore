@@ -1,0 +1,12 @@
+# Monorepo root ignores
+.git-backups/
+**/node_modules/
+**/dist/
+**/build/
+**/.env
+**/.env.*
+**/secrets.local.txt
+**/appsettings.DigitalOcean.json
+yolpilot-backend.tar.gz
+*.log
+.DS_Store
