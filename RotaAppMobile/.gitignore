@@ -32,7 +32,6 @@ local.properties
 *.hprof
 .cxx/
 *.keystore
-!debug.keystore
 .kotlin/
 
 # node.js
@@ -80,9 +79,7 @@ dist/
 
 # Security - Keystore files
 *.keystore
-!debug.keystore
 android/app/*.keystore
-!android/app/debug.keystore
 
 # Security - Local properties with sensitive data
 android/local.properties
