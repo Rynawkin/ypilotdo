@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://api.yolpilot.com/api/:path*"
+      "destination": "https://161-35-202-69.sslip.io/api/:path*"
     },
     {
       "source": "/(.*)",

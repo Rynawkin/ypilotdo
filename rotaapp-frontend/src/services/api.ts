@@ -1,9 +1,20 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
+const runtimeOrigin = typeof window !== 'undefined' ? window.location.origin : '';
+const envBaseUrl =
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.VITE_SIGNALR_URL ||
+  (import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : '');
+
 // Production'da relative path (/api), development'ta absolute URL
-const API_URL = import.meta.env.MODE === 'production'
+export const API_URL = import.meta.env.MODE === 'production'
   ? '/api'  // Vercel rewrite kullan
   : (import.meta.env.VITE_API_URL || 'http://localhost:5055/api');
+
+// Base URL (uploads, SignalR vb.)
+export const API_BASE_URL =
+  envBaseUrl ||
+  (import.meta.env.MODE === 'development' ? 'http://localhost:5055' : runtimeOrigin);
 
 console.log('API URL:', API_URL);
 

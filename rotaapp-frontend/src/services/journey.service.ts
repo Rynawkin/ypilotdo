@@ -1,5 +1,5 @@
 // frontend/src/services/journey.service.ts
-import { api } from './api';
+import { api, API_BASE_URL } from './api';
 import { Journey, Route, JourneyStatus } from '@/types';
 
 // Backend'deki JourneyStatusType enum'u
@@ -241,8 +241,7 @@ class JourneyService {
     }
 
     // Relative URL ise base URL ekle (legacy local storage desteği)
-    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5055';
-    return `${baseUrl}${url}`;
+    return `${API_BASE_URL}${url}`;
   }
 
   async getAllSummary(from?: Date, to?: Date): Promise<JourneySummary[]> {

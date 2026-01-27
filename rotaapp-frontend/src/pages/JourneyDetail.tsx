@@ -38,7 +38,7 @@ import { journeyService, CompleteStopDto } from '@/services/journey.service';
 import { toast } from 'react-hot-toast';
 import signalRService from '@/services/signalr.service';
 import { useSignalR, useJourneyTracking } from '@/hooks/useSignalR';
-import { api } from '@/services/api';
+import { api, API_BASE_URL } from '@/services/api';
 import { AddStopModal } from '@/components/journey/AddStopModal';
 import { InfoTooltip, TOOLTIP_TEXTS } from '@/components/common/InfoTooltip';
 import jsPDF from 'jspdf';
@@ -74,8 +74,7 @@ const StopDetailsSection: React.FC<{
       return url;
     }
     
-    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5055';
-    return `${baseUrl}${url}`;
+    return `${API_BASE_URL}${url}`;
   };
   
   useEffect(() => {
@@ -307,7 +306,7 @@ const JourneyDetail: React.FC = () => {
     }
 
     // Relative URL ise base URL ekle (legacy support)
-    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5055';
+    const baseUrl = API_BASE_URL;
     return `${baseUrl}${url}`;
   };
 

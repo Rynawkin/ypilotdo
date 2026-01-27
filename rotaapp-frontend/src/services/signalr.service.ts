@@ -1,8 +1,9 @@
 // frontend/src/services/signalr.service.ts
 import * as signalR from '@microsoft/signalr';
+import { API_BASE_URL as APP_API_BASE_URL } from './api';
 
 // Production API URL
-const API_BASE_URL = 'https://api.yolpilot.com';
+const API_BASE_URL = APP_API_BASE_URL;
 
 export interface UpdateLocationDto {
   journeyId: number;

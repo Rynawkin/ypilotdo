@@ -1,5 +1,6 @@
 // frontend/src/services/tracking.service.ts
 import * as signalR from '@microsoft/signalr';
+import { API_BASE_URL } from './api';
 
 export interface LiveLocation {
   latitude: number;
@@ -38,8 +39,7 @@ class TrackingService {
       return;
     }
 
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5055/api';
-    const baseUrl = apiUrl.replace('/api', '');
+    const baseUrl = API_BASE_URL;
 
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(`${baseUrl}/hubs/tracking`, {

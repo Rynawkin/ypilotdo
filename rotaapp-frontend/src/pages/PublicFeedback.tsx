@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Star, CheckCircle, Loader, AlertCircle } from 'lucide-react';
 import axios from 'axios';
+import { API_URL } from '@/services/api';
 import toast, { Toaster } from 'react-hot-toast';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://api.yolpilot.com/api';
+const PUBLIC_FEEDBACK_API_URL = import.meta.env.VITE_API_URL || API_URL;
 
 interface FeedbackFormData {
     token: string;
@@ -45,7 +46,7 @@ export default function PublicFeedback() {
 
     const loadFeedbackForm = async () => {
         try {
-            const response = await axios.get(`${API_URL}/feedback/${token}`);
+            const response = await axios.get(`${PUBLIC_FEEDBACK_API_URL}/feedback/${token}`);
             setFormData(response.data);
 
             if (response.data.alreadySubmitted) {
@@ -73,7 +74,7 @@ export default function PublicFeedback() {
 
         setSubmitting(true);
         try {
-            await axios.post(`${API_URL}/feedback/submit`, {
+            await axios.post(`${PUBLIC_FEEDBACK_API_URL}/feedback/submit`, {
                 token,
                 overallRating,
                 deliverySpeedRating: deliverySpeed || null,

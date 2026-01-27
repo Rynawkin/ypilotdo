@@ -607,15 +607,23 @@ void AddCors()
     {
         options.AddPolicy("AllowAll", policy =>
         {
-            policy.WithOrigins(
-                    "http://localhost:5173",
-                    "http://localhost:5174",
-                    "http://localhost:3000",
-                    "https://app.yolpilot.com",
-                    "https://yolpilot.com",
-                    "https://www.yolpilot.com",
-                    "https://yolpilot-api.azurewebsites.net",
-                    "https://yolpilot.vercel.app"
+            var allowedOrigins = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "http://localhost:5173",
+                "http://localhost:5174",
+                "http://localhost:3000",
+                "https://app.yolpilot.com",
+                "https://yolpilot.com",
+                "https://www.yolpilot.com",
+                "https://yolpilot-api.azurewebsites.net",
+                "https://yolpilot.vercel.app"
+            };
+
+            var allowVercelWildcard = builder.Environment.IsEnvironment("DigitalOcean");
+
+            policy.SetIsOriginAllowed(origin =>
+                    allowedOrigins.Contains(origin) ||
+                    (allowVercelWildcard && origin.EndsWith(".vercel.app", StringComparison.OrdinalIgnoreCase))
                 )
                 .AllowAnyMethod()
                 .AllowAnyHeader()
