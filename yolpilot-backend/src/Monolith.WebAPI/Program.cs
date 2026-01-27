@@ -64,7 +64,7 @@ builder.Services.AddSingleton<IGoogleApiCacheService, GoogleApiCacheService>();
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseLazyLoadingProxies(false);
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
     
     // ⭐ PERFORMANCE MONITORING: Enable query performance logging in Development
     if (builder.Environment.IsDevelopment())
