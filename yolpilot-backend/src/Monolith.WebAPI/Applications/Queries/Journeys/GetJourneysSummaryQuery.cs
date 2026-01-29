@@ -39,8 +39,18 @@ public class GetJourneysSummaryQueryHandler : BaseAuthenticatedCommandHandler<Ge
     protected override async Task<IEnumerable<JourneySummaryResponse>> HandleCommand(GetJourneysSummaryQuery request, CancellationToken cancellationToken)
     {
         // Tarih aralığını belirle
-        var fromDate = request.FromDate ?? DateTime.Today.AddDays(-30); // Son 30 gün
-        var toDate = request.ToDate ?? DateTime.Today.AddDays(1).AddSeconds(-1); // Bugün 23:59:59
+        static DateTime EnsureUtc(DateTime value)
+        {
+            return value.Kind switch
+            {
+                DateTimeKind.Utc => value,
+                DateTimeKind.Local => value.ToUniversalTime(),
+                _ => DateTime.SpecifyKind(value, DateTimeKind.Utc)
+            };
+        }
+
+        var fromDate = EnsureUtc(request.FromDate ?? DateTime.UtcNow.Date.AddDays(-30)); // Son 30 g??n
+        var toDate = EnsureUtc(request.ToDate ?? DateTime.UtcNow.Date.AddDays(1).AddSeconds(-1)); // Bug??n 23:59:59
 
         // Base query
         var query = _context.Journeys

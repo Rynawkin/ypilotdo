@@ -15,55 +15,55 @@ const planFeatures = {
     icon: <Zap className="h-6 w-6" />,
     color: 'blue',
     features: [
-      '3 sürücü, 3 araç',
-      '100 müşteri',
-      '2 kullanıcı',
-      '500 durak/ay (ek 3₺)',
+      '3 sÃ¼rÃ¼cÃ¼, 3 araÃ§',
+      '100 mÃ¼ÅŸteri',
+      '2 kullanÄ±cÄ±',
+      '500 durak/ay (ek 3â‚º)',
       'WhatsApp yok',
-      'Rota şablonları',
-      '30 gün kanıt arşivi'
+      'Rota ÅŸablonlarÄ±',
+      '30 gÃ¼n kanÄ±t arÅŸivi'
     ]
   },
   Growth: {
     icon: <Star className="h-6 w-6" />,
     color: 'green',
     features: [
-      'Sınırsız sürücü & araç',
-      '1.000 müşteri',
-      '10 kullanıcı',
-      '500 durak/ay (ek 3₺)',
-      '100 WhatsApp/ay (ek 0,50₺)',
+      'SÄ±nÄ±rsÄ±z sÃ¼rÃ¼cÃ¼ & araÃ§',
+      '1.000 mÃ¼ÅŸteri',
+      '10 kullanÄ±cÄ±',
+      '500 durak/ay (ek 3â‚º)',
+      '100 WhatsApp/ay (ek 0,50â‚º)',
       'Zaman penceresi',
-      'Müşteri memnuniyet raporu',
-      '90 gün kanıt arşivi'
+      'MÃ¼ÅŸteri memnuniyet raporu',
+      '90 gÃ¼n kanÄ±t arÅŸivi'
     ]
   },
   Professional: {
     icon: <Shield className="h-6 w-6" />,
     color: 'purple',
     features: [
-      'Sınırsız sürücü & araç',
-      '1.000 müşteri',
-      '10 kullanıcı',
-      '2.000 durak/ay (ek 2₺)',
-      '100 WhatsApp/ay (ek 0,50₺)',
-      'Gelişmiş özellikler',
-      'Öncelik desteği',
-      '90 gün kanıt arşivi'
+      'SÄ±nÄ±rsÄ±z sÃ¼rÃ¼cÃ¼ & araÃ§',
+      '1.000 mÃ¼ÅŸteri',
+      '10 kullanÄ±cÄ±',
+      '2.000 durak/ay (ek 2â‚º)',
+      '100 WhatsApp/ay (ek 0,50â‚º)',
+      'GeliÅŸmiÅŸ Ã¶zellikler',
+      'Ã–ncelik desteÄŸi',
+      '90 gÃ¼n kanÄ±t arÅŸivi'
     ]
   },
   Business: {
     icon: <Crown className="h-6 w-6" />,
     color: 'yellow',
     features: [
-      'Sınırsız her şey',
-      'Sınırsız müşteri',
-      '50 kullanıcı',
-      '5.000 durak/ay (ek 1,5₺)',
-      '500 WhatsApp/ay (ek 0,30₺)',
-      'Özel raporlar',
-      'Özel entegrasyon',
-      '365 gün kanıt arşivi'
+      'SÄ±nÄ±rsÄ±z her ÅŸey',
+      'SÄ±nÄ±rsÄ±z mÃ¼ÅŸteri',
+      '50 kullanÄ±cÄ±',
+      '5.000 durak/ay (ek 1,5â‚º)',
+      '500 WhatsApp/ay (ek 0,30â‚º)',
+      'Ã–zel raporlar',
+      'Ã–zel entegrasyon',
+      '365 gÃ¼n kanÄ±t arÅŸivi'
     ]
   }
 };
@@ -117,14 +117,14 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
   const handleUpgrade = async () => {
     if (step === 1) {
       if (!customerInfo.name || !customerInfo.email || !customerInfo.phone) {
-        alert('L?tfen t?m bilgileri doldurun');
+        alert('Lütfen tüm bilgileri doldurun');
         return;
       }
       setStep(2);
       return;
     }
     if (!cardInfo.cardNumber || !cardInfo.expiryMonth || !cardInfo.expiryYear || !cardInfo.cvv) {
-      alert('L?tfen kart bilgilerini doldurun');
+      alert('Lütfen kart bilgilerini doldurun');
       return;
     }
 
@@ -157,11 +157,11 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
         // Redirect to payment provider
         window.location.href = result.paymentUrl;
       } else {
-        alert(result.errorMessage || 'Ödeme başlatılamadı');
+        alert(result.errorMessage || 'Ã–deme baÅŸlatÄ±lamadÄ±');
       }
     } catch (error: any) {
       console.error('Upgrade error:', error);
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Bir hata oluştu. Lütfen tekrar deneyin.';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Bir hata oluÅŸtu. LÃ¼tfen tekrar deneyin.';
       alert(errorMessage);
     } finally {
       setUpgrading(false);
@@ -203,9 +203,9 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b">
         <div>
-          <h2 className="text-xl font-semibold text-gray-900">Planınızı Yükseltin</h2>
+          <h2 className="text-xl font-semibold text-gray-900">PlanÄ±nÄ±zÄ± YÃ¼kseltin</h2>
           <p className="text-sm text-gray-600 mt-1">
-            İhtiyaçlarınıza uygun planı seçin ve daha fazla özellikten yararlanın
+            Ä°htiyaÃ§larÄ±nÄ±za uygun planÄ± seÃ§in ve daha fazla Ã¶zellikten yararlanÄ±n
           </p>
         </div>
         {onClose && (
@@ -255,7 +255,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
                     <div className="text-2xl font-bold text-gray-900">
                       {paymentService.formatPrice(limits.monthlyPrice)}
                     </div>
-                    <div className="text-sm text-gray-600">aylık</div>
+                    <div className="text-sm text-gray-600">aylÄ±k</div>
                   </div>
                 )}
 
@@ -322,7 +322,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Kart Üzerindeki İsim *
+                Kart Ãœzerindeki Ä°sim *
               </label>
               <input
                 type="text"
@@ -334,7 +334,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Kart Numarası *
+                Kart NumarasÄ± *
               </label>
               <input
                 type="text"
@@ -364,7 +364,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Son Kullanma Yıl *
+                  Son Kullanma YÄ±l *
                 </label>
                 <input
                   type="text"
@@ -415,10 +415,10 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-medium text-blue-900">
-                  {paymentService.getPlanDisplayName(selectedPlan)} Planı
+                  {paymentService.getPlanDisplayName(selectedPlan)} PlanÄ±
                 </h3>
                 <p className="text-sm text-blue-700">
-                  Aylık {paymentService.formatPrice(planLimits[selectedPlan].monthlyPrice)}
+                  AylÄ±k {paymentService.formatPrice(planLimits[selectedPlan].monthlyPrice)}
                 </p>
               </div>
               <div className="text-blue-600">
@@ -441,7 +441,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               disabled={upgrading}
             >
-              İptal
+              Ä°ptal
             </button>
           )}
           {step === 2 && (
@@ -459,7 +459,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {upgrading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-            {upgrading ? "Y�nlendiriliyor..." : step === 1 ? "Kart Bilgilerine Ge�" : "�demeye Ge�"}
+            {upgrading ? "Yönlendiriliyor..." : step === 1 ? "Kart Bilgilerine Geç" : "Ödemeye Geç"}
           </button>
         </div>
       </div>

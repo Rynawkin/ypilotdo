@@ -1807,7 +1807,13 @@ const Settings: React.FC = () => {
                   </div>
                   
                   <div className="flex gap-3">
-                    <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <button
+                      onClick={() => {
+                        setActiveTab('payment');
+                        setShowUpgradePlan(true);
+                      }}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
                       Planı Yükselt
                     </button>
                     <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
@@ -1862,7 +1868,7 @@ const Settings: React.FC = () => {
                     <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
                       <UpgradePlan 
                         onClose={() => setShowUpgradePlan(false)}
-                        currentPlan={trialStatus?.isActive ? 'Trial' : 'Starter'}
+                        currentPlan={(billingData?.plan?.name || subscriptionData?.currentPlan || (trialStatus?.isActive ? 'Trial' : 'Starter')) as any}
                       />
                     </div>
                   </div>
