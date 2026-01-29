@@ -643,6 +643,12 @@ public class AppDbContext(DbContextOptions<AppDbContext> options, IPublisher pub
             entity.HasIndex(e => e.IsActive);
         });
 
+        // Postgres tables are singular for maintenance entities
+        modelBuilder.Entity<MaintenanceReminder>()
+            .ToTable("maintenancereminder");
+        modelBuilder.Entity<VehicleMaintenance>()
+            .ToTable("vehiclemaintenance");
+
         // Workspace additional configuration for new payment fields
         modelBuilder.Entity<Workspace.Workspace>(entity =>
         {
