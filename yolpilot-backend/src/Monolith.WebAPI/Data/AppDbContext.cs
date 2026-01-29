@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Monolith.WebAPI.Applications.Events;
 using Monolith.WebAPI.Data.Journeys;
@@ -132,6 +133,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options, IPublisher pub
 
     override protected void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         // Ignore NotificationEvent to prevent Entity Framework from trying to map it
         modelBuilder.Ignore<NotificationEvent>();
         modelBuilder.Ignore<INotification>();
@@ -646,8 +649,56 @@ public class AppDbContext(DbContextOptions<AppDbContext> options, IPublisher pub
             entity.Property(e => e.CurrentMonthAdditionalCharges)
                 .HasPrecision(18, 2);
         });
+        
+        // Match existing Postgres schema/table/column names (dbo + lowercase)
+        modelBuilder.HasDefaultSchema("dbo");
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            entity.SetSchema("dbo");
 
-        base.OnModelCreating(modelBuilder);
+            var tableName = entity.GetTableName();
+            if (!string.IsNullOrWhiteSpace(tableName))
+            {
+                entity.SetTableName(tableName.ToLowerInvariant());
+
+                var storeObject = StoreObjectIdentifier.Table(entity.GetTableName() ?? tableName, entity.GetSchema());
+                foreach (var property in entity.GetProperties())
+                {
+                    var columnName = property.GetColumnName(storeObject);
+                    if (!string.IsNullOrWhiteSpace(columnName))
+                    {
+                        property.SetColumnName(columnName.ToLowerInvariant());
+                    }
+                }
+            }
+
+            foreach (var key in entity.GetKeys())
+            {
+                var keyName = key.GetName();
+                if (!string.IsNullOrWhiteSpace(keyName))
+                {
+                    key.SetName(keyName.ToLowerInvariant());
+                }
+            }
+
+            foreach (var fk in entity.GetForeignKeys())
+            {
+                var fkName = fk.GetConstraintName();
+                if (!string.IsNullOrWhiteSpace(fkName))
+                {
+                    fk.SetConstraintName(fkName.ToLowerInvariant());
+                }
+            }
+
+            foreach (var index in entity.GetIndexes())
+            {
+                var indexName = index.GetDatabaseName();
+                if (!string.IsNullOrWhiteSpace(indexName))
+                {
+                    index.SetDatabaseName(indexName.ToLowerInvariant());
+                }
+            }
+        }
     }
 }
 
