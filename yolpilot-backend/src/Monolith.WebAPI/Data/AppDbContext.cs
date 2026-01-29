@@ -648,6 +648,15 @@ public class AppDbContext(DbContextOptions<AppDbContext> options, IPublisher pub
             .ToTable("maintenancereminder");
         modelBuilder.Entity<VehicleMaintenance>()
             .ToTable("vehiclemaintenance");
+        modelBuilder.Entity<MaintenanceReminder>(entity =>
+        {
+            entity.Ignore(e => e.IsDeleted);
+            entity.Ignore(e => e.UpdatedAt);
+        });
+        modelBuilder.Entity<VehicleMaintenance>(entity =>
+        {
+            entity.Ignore(e => e.IsDeleted);
+        });
 
         // Workspace additional configuration for new payment fields
         modelBuilder.Entity<Workspace.Workspace>(entity =>
