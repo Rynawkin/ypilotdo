@@ -117,14 +117,14 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
   const handleUpgrade = async () => {
     if (step === 1) {
       if (!customerInfo.name || !customerInfo.email || !customerInfo.phone) {
-        alert('L??tfen t??m bilgileri doldurun');
+        alert('L?tfen t?m bilgileri doldurun');
         return;
       }
       setStep(2);
       return;
     }
     if (!cardInfo.cardNumber || !cardInfo.expiryMonth || !cardInfo.expiryYear || !cardInfo.cvv) {
-      alert('L??tfen kart bilgilerini doldurun');
+      alert('L?tfen kart bilgilerini doldurun');
       return;
     }
 
@@ -429,6 +429,11 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
         )}
 
         {/* Action Buttons */}
+        {step === 1 && (
+          <p className="text-xs text-gray-500 mb-2">
+            Kart bilgileri bir sonraki ad?mda al?n?r. Bankan?n 3D sayfas?na y?nlendirileceksiniz.
+          </p>
+        )}
         <div className="flex items-center justify-end space-x-3">
           {onClose && (
             <button
@@ -454,7 +459,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {upgrading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-            {upgrading ? "Y??nlendiriliyor..." : step === 1 ? "Devam Et" : "??demeye Ge??"}
+            {upgrading ? "Yönlendiriliyor..." : step === 1 ? "Kart Bilgilerine Geç" : "Ödemeye Geç"}
           </button>
         </div>
       </div>
