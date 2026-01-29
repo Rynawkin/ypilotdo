@@ -48,7 +48,7 @@ const planFeatures = {
       '2.000 durak/ay (ek 2₺)',
       '100 WhatsApp/ay (ek 0,50₺)',
       'Gelişmiş özellikler',
-      'Ã–ncelik desteÄŸi',
+      'Öncelik desteği',
       '90 gün kanıt arşivi'
     ]
   },
@@ -61,8 +61,8 @@ const planFeatures = {
       '50 kullanıcı',
       '5.000 durak/ay (ek 1,5₺)',
       '500 WhatsApp/ay (ek 0,30₺)',
-      'Ã–zel raporlar',
-      'Ã–zel entegrasyon',
+      'Özel raporlar',
+      'Özel entegrasyon',
       '365 gün kanıt arşivi'
     ]
   }
@@ -157,7 +157,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
         // Redirect to payment provider
         window.location.href = result.paymentUrl;
       } else {
-        alert(result.errorMessage || 'Ã–deme başlatılamadı');
+        alert(result.errorMessage || 'Ödeme başlatılamadı');
       }
     } catch (error: any) {
       console.error('Upgrade error:', error);
@@ -322,7 +322,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Kart Ãœzerindeki İsim *
+                Kart Üzerindeki İsim *
               </label>
               <input
                 type="text"
