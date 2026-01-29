@@ -389,7 +389,16 @@ public class ParamPOSProvider : IPaymentProvider
 
         if (!response.IsSuccessStatusCode)
         {
-            _logger.LogWarning("ParamPOS SOAP call failed: {StatusCode} {Method}", response.StatusCode, methodName);
+            var snippet = responseContent;
+            if (!string.IsNullOrWhiteSpace(snippet) && snippet.Length > 2000)
+            {
+                snippet = snippet[..2000];
+            }
+            _logger.LogWarning(
+                "ParamPOS SOAP call failed: {StatusCode} {Method}. Response: {Response}",
+                response.StatusCode,
+                methodName,
+                string.IsNullOrWhiteSpace(snippet) ? "<empty>" : snippet);
             throw new InvalidOperationException($"ParamPOS SOAP call failed ({response.StatusCode})");
         }
 
