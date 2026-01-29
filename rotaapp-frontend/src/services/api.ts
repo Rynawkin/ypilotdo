@@ -18,6 +18,48 @@ export const API_BASE_URL =
 
 console.log('API URL:', API_URL);
 
+const SENSITIVE_KEYS = new Set([
+  'cardNumber',
+  'cvv',
+  'cvc',
+  'cardCvv',
+  'CardNumber',
+  'Cvv',
+  'KK_No',
+  'KK_CVC',
+  'password',
+  'Password'
+]);
+
+const sanitizePayload = (value: any): any => {
+  if (Array.isArray(value)) {
+    return value.map(sanitizePayload);
+  }
+
+  if (value && typeof value === 'object') {
+    const sanitized: any = {};
+    Object.keys(value).forEach((key) => {
+      if (SENSITIVE_KEYS.has(key)) {
+        sanitized[key] = '***';
+      } else {
+        sanitized[key] = sanitizePayload((value as any)[key]);
+      }
+    });
+    return sanitized;
+  }
+
+  return value;
+};
+
+const sanitizeHeaders = (headers: any) => {
+  if (!headers || typeof headers !== 'object') return headers;
+  const sanitized: any = { ...headers };
+  if (sanitized.Authorization) {
+    sanitized.Authorization = String(sanitized.Authorization).substring(0, 20) + '...';
+  }
+  return sanitized;
+};
+
 // Rate limiting configuration
 const RATE_LIMIT_CONFIG = {
   MAX_CONCURRENT_REQUESTS: 10,
@@ -204,8 +246,10 @@ api.interceptors.request.use(
       console.log('WorkspaceId in localStorage:', workspaceId);
     }
     
-    console.log('API Request:', config.method?.toUpperCase(), config.url, config.data);
-    console.log('Request headers:', config.headers);
+    const safeData = sanitizePayload(config.data);
+    const safeHeaders = sanitizeHeaders(config.headers);
+    console.log('API Request:', config.method?.toUpperCase(), config.url, safeData);
+    console.log('Request headers:', safeHeaders);
     
     return config;
   },

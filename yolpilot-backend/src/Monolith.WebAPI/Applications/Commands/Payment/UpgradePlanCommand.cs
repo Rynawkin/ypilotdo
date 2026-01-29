@@ -18,6 +18,9 @@ public class UpgradePlanCommand : BaseAuthenticatedCommand<UpgradePlanResponse>
     public string CustomerPhone { get; set; } = string.Empty;
     public string? SuccessUrl { get; set; }
     public string? FailUrl { get; set; }
+    public string? ClientIp { get; set; }
+    public string? ReferrerUrl { get; set; }
+    public PaymentCard? Card { get; set; }
     
     public override bool RequiresDriver => false;
 }
@@ -96,6 +99,9 @@ public class UpgradePlanCommandHandler : BaseAuthenticatedCommandHandler<Upgrade
             CustomerPhone = request.CustomerPhone,
             SuccessUrl = request.SuccessUrl,
             FailUrl = request.FailUrl,
+            ClientIp = request.ClientIp,
+            ReferrerUrl = request.ReferrerUrl,
+            Card = request.Card,
             PlanType = request.NewPlanType,
             ExtraData = new Dictionary<string, object>
             {
@@ -110,7 +116,19 @@ public class UpgradePlanCommandHandler : BaseAuthenticatedCommandHandler<Upgrade
         if (result.IsSuccess)
         {
             // Fatura oluştur
-            await _paymentService.CreateInvoiceAsync(User.WorkspaceId, request.NewPlanType, planLimits.MonthlyPrice);
+            var invoice = await _paymentService.CreateInvoiceAsync(
+                User.WorkspaceId,
+                request.NewPlanType,
+                planLimits.MonthlyPrice,
+                result.InternalTransactionId);
+
+            if (result.Status == PaymentStatus.Completed)
+            {
+                workspace.UpdatePlan(request.NewPlanType);
+                invoice.Status = InvoiceStatus.Paid;
+                invoice.PaidDate = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+            }
 
             return new UpgradePlanResponse
             {

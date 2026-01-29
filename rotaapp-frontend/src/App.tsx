@@ -61,6 +61,8 @@ const TermsOfService = lazy(() => import('./pages/legal/TermsOfService'));
 const Support = lazy(() => import('./pages/legal/Support'));
 const DeleteAccount = lazy(() => import('./pages/DeleteAccount'));
 const LocationUpdateRequests = lazy(() => import('@/pages/LocationUpdateRequests'));
+const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'));
+const PaymentFailed = lazy(() => import('./pages/PaymentFailed'));
 
 // Layout wrapper for protected routes - useAuth hook'unu kullanacak şekilde güncellendi
 const ProtectedLayout: React.FC<{
@@ -107,6 +109,8 @@ const AppRoutes: React.FC = () => {
       <Route path="/terms" element={<TermsOfService />} />
       <Route path="/support" element={<Support />} />
       <Route path="/delete-account" element={<DeleteAccount />} />
+      <Route path="/payment/success" element={<PaymentSuccess />} />
+      <Route path="/payment/failed" element={<PaymentFailed />} />
 
       {/* Protected Routes */}
       <Route path="/" element={

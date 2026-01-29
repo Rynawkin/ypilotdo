@@ -11,7 +11,7 @@ public interface IPaymentService
     Task<PaymentTransaction> CreatePaymentTransactionAsync(PaymentRequest request, PaymentResult result);
     Task UpdatePaymentTransactionAsync(string transactionId, PaymentResult result);
     Task<List<Invoice>> GetInvoicesAsync(int workspaceId);
-    Task<Invoice> CreateInvoiceAsync(int workspaceId, PlanType planType, decimal amount);
+    Task<Invoice> CreateInvoiceAsync(int workspaceId, PlanType planType, decimal amount, int? paymentTransactionId = null);
 }
 
 public class PaymentService : IPaymentService
@@ -48,10 +48,12 @@ public class PaymentService : IPaymentService
         }
 
         var result = await provider.InitiatePaymentAsync(request);
-        
+
         if (result.IsSuccess)
         {
-            await CreatePaymentTransactionAsync(request, result);
+            EnsureProviderDataDefaults(request, result);
+            var transaction = await CreatePaymentTransactionAsync(request, result);
+            result.InternalTransactionId = transaction.Id;
         }
 
         return result;
@@ -116,13 +118,59 @@ public class PaymentService : IPaymentService
 
         transaction.Status = result.Status;
         transaction.ProcessedAt = result.ProcessedAt ?? DateTime.UtcNow;
-        transaction.ProviderResponse = System.Text.Json.JsonSerializer.Serialize(result.ProviderData);
+        transaction.ProviderResponse = System.Text.Json.JsonSerializer.Serialize(
+            MergeProviderData(transaction.ProviderResponse, result.ProviderData));
+        transaction.ErrorMessage = result.ErrorMessage;
         transaction.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();
 
         _logger.LogInformation("Payment transaction {TransactionId} updated with status {Status}", 
             transactionId, result.Status);
+    }
+
+    private void EnsureProviderDataDefaults(PaymentRequest request, PaymentResult result)
+    {
+        if (request.PlanType.HasValue && !result.ProviderData.ContainsKey("plan_type"))
+        {
+            result.ProviderData["plan_type"] = request.PlanType.Value.ToString();
+        }
+
+        if (!result.ProviderData.ContainsKey("workspace_id"))
+        {
+            result.ProviderData["workspace_id"] = request.WorkspaceId;
+        }
+    }
+
+    private static Dictionary<string, object> MergeProviderData(string? existingJson, Dictionary<string, object> incoming)
+    {
+        var merged = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+
+        if (!string.IsNullOrWhiteSpace(existingJson))
+        {
+            try
+            {
+                var existing = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(existingJson);
+                if (existing != null)
+                {
+                    foreach (var kvp in existing)
+                    {
+                        merged[kvp.Key] = kvp.Value;
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore JSON parse errors and just use incoming data
+            }
+        }
+
+        foreach (var kvp in incoming)
+        {
+            merged[kvp.Key] = kvp.Value;
+        }
+
+        return merged;
     }
 
     public async Task<List<Invoice>> GetInvoicesAsync(int workspaceId)
@@ -133,7 +181,7 @@ public class PaymentService : IPaymentService
             .ToListAsync();
     }
 
-    public async Task<Invoice> CreateInvoiceAsync(int workspaceId, PlanType planType, decimal amount)
+    public async Task<Invoice> CreateInvoiceAsync(int workspaceId, PlanType planType, decimal amount, int? paymentTransactionId = null)
     {
         var invoice = new Invoice
         {
@@ -147,6 +195,7 @@ public class PaymentService : IPaymentService
             PlanType = planType,
             PeriodStart = DateTime.UtcNow,
             PeriodEnd = DateTime.UtcNow.AddMonths(1),
+            PaymentTransactionId = paymentTransactionId,
             Items = new List<InvoiceItem>
             {
                 new InvoiceItem { Description = $"{planType} Plan", Amount = amount, Quantity = 1 }

@@ -82,10 +82,12 @@ public class ProcessPaymentWebhookCommandHandler : IRequestHandler<ProcessPaymen
             return;
         }
 
-        // SECURITY: Idempotency check - prevent double processing of payment webhooks
-        if (transaction.Status == PaymentStatus.Completed)
+        // Idempotency check - prevent duplicate processing if invoice already paid
+        var invoice = await _context.Invoices
+            .FirstOrDefaultAsync(i => i.PaymentTransactionId == transaction.Id);
+        if (invoice?.Status == InvoiceStatus.Paid)
         {
-            _logger.LogInformation("Transaction {TransactionId} already processed, skipping duplicate webhook", transactionId);
+            _logger.LogInformation("Invoice already paid for transaction {TransactionId}, skipping duplicate webhook", transactionId);
             return;
         }
 
@@ -125,6 +127,10 @@ public class ProcessPaymentWebhookCommandHandler : IRequestHandler<ProcessPaymen
 
                         // Mark transaction as failed
                         transaction.Status = PaymentStatus.Failed;
+                        if (invoice != null)
+                        {
+                            invoice.Status = InvoiceStatus.Failed;
+                        }
                         transaction.ProviderResponse = $"Plan downgrade blocked: {activeDriversCount} active drivers exceeds {planType} limit of {newPlanLimits.MaxDrivers}";
                         await _context.SaveChangesAsync();
                         return;
@@ -141,6 +147,10 @@ public class ProcessPaymentWebhookCommandHandler : IRequestHandler<ProcessPaymen
                             planType, activeVehiclesCount, newPlanLimits.MaxVehicles);
 
                         transaction.Status = PaymentStatus.Failed;
+                        if (invoice != null)
+                        {
+                            invoice.Status = InvoiceStatus.Failed;
+                        }
                         transaction.ProviderResponse = $"Plan downgrade blocked: {activeVehiclesCount} active vehicles exceeds {planType} limit of {newPlanLimits.MaxVehicles}";
                         await _context.SaveChangesAsync();
                         return;
@@ -156,6 +166,12 @@ public class ProcessPaymentWebhookCommandHandler : IRequestHandler<ProcessPaymen
                 if (transaction.Workspace.PlanType == PlanType.Trial)
                 {
                     transaction.Workspace.TrialEndDate = DateTime.UtcNow;
+                }
+
+                if (invoice != null)
+                {
+                    invoice.Status = InvoiceStatus.Paid;
+                    invoice.PaidDate = DateTime.UtcNow;
                 }
 
                 await _context.SaveChangesAsync();

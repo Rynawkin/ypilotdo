@@ -10,8 +10,19 @@ export interface UpgradePlanRequest {
   customerEmail: string;
   customerName: string;
   customerPhone: string;
+  referrerUrl?: string;
+  card: PaymentCard;
   successUrl?: string;
   failUrl?: string;
+}
+
+export interface PaymentCard {
+  cardHolderName: string;
+  cardNumber: string;
+  expiryMonth: string;
+  expiryYear: string;
+  cvv: string;
+  cardHolderPhone?: string;
 }
 
 export interface UpgradePlanResponse {

@@ -82,6 +82,14 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
     email: '',
     phone: ''
   });
+  const [cardInfo, setCardInfo] = useState({
+    cardHolderName: '',
+    cardNumber: '',
+    expiryMonth: '',
+    expiryYear: '',
+    cvv: '',
+    cardHolderPhone: ''
+  });
 
   useEffect(() => {
     loadPlanLimits();
@@ -110,6 +118,13 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
       alert('Lütfen tüm bilgileri doldurun');
       return;
     }
+    if (!cardInfo.cardNumber || !cardInfo.expiryMonth || !cardInfo.expiryYear || !cardInfo.cvv) {
+      alert('Lütfen kart bilgilerini doldurun');
+      return;
+    }
+
+    const cardHolderName = cardInfo.cardHolderName || customerInfo.name;
+    const cardHolderPhone = cardInfo.cardHolderPhone || customerInfo.phone;
 
     setUpgrading(true);
     try {
@@ -118,6 +133,15 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
         customerEmail: customerInfo.email,
         customerName: customerInfo.name,
         customerPhone: customerInfo.phone,
+        referrerUrl: window.location.href,
+        card: {
+          cardHolderName,
+          cardNumber: cardInfo.cardNumber,
+          expiryMonth: cardInfo.expiryMonth,
+          expiryYear: cardInfo.expiryYear,
+          cvv: cardInfo.cvv,
+          cardHolderPhone
+        },
         successUrl: `${window.location.origin}/payment/success`,
         failUrl: `${window.location.origin}/payment/failed`
       };
@@ -281,6 +305,98 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
                 onChange={(e) => setCustomerInfo(prev => ({ ...prev, phone: e.target.value }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="+90 555 123 45 67"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Card Information */}
+        <div className="bg-gray-50 rounded-lg p-4 mb-6">
+          <h3 className="font-medium text-gray-900 mb-3">Kart Bilgileri</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Kart Üzerindeki İsim *
+              </label>
+              <input
+                type="text"
+                value={cardInfo.cardHolderName}
+                onChange={(e) => setCardInfo(prev => ({ ...prev, cardHolderName: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="John Doe"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Kart Numarası *
+              </label>
+              <input
+                type="text"
+                value={cardInfo.cardNumber}
+                onChange={(e) => setCardInfo(prev => ({ ...prev, cardNumber: e.target.value.replace(/[^0-9 ]/g, '') }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="4242 4242 4242 4242"
+                inputMode="numeric"
+                autoComplete="cc-number"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Son Kullanma Ay *
+                </label>
+                <input
+                  type="text"
+                  value={cardInfo.expiryMonth}
+                  onChange={(e) => setCardInfo(prev => ({ ...prev, expiryMonth: e.target.value.replace(/[^0-9]/g, '') }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="MM"
+                  inputMode="numeric"
+                  maxLength={2}
+                  autoComplete="cc-exp-month"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Son Kullanma Yıl *
+                </label>
+                <input
+                  type="text"
+                  value={cardInfo.expiryYear}
+                  onChange={(e) => setCardInfo(prev => ({ ...prev, expiryYear: e.target.value.replace(/[^0-9]/g, '') }))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="YYYY"
+                  inputMode="numeric"
+                  maxLength={4}
+                  autoComplete="cc-exp-year"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                CVV *
+              </label>
+              <input
+                type="password"
+                value={cardInfo.cvv}
+                onChange={(e) => setCardInfo(prev => ({ ...prev, cvv: e.target.value.replace(/[^0-9]/g, '') }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="123"
+                inputMode="numeric"
+                maxLength={4}
+                autoComplete="cc-csc"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Kart Sahibi Telefon
+              </label>
+              <input
+                type="tel"
+                value={cardInfo.cardHolderPhone}
+                onChange={(e) => setCardInfo(prev => ({ ...prev, cardHolderPhone: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="5xx xxx xx xx"
               />
             </div>
           </div>
