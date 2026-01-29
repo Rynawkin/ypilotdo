@@ -129,7 +129,7 @@ public class ProcessPaymentWebhookCommandHandler : IRequestHandler<ProcessPaymen
                         transaction.Status = PaymentStatus.Failed;
                         if (invoice != null)
                         {
-                            invoice.Status = InvoiceStatus.Failed;
+                            invoice.Status = InvoiceStatus.Cancelled;
                         }
                         transaction.ProviderResponse = $"Plan downgrade blocked: {activeDriversCount} active drivers exceeds {planType} limit of {newPlanLimits.MaxDrivers}";
                         await _context.SaveChangesAsync();
@@ -149,7 +149,7 @@ public class ProcessPaymentWebhookCommandHandler : IRequestHandler<ProcessPaymen
                         transaction.Status = PaymentStatus.Failed;
                         if (invoice != null)
                         {
-                            invoice.Status = InvoiceStatus.Failed;
+                            invoice.Status = InvoiceStatus.Cancelled;
                         }
                         transaction.ProviderResponse = $"Plan downgrade blocked: {activeVehiclesCount} active vehicles exceeds {planType} limit of {newPlanLimits.MaxVehicles}";
                         await _context.SaveChangesAsync();
