@@ -10,6 +10,7 @@ using Monolith.WebAPI.Services.Payment;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Monolith.WebAPI.Controllers;
 
@@ -389,6 +390,7 @@ public class PaymentController : ControllerBase
 // Request/Response DTOs
 public class UpgradePlanRequest
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public PlanType PlanType { get; set; }
     public string CustomerEmail { get; set; } = string.Empty;
     public string CustomerName { get; set; } = string.Empty;

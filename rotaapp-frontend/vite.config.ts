@@ -10,6 +10,11 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    // Ensure output is ASCII-escaped so Turkish characters render correctly
+    // even if a proxy/CDN mis-decodes UTF-8.
+    charset: 'ascii',
+  },
   server: {
     port: 5173,
     host: true,
