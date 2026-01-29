@@ -77,6 +77,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
   const [planLimits, setPlanLimits] = useState<Record<PlanType, PlanLimits>>({} as any);
   const [loading, setLoading] = useState(true);
   const [upgrading, setUpgrading] = useState(false);
+  const [step, setStep] = useState<1 | 2>(1);
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     email: '',
@@ -114,12 +115,16 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
   };
 
   const handleUpgrade = async () => {
-    if (!customerInfo.name || !customerInfo.email || !customerInfo.phone) {
-      alert('Lütfen tüm bilgileri doldurun');
+    if (step === 1) {
+      if (!customerInfo.name || !customerInfo.email || !customerInfo.phone) {
+        alert('L??tfen t??m bilgileri doldurun');
+        return;
+      }
+      setStep(2);
       return;
     }
     if (!cardInfo.cardNumber || !cardInfo.expiryMonth || !cardInfo.expiryYear || !cardInfo.cvv) {
-      alert('Lütfen kart bilgilerini doldurun');
+      alert('L??tfen kart bilgilerini doldurun');
       return;
     }
 
@@ -311,6 +316,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
         </div>
 
         {/* Card Information */}
+        {step === 2 && (
         <div className="bg-gray-50 rounded-lg p-4 mb-6">
           <h3 className="font-medium text-gray-900 mb-3">Kart Bilgileri</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -402,6 +408,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
           </div>
         </div>
 
+        )}
         {/* Selected Plan Summary */}
         {planLimits[selectedPlan] && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
@@ -432,13 +439,22 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
               İptal
             </button>
           )}
+          {step === 2 && (
+            <button
+              onClick={() => setStep(1)}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              disabled={upgrading}
+            >
+              Geri
+            </button>
+          )}
           <button
             onClick={handleUpgrade}
             disabled={upgrading || currentPlan === selectedPlan}
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {upgrading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-            {upgrading ? 'Yönlendiriliyor...' : 'Ödemeye Geç'}
+            {upgrading ? "Y??nlendiriliyor..." : step === 1 ? "Devam Et" : "??demeye Ge??"}
           </button>
         </div>
       </div>
