@@ -673,7 +673,8 @@ const TabNavigator = () => {
   const androidNavBarHeight = Platform.OS === 'android'
     ? Math.max(0, screenHeight - windowHeight - statusBarHeight)
     : 0;
-  const bottomInset = Math.max(insets.bottom, androidNavBarHeight);
+  const androidFallbackInset = Platform.OS === 'android' ? 48 : 0;
+  const bottomInset = Math.max(insets.bottom, androidNavBarHeight, androidFallbackInset);
 
   return (
     <Tab.Navigator
