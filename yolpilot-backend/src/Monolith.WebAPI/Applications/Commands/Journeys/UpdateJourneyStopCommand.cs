@@ -253,9 +253,28 @@ public class UpdateJourneyStopCommandHandler : BaseAuthenticatedCommandHandler<U
                 400);
         }
 
+        // Ensure DateTimes are UTC to satisfy Postgres timestamptz
+        static DateTime? EnsureUtc(DateTime? value, TimeZoneInfo timeZone)
+        {
+            if (!value.HasValue)
+            {
+                return null;
+            }
+
+            var dt = value.Value;
+            return dt.Kind switch
+            {
+                DateTimeKind.Utc => dt,
+                DateTimeKind.Local => dt.ToUniversalTime(),
+                _ => TimeZoneInfo.ConvertTimeToUtc(DateTime.SpecifyKind(dt, DateTimeKind.Unspecified), timeZone)
+            };
+        }
+
+        var turkeyTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Turkey Standard Time");
+
         stop.Status = request.Status;
-        stop.CheckInTime = request.CheckInTime;
-        stop.CheckOutTime = request.CheckOutTime;
+        stop.CheckInTime = EnsureUtc(request.CheckInTime, turkeyTimeZone);
+        stop.CheckOutTime = EnsureUtc(request.CheckOutTime, turkeyTimeZone);
         stop.UpdatedAt = DateTime.UtcNow;
 
         // ✅ YENİ: CheckIn yapıldığında gecikme hesapla
@@ -266,7 +285,7 @@ public class UpdateJourneyStopCommandHandler : BaseAuthenticatedCommandHandler<U
         if (request.Status == JourneyStopStatus.InProgress && request.CheckInTime.HasValue)
         {
             // Türkiye timezone
-            var turkeyTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Turkey Standard Time");
+            var delayTimeZone = turkeyTimeZone;
 
             // Önceki durakların kümülatif gecikmesini hesapla
             var previousStops = await _context.JourneyStops
@@ -282,7 +301,7 @@ public class UpdateJourneyStopCommandHandler : BaseAuthenticatedCommandHandler<U
             }
 
             // Mevcut durağın gerçek gecikmesini hesapla
-            var actualDelay = stop.CalculateActualDelay(turkeyTimeZone);
+            var actualDelay = stop.CalculateActualDelay(delayTimeZone);
 
             // Yeni gecikmeyi hesapla
             newDelay = actualDelay - previousCumulativeDelay;
