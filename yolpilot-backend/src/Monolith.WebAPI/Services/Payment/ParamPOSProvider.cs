@@ -56,7 +56,8 @@ public class ParamPOSProvider : IPaymentProvider
             var amountStr = FormatAmount(request.Amount);
             var totalStr = amountStr;
             var installment = "1";
-            var islemHash = ComputeSha256Base64($"{settings.ClientCode}{settings.Guid}{installment}{amountStr}{totalStr}{orderId}");
+            var hashInput = $"{settings.ClientCode}{settings.Guid}{installment}{amountStr}{totalStr}{orderId}";
+            var islemHash = await ComputeSha2B64Async(settings, hashInput);
 
             var successReturnUrl = BuildReturnUrl(settings.ApiBaseUrl, "success");
             var failReturnUrl = BuildReturnUrl(settings.ApiBaseUrl, "fail");
@@ -461,6 +462,32 @@ public class ParamPOSProvider : IPaymentProvider
         using var sha = SHA1.Create();
         var bytes = Encoding.UTF8.GetBytes(raw);
         return Convert.ToBase64String(sha.ComputeHash(bytes));
+    }
+
+    private async Task<string> ComputeSha2B64Async(ParamPosSettings settings, string raw)
+    {
+        var baseUrl = settings.ServiceUrl?.TrimEnd('/') ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(baseUrl))
+        {
+            return ComputeSha1Base64(raw);
+        }
+
+        var url = $"{baseUrl}/SHA2B64?Data={Uri.EscapeDataString(raw)}";
+
+        try
+        {
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            var payload = await response.Content.ReadAsStringAsync();
+            var doc = XDocument.Parse(payload);
+            var value = doc.Root?.Value;
+            return string.IsNullOrWhiteSpace(value) ? ComputeSha1Base64(raw) : value;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "ParamPOS SHA2B64 call failed, falling back to local hash.");
+            return ComputeSha1Base64(raw);
+        }
     }
 
     private static string FormatAmount(decimal amount)
