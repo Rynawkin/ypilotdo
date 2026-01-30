@@ -432,6 +432,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
         {step === 1 && (
           <p className="text-xs text-gray-500 mb-2">
             Kart bilgileri bir sonraki adımda alınır. Bankanın 3D sayfasına yönlendirileceksiniz.
+            Kart bilgileriniz sistemde saklanmaz.
           </p>
         )}
         <div className="flex items-center justify-end space-x-3">
