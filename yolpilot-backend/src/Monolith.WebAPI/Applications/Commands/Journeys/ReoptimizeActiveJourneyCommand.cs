@@ -16,7 +16,7 @@ namespace Monolith.WebAPI.Applications.Commands.Journeys;
 public class ReoptimizeActiveJourneyCommand : BaseAuthenticatedCommand<JourneyResponse>
 {
     [JsonIgnore] public override bool RequiresDriver => false; // Şoför de çağırabilir
-    [JsonIgnore] public override bool RequiresWorkspaceAccess => true;
+    [JsonIgnore] public override bool RequiresWorkspaceAccess => false;
 
     [JsonIgnore] public int JourneyId { get; init; }
 
