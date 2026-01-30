@@ -114,17 +114,6 @@ public class OptimizeRouteCommandHandler : BaseAuthenticatedCommandHandler<Optim
         logger.LogInformation("=== OPTIMIZE ROUTE START ===");
         logger.LogInformation($"RouteId: {request.RouteId}, Mode: {request.OptimizationMode}, IsTimeDeviationOptimization: {request.IsTimeDeviationOptimization}");
         
-        // Time deviation optimization ise yetki kontrolünü atla
-        if (request.IsTimeDeviationOptimization)
-        {
-            logger.LogInformation("Time deviation optimization - skipping dispatcher check");
-        }
-        else if (User.IsDriver && !User.IsDispatcher && !User.IsAdmin && !User.IsSuperAdmin)
-        {
-            logger.LogWarning($"User {User.Id} attempted to optimize route without dispatcher access");
-            throw new ApiException("You are not authorized to perform this action. Dispatcher access required.", 403);
-        }
-
         logger.LogInformation($"=== OPTIMIZE ROUTE START - RouteId: {request.RouteId} ===");
         logger.LogInformation($"AvoidTolls parameter: {request.AvoidTolls}");
 
@@ -144,6 +133,27 @@ public class OptimizeRouteCommandHandler : BaseAuthenticatedCommandHandler<Optim
 
         if (route?.Stops is null || route?.Stops?.Count == 0)
             throw new ApiException("Route stops not found", 404);
+
+        // Time deviation optimization ise yetki kontrolünü atla
+        if (request.IsTimeDeviationOptimization)
+        {
+            logger.LogInformation("Time deviation optimization - skipping dispatcher check");
+        }
+        else if (User.IsDriver && !User.IsDispatcher && !User.IsAdmin && !User.IsSuperAdmin)
+        {
+            var assignedDriverUserId = route.Driver?.UserId;
+            var isAssignedDriver = assignedDriverUserId.HasValue && assignedDriverUserId.Value == User.Id;
+
+            if (!isAssignedDriver)
+            {
+                logger.LogWarning(
+                    "User {UserId} attempted to optimize route {RouteId} without dispatcher access (AssignedDriverUserId: {AssignedDriverUserId})",
+                    User.Id,
+                    route.Id,
+                    assignedDriverUserId);
+                throw new ApiException("You are not authorized to perform this action. Dispatcher access required.", 403);
+            }
+        }
 
         // TIME WINDOW AUTO-COMPLETION VE VALIDATION
         logger.LogInformation("=== BEFORE OPTIMIZATION ===");
