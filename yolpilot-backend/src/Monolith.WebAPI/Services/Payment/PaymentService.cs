@@ -49,6 +49,11 @@ public class PaymentService : IPaymentService
 
         var result = await provider.InitiatePaymentAsync(request);
 
+        if (!result.IsSuccess)
+        {
+            _logger.LogWarning("Payment initiation failed via {Provider}: {Error}", providerName, result.ErrorMessage);
+        }
+
         if (result.IsSuccess)
         {
             EnsureProviderDataDefaults(request, result);
