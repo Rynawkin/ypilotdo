@@ -469,7 +469,7 @@ public class ParamPOSProvider : IPaymentProvider
         var baseUrl = settings.ServiceUrl?.TrimEnd('/') ?? string.Empty;
         if (string.IsNullOrWhiteSpace(baseUrl))
         {
-            return ComputeSha1Base64(raw);
+            return ComputeSha256Base64(raw);
         }
 
         var url = $"{baseUrl}/SHA2B64?Data={Uri.EscapeDataString(raw)}";
@@ -481,12 +481,12 @@ public class ParamPOSProvider : IPaymentProvider
             var payload = await response.Content.ReadAsStringAsync();
             var doc = XDocument.Parse(payload);
             var value = doc.Root?.Value;
-            return string.IsNullOrWhiteSpace(value) ? ComputeSha1Base64(raw) : value;
+            return string.IsNullOrWhiteSpace(value) ? ComputeSha256Base64(raw) : value;
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "ParamPOS SHA2B64 call failed, falling back to local hash.");
-            return ComputeSha1Base64(raw);
+            return ComputeSha256Base64(raw);
         }
     }
 
