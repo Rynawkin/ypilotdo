@@ -383,10 +383,18 @@ public class ParamPOSProvider : IPaymentProvider
         );
 
         var content = new StringContent(envelope.ToString(SaveOptions.DisableFormatting), Encoding.UTF8, "text/xml");
-        var soapAction = $"{settings.SoapActionBase.TrimEnd('/')}/{methodName}";
+        content.Headers.ContentType!.CharSet = "utf-8";
+
+        var soapActionBase = settings.SoapActionBase?.Trim();
+        var soapAction = string.IsNullOrWhiteSpace(soapActionBase)
+            ? methodName
+            : (soapActionBase.Contains(methodName, StringComparison.OrdinalIgnoreCase)
+                ? soapActionBase
+                : $"{soapActionBase.TrimEnd('/')}/{methodName}");
+        var soapActionHeader = $"\"{soapAction}\"";
 
         using var request = new HttpRequestMessage(HttpMethod.Post, settings.ServiceUrl);
-        request.Headers.Add("SOAPAction", soapAction);
+        request.Headers.TryAddWithoutValidation("SOAPAction", soapActionHeader);
         request.Content = content;
 
         var response = await _httpClient.SendAsync(request);
