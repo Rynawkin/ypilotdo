@@ -56,11 +56,10 @@ public class ParamPOSProvider : IPaymentProvider
             var amountStr = FormatAmount(request.Amount);
             var totalStr = amountStr;
             var installment = "1";
-            var hashInput = $"{settings.ClientCode}{settings.Guid}{installment}{amountStr}{totalStr}{orderId}";
-            var islemHash = await ComputeSha2B64Async(settings, hashInput);
-
             var successReturnUrl = BuildReturnUrl(settings.ApiBaseUrl, "success");
             var failReturnUrl = BuildReturnUrl(settings.ApiBaseUrl, "fail");
+            var hashInput = $"{settings.ClientCode}{settings.Guid}{installment}{amountStr}{totalStr}{orderId}{failReturnUrl}{successReturnUrl}";
+            var islemHash = await ComputeSha2B64Async(settings, hashInput);
 
             var cardHolderName = string.IsNullOrWhiteSpace(request.Card.CardHolderName)
                 ? request.CustomerName
