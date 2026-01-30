@@ -120,6 +120,11 @@ public class ParamPOSProvider : IPaymentProvider
 
             if (sonuc <= 0)
             {
+                _logger.LogWarning(
+                    "ParamPOS returned failure. Sonuc: {Sonuc}, SonucStr: {SonucStr}, OrderId: {OrderId}",
+                    sonuc,
+                    string.IsNullOrWhiteSpace(sonucStr) ? "<empty>" : sonucStr,
+                    orderId);
                 return new PaymentResult
                 {
                     IsSuccess = false,
