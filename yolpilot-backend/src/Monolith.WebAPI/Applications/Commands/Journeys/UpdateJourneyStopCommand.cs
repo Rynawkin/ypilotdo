@@ -548,7 +548,6 @@ public class UpdateJourneyStopCommandHandler : BaseAuthenticatedCommandHandler<U
             if (stop.EstimatedDepartureTime.HasValue)
             {
                 // ✅ Türkiye saatini al (server UTC'de olabilir)
-                var turkeyTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Turkey Standard Time");
                 var turkeyNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, turkeyTimeZone);
 
                 // BUGFIX S3.2: Handle midnight crossing properly
