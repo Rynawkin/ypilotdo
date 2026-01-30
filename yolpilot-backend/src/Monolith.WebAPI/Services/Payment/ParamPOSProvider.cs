@@ -56,10 +56,10 @@ public class ParamPOSProvider : IPaymentProvider
             var amountStr = FormatAmount(request.Amount);
             var totalStr = amountStr;
             var installment = "1";
-            var guid = settings.Guid.ToLowerInvariant();
+            var guid = settings.Guid;
             var successReturnUrl = BuildReturnUrl(settings.ApiBaseUrl, "success");
             var failReturnUrl = BuildReturnUrl(settings.ApiBaseUrl, "fail");
-            var hashInput = $"{settings.ClientCode}{guid}{installment}{amountStr}{totalStr}{orderId}{failReturnUrl}{successReturnUrl}";
+            var hashInput = $"{settings.ClientCode}{guid}{installment}{amountStr}{totalStr}{orderId}";
             var islemHash = await ComputeSha2B64Async(settings, hashInput);
 
             var cardHolderName = string.IsNullOrWhiteSpace(request.Card.CardHolderName)
@@ -82,7 +82,7 @@ public class ParamPOSProvider : IPaymentProvider
 
             var body = new XElement(settings.XmlNamespace + "TP_WMD_UCD",
                 BuildSecurityNode(settings),
-                new XElement(settings.XmlNamespace + "GUID", guid),
+            new XElement(settings.XmlNamespace + "GUID", guid),
                 new XElement(settings.XmlNamespace + "KK_Sahibi", cardHolderName),
                 new XElement(settings.XmlNamespace + "KK_No", cardNumber),
                 new XElement(settings.XmlNamespace + "KK_SK_Ay", cardMonth),
@@ -291,7 +291,7 @@ public class ParamPOSProvider : IPaymentProvider
 
         var body = new XElement(settings.XmlNamespace + "TP_WMD_Pay",
             BuildSecurityNode(settings),
-            new XElement(settings.XmlNamespace + "GUID", settings.Guid.ToLowerInvariant()),
+            new XElement(settings.XmlNamespace + "GUID", settings.Guid),
             new XElement(settings.XmlNamespace + "UCD_MD", md),
             new XElement(settings.XmlNamespace + "Islem_GUID", islemGuid),
             new XElement(settings.XmlNamespace + "Siparis_ID", orderId)

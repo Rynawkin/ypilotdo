@@ -341,7 +341,8 @@ public class JourneysController : ControllerBase
             JourneyId = journeyId,
             AuthenticatedUserId = User.GetId(),
             CurrentLatitude = request.CurrentLatitude,
-            CurrentLongitude = request.CurrentLongitude
+            CurrentLongitude = request.CurrentLongitude,
+            DeferredStopIds = request.DeferredStopIds ?? new List<int>()
         };
         return await _sender.Send(command);
     }
@@ -775,4 +776,5 @@ public class ReoptimizeActiveJourneyRequest
 {
     public double CurrentLatitude { get; set; }
     public double CurrentLongitude { get; set; }
+    public List<int> DeferredStopIds { get; set; } = new();
 }

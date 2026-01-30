@@ -197,8 +197,9 @@ public class JourneyStopResponse
         ArriveBetweenEnd = journeyStop.ArriveBetweenEnd?.ToString(@"hh\:mm\:ss");
 
         // ✅ ÖNEMLİ: EKSİK OLAN FIELD'LAR EKLENDİ
-        CheckInTime = journeyStop.CheckInTime?.ToString("yyyy-MM-dd'T'HH:mm:ss.fff");
-        CheckOutTime = journeyStop.CheckOutTime?.ToString("yyyy-MM-dd'T'HH:mm:ss.fff");
+        CheckInTime = FormatIsoUtc(journeyStop.CheckInTime);
+        CheckOutTime = FormatIsoUtc(journeyStop.CheckOutTime);
+        CreatedAt = FormatIsoUtc(journeyStop.CreatedAt);
 
         // ✅ YENİ: Gecikme bilgileri
         DelayReasonCategory = journeyStop.DelayReasonCategory?.ToString();
@@ -240,12 +241,33 @@ public class JourneyStopResponse
     // âœ… Ã–NEMLÄ°: EKSÄ°K OLAN PROPERTY'LER EKLENDÄ°
     public string? CheckInTime { get; set; }
     public string? CheckOutTime { get; set; }
+    public string? CreatedAt { get; set; }
 
     // ✅ YENİ: Gecikme tracking property'leri
     public string? DelayReasonCategory { get; set; }
     public string? DelayReason { get; set; }
     public int NewDelay { get; set; }
     public int CumulativeDelay { get; set; }
+
+    private static string? FormatIsoUtc(DateTime? value)
+    {
+        if (!value.HasValue)
+        {
+            return null;
+        }
+
+        var normalized = value.Value;
+        if (normalized.Kind == DateTimeKind.Unspecified)
+        {
+            normalized = DateTime.SpecifyKind(normalized, DateTimeKind.Utc);
+        }
+        else if (normalized.Kind == DateTimeKind.Local)
+        {
+            normalized = normalized.ToUniversalTime();
+        }
+
+        return normalized.ToString("O");
+    }
 }
 
 public class RouteStopResponse

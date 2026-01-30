@@ -37,11 +37,11 @@ const CreateVehicle: React.FC = () => {
       let errorMessage = error.userFriendlyMessage;
       
       if (!errorMessage) {
-        if (error.response?.data?.message) {
+        if (error.response.data.message) {
           errorMessage = error.response.data.message;
-        } else if (error.response?.status === 409) {
+        } else if (error.response.status === 409) {
           errorMessage = 'Bu plaka numarası zaten kayıtlı';
-        } else if (error.response?.status === 400) {
+        } else if (error.response.status === 400) {
           errorMessage = 'Geçersiz veri. Lütfen tüm alanları kontrol edin';
         } else {
           errorMessage = 'Araç oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.';

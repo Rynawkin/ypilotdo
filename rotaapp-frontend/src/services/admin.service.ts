@@ -52,18 +52,18 @@ export const adminService = {
   },
 
   // Issue Management Methods - YENİ EKLENEN
-  async getIssues(params?: any) {
+  async getIssues(params: any) {
     const response = await api.get('/workspace/issues', { params });
     return response.data;
   },
 
-  async updateIssueStatus(issueId: number, data: { status: string; adminNotes?: string }) {
+  async updateIssueStatus(issueId: number, data: { status: string; adminNotes: string }) {
     const response = await api.put(`/workspace/issues/${issueId}/status`, data);
     return response.data;
   },
 
   // Marketing Lead Management Methods - YENİ EKLENEN
-  async getMarketingLeads(params?: any) {
+  async getMarketingLeads(params: any) {
     const response = await api.get('/marketinglead', { params });
     return response.data;
   },
@@ -73,7 +73,7 @@ export const adminService = {
     return response.data;
   },
 
-  async updateMarketingLead(id: number, data: { status: number; adminNotes?: string; assignedTo?: string }) {
+  async updateMarketingLead(id: number, data: { status: number; adminNotes: string; assignedTo: string }) {
     const response = await api.put(`/marketinglead/${id}`, data);
     return response.data;
   },

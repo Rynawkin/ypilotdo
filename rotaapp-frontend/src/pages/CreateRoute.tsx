@@ -34,7 +34,7 @@ const CreateRoute: React.FC = () => {
 
       const userChoice = window.confirm(
         'Rota başarıyla oluşturuldu!\n\n' +
-        'Oluşturulan rotayı görmek ister misiniz?\n\n' +
+        'Oluşturulan rotayı görmek ister misiniz\n\n' +
         'Evet: Rota detayına git\n' +
         'Hayır: Yeni rota oluşturmaya devam et'
       );
@@ -45,7 +45,7 @@ const CreateRoute: React.FC = () => {
       }
       // Hayır seçerse zaten form temiz, sayfada kalır
     } catch (error: any) {
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Rota işleminde bir hata oluştu.';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Rota işleminde bir hata oluştu.';
       setError(errorMessage);
       console.error('Error processing route:', error);
     } finally {
@@ -64,7 +64,7 @@ const CreateRoute: React.FC = () => {
       });
       navigate('/routes');
     } catch (error: any) {
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Taslak kaydedilirken bir hata oluştu.';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Taslak kaydedilirken bir hata oluştu.';
       setError(errorMessage);
       console.error('Error saving draft:', error);
     } finally {

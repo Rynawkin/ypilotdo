@@ -27,9 +27,9 @@ const libraries: ("places" | "drawing" | "geometry")[] = ['places', 'geometry'];
 
 interface LiveMapProps {
   journeys: Journey[];
-  selectedJourneyId?: string;
-  onJourneySelect?: (journey: Journey) => void;
-  height?: string;
+  selectedJourneyId: string;
+  onJourneySelect: (journey: Journey) => void;
+  height: string;
 }
 
 const LiveMap: React.FC<LiveMapProps> = ({
@@ -189,7 +189,7 @@ const LiveMap: React.FC<LiveMapProps> = ({
     const selectedJourney = journeys.find(j => j.id === selectedJourneyId);
     
     // ✅ DÜZELTME: Route kontrolü ekle
-    if (!selectedJourney || !selectedJourney.liveLocation || !selectedJourney.route?.stops) {
+    if (!selectedJourney || !selectedJourney.liveLocation || !selectedJourney.route.stops) {
       console.warn('Selected journey has no route or stops');
       return;
     }
@@ -286,13 +286,13 @@ const LiveMap: React.FC<LiveMapProps> = ({
     
     return {
       path: vehiclePath,
-      fillColor: isSelected ? '#EF4444' : '#10B981',
+      fillColor: isSelected  '#EF4444' : '#10B981',
       fillOpacity: 1,
       strokeColor: 'white',
       strokeWeight: 2,
       scale: 1.5,
       anchor: new window.google.maps.Point(12, 12),
-      rotation: journey.liveLocation?.heading || 0
+      rotation: journey.liveLocation.heading || 0
     };
   };
 
@@ -308,7 +308,7 @@ const LiveMap: React.FC<LiveMapProps> = ({
     
     return {
       path: window.google.maps.SymbolPath.CIRCLE,
-      scale: isNext ? 10 : 8,
+      scale: isNext  10 : 8,
       fillColor: colors[status as keyof typeof colors] || '#9CA3AF',
       fillOpacity: 1,
       strokeColor: 'white',
@@ -326,7 +326,7 @@ const LiveMap: React.FC<LiveMapProps> = ({
 
   // ✅ DÜZELTME: Null check ekle
   const getCurrentStop = (journey: Journey) => {
-    if (!journey.route?.stops || journey.currentStopIndex === undefined) {
+    if (!journey.route.stops || journey.currentStopIndex === undefined) {
       return null;
     }
     return journey.route.stops[journey.currentStopIndex] || null;
@@ -334,7 +334,7 @@ const LiveMap: React.FC<LiveMapProps> = ({
 
   // ✅ DÜZELTME: Null check ekle
   const getCompletionPercentage = (journey: Journey) => {
-    if (!journey.route?.stops || journey.route.stops.length === 0) {
+    if (!journey.route.stops || journey.route.stops.length === 0) {
       return 0;
     }
     const completed = journey.route.stops.filter(s => s.status === 'completed').length;
@@ -421,14 +421,14 @@ const LiveMap: React.FC<LiveMapProps> = ({
                     lng: journey.liveLocation.longitude
                   }}
                   icon={getVehicleIcon(journey)}
-                  title={`${journey.route.driver?.name || 'Sürücü'} - ${journey.route.vehicle?.plateNumber || 'Araç'}`}
+                  title={`${journey.route.driver.name || 'Sürücü'} - ${journey.route.vehicle.plateNumber || 'Araç'}`}
                   onClick={() => handleMarkerClick(journey)}
-                  zIndex={selectedJourneyId === journey.id ? 1000 : 100}
+                  zIndex={selectedJourneyId === journey.id  1000 : 100}
                 />
               )}
 
               {/* Stop Markers for selected journey */}
-              {selectedJourneyId === journey.id && journey.route.stops?.map((stop, index) => {
+              {selectedJourneyId === journey.id && journey.route.stops.map((stop, index) => {
                 if (!stop.customer) return null;
                 const isNext = index === journey.currentStopIndex;
                 
@@ -446,9 +446,9 @@ const LiveMap: React.FC<LiveMapProps> = ({
                       fontSize: '12px',
                       fontWeight: 'bold'
                     }}
-                    title={`${stop.customer.name} - ${stop.status === 'completed' ? 'Tamamlandı' : 
-                            stop.status === 'arrived' ? 'Varıldı' : 'Bekliyor'}`}
-                    zIndex={isNext ? 90 : 50}
+                    title={`${stop.customer.name} - ${stop.status === 'completed'  'Tamamlandı' : 
+                            stop.status === 'arrived'  'Varıldı' : 'Bekliyor'}`}
+                    zIndex={isNext  90 : 50}
                   />
                 );
               })}
@@ -468,26 +468,26 @@ const LiveMap: React.FC<LiveMapProps> = ({
             <div className="p-2 min-w-[250px]">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="font-bold text-gray-900">
-                  {selectedMarker.route?.vehicle?.plateNumber || 'Araç Bilgisi Yok'}
+                  {selectedMarker.route.vehicle.plateNumber || 'Araç Bilgisi Yok'}
                 </h3>
                 <span className={`px-2 py-1 text-xs rounded-full ${
                   selectedMarker.status === 'in_progress' 
-                    ? 'bg-green-100 text-green-700'
+                     'bg-green-100 text-green-700'
                     : 'bg-blue-100 text-blue-700'
                 }`}>
-                  {selectedMarker.status === 'in_progress' ? 'Aktif' : 'Başladı'}
+                  {selectedMarker.status === 'in_progress'  'Aktif' : 'Başladı'}
                 </span>
               </div>
               
               <div className="space-y-1 text-sm">
-                {selectedMarker.route?.driver && (
+                {selectedMarker.route.driver && (
                   <div className="flex items-center">
                     <User className="w-4 h-4 text-gray-400 mr-2" />
                     <span>{selectedMarker.route.driver.name}</span>
                   </div>
                 )}
                 
-                {selectedMarker.liveLocation?.speed !== undefined && (
+                {selectedMarker.liveLocation.speed !== undefined && (
                   <div className="flex items-center">
                     <TrendingUp className="w-4 h-4 text-gray-400 mr-2" />
                     <span>{Math.round(selectedMarker.liveLocation.speed)} km/h</span>
@@ -507,7 +507,7 @@ const LiveMap: React.FC<LiveMapProps> = ({
                   <div className="flex items-center">
                     <MapPin className="w-4 h-4 text-gray-400 mr-2" />
                     <span className="truncate">
-                      Hedef: {getCurrentStop(selectedMarker)?.customer?.name || 'Bilinmiyor'}
+                      Hedef: {getCurrentStop(selectedMarker).customer.name || 'Bilinmiyor'}
                     </span>
                   </div>
                 )}

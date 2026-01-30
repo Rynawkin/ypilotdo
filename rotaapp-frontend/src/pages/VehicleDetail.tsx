@@ -132,7 +132,7 @@ const VehicleDetail: React.FC = () => {
   const handleDelete = async () => {
     if (!vehicle) return;
     
-    if (window.confirm('Bu aracı silmek istediğinizden emin misiniz?')) {
+    if (window.confirm('Bu aracı silmek istediğinizden emin misiniz')) {
       try {
         await vehicleService.delete(vehicle.id);
         navigate('/vehicles');
@@ -364,7 +364,7 @@ const VehicleDetail: React.FC = () => {
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <Gauge className="w-8 h-8 text-red-500 mx-auto mb-2" />
                 <p className="text-2xl font-bold text-gray-900">
-                  {vehicle.currentKm ? vehicle.currentKm.toLocaleString('tr-TR') : '-'}
+                  {vehicle.currentKm  vehicle.currentKm.toLocaleString('tr-TR') : '-'}
                 </p>
                 <p className="text-xs text-gray-600">Güncel Kilometre</p>
               </div>
@@ -379,7 +379,7 @@ const VehicleDetail: React.FC = () => {
           {/* Recent Routes */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Son Rotalar</h2>
-            {routes.length === 0 ? (
+            {routes.length === 0  (
               <p className="text-gray-500 text-center py-8">Bu araç henüz hiçbir rotada kullanılmamış</p>
             ) : (
               <div className="space-y-3">
@@ -402,7 +402,7 @@ const VehicleDetail: React.FC = () => {
                           </span>
                           <span className="flex items-center">
                             <MapPin className="w-4 h-4 mr-1" />
-                            {route.stops?.length || 0} durak
+                            {route.stops.length || 0} durak
                           </span>
                         </div>
                       </div>
@@ -433,7 +433,7 @@ const VehicleDetail: React.FC = () => {
                 disabled={vehicle.status === 'maintenance'}
               >
                 <Wrench className="w-4 h-4 mr-2" />
-                {vehicle.status === 'maintenance' ? 'Bakımda' : 'Bakıma Al'}
+                {vehicle.status === 'maintenance'  'Bakımda' : 'Bakıma Al'}
               </button>
               <button 
                 onClick={handleEditSettings}
@@ -505,7 +505,7 @@ const VehicleDetail: React.FC = () => {
                   )}
                 </div>
                 <p className="text-2xl font-bold text-blue-900">
-                  {kmStats.oneMonth > 0 ? `+${kmStats.oneMonth.toLocaleString('tr-TR')}` : '-'}
+                  {kmStats.oneMonth > 0  `+${kmStats.oneMonth.toLocaleString('tr-TR')}` : '-'}
                 </p>
                 <p className="text-xs text-gray-600 mt-1">km artış</p>
               </div>
@@ -517,7 +517,7 @@ const VehicleDetail: React.FC = () => {
                   )}
                 </div>
                 <p className="text-2xl font-bold text-green-900">
-                  {kmStats.threeMonths > 0 ? `+${kmStats.threeMonths.toLocaleString('tr-TR')}` : '-'}
+                  {kmStats.threeMonths > 0  `+${kmStats.threeMonths.toLocaleString('tr-TR')}` : '-'}
                 </p>
                 <p className="text-xs text-gray-600 mt-1">km artış</p>
               </div>

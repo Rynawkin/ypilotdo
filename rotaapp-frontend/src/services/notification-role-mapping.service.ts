@@ -1,13 +1,13 @@
 import { api } from './api';
 
 export interface NotificationRoleMapping {
-  id?: number;
-  workspaceId?: number;
+  id: number;
+  workspaceId: number;
   contactRole: string;
   notificationType: string;
   isEnabled: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface RoleOption {

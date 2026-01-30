@@ -37,7 +37,7 @@ const EditRoute: React.FC = () => {
       }
     } catch (error: any) {
       console.error('Error loading route:', error);
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Rota yüklenirken bir hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Rota yüklenirken bir hata oluştu';
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -54,7 +54,7 @@ const EditRoute: React.FC = () => {
       await routeService.update(id, formData);
       navigate(`/routes/${id}`);
     } catch (error: any) {
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Rota güncellenirken bir hata oluştu.';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Rota güncellenirken bir hata oluştu.';
       setError(errorMessage);
       console.error('Error updating route:', error);
     } finally {
@@ -75,7 +75,7 @@ const EditRoute: React.FC = () => {
       });
       navigate('/routes');
     } catch (error: any) {
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Taslak kaydedilirken bir hata oluştu.';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Taslak kaydedilirken bir hata oluştu.';
       setError(errorMessage);
       console.error('Error saving draft:', error);
     } finally {
@@ -124,7 +124,7 @@ const EditRoute: React.FC = () => {
             </Link>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Rota Düzenle</h1>
-              <p className="text-gray-600 mt-1">{route?.name}</p>
+              <p className="text-gray-600 mt-1">{route.name}</p>
             </div>
           </div>
         </div>

@@ -6,8 +6,8 @@ export interface User {
   email: string;
   name: string;
   role: 'admin' | 'manager' | 'driver';
-  avatar?: string;
-  workspaceId?: string;
+  avatar: string;
+  workspaceId: string;
   createdAt: Date;
 }
 
@@ -15,8 +15,8 @@ export interface User {
 export interface Workspace {
   id: string;
   name: string;
-  email?: string;
-  phoneNumber?: string;
+  email: string;
+  phoneNumber: string;
   distanceUnit: string;
   currency: string;
   timeZone: string;
@@ -25,7 +25,7 @@ export interface Workspace {
   maximumDriverCount: number;
   active: boolean;
   createdAt: Date;
-  subscription?: {
+  subscription: {
     plan: 'trial' | 'basic' | 'premium' | 'enterprise';
     startDate: Date;
     endDate: Date;
@@ -34,13 +34,13 @@ export interface Workspace {
     maxRoutes: number;
     maxCustomers: number;
   };
-  settings?: WorkspaceSettings; // YENİ EKLENEN
+  settings: WorkspaceSettings; // YENİ EKLENEN
 }
 
 // Workspace Settings - YENİ EKLENEN
 export interface WorkspaceSettings {
-  whatsAppSettings?: WhatsAppSettings;
-  emailTemplates?: any;
+  whatsAppSettings: WhatsAppSettings;
+  emailTemplates: any;
   // Diğer ayarlar...
 }
 
@@ -51,8 +51,8 @@ export interface WhatsAppSettings {
   enableWhatsAppForCheckIn: boolean;
   enableWhatsAppForCompletion: boolean;
   enableWhatsAppForFailure: boolean;
-  businessPhoneNumber?: string;
-  businessDisplayName?: string;
+  businessPhoneNumber: string;
+  businessDisplayName: string;
 }
 
 // Super Admin Types
@@ -85,32 +85,32 @@ export interface Customer {
   name: string;
   address: string;
   phone: string;
-  email?: string;
+  email: string;
   
   // WhatsApp Alanları - YENİ EKLENEN
-  whatsApp?: string;
+  whatsApp: string;
   whatsAppOptIn: boolean;
   whatsAppVerified: boolean;
-  whatsAppOptInDate?: Date;
+  whatsAppOptInDate: Date;
   
   latitude: number;
   longitude: number;
-  timeWindow?: {
+  timeWindow: {
     start: string;
     end: string;
   };
-  estimatedServiceTime?: number;
-  notes?: string;
-  tags?: string[];
-  lastDeliveryDate?: Date; // Son teslimat tarihi - filtreleme için
+  estimatedServiceTime: number;
+  notes: string;
+  tags: string[];
+  lastDeliveryDate: Date; // Son teslimat tarihi - filtreleme için
   createdAt: Date;
   updatedAt: Date;
 }
 
 // Customer Contact Types
 export interface CustomerContact {
-  id?: number;
-  customerId?: number;
+  id: number;
+  customerId: number;
   firstName: string;
   lastName: string;
   email: string;
@@ -124,11 +124,11 @@ export interface CustomerContact {
   receiveDeliveryFailed: boolean;
   receiveJourneyAssigned: boolean;
   receiveJourneyCancelled: boolean;
-  workspaceId?: number;
-  createdBy?: number;
-  updatedBy?: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  workspaceId: number;
+  createdBy: number;
+  updatedBy: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 // Driver Types
@@ -136,17 +136,17 @@ export interface Driver {
   id: number;
   name: string;
   phone: string;
-  email?: string;
+  email: string;
   licenseNumber: string;
-  vehicleId?: number;
+  vehicleId: number;
   status: 'available' | 'busy' | 'offline';
-  currentLocation?: {
+  currentLocation: {
     latitude: number;
     longitude: number;
   };
-  avatar?: string;
-  rating?: number;
-  totalDeliveries?: number;
+  avatar: string;
+  rating: number;
+  totalDeliveries: number;
   createdAt: Date;
 }
 
@@ -161,57 +161,57 @@ export interface Vehicle {
   capacity: number;
   status: 'active' | 'maintenance' | 'inactive';
   fuelType: 'gasoline' | 'diesel' | 'electric' | 'hybrid';
-  currentKm?: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  currentKm: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 // Vehicle Maintenance Types
 export interface VehicleMaintenance {
   id: number;
   vehicleId: number;
-  vehicle?: Vehicle;
+  vehicle: Vehicle;
   type: 'routine' | 'repair' | 'inspection' | 'tire_change' | 'oil_change' | 'other';
   title: string;
-  description?: string;
+  description: string;
   cost: number;
   performedAt: Date;
-  nextMaintenanceDate?: Date;
-  nextMaintenanceKm?: number;
-  currentKm?: number;
-  workshop?: string;
-  parts?: string;
-  notes?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  nextMaintenanceDate: Date;
+  nextMaintenanceKm: number;
+  currentKm: number;
+  workshop: string;
+  parts: string;
+  notes: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface MaintenanceReminder {
   id: number;
   vehicleId: number;
-  maintenanceId?: number;
+  maintenanceId: number;
   reminderDays: number; // Kaç gün öncesinden hatırlatma gönderilsin
   nextMaintenanceDate: Date;
   isActive: boolean;
-  sentAt?: Date;
-  createdAt?: Date;
+  sentAt: Date;
+  createdAt: Date;
 }
 
 export interface CreateMaintenanceDto {
   vehicleId: number;
   type: 'routine' | 'repair' | 'inspection' | 'tire_change' | 'oil_change' | 'other';
   title: string;
-  description?: string;
+  description: string;
   cost: number;
   performedAt: Date;
-  nextMaintenanceDate?: Date;
-  nextMaintenanceKm?: number;
-  currentKm?: number;
-  workshop?: string;
-  parts?: string;
-  notes?: string;
-  reminderDays?: number; // Hatırlatma için kaç gün öncesinden (tarih bazlı)
-  reminderKm?: number; // Hatırlatma için kaç km öncesinden (km bazlı)
+  nextMaintenanceDate: Date;
+  nextMaintenanceKm: number;
+  currentKm: number;
+  workshop: string;
+  parts: string;
+  notes: string;
+  reminderDays: number; // Hatırlatma için kaç gün öncesinden (tarih bazlı)
+  reminderKm: number; // Hatırlatma için kaç km öncesinden (km bazlı)
 }
 
 export interface UpdateMaintenanceDto extends Partial<CreateMaintenanceDto> {}
@@ -221,23 +221,23 @@ export interface Route {
   id: string;
   name: string;
   date: Date;
-  driverId?: string;
-  driver?: Driver;
-  vehicleId?: string;
-  vehicle?: Vehicle;
-  currentKm?: number; // Current kilometer reading of the vehicle
+  driverId: string;
+  driver: Driver;
+  vehicleId: string;
+  vehicle: Vehicle;
+  currentKm: number; // Current kilometer reading of the vehicle
   depotId: string;
   status: 'draft' | 'planned' | 'in_progress' | 'completed' | 'cancelled';
   stops: RouteStop[];
-  totalDistance?: number;
-  totalDuration?: number;
+  totalDistance: number;
+  totalDuration: number;
   totalDeliveries: number;
   completedDeliveries: number;
   optimized: boolean;
   createdAt: Date;
-  startedAt?: Date;
-  completedAt?: Date;
-  notes?: string;
+  startedAt: Date;
+  completedAt: Date;
+  notes: string;
 }
 
 // Route Stop Types
@@ -245,30 +245,30 @@ export interface RouteStop {
   id: string;
   routeId: string;
   customerId: string;
-  customer?: Customer;
+  customer: Customer;
   order: number;
   status: 'pending' | 'arrived' | 'completed' | 'failed';
   
-  overrideTimeWindow?: {
+  overrideTimeWindow: {
     start: string;
     end: string;
   };
-  serviceTime?: number;
-  signatureRequired?: boolean;  // YENİ
-  photoRequired?: boolean;      // YENİ
+  serviceTime: number;
+  signatureRequired: boolean;  // YENİ
+  photoRequired: boolean;      // YENİ
 
-  estimatedArrival?: Date;
-  actualArrival?: Date;
-  completedAt?: Date;
-  duration?: number;
-  distance?: number;
-  deliveryProof?: {
-    signature?: string;
-    photo?: string;
-    notes?: string;
+  estimatedArrival: Date;
+  actualArrival: Date;
+  completedAt: Date;
+  duration: number;
+  distance: number;
+  deliveryProof: {
+    signature: string;
+    photo: string;
+    notes: string;
   };
-  failureReason?: string;
-  stopNotes?: string;
+  failureReason: string;
+  stopNotes: string;
 }
 
 // Journey Stop Status Enum
@@ -299,27 +299,27 @@ export interface JourneyStop {
   
   // Time Windows
   estimatedArrivalTime: string;
-  estimatedDepartureTime?: string;
+  estimatedDepartureTime: string;
 
   // ✅ YENİ - Original ETA'lar (planlanan zamanlar - dispatcher analizi için)
-  originalEstimatedArrivalTime?: string;
-  originalEstimatedDepartureTime?: string;
+  originalEstimatedArrivalTime: string;
+  originalEstimatedDepartureTime: string;
 
-  arriveBetweenStart?: string;
-  arriveBetweenEnd?: string;
+  arriveBetweenStart: string;
+  arriveBetweenEnd: string;
 
   // Backend'den gelen field'lar
-  checkInTime?: string;  // ISO string format
-  checkOutTime?: string; // ISO string format
+  checkInTime: string;  // ISO string format
+  checkOutTime: string; // ISO string format
 
   // ✅ YENİ - Delay tracking fields
-  delayReasonCategory?: string;
-  delayReason?: string;
-  newDelay?: number;
-  cumulativeDelay?: number;
+  delayReasonCategory: string;
+  delayReason: string;
+  newDelay: number;
+  cumulativeDelay: number;
 
   // Relations
-  routeStop?: RouteStop;
+  routeStop: RouteStop;
 }
 
 // Journey Status Type
@@ -338,16 +338,16 @@ export interface JourneyStatus {
   journeyId: string;
   stopId: string | number; // ✅ Backend'den number olarak geliyor
   status: JourneyStatusType;
-  notes?: string;
+  notes: string;
   latitude: number;
   longitude: number;
-  additionalValues?: Record<string, string>;
+  additionalValues: Record<string, string>;
   createdAt: Date;
-  failureReason?: string;
-  signatureUrl?: string;
-  photoUrl?: string;
-  signatureBase64?: string; // ✅ Base64 versiyonu da var
-  photoBase64?: string; // ✅ Base64 versiyonu da var
+  failureReason: string;
+  signatureUrl: string;
+  photoUrl: string;
+  signatureBase64: string; // ✅ Base64 versiyonu da var
+  photoBase64: string; // ✅ Base64 versiyonu da var
 }
 
 // Journey (Active Route) Types
@@ -357,19 +357,19 @@ export interface Journey {
   route: Route;
   status: 'preparing' | 'started' | 'in_progress' | 'completed' | 'cancelled';
   currentStopIndex: number;
-  startedAt?: Date;
-  completedAt?: Date;
-  startKm?: number; // ✅ YENİ - Sefer başlangıç kilometresi
-  endKm?: number; // ✅ YENİ - Sefer bitiş kilometresi
-  startFuel?: string; // ✅ YENİ - Sefer başlangıç yakıt seviyesi
-  endFuel?: string; // ✅ YENİ - Sefer bitiş yakıt seviyesi
-  vehicleCondition?: string; // ✅ YENİ - Sefer bitişindeki araç durumu
-  needsReoptimization?: boolean; // ✅ YENİ - Optimizasyon gerekiyor mu?
+  startedAt: Date;
+  completedAt: Date;
+  startKm: number; // ✅ YENİ - Sefer başlangıç kilometresi
+  endKm: number; // ✅ YENİ - Sefer bitiş kilometresi
+  startFuel: string; // ✅ YENİ - Sefer başlangıç yakıt seviyesi
+  endFuel: string; // ✅ YENİ - Sefer bitiş yakıt seviyesi
+  vehicleCondition: string; // ✅ YENİ - Sefer bitişindeki araç durumu
+  needsReoptimization: boolean; // ✅ YENİ - Optimizasyon gerekiyor mu
   totalDistance: number;
   totalDuration: number;
-  stops?: JourneyStop[];
-  statuses?: JourneyStatus[];
-  liveLocation?: LiveLocation;
+  stops: JourneyStop[];
+  statuses: JourneyStatus[];
+  liveLocation: LiveLocation;
 }
 
 // LiveLocation Type
@@ -377,9 +377,9 @@ export interface LiveLocation {
   latitude: number;
   longitude: number;
   timestamp: Date;
-  speed?: number;
-  heading?: number;
-  accuracy?: number;
+  speed: number;
+  heading: number;
+  accuracy: number;
 }
 
 // Depot Types
@@ -390,7 +390,7 @@ export interface Depot {
   latitude: number;
   longitude: number;
   isDefault: boolean;
-  workingHours?: {
+  workingHours: {
     [key: string]: {
       open: string;
       close: string;
@@ -426,19 +426,19 @@ export interface DriverPerformanceReport {
   avgDeliveryTime: number;
   totalDistance: number;
   rating: number;
-  successRate?: number;
+  successRate: number;
 }
 
 export interface VehicleUtilizationReport {
   vehicleId: string;
   plateNumber: string;
-  vehicleType?: string;
+  vehicleType: string;
   totalRoutes: number;
   totalDistance: number;
-  totalDuration?: number;
+  totalDuration: number;
   utilizationRate: number;
-  avgDistancePerRoute?: number;
-  status?: Vehicle['status'];
+  avgDistancePerRoute: number;
+  status: Vehicle['status'];
 }
 
 export interface CustomerAnalyticsReport {
@@ -448,7 +448,7 @@ export interface CustomerAnalyticsReport {
   completedOrders: number;
   failedOrders: number;
   avgServiceTime: number;
-  lastOrderDate?: Date;
+  lastOrderDate: Date;
 }
 
 export interface RouteEfficiencyReport {
@@ -461,7 +461,7 @@ export interface RouteEfficiencyReport {
   plannedDuration: number;
   actualDuration: number;
   efficiencyScore: number;
-  optimizationSavings?: number;
+  optimizationSavings: number;
 }
 
 export interface TimeBasedReport {
@@ -474,13 +474,13 @@ export interface TimeBasedReport {
 }
 
 export interface ReportFilters {
-  startDate?: Date;
-  endDate?: Date;
-  driverId?: string;
-  vehicleId?: string;
-  customerId?: string;
-  routeStatus?: Route['status'];
-  depotId?: string;
+  startDate: Date;
+  endDate: Date;
+  driverId: string;
+  vehicleId: string;
+  customerId: string;
+  routeStatus: Route['status'];
+  depotId: string;
 }
 
 export interface ReportSummary {
@@ -493,22 +493,22 @@ export interface ReportSummary {
   activeVehicles: number;
   totalCustomers: number;
   onTimeDeliveryRate: number;
-  fuelEfficiency?: number;
-  costPerDelivery?: number;
+  fuelEfficiency: number;
+  costPerDelivery: number;
 }
 
 export interface KPIMetric {
   id: string;
   name: string;
   value: number | string;
-  unit?: string;
-  change?: number;
-  changeType?: 'increase' | 'decrease' | 'neutral';
-  target?: number;
-  icon?: string;
-  color?: string;
-  description?: string;
-  lastUpdated?: Date;
+  unit: string;
+  change: number;
+  changeType: 'increase' | 'decrease' | 'neutral';
+  target: number;
+  icon: string;
+  color: string;
+  description: string;
+  lastUpdated: Date;
 }
 
 export interface OptimizationResponse {
@@ -519,20 +519,20 @@ export interface OptimizationResponse {
   totalDistance: number;
   totalDuration: number;
   hasExclusions: boolean;
-  endDetails?: {
+  endDetails: {
     name: string;
     address: string;
     latitude: number;
     longitude: number;
-    estimatedArrivalTime?: string;
+    estimatedArrivalTime: string;
   };
 }
 
 export interface ExcludedStop {
   stop: RouteStop;
-  customer?: Customer;
+  customer: Customer;
   reason: string;
-  timeWindowConflict?: string;
+  timeWindowConflict: string;
 }
 
 export type OptimizationStatus = 'none' | 'success' | 'partial';
@@ -540,17 +540,17 @@ export type OptimizationStatus = 'none' | 'success' | 'partial';
 // Route Form Types
 export interface StopData {
   customer: Customer;
-  overrideTimeWindow?: { start: string; end: string };
-  serviceTime?: number;
-  signatureRequired?: boolean;  // YENİ
-  photoRequired?: boolean;      // YENİ
-  stopNotes?: string;
-  estimatedArrivalTime?: string;
-  estimatedDepartureTime?: string;
+  overrideTimeWindow: { start: string; end: string };
+  serviceTime: number;
+  signatureRequired: boolean;  // YENİ
+  photoRequired: boolean;      // YENİ
+  stopNotes: string;
+  estimatedArrivalTime: string;
+  estimatedDepartureTime: string;
 }
 
 // ✅ YENİ - Delay Reason Helper Functions
-export const getDelayReasonLabel = (category?: string): string => {
+export const getDelayReasonLabel = (category: string): string => {
   if (!category) return '';
 
   switch (category) {
@@ -578,7 +578,7 @@ export const getDelayReasonLabel = (category?: string): string => {
 };
 
 // ✅ YENİ - Fuel Level Helper Functions
-export const getFuelLabel = (fuelLevel?: string): string => {
+export const getFuelLabel = (fuelLevel: string): string => {
   if (!fuelLevel) return '-';
 
   switch (fuelLevel) {
@@ -598,7 +598,7 @@ export const getFuelLabel = (fuelLevel?: string): string => {
 };
 
 // ✅ YENİ - Vehicle Condition Helper Functions
-export const getVehicleConditionLabel = (condition?: string): string => {
+export const getVehicleConditionLabel = (condition: string): string => {
   if (!condition) return '-';
 
   switch (condition) {
@@ -615,7 +615,7 @@ export const getVehicleConditionLabel = (condition?: string): string => {
   }
 };
 
-export const getVehicleConditionColor = (condition?: string): string => {
+export const getVehicleConditionColor = (condition: string): string => {
   if (!condition) return 'bg-gray-100 text-gray-700';
 
   switch (condition) {

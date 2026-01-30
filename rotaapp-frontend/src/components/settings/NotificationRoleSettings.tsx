@@ -66,7 +66,7 @@ const NotificationRoleSettings: React.FC = () => {
       if (existing) {
         return prev.map(m => 
           m.contactRole === roleKey && m.notificationType === notificationTypeKey
-            ? { ...m, isEnabled: enabled }
+             { ...m, isEnabled: enabled }
             : m
         );
       } else {
@@ -100,7 +100,7 @@ const NotificationRoleSettings: React.FC = () => {
   };
 
   const handleResetToDefaults = async () => {
-    if (!confirm('Tüm bildirim ayarları varsayılan değerlere sıfırlanacak. Emin misiniz?')) {
+    if (!confirm('Tüm bildirim ayarları varsayılan değerlere sıfırlanacak. Emin misiniz')) {
       return;
     }
 
@@ -161,7 +161,7 @@ const NotificationRoleSettings: React.FC = () => {
             disabled={resetting}
             className="px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 disabled:opacity-50 flex items-center gap-2"
           >
-            {resetting ? (
+            {resetting  (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <RotateCcw className="w-4 h-4" />
@@ -174,7 +174,7 @@ const NotificationRoleSettings: React.FC = () => {
             disabled={saving}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
           >
-            {saving ? (
+            {saving  (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <Save className="w-4 h-4" />

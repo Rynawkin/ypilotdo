@@ -37,7 +37,7 @@ const TestMap: React.FC = () => {
     // Google Maps'i manuel yükle
     if (!window.google) {
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+      script.src = `https://maps.googleapis.com/maps/api/jskey=${apiKey}&libraries=places`;
       script.async = true;
       script.defer = true;
       
@@ -131,7 +131,7 @@ const TestMap: React.FC = () => {
               <p className="font-medium">Google Maps API Key</p>
               <p className="text-sm text-gray-600">
                 {status === 'checking' && 'Kontrol ediliyor...'}
-                {status === 'success' && `Key aktif: ${apiKey?.substring(0, 10)}...`}
+                {status === 'success' && `Key aktif: ${apiKey.substring(0, 10)}...`}
                 {status === 'error' && errorMessage}
               </p>
             </div>
@@ -139,7 +139,7 @@ const TestMap: React.FC = () => {
 
           {/* Map Load Status */}
           <div className="flex items-center space-x-3">
-            {mapLoaded ? (
+            {mapLoaded  (
               <CheckCircle className="w-5 h-5 text-green-600" />
             ) : (
               <AlertCircle className="w-5 h-5 text-gray-400" />
@@ -147,7 +147,7 @@ const TestMap: React.FC = () => {
             <div>
               <p className="font-medium">Harita Yükleme</p>
               <p className="text-sm text-gray-600">
-                {mapLoaded ? 'Harita başarıyla yüklendi' : 'Harita henüz yüklenmedi'}
+                {mapLoaded  'Harita başarıyla yüklendi' : 'Harita henüz yüklenmedi'}
               </p>
             </div>
           </div>
@@ -169,9 +169,9 @@ const TestMap: React.FC = () => {
         <h3 className="font-semibold mb-2">Debug Bilgileri:</h3>
         <pre className="text-xs text-gray-600">
           {JSON.stringify({
-            apiKeyLength: apiKey?.length || 0,
+            apiKeyLength: apiKey.length || 0,
             googleLoaded: typeof window !== 'undefined' && !!window.google,
-            mapsLoaded: typeof window !== 'undefined' && !!window.google?.maps,
+            mapsLoaded: typeof window !== 'undefined' && !!window.google.maps,
             env: import.meta.env.MODE
           }, null, 2)}
         </pre>
@@ -200,7 +200,7 @@ const TestMap: React.FC = () => {
           <li>1. Console'da (F12) kırmızı hata var mı kontrol edin</li>
           <li>2. API Key'in doğru yazıldığından emin olun</li>
           <li>3. Google Cloud Console'da API'lerin aktif olduğunu kontrol edin</li>
-          <li>4. API Key kısıtlamalarını kontrol edin (localhost:5173 eklendi mi?)</li>
+          <li>4. API Key kısıtlamalarını kontrol edin (localhost:5173 eklendi mi)</li>
         </ol>
       </div>
     </div>

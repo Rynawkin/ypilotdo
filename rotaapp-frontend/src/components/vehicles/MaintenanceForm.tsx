@@ -5,7 +5,7 @@ import { maintenanceService } from '@/services/maintenance.service';
 
 interface MaintenanceFormProps {
   vehicle: Vehicle;
-  maintenance?: VehicleMaintenance | null;
+  maintenance: VehicleMaintenance | null;
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -43,7 +43,7 @@ const MaintenanceForm: React.FC<MaintenanceFormProps> = ({
         description: maintenance.description || '',
         cost: maintenance.cost,
         performedAt: new Date(maintenance.performedAt),
-        nextMaintenanceDate: maintenance.nextMaintenanceDate ? new Date(maintenance.nextMaintenanceDate) : undefined,
+        nextMaintenanceDate: maintenance.nextMaintenanceDate  new Date(maintenance.nextMaintenanceDate) : undefined,
         nextMaintenanceKm: maintenance.nextMaintenanceKm,
         currentKm: maintenance.currentKm,
         workshop: maintenance.workshop || '',
@@ -81,8 +81,8 @@ const MaintenanceForm: React.FC<MaintenanceFormProps> = ({
 
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'number' ? (value ? parseFloat(value) : undefined) :
-              type === 'date' ? (value ? new Date(value) : undefined) :
+      [name]: type === 'number'  (value  parseFloat(value) : undefined) :
+              type === 'date'  (value  new Date(value) : undefined) :
               value
     }));
   };
@@ -94,7 +94,7 @@ const MaintenanceForm: React.FC<MaintenanceFormProps> = ({
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-900 flex items-center">
             <Wrench className="w-5 h-5 mr-2 text-blue-600" />
-            {maintenance ? 'Bakım Kaydını Düzenle' : 'Yeni Bakım Kaydı'}
+            {maintenance  'Bakım Kaydını Düzenle' : 'Yeni Bakım Kaydı'}
           </h2>
           <button
             onClick={onClose}
@@ -177,7 +177,7 @@ const MaintenanceForm: React.FC<MaintenanceFormProps> = ({
               <input
                 type="date"
                 name="performedAt"
-                value={formData.performedAt instanceof Date ? formData.performedAt.toISOString().split('T')[0] : ''}
+                value={formData.performedAt instanceof Date  formData.performedAt.toISOString().split('T')[0] : ''}
                 onChange={handleChange}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -251,7 +251,7 @@ const MaintenanceForm: React.FC<MaintenanceFormProps> = ({
                 <input
                   type="date"
                   name="nextMaintenanceDate"
-                  value={formData.nextMaintenanceDate instanceof Date ? formData.nextMaintenanceDate.toISOString().split('T')[0] : ''}
+                  value={formData.nextMaintenanceDate instanceof Date  formData.nextMaintenanceDate.toISOString().split('T')[0] : ''}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                 />
@@ -364,7 +364,7 @@ const MaintenanceForm: React.FC<MaintenanceFormProps> = ({
               disabled={loading}
               className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-blue-400"
             >
-              {loading ? (
+              {loading  (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                   Kaydediliyor...
@@ -372,7 +372,7 @@ const MaintenanceForm: React.FC<MaintenanceFormProps> = ({
               ) : (
                 <>
                   <Save className="w-4 h-4 mr-2" />
-                  {maintenance ? 'Güncelle' : 'Kaydet'}
+                  {maintenance  'Güncelle' : 'Kaydet'}
                 </>
               )}
             </button>

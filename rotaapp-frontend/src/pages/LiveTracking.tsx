@@ -148,7 +148,7 @@ const LiveTracking: React.FC = () => {
       // Journey'leri güncelle
       setJourneys(prev => {
         const updated = [...prev];
-        const index = updated.findIndex(j => j.id === data.journeyId?.toString());
+        const index = updated.findIndex(j => j.id === data.journeyId.toString());
         
         if (index >= 0 && data.location) {
           updated[index] = {
@@ -170,7 +170,7 @@ const LiveTracking: React.FC = () => {
 
       // Seçili journey güncellendiyse
       setSelectedJourney(prev => {
-        if (prev && prev.id === data.journeyId?.toString() && data.location) {
+        if (prev && prev.id === data.journeyId.toString() && data.location) {
           return {
             ...prev,
             liveLocation: data.location,
@@ -268,7 +268,7 @@ const LiveTracking: React.FC = () => {
         setJourneys(activeJourneysData);
         
         // Seçili journey güncellemesi
-        const currentSelectedId = selectedJourneyRef.current?.id;
+        const currentSelectedId = selectedJourneyRef.current.id;
         if (currentSelectedId) {
           const updated = activeJourneysData.find((j: any) => j.id === currentSelectedId);
           if (updated) {
@@ -311,21 +311,21 @@ const LiveTracking: React.FC = () => {
       );
     } else if (filter === 'delayed') {
       filtered = filtered.filter(j => {
-        if (!j.route?.stops || !j.currentStopIndex) return false;
+        if (!j.route.stops || !j.currentStopIndex) return false;
         const currentStop = j.route.stops[j.currentStopIndex];
-        const estimatedTime = currentStop?.estimatedArrivalTime;
+        const estimatedTime = currentStop.estimatedArrivalTime;
         return estimatedTime && new Date(estimatedTime) < new Date();
       });
     }
 
     // Apply driver filter
     if (selectedDriverId) {
-      filtered = filtered.filter(j => j.driverId?.toString() === selectedDriverId);
+      filtered = filtered.filter(j => j.driverId.toString() === selectedDriverId);
     }
 
     // Apply vehicle filter
     if (selectedVehicleId) {
-      filtered = filtered.filter(j => j.vehicleId?.toString() === selectedVehicleId);
+      filtered = filtered.filter(j => j.vehicleId.toString() === selectedVehicleId);
     }
 
     return filtered;
@@ -351,7 +351,7 @@ const LiveTracking: React.FC = () => {
   };
 
   const handleJourneySelect = useCallback((journey: any) => {
-    if (journey.id !== selectedJourney?.id) {
+    if (journey.id !== selectedJourney.id) {
       setSelectedJourney(journey);
       selectedJourneyRef.current = journey;
     }
@@ -407,7 +407,7 @@ const LiveTracking: React.FC = () => {
 
   const getTotalStops = () => {
     return journeys.reduce((sum, j) => {
-      const stops = j.totalStops || j.route?.stops?.length || 0;
+      const stops = j.totalStops || j.route.stops.length || 0;
       return sum + stops;
     }, 0);
   };
@@ -425,7 +425,7 @@ const LiveTracking: React.FC = () => {
 
   const getAverageSpeed = () => {
     const speeds = journeys
-      .map(j => j.liveLocation?.speed || 0)
+      .map(j => j.liveLocation.speed || 0)
       .filter(speed => speed > 0);
     
     if (speeds.length === 0) return 0;
@@ -468,7 +468,7 @@ const LiveTracking: React.FC = () => {
           <div className="flex items-center space-x-2">
             {getConnectionIcon()}
             <span className="text-sm text-gray-600">
-              {isConnected ? 'Bağlı' : 'Bağlantı Yok'}
+              {isConnected  'Bağlı' : 'Bağlantı Yok'}
             </span>
           </div>
 
@@ -490,11 +490,11 @@ const LiveTracking: React.FC = () => {
             onClick={() => setAutoRefresh(!autoRefresh)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
               autoRefresh 
-                ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+                 'bg-green-100 text-green-700 hover:bg-green-200' 
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            {autoRefresh ? (
+            {autoRefresh  (
               <>
                 <RefreshCw className="w-4 h-4 animate-spin" />
                 <span>Otomatik (10sn)</span>
@@ -527,7 +527,7 @@ const LiveTracking: React.FC = () => {
             disabled={loading}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${loading  'animate-spin' : ''}`} />
             <span>Yenile</span>
           </button>
         </div>
@@ -688,7 +688,7 @@ const LiveTracking: React.FC = () => {
               </div>
             </div>
             <div className="p-4">
-              {filteredJourneys.length === 0 ? (
+              {filteredJourneys.length === 0  (
                 <div className="flex items-center justify-center bg-gray-50 rounded-lg" style={{ height: '600px' }}>
                   <div className="text-center">
                     <Car className="w-16 h-16 text-gray-300 mx-auto mb-4" />
@@ -698,14 +698,14 @@ const LiveTracking: React.FC = () => {
                     </p>
                   </div>
                 </div>
-              ) : selectedJourney && selectedJourney.route ? (
+              ) : selectedJourney && selectedJourney.route  (
                 <LiveMap
                   journeys={[selectedJourney]}
                   selectedJourneyId={selectedJourney.id}
                   onJourneySelect={handleJourneySelect}
                   height="600px"
                 />
-              ) : selectedJourney && !selectedJourney.route ? (
+              ) : selectedJourney && !selectedJourney.route  (
                 <div className="flex items-center justify-center bg-gray-50 rounded-lg" style={{ height: '600px' }}>
                   <div className="text-center">
                     <AlertCircle className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
@@ -739,7 +739,7 @@ const LiveTracking: React.FC = () => {
               </h2>
             </div>
             <div className="divide-y max-h-[600px] overflow-y-auto">
-              {filteredJourneys.length === 0 ? (
+              {filteredJourneys.length === 0  (
                 <div className="p-8 text-center">
                   <Car className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                   <p className="text-gray-500">Aktif sefer bulunmuyor</p>
@@ -752,7 +752,7 @@ const LiveTracking: React.FC = () => {
                   <VehicleCard
                     key={`vehicle-${journey.id || index}`}
                     journey={journey}
-                    selected={selectedJourney?.id === journey.id}
+                    selected={selectedJourney.id === journey.id}
                     onClick={() => handleJourneySelect(journey)}
                   />
                 ))

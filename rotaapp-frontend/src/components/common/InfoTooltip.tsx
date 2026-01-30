@@ -6,7 +6,7 @@ import { HelpCircle } from 'lucide-react';
 interface InfoTooltipProps {
   title: string;
   content: string;
-  className?: string;
+  className: string;
 }
 
 export const InfoTooltip: React.FC<InfoTooltipProps> = ({ title, content, className = '' }) => {
@@ -38,7 +38,7 @@ export const InfoTooltip: React.FC<InfoTooltipProps> = ({ title, content, classN
 // Yaygın kullanılan tooltip'ler için hazır metinler
 export const TOOLTIP_TEXTS = {
   SLA: {
-    title: 'SLA Nedir?',
+    title: 'SLA Nedir',
     content: 'Service Level Agreement (Hizmet Seviyesi Anlaşması): Zamanında teslimat oranını gösterir. %90 ve üzeri mükemmel performans olarak kabul edilir.'
   },
   ORIGINAL_PLAN: {

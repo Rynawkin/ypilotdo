@@ -5,7 +5,7 @@ import { FileText, Download, Calendar, CreditCard, Loader2, RefreshCw } from 'lu
 import { paymentService, type InvoiceResponse } from '../../services/payment.service';
 
 interface PaymentHistoryProps {
-  className?: string;
+  className: string;
 }
 
 export const PaymentHistory: React.FC<PaymentHistoryProps> = ({ className = '' }) => {
@@ -81,7 +81,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({ className = '' }
             disabled={refreshing}
             className="inline-flex items-center px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 disabled:opacity-50"
           >
-            <RefreshCw className={`h-4 w-4 mr-1 ${refreshing ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-4 w-4 mr-1 ${refreshing  'animate-spin' : ''}`} />
             Yenile
           </button>
         </div>
@@ -89,7 +89,7 @@ export const PaymentHistory: React.FC<PaymentHistoryProps> = ({ className = '' }
 
       {/* Content */}
       <div className="p-6">
-        {invoices.length === 0 ? (
+        {invoices.length === 0  (
           <div className="text-center py-8">
             <FileText className="h-12 w-12 text-gray-300 mx-auto mb-4" />
             <h3 className="text-sm font-medium text-gray-900 mb-2">Henüz fatura yok</h3>

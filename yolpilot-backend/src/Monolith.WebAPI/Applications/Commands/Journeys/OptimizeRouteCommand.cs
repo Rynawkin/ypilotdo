@@ -1573,43 +1573,63 @@ public class OptimizeRouteCommandHandler : BaseAuthenticatedCommandHandler<Optim
                     logger.LogInformation("Depot will be added as final stop (non-optimized route)");
                 }
 
-                // 3. Last stopları sona ekle (eğer varsa)
+                // 3. Append last stops (if any) - handle depot stop separately
+                var depotStops = lastStops.Where(s => IsDepotStop(s, route.Depot) && !s.IsExcluded).ToList();
+                if (depotStops.Count > 1)
+                {
+                    logger.LogWarning("Multiple depot stops detected for route {RouteId}: {Count}", route.Id, depotStops.Count);
+                }
+
+                lastStops = lastStops.Except(depotStops).ToList();
                 finalOrderedStops.AddRange(lastStops);
 
                 // Depoyu son durak olarak database'e ekle
-                var depotStop = new Data.Journeys.RouteStop();
-                context.Entry(depotStop).State = EntityState.Added;
-                context.Entry(depotStop).CurrentValues.SetValues(new
+                var existingDepotStop = depotStops.FirstOrDefault()
+                    ?? route.Stops.FirstOrDefault(s => IsDepotStop(s, route.Depot) && !s.IsExcluded);
+
+                if (existingDepotStop == null)
                 {
-                    Name = route.Depot.Name + " (Dönüş)",
-                    Address = route.Depot.Address,
-                    Latitude = route.Depot.Latitude,
-                    Longitude = route.Depot.Longitude,
-                    OrderType = OrderType.Last,
-                    Type = 1, // Delivery
-                    ServiceTime = TimeSpan.FromMinutes(5),
-                    RouteId = route.Id,
-                    CustomerId = (int?)null, // Depot için customer yok
-                    ContactFullName = route.Depot.Name,
-                    ContactPhone = "",
-                    ContactEmail = "",
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                    Order = finalOrderedStops.Count + 1,
-                    EstimatedArrivalTime = (TimeSpan?)null,
-                    EstimatedDepartureTime = (TimeSpan?)null,
-                    ArriveBetweenStart = (TimeSpan?)null,
-                    ArriveBetweenEnd = (TimeSpan?)null,
-                    ExclusionReason = "",
-                    IsDeleted = false,
-                    IsExcluded = false,
-                    Notes = "",
-                    PhotoRequired = false,
-                    ProofOfDeliveryRequired = false,
-                    SignatureRequired = false
-                });
-                finalOrderedStops.Add(depotStop);
-                logger.LogInformation("Added depot as final stop: {DepotName}", route.Depot.Name);
+                    var depotStop = new Data.Journeys.RouteStop();
+                    context.Entry(depotStop).State = EntityState.Added;
+                    context.Entry(depotStop).CurrentValues.SetValues(new
+                    {
+                        Name = route.Depot.Name + " (D??n????)",
+                        Address = route.Depot.Address,
+                        Latitude = route.Depot.Latitude,
+                        Longitude = route.Depot.Longitude,
+                        OrderType = OrderType.Last,
+                        Type = 1, // Delivery
+                        ServiceTime = TimeSpan.FromMinutes(5),
+                        RouteId = route.Id,
+                        CustomerId = (int?)null, // No customer for depot
+                        ContactFullName = route.Depot.Name,
+                        ContactPhone = "",
+                        ContactEmail = "",
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        Order = finalOrderedStops.Count + 1,
+                        EstimatedArrivalTime = (TimeSpan?)null,
+                        EstimatedDepartureTime = (TimeSpan?)null,
+                        ArriveBetweenStart = (TimeSpan?)null,
+                        ArriveBetweenEnd = (TimeSpan?)null,
+                        ExclusionReason = "",
+                        IsDeleted = false,
+                        IsExcluded = false,
+                        Notes = "",
+                        PhotoRequired = false,
+                        ProofOfDeliveryRequired = false,
+                        SignatureRequired = false
+                    });
+                    finalOrderedStops.Add(depotStop);
+                    logger.LogInformation("Added depot as final stop: {DepotName}", route.Depot.Name);
+                }
+                else
+                {
+                    existingDepotStop.Order = finalOrderedStops.Count + 1;
+                    context.Entry(existingDepotStop).State = EntityState.Modified;
+                    finalOrderedStops.Add(existingDepotStop);
+                    logger.LogInformation("Updated existing depot stop order to: {Order}", existingDepotStop.Order);
+                }
 
                 // Final sıralamayı database'e kaydet
                 for (int newOrder = 0; newOrder < finalOrderedStops.Count - 1; newOrder++) // -1 çünkü depot stop zaten eklendi
@@ -1727,6 +1747,14 @@ public class OptimizeRouteCommandHandler : BaseAuthenticatedCommandHandler<Optim
 
         logger.LogInformation("=== GOOGLE OPTIMIZE END ===");
         return directionsResponse;
+    }
+
+    private static bool IsDepotStop(Data.Journeys.RouteStop stop, Data.Workspace.Depot depot)
+    {
+        const double tolerance = 0.000001;
+        return stop.CustomerId == null &&
+               Math.Abs(stop.Latitude - depot.Latitude) < tolerance &&
+               Math.Abs(stop.Longitude - depot.Longitude) < tolerance;
     }
 
     private List<Data.Journeys.RouteStop> Apply2OptImprovement(List<Data.Journeys.RouteStop> stops, Data.Workspace.Depot depot)

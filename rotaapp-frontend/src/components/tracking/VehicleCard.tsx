@@ -16,8 +16,8 @@ import { Journey } from '@/types';
 
 interface VehicleCardProps {
   journey: Journey;
-  selected?: boolean;
-  onClick?: () => void;
+  selected: boolean;
+  onClick: () => void;
 }
 
 const VehicleCard: React.FC<VehicleCardProps> = ({ journey, selected, onClick }) => {
@@ -68,7 +68,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ journey, selected, onClick })
 
   // ✅ DÜZELTME: Null check ekledik
   const getCurrentStop = () => {
-    if (!journey.route?.stops || !Array.isArray(journey.route.stops)) {
+    if (!journey.route.stops || !Array.isArray(journey.route.stops)) {
       return null;
     }
     const index = journey.currentStopIndex || 0;
@@ -77,12 +77,12 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ journey, selected, onClick })
 
   // ✅ DÜZELTME: Null check ekledik
   const getProgress = () => {
-    if (!journey.route?.stops || !Array.isArray(journey.route.stops)) {
+    if (!journey.route.stops || !Array.isArray(journey.route.stops)) {
       return 0;
     }
     const completed = journey.route.stops.filter(s => s.status === 'completed').length;
     const total = journey.route.stops.length;
-    return total > 0 ? Math.round((completed / total) * 100) : 0;
+    return total > 0  Math.round((completed / total) * 100) : 0;
   };
 
   const getTimeElapsed = () => {
@@ -96,7 +96,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ journey, selected, onClick })
 
   // ✅ DÜZELTME: Null check ekledik
   const getETA = () => {
-    if (!journey.route?.stops || !Array.isArray(journey.route.stops)) {
+    if (!journey.route.stops || !Array.isArray(journey.route.stops)) {
       return 'Bilinmiyor';
     }
     const remainingStops = journey.route.stops.filter(s => 
@@ -111,11 +111,11 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ journey, selected, onClick })
 
   // ✅ DÜZELTME: Null check ekledik
   const getTotalDeliveries = () => {
-    return journey.route?.totalDeliveries || journey.route?.stops?.length || 0;
+    return journey.route.totalDeliveries || journey.route.stops.length || 0;
   };
 
   const getCompletedDeliveries = () => {
-    return journey.route?.completedDeliveries || 0;
+    return journey.route.completedDeliveries || 0;
   };
 
   const currentStop = getCurrentStop();
@@ -124,7 +124,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ journey, selected, onClick })
     <div
       onClick={onClick}
       className={`p-4 cursor-pointer transition-all hover:bg-gray-50 ${
-        selected ? 'bg-blue-50 border-l-4 border-blue-600' : ''
+        selected  'bg-blue-50 border-l-4 border-blue-600' : ''
       }`}
     >
       {/* Header */}
@@ -133,10 +133,10 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ journey, selected, onClick })
           <Car className="w-5 h-5 text-gray-600 mr-2" />
           <div>
             <p className="font-semibold text-gray-900">
-              {journey.route?.vehicle?.plateNumber || 'Araç Yok'}
+              {journey.route.vehicle.plateNumber || 'Araç Yok'}
             </p>
             <p className="text-xs text-gray-500">
-              {journey.route?.vehicle?.brand} {journey.route?.vehicle?.model}
+              {journey.route.vehicle.brand} {journey.route.vehicle.model}
             </p>
           </div>
         </div>
@@ -150,7 +150,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ journey, selected, onClick })
       <div className="flex items-center mb-3">
         <User className="w-4 h-4 text-gray-400 mr-2" />
         <span className="text-sm text-gray-700">
-          {journey.route?.driver?.name || 'Sürücü Atanmadı'}
+          {journey.route.driver.name || 'Sürücü Atanmadı'}
         </span>
       </div>
 
@@ -160,10 +160,10 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ journey, selected, onClick })
           <MapPin className="w-4 h-4 text-gray-400 mr-2 mt-0.5" />
           <div className="flex-1">
             <p className="text-sm text-gray-700">
-              Hedef: {currentStop.customer?.name || 'Müşteri Bilgisi Yok'}
+              Hedef: {currentStop.customer.name || 'Müşteri Bilgisi Yok'}
             </p>
             <p className="text-xs text-gray-500 mt-0.5">
-              {currentStop.customer?.address || currentStop.address || 'Adres bilgisi yok'}
+              {currentStop.customer.address || currentStop.address || 'Adres bilgisi yok'}
             </p>
           </div>
         </div>
@@ -177,7 +177,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ journey, selected, onClick })
             <div className="flex items-center">
               <TrendingUp className="w-3 h-3 text-gray-400 mr-1" />
               <span className="text-xs font-semibold text-gray-700">
-                {journey.liveLocation?.speed ? Math.round(journey.liveLocation.speed) : 0} km/h
+                {journey.liveLocation.speed  Math.round(journey.liveLocation.speed) : 0} km/h
               </span>
             </div>
           </div>

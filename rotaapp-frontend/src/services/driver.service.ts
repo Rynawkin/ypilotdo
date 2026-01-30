@@ -6,15 +6,15 @@ import { Driver } from '@/types';
 export interface CreateDriverDto {
   name: string;
   phone: string;
-  email?: string;
+  email: string;
   licenseNumber: string;
-  vehicleId?: string;
-  status?: 'available' | 'busy' | 'offline';
-  currentLatitude?: number;
-  currentLongitude?: number;
-  avatar?: string;
-  rating?: number;
-  totalDeliveries?: number;
+  vehicleId: string;
+  status: 'available' | 'busy' | 'offline';
+  currentLatitude: number;
+  currentLongitude: number;
+  avatar: string;
+  rating: number;
+  totalDeliveries: number;
 }
 
 export interface UpdateDriverDto extends CreateDriverDto {}
@@ -26,11 +26,11 @@ export interface UpdateDriverStatusDto {
 export interface BulkImportDriverDto {
   name: string;
   phone: string;
-  email?: string;
+  email: string;
   licenseNumber: string;
-  status?: string;
-  rating?: number;
-  totalDeliveries?: number;
+  status: string;
+  rating: number;
+  totalDeliveries: number;
 }
 
 export interface BulkImportResult {
@@ -48,7 +48,7 @@ class DriverService {
    * @param status - Filter by status (available, busy, offline, all)
    * @param search - Search by name, phone, email or license number
    */
-  async getAll(status?: string, search?: string): Promise<Driver[]> {
+  async getAll(status: string, search: string): Promise<Driver[]> {
     const params = new URLSearchParams();
     if (status && status !== 'all') {
       params.append('status', status);
@@ -58,7 +58,7 @@ class DriverService {
     }
     
     const queryString = params.toString();
-    const url = queryString ? `${this.basePath}?${queryString}` : this.basePath;
+    const url = queryString  `${this.basePath}${queryString}` : this.basePath;
     
     const response = await api.get<Driver[]>(url);
     return response.data;
@@ -166,11 +166,11 @@ class DriverService {
       const values = lines[i].split(',');
       if (values.length >= 5) {
         drivers.push({
-          name: values[1]?.trim(),
-          phone: values[2]?.trim(),
-          email: values[3]?.trim() || undefined,
-          licenseNumber: values[4]?.trim(),
-          status: values[5]?.trim() || 'available',
+          name: values[1].trim(),
+          phone: values[2].trim(),
+          email: values[3].trim() || undefined,
+          licenseNumber: values[4].trim(),
+          status: values[5].trim() || 'available',
           rating: parseFloat(values[6]) || undefined,
           totalDeliveries: parseInt(values[7]) || 0
         });

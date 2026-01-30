@@ -1,15 +1,15 @@
 export interface MessageTemplate {
-  id?: number;
+  id: number;
   templateType: TemplateType;
   channel: TemplateChannel;
   name: string;
-  subject?: string;
+  subject: string;
   body: string;
-  variables?: string[];
+  variables: string[];
   isActive: boolean;
   isDefault: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export enum TemplateType {
@@ -28,8 +28,8 @@ export enum TemplateChannel {
 export interface TemplateVariable {
   key: string;
   label: string;
-  description?: string;
-  example?: string;
+  description: string;
+  example: string;
 }
 
 export interface TemplateVariableGroup {

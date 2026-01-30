@@ -6,14 +6,14 @@ export interface Member {
     id: string;
     fullName: string;
     email: string;
-    phoneNumber?: string;
+    phoneNumber: string;
     isDriver: boolean;
     isDispatcher: boolean;
     isAdmin: boolean;
     isSuperAdmin: boolean;
     isOnboarded: boolean;
     workspaceId: number;
-    depotId?: number;
+    depotId: number;
     isRegistered: boolean;
 }
 
@@ -25,8 +25,8 @@ export interface CreateMemberRequest {
 }
 
 export interface UpdateMemberRequest {
-    depotId?: number;
-    roles?: number[];
+    depotId: number;
+    roles: number[];
 }
 
 export interface UpdateMemberRoleRequest {
@@ -37,26 +37,26 @@ export interface CreateDispatcherRequest {
   fullName: string;
   email: string;
   password: string;
-  phoneNumber?: string;
-  depotId?: number;
+  phoneNumber: string;
+  depotId: number;
 }
 
 
 class MemberService {
     // Get all members
-    async getMembers(filters?: {
-        isDriver?: boolean;
-        isDispatcher?: boolean;
-        isAdmin?: boolean;
-        searchQuery?: string;
+    async getMembers(filters: {
+        isDriver: boolean;
+        isDispatcher: boolean;
+        isAdmin: boolean;
+        searchQuery: string;
     }): Promise<Member[]> {
         const params = new URLSearchParams();
-        if (filters?.isDriver !== undefined) params.append('isDriver', filters.isDriver.toString());
-        if (filters?.isDispatcher !== undefined) params.append('isDispatcher', filters.isDispatcher.toString());
-        if (filters?.isAdmin !== undefined) params.append('isAdmin', filters.isAdmin.toString());
-        if (filters?.searchQuery) params.append('searchQuery', filters.searchQuery);
+        if (filters.isDriver !== undefined) params.append('isDriver', filters.isDriver.toString());
+        if (filters.isDispatcher !== undefined) params.append('isDispatcher', filters.isDispatcher.toString());
+        if (filters.isAdmin !== undefined) params.append('isAdmin', filters.isAdmin.toString());
+        if (filters.searchQuery) params.append('searchQuery', filters.searchQuery);
 
-        const response = await api.get(`/members${params.toString() ? `?${params}` : ''}`);
+        const response = await api.get(`/members${params.toString()  `${params}` : ''}`);
         return response.data;
     }
 
@@ -73,7 +73,7 @@ class MemberService {
     
     // Save invited member (complete signup)
     async saveInvitedMember(token: string, password: string): Promise<any> {
-        const response = await api.post(`/members/save-invited?token=${token}`, { password });
+        const response = await api.post(`/members/save-invitedtoken=${token}`, { password });
         return response.data;
     }
 

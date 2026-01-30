@@ -6,7 +6,7 @@ interface PreviewTemplateRequest {
 }
 
 interface PreviewTemplateResponse {
-  subject?: string;
+  subject: string;
   body: string;
 }
 

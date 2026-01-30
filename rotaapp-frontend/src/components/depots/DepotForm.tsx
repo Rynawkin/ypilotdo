@@ -19,7 +19,7 @@ import { useJsApiLoader, Autocomplete } from '@react-google-maps/api';
 const libraries: ("places" | "drawing" | "geometry")[] = ['places', 'geometry'];
 
 interface DepotFormProps {
-  depot?: Depot;
+  depot: Depot;
   onSubmit: (data: Partial<Depot>) => Promise<void>;
   onCancel: () => void;
 }
@@ -59,12 +59,12 @@ const DepotForm: React.FC<DepotFormProps> = ({ depot, onSubmit, onCancel }) => {
   });
 
   const [formData, setFormData] = useState<Partial<Depot>>({
-    name: depot?.name || '',
-    address: depot?.address || '',
-    latitude: depot?.latitude || 40.9869,
-    longitude: depot?.longitude || 29.0252,
-    isDefault: depot?.isDefault || false,
-    workingHours: depot?.workingHours || DEFAULT_HOURS
+    name: depot.name || '',
+    address: depot.address || '',
+    latitude: depot.latitude || 40.9869,
+    longitude: depot.longitude || 29.0252,
+    isDefault: depot.isDefault || false,
+    workingHours: depot.workingHours || DEFAULT_HOURS
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -125,11 +125,11 @@ const DepotForm: React.FC<DepotFormProps> = ({ depot, onSubmit, onCancel }) => {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.name?.trim()) {
+    if (!formData.name.trim()) {
       newErrors.name = 'Depo adı zorunludur';
     }
 
-    if (!formData.address?.trim()) {
+    if (!formData.address.trim()) {
       newErrors.address = 'Adres zorunludur';
     }
 
@@ -189,7 +189,7 @@ const DepotForm: React.FC<DepotFormProps> = ({ depot, onSubmit, onCancel }) => {
       workingHours: {
         ...prev.workingHours,
         [day]: isClosed 
-          ? { open: '08:00', close: '18:00' }
+           { open: '08:00', close: '18:00' }
           : { open: 'closed', close: 'closed' }
       }
     }));
@@ -297,7 +297,7 @@ const DepotForm: React.FC<DepotFormProps> = ({ depot, onSubmit, onCancel }) => {
               value={formData.name}
               onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
               className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.name ? 'border-red-500' : 'border-gray-300'
+                errors.name  'border-red-500' : 'border-gray-300'
               }`}
               placeholder="Örn: Ana Depo - Kadıköy"
             />
@@ -337,7 +337,7 @@ const DepotForm: React.FC<DepotFormProps> = ({ depot, onSubmit, onCancel }) => {
               value={formData.address}
               onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
               className={`flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.address ? 'border-red-500' : 'border-gray-300'
+                errors.address  'border-red-500' : 'border-gray-300'
               }`}
               placeholder="Örn: Kadıköy, Rıhtım Cad. No:1"
             />
@@ -391,7 +391,7 @@ const DepotForm: React.FC<DepotFormProps> = ({ depot, onSubmit, onCancel }) => {
             className="text-sm text-blue-600 hover:text-blue-700 flex items-center mb-4"
           >
             <MapPin className="w-4 h-4 mr-1" />
-            {showMap ? 'Haritayı Gizle' : 'Haritada Göster'}
+            {showMap  'Haritayı Gizle' : 'Haritada Göster'}
           </button>
           
           {showMap && isLoaded && (
@@ -435,7 +435,7 @@ const DepotForm: React.FC<DepotFormProps> = ({ depot, onSubmit, onCancel }) => {
                 </div>
                 
                 <div className="flex-1 flex items-center gap-3">
-                  {!isClosed ? (
+                  {!isClosed  (
                     <>
                       <input
                         type="time"
@@ -462,11 +462,11 @@ const DepotForm: React.FC<DepotFormProps> = ({ depot, onSubmit, onCancel }) => {
                     onClick={() => toggleDayOff(key)}
                     className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
                       isClosed 
-                        ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' 
+                         'bg-gray-100 text-gray-700 hover:bg-gray-200' 
                         : 'bg-red-50 text-red-600 hover:bg-red-100'
                     }`}
                   >
-                    {isClosed ? 'Aç' : 'Kapalı'}
+                    {isClosed  'Aç' : 'Kapalı'}
                   </button>
                   
                   {!isClosed && (
@@ -513,7 +513,7 @@ const DepotForm: React.FC<DepotFormProps> = ({ depot, onSubmit, onCancel }) => {
           className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center disabled:opacity-50"
         >
           <Save className="w-4 h-4 mr-2" />
-          {loading ? 'Kaydediliyor...' : (depot ? 'Güncelle' : 'Kaydet')}
+          {loading  'Kaydediliyor...' : (depot  'Güncelle' : 'Kaydet')}
         </button>
       </div>
 

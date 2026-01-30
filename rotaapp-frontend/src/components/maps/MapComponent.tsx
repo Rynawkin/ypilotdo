@@ -17,21 +17,21 @@ const libraries: ("places" | "drawing" | "geometry")[] = ['places', 'geometry'];
 export type MarkerStyle = 'pin' | 'bubble' | 'shield' | 'emoji';
 
 interface MapComponentProps {
-  center?: LatLng;
-  zoom?: number;
-  height?: string;
-  markers?: MarkerData[];
-  directions?: google.maps.DirectionsResult | null;
-  customers?: Customer[];
-  depot?: LatLng;
-  showTraffic?: boolean;
-  optimizedOrder?: number[];
-  onMapClick?: (latLng: LatLng) => void;
-  onMarkerClick?: (marker: MarkerData) => void;
-  onMapLoad?: (map: google.maps.Map) => void;
-  selectedCustomerId?: string;
-  onCustomerSelect?: (customerId: string) => void;
-  markerStyle?: MarkerStyle;
+  center: LatLng;
+  zoom: number;
+  height: string;
+  markers: MarkerData[];
+  directions: google.maps.DirectionsResult | null;
+  customers: Customer[];
+  depot: LatLng;
+  showTraffic: boolean;
+  optimizedOrder: number[];
+  onMapClick: (latLng: LatLng) => void;
+  onMarkerClick: (marker: MarkerData) => void;
+  onMapLoad: (map: google.maps.Map) => void;
+  selectedCustomerId: string;
+  onCustomerSelect: (customerId: string) => void;
+  markerStyle: MarkerStyle;
 }
 
 // Ultra modern harita stili
@@ -253,7 +253,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   };
 
   // Modern pin-style marker icon oluştur
-  const createPinIcon = (color: string, label?: string) => {
+  const createPinIcon = (color: string, label: string) => {
     if (typeof window === 'undefined' || !window.google || !window.google.maps) return undefined;
 
     // Modern pin SVG path (sharp, clean design)
@@ -306,7 +306,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
   };
 
   // Ana marker icon oluşturucu - style'a göre
-  const createMarkerIcon = (color: string, style: MarkerStyle = 'pin', label?: string) => {
+  const createMarkerIcon = (color: string, style: MarkerStyle = 'pin', label: string) => {
     switch (style) {
       case 'bubble':
         return createBubbleIcon(color);
@@ -331,7 +331,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
       const hasContent = (markers && markers.length > 0) || depot;
 
       if (hasContent) {
-        console.log('Setting bounds with markers:', markers?.length, 'depot:', depot);
+        console.log('Setting bounds with markers:', markers.length, 'depot:', depot);
         const bounds = new window.google.maps.LatLngBounds();
 
         if (depot) {
@@ -349,7 +349,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
         map.fitBounds(bounds);
 
         // Eğer sadece tek bir nokta varsa, zoom level'ı ayarla
-        if ((markers?.length === 1 && !depot) || (!markers?.length && depot)) {
+        if ((markers.length === 1 && !depot) || (!markers.length && depot)) {
           setTimeout(() => {
             map.setZoom(15);
           }, 100);
@@ -375,7 +375,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
     console.log('MapComponent state:', {
       isLoaded,
       mapReady,
-      markersCount: markers?.length,
+      markersCount: markers.length,
       depotExists: !!depot,
       mapExists: !!map
     });
@@ -438,13 +438,13 @@ const MapComponent: React.FC<MapComponentProps> = ({
         <Marker
           key="depot-marker"
           position={depot}
-          icon={markerStyle === 'emoji' ? undefined : createMarkerIcon('#2563EB', markerStyle)}
+          icon={markerStyle === 'emoji'  undefined : createMarkerIcon('#2563EB', markerStyle)}
           title="Ana Depo"
           zIndex={1000}
           label={{
-            text: markerStyle === 'emoji' ? '🏢' : '🏢',
+            text: markerStyle === 'emoji'  '🏢' : '🏢',
             color: 'white',
-            fontSize: markerStyle === 'emoji' ? '32px' : '16px',
+            fontSize: markerStyle === 'emoji'  '32px' : '16px',
             fontWeight: 'bold'
           }}
         />
@@ -466,20 +466,20 @@ const MapComponent: React.FC<MapComponentProps> = ({
         const isSingleMarker = markers.length === 1 && !depot;
 
         // Marker rengi - gradient renkler (sosyal medya için daha çekici)
-        const markerColor = isSelected ? '#EF4444' : isSingleMarker ? '#2563EB' : '#10B981';
+        const markerColor = isSelected  '#EF4444' : isSingleMarker  '#2563EB' : '#10B981';
 
         markerElements.push(
           <Marker
             key={`marker-${marker.customerId || index}`}
             position={marker.position}
-            icon={markerStyle === 'emoji' ? undefined : createMarkerIcon(markerColor, markerStyle)}
+            icon={markerStyle === 'emoji'  undefined : createMarkerIcon(markerColor, markerStyle)}
             title={marker.title || `Müşteri ${index + 1}`}
-            zIndex={isSelected ? 2000 : 500 + index}
-            label={markerStyle === 'emoji' ? {
+            zIndex={isSelected  2000 : 500 + index}
+            label={markerStyle === 'emoji'  {
               text: '📍',
               fontSize: '32px',
               fontWeight: 'bold'
-            } : (marker.label ? {
+            } : (marker.label  {
               text: orderNumber,
               color: 'white',
               fontSize: '14px',
@@ -539,7 +539,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
             <div className="p-3 min-w-[280px]">
               <div className="flex items-start justify-between mb-2">
                 <h3 className="font-bold text-gray-900 text-lg">{selectedMarker.title}</h3>
-                {selectedMarker.customerId && customers.find(c => c.id.toString() === selectedMarker.customerId)?.priority === 'high' && (
+                {selectedMarker.customerId && customers.find(c => c.id.toString() === selectedMarker.customerId).priority === 'high' && (
                   <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                     <Star className="w-3 h-3 mr-1" />
                     Yüksek

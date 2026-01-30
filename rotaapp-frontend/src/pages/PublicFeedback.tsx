@@ -11,13 +11,13 @@ interface FeedbackFormData {
     token: string;
     customerName: string;
     customerAddress: string;
-    driverName?: string;
-    deliveryDate?: string;
+    driverName: string;
+    deliveryDate: string;
     companyName: string;
-    companyLogo?: string;
+    companyLogo: string;
     alreadySubmitted: boolean;
-    submittedAt?: string;
-    rating?: number;
+    submittedAt: string;
+    rating: number;
 }
 
 export default function PublicFeedback() {
@@ -53,7 +53,7 @@ export default function PublicFeedback() {
                 setSubmitted(true);
             }
         } catch (error: any) {
-            setError(error.response?.data?.message || 'Bir hata oluştu');
+            setError(error.response.data.message || 'Bir hata oluştu');
         } finally {
             setLoading(false);
         }
@@ -89,7 +89,7 @@ export default function PublicFeedback() {
             setSubmitted(true);
             toast.success('Değerlendirmeniz için teşekkür ederiz!');
         } catch (error: any) {
-            toast.error(error.response?.data?.message || 'Bir hata oluştu');
+            toast.error(error.response.data.message || 'Bir hata oluştu');
         } finally {
             setSubmitting(false);
         }
@@ -104,11 +104,11 @@ export default function PublicFeedback() {
                         type="button"
                         disabled={disabled}
                         onClick={() => !disabled && setRating(value)}
-                        className={`transition-all ${disabled ? 'cursor-default' : 'cursor-pointer hover:scale-110'}`}
+                        className={`transition-all ${disabled  'cursor-default' : 'cursor-pointer hover:scale-110'}`}
                     >
                         <Star
                             className={`w-8 h-8 ${value <= rating
-                                    ? 'text-yellow-400 fill-current'
+                                     'text-yellow-400 fill-current'
                                     : 'text-gray-300'
                                 }`}
                         />
@@ -141,7 +141,7 @@ export default function PublicFeedback() {
         );
     }
 
-    if (submitted || formData?.alreadySubmitted) {
+    if (submitted || formData.alreadySubmitted) {
         return (
             <div className="min-h-screen bg-gradient-to-br from-blue-600 to-purple-700 flex items-center justify-center p-4">
                 <div className="bg-white rounded-lg p-8 max-w-md w-full text-center">
@@ -152,7 +152,7 @@ export default function PublicFeedback() {
                     <p className="text-gray-600 mb-6">
                         Geri bildiriminiz için teşekkür ederiz. Hizmet kalitemizi artırmak için görüşleriniz bizim için çok değerli.
                     </p>
-                    {formData?.alreadySubmitted && formData.rating && (
+                    {formData.alreadySubmitted && formData.rating && (
                         <div className="p-4 bg-gray-50 rounded-lg">
                             <p className="text-sm text-gray-600 mb-2">Verdiğiniz puan:</p>
                             <div className="flex justify-center">
@@ -173,7 +173,7 @@ export default function PublicFeedback() {
                     {/* Header */}
                     <div className="bg-gradient-to-r from-blue-600 to-purple-700 p-6 text-white text-center">
                         <h1 className="text-2xl font-bold mb-2">Teslimat Değerlendirmesi</h1>
-                        <p className="text-blue-100">{formData?.companyName || 'YolPilot'}</p>
+                        <p className="text-blue-100">{formData.companyName || 'YolPilot'}</p>
                     </div>
 
                     {/* Customer Info */}
@@ -181,19 +181,19 @@ export default function PublicFeedback() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <p className="text-sm text-gray-600">Müşteri</p>
-                                <p className="font-medium text-gray-900">{formData?.customerName}</p>
+                                <p className="font-medium text-gray-900">{formData.customerName}</p>
                             </div>
                             <div>
                                 <p className="text-sm text-gray-600">Adres</p>
-                                <p className="font-medium text-gray-900">{formData?.customerAddress}</p>
+                                <p className="font-medium text-gray-900">{formData.customerAddress}</p>
                             </div>
-                            {formData?.driverName && (
+                            {formData.driverName && (
                                 <div>
                                     <p className="text-sm text-gray-600">Teslimatı Yapan</p>
                                     <p className="font-medium text-gray-900">{formData.driverName}</p>
                                 </div>
                             )}
-                            {formData?.deliveryDate && (
+                            {formData.deliveryDate && (
                                 <div>
                                     <p className="text-sm text-gray-600">Teslimat Tarihi</p>
                                     <p className="font-medium text-gray-900">
@@ -239,7 +239,7 @@ export default function PublicFeedback() {
                         </div>
 
                         {/* Driver Behavior */}
-                        {formData?.driverName && (
+                        {formData.driverName && (
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-3">
                                     Görevli Davranışı
@@ -345,7 +345,7 @@ export default function PublicFeedback() {
                             disabled={submitting}
                             className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-700 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {submitting ? (
+                            {submitting  (
                                 <span className="flex items-center justify-center gap-2">
                                     <Loader className="w-5 h-5 animate-spin" />
                                     Gönderiliyor...
@@ -359,7 +359,7 @@ export default function PublicFeedback() {
 
                 {/* Footer */}
                 <div className="text-center mt-6 text-white/80 text-sm">
-                    <p>© 2024 {formData?.companyName || 'YolPilot'}. Tüm hakları saklıdır.</p>
+                    <p>© 2024 {formData.companyName || 'YolPilot'}. Tüm hakları saklıdır.</p>
                 </div>
             </div>
         </div>

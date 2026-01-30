@@ -67,7 +67,7 @@ const DriverDetail: React.FC = () => {
   const handleDelete = async () => {
     if (!driver) return;
     
-    if (window.confirm('Bu sürücüyü silmek istediğinizden emin misiniz?')) {
+    if (window.confirm('Bu sürücüyü silmek istediğinizden emin misiniz')) {
       await driverService.delete(driver.id);
       navigate('/drivers');
     }
@@ -279,7 +279,7 @@ const DriverDetail: React.FC = () => {
           {/* Recent Routes */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Son Rotalar</h2>
-            {routes.length === 0 ? (
+            {routes.length === 0  (
               <p className="text-gray-500 text-center py-8">Henüz rota atanmamış</p>
             ) : (
               <div className="space-y-3">
@@ -295,9 +295,9 @@ const DriverDetail: React.FC = () => {
                           <Route className="w-5 h-5 text-gray-400" />
                           <h3 className="font-medium text-gray-900">{route.name}</h3>
                           <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getRouteStatusColor(route.status)}`}>
-                            {route.status === 'completed' ? 'Tamamlandı' : 
-                             route.status === 'in_progress' ? 'Devam Ediyor' :
-                             route.status === 'planned' ? 'Planlandı' : route.status}
+                            {route.status === 'completed'  'Tamamlandı' : 
+                             route.status === 'in_progress'  'Devam Ediyor' :
+                             route.status === 'planned'  'Planlandı' : route.status}
                           </span>
                         </div>
                         <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
@@ -357,12 +357,12 @@ const DriverDetail: React.FC = () => {
                     <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-yellow-500 rounded-full"
-                        style={{ width: `${rating === 5 ? 65 : rating === 4 ? 25 : rating === 3 ? 8 : 2}%` }}
+                        style={{ width: `${rating === 5  65 : rating === 4  25 : rating === 3  8 : 2}%` }}
                       />
                     </div>
                   </div>
                   <span className="text-sm text-gray-600 w-10 text-right">
-                    {rating === 5 ? '65%' : rating === 4 ? '25%' : rating === 3 ? '8%' : '2%'}
+                    {rating === 5  '65%' : rating === 4  '25%' : rating === 3  '8%' : '2%'}
                   </span>
                 </div>
               ))}

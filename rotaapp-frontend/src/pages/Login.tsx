@@ -29,7 +29,7 @@ const Login: React.FC = () => {
       console.log('Login successful, redirecting...');
     } catch (error: any) {
       console.error('Login error:', error);
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Giriş başarısız. Lütfen bilgilerinizi kontrol edin.';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Giriş başarısız. Lütfen bilgilerinizi kontrol edin.';
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -44,8 +44,8 @@ const Login: React.FC = () => {
   useEffect(() => {
     console.log('=== Login Page Mounted ===');
     console.log('Current localStorage:', {
-      token: localStorage.getItem('token') ? 'exists' : 'empty',
-      user: localStorage.getItem('user') ? 'exists' : 'empty',
+      token: localStorage.getItem('token')  'exists' : 'empty',
+      user: localStorage.getItem('user')  'exists' : 'empty',
       workspaceId: localStorage.getItem('workspaceId')
     });
     console.log('========================');
@@ -116,7 +116,7 @@ const Login: React.FC = () => {
               <input
                 id="password"
                 name="password"
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword  'text' : 'password'}
                 autoComplete="current-password"
                 required
                 value={password}
@@ -129,7 +129,7 @@ const Login: React.FC = () => {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute inset-y-0 right-0 pr-3 flex items-center"
               >
-                {showPassword ? (
+                {showPassword  (
                   <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
                 ) : (
                   <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
@@ -168,7 +168,7 @@ const Login: React.FC = () => {
             disabled={isLoading}
             className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
-            {isLoading ? (
+            {isLoading  (
               <div className="flex items-center">
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                 Giriş yapılıyor...
@@ -182,7 +182,7 @@ const Login: React.FC = () => {
         {/* Kayıt Ol Linki */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
-            Hesabınız yok mu?{' '}
+            Hesabınız yok mu{' '}
             <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500">
               Hemen kayıt olun
             </Link>

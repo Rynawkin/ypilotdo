@@ -1025,7 +1025,8 @@ class JourneyService {
   async reoptimizeJourney(
     journeyId: number,
     currentLatitude: number,
-    currentLongitude: number
+    currentLongitude: number,
+    deferredStopIds: number[] = []
   ): Promise<JourneyResponse> {
     try {
       console.log(`[JourneyService] Reoptimizing journey ${journeyId}`);
@@ -1034,7 +1035,8 @@ class JourneyService {
         `/workspace/journeys/${journeyId}/reoptimize`,
         {
           currentLatitude,
-          currentLongitude
+          currentLongitude,
+          deferredStopIds
         }
       );
 

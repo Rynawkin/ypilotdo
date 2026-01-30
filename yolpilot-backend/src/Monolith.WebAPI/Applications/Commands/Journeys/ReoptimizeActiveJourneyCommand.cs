@@ -23,6 +23,8 @@ public class ReoptimizeActiveJourneyCommand : BaseAuthenticatedCommand<JourneyRe
     // Şoförün anlık konumu
     public double CurrentLatitude { get; init; }
     public double CurrentLongitude { get; init; }
+
+    public List<int> DeferredStopIds { get; init; } = new();
 }
 
 public class ReoptimizeActiveJourneyCommandValidator : AbstractValidator<ReoptimizeActiveJourneyCommand>
@@ -32,6 +34,7 @@ public class ReoptimizeActiveJourneyCommandValidator : AbstractValidator<Reoptim
         RuleFor(x => x.JourneyId).GreaterThan(0);
         RuleFor(x => x.CurrentLatitude).InclusiveBetween(-90, 90);
         RuleFor(x => x.CurrentLongitude).InclusiveBetween(-180, 180);
+        RuleForEach(x => x.DeferredStopIds).GreaterThan(0);
     }
 }
 
@@ -101,15 +104,25 @@ public class ReoptimizeActiveJourneyCommandHandler : BaseAuthenticatedCommandHan
         var lastStops = pendingStops.Where(s => s.RouteStop != null && s.RouteStop.OrderType == OrderType.Last).ToList();
         var autoStops = pendingStops.Where(s => s.RouteStop != null && s.RouteStop.OrderType == OrderType.Auto).ToList();
 
-        // Depot stop (CustomerId == null) - bu her zaman en sonda olmalı
+        // Depot stop (CustomerId == null) - always last
         var depotStop = pendingStops.FirstOrDefault(s => s.RouteStop?.CustomerId == null);
 
-        _logger.LogInformation($"[REOPTIMIZE] Position constraints - First: {firstStops.Count}, Last: {lastStops.Count}, Auto: {autoStops.Count}, Depot: {(depotStop != null ? 1 : 0)}");
+        if (depotStop != null)
+        {
+            firstStops = firstStops.Where(s => s.Id != depotStop.Id).ToList();
+            lastStops = lastStops.Where(s => s.Id != depotStop.Id).ToList();
+            autoStops = autoStops.Where(s => s.Id != depotStop.Id).ToList();
+        }
 
-        // ✅ YENİ: Sadece Auto stopları optimize et
-        var stopsToOptimize = autoStops.ToList();
+        var deferredStopIdSet = request.DeferredStopIds != null && request.DeferredStopIds.Count > 0
+            ? request.DeferredStopIds.ToHashSet()
+            : new HashSet<int>();
+        var deferredStops = autoStops.Where(s => deferredStopIdSet.Contains(s.Id)).ToList();
+        var stopsToOptimize = autoStops.Where(s => !deferredStopIdSet.Contains(s.Id)).ToList();
 
-        if (stopsToOptimize.Count == 0 && firstStops.Count == 0 && lastStops.Count == 0)
+        _logger.LogInformation($"[REOPTIMIZE] Position constraints - First: {firstStops.Count}, Last: {lastStops.Count}, Auto: {autoStops.Count}, Deferred: {deferredStops.Count}, Depot: {(depotStop != null ? 1 : 0)}");
+
+        if (autoStops.Count == 0 && firstStops.Count == 0 && lastStops.Count == 0)
         {
             _logger.LogInformation($"[REOPTIMIZE] Only depot stop remaining, no optimization needed");
             journey.NeedsReoptimization = false;
@@ -117,7 +130,7 @@ public class ReoptimizeActiveJourneyCommandHandler : BaseAuthenticatedCommandHan
             return new JourneyResponse(journey);
         }
 
-        _logger.LogInformation($"[REOPTIMIZE] Optimizing {stopsToOptimize.Count} auto stops, keeping first ({firstStops.Count}) and last ({lastStops.Count}) stops fixed");
+        _logger.LogInformation($"[REOPTIMIZE] Optimizing {stopsToOptimize.Count} auto stops, keeping first ({firstStops.Count}) and last ({lastStops.Count}) stops fixed, deferring {deferredStops.Count} auto stops");
 
         // Google Maps Directions API parametrelerini hazırla
         var origin = $"{request.CurrentLatitude},{request.CurrentLongitude}"; // Şoförün konumu
@@ -127,47 +140,107 @@ public class ReoptimizeActiveJourneyCommandHandler : BaseAuthenticatedCommandHan
             ? $"{depotStop.EndLatitude},{depotStop.EndLongitude}"
             : $"{request.CurrentLatitude},{request.CurrentLongitude}"; // Depot yoksa mevcut konum
 
-        // Ara duraklar (waypoints)
-        var waypoints = new Dictionary<int, string>();
-        var waypointStopIds = new List<int>();
-
-        foreach (var stop in stopsToOptimize)
-        {
-            waypoints.Add(stop.Id, $"{stop.EndLatitude},{stop.EndLongitude}");
-            waypointStopIds.Add(stop.Id);
-        }
-
-        _logger.LogInformation($"[REOPTIMIZE] Origin: Driver location ({origin}), Destination: Depot ({destination}), Waypoints: {waypoints.Count}");
-
         try
         {
-            // Google Maps API çağrısı - OPTIMIZE EDİLMİŞ SIRA İLE
+        // Ara duraklar (waypoints)
+        var optimizedAutoStops = new List<JourneyStop>();
+
+        if (stopsToOptimize.Count > 0)
+        {
+            var waypoints = new Dictionary<int, string>();
+            var waypointStopIds = new List<int>();
+
+            foreach (var stop in stopsToOptimize)
+            {
+                waypoints.Add(stop.Id, $"{stop.EndLatitude},{stop.EndLongitude}");
+                waypointStopIds.Add(stop.Id);
+            }
+
+            _logger.LogInformation($"[REOPTIMIZE] Origin: Driver location ({origin}), Destination: Depot ({destination}), Waypoints: {waypoints.Count}");
+
             var waypointsList = waypoints.Values.ToList();
             var directionsResponse = await _googleApiService.GetDirections(
                 origin,
                 destination,
                 waypointsList,
-                optimize: true, // ✅ Waypoint optimizasyonu aktif
+                optimize: true,
                 avoidTolls: journey.Route?.AvoidTolls ?? false
             );
 
             if (directionsResponse?.Routes == null || directionsResponse.Routes.Count == 0)
             {
-                throw new ApiException("Google Maps'ten rota alınamadı", 500);
+                throw new ApiException("Google Maps'ten rota alinamadi", 500);
             }
 
             var route = directionsResponse.Routes.First();
             var waypointOrder = route.WaypointOrder ?? directionsResponse.WaypointOrder ?? new List<int>();
-            var legs = route.Legs;
 
-            _logger.LogInformation($"[REOPTIMIZE] Optimized waypoint order: [{string.Join(", ", waypointOrder)}]");
-            _logger.LogInformation($"[REOPTIMIZE] Received {legs?.Count ?? 0} legs from Google Directions API");
-
-            // BUGFIX S3.15: Use transaction to ensure atomic updates (all or nothing)
-            using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
-
-            try
+            if (waypointOrder.Count == 0)
             {
+                optimizedAutoStops.AddRange(stopsToOptimize);
+            }
+            else
+            {
+                foreach (var optimizedIndex in waypointOrder)
+                {
+                    if (optimizedIndex < waypointStopIds.Count)
+                    {
+                        var stopId = waypointStopIds[optimizedIndex];
+                        var stop = stopsToOptimize.First(s => s.Id == stopId);
+                        optimizedAutoStops.Add(stop);
+                    }
+                }
+            }
+        }
+
+        var finalOrderedStops = new List<JourneyStop>();
+        finalOrderedStops.AddRange(firstStops);
+        finalOrderedStops.AddRange(optimizedAutoStops);
+        finalOrderedStops.AddRange(deferredStops);
+        finalOrderedStops.AddRange(lastStops);
+        if (depotStop != null)
+        {
+            finalOrderedStops.Add(depotStop);
+        }
+
+        if (finalOrderedStops.Count == 0)
+        {
+            _logger.LogInformation($"[REOPTIMIZE] No stops left after ordering, skipping reoptimization");
+            journey.NeedsReoptimization = false;
+            await _context.SaveChangesAsync(cancellationToken);
+            return new JourneyResponse(journey);
+        }
+
+        var destinationStop = finalOrderedStops.Last();
+        var finalWaypoints = finalOrderedStops
+            .Take(Math.Max(0, finalOrderedStops.Count - 1))
+            .Select(stop => $"{stop.EndLatitude},{stop.EndLongitude}")
+            .ToList();
+        var finalDestination = $"{destinationStop.EndLatitude},{destinationStop.EndLongitude}";
+
+        _logger.LogInformation($"[REOPTIMIZE] Final order count: {finalOrderedStops.Count}, Waypoints: {finalWaypoints.Count}");
+
+        var finalDirectionsResponse = await _googleApiService.GetDirections(
+            origin,
+            finalDestination,
+            finalWaypoints,
+            optimize: false,
+            avoidTolls: journey.Route?.AvoidTolls ?? false
+        );
+
+        if (finalDirectionsResponse?.Routes == null || finalDirectionsResponse.Routes.Count == 0)
+        {
+            throw new ApiException("Google Maps'ten rota alinamadi", 500);
+        }
+
+        var finalRoute = finalDirectionsResponse.Routes.First();
+        var legs = finalRoute.Legs;
+
+        // BUGFIX S3.15: Use transaction to ensure atomic updates (all or nothing)
+        using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+
+        try
+        {
                 // Optimize edilmiş sıra ile durakları yeniden düzenle
                 // ✅ Türkiye saatini al (server UTC'de olabilir)
                 var turkeyTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Turkey Standard Time");
@@ -186,31 +259,6 @@ public class ReoptimizeActiveJourneyCommandHandler : BaseAuthenticatedCommandHan
                 int newOrder = completedStops.Count > 0 ? completedStops.Max(s => s.Order) + 1 : 1;
 
                 // ✅ YENİ: Final stop order'ı oluştur: First → Optimized Auto → Last → Depot
-                var finalOrderedStops = new List<JourneyStop>();
-
-                // 1. First stops'ları ekle (order preserved)
-                finalOrderedStops.AddRange(firstStops);
-
-                // 2. Optimized auto stops'ları ekle
-                foreach (var optimizedIndex in waypointOrder)
-                {
-                    if (optimizedIndex < waypointStopIds.Count)
-                    {
-                        var stopId = waypointStopIds[optimizedIndex];
-                        var stop = stopsToOptimize.First(s => s.Id == stopId);
-                        finalOrderedStops.Add(stop);
-                    }
-                }
-
-                // 3. Last stops'ları ekle (order preserved)
-                finalOrderedStops.AddRange(lastStops);
-
-                // 4. Depot'u ekle
-                if (depotStop != null)
-                {
-                    finalOrderedStops.Add(depotStop);
-                }
-
                 _logger.LogInformation($"[REOPTIMIZE] Final stop order: {string.Join(" → ", finalOrderedStops.Select(s => s.RouteStop?.Name ?? "Depot"))}");
 
                 // ✅ OPTIMIZED: ETA hesaplama - Google Directions legs array'ini kullan
@@ -292,7 +340,7 @@ public class ReoptimizeActiveJourneyCommandHandler : BaseAuthenticatedCommandHan
                 }
 
                 // Polyline güncelle
-                journey.Polyline = route.OverviewPolyline?.Points;
+                journey.Polyline = finalRoute.OverviewPolyline?.Points;
 
                 // Optimizasyon bayrağını kaldır
                 journey.NeedsReoptimization = false;
@@ -302,14 +350,14 @@ public class ReoptimizeActiveJourneyCommandHandler : BaseAuthenticatedCommandHan
                 await transaction.CommitAsync(cancellationToken);
 
                 _logger.LogInformation($"[REOPTIMIZE] ✅ BUGFIX S3.15: Journey #{request.JourneyId} reoptimized successfully with transaction");
-            }
-            catch (Exception transactionEx)
-            {
+        }
+        catch (Exception transactionEx)
+        {
                 // BUGFIX S3.15: Rollback on any error - no partial updates
                 await transaction.RollbackAsync(cancellationToken);
                 _logger.LogError(transactionEx, "[REOPTIMIZE] BUGFIX S3.15: Transaction rolled back due to error");
                 throw;
-            }
+        }
 
             // SignalR ile şoföre güncellemeyi bildir
             try

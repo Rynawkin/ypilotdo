@@ -159,6 +159,7 @@ export interface JourneyStopResponse {
   routeStop: RouteStopResponse;
   checkInTime?: string;  // ✅ EKLENDİ
   checkOutTime?: string; // ✅ EKLENDİ
+  createdAt?: string;
   isExcluded?: boolean;
 
   // ✅ YENİ - Delay tracking fields

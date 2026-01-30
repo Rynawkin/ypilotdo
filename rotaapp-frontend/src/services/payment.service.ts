@@ -10,10 +10,10 @@ export interface UpgradePlanRequest {
   customerEmail: string;
   customerName: string;
   customerPhone: string;
-  referrerUrl?: string;
+  referrerUrl: string;
   card: PaymentCard;
-  successUrl?: string;
-  failUrl?: string;
+  successUrl: string;
+  failUrl: string;
 }
 
 export interface PaymentCard {
@@ -22,20 +22,20 @@ export interface PaymentCard {
   expiryMonth: string;
   expiryYear: string;
   cvv: string;
-  cardHolderPhone?: string;
+  cardHolderPhone: string;
 }
 
 export interface UpgradePlanResponse {
   isSuccess: boolean;
-  paymentUrl?: string;
-  transactionId?: string;
-  errorMessage?: string;
+  paymentUrl: string;
+  transactionId: string;
+  errorMessage: string;
 }
 
 export interface StartTrialResponse {
   isSuccess: boolean;
-  trialEndDate?: string;
-  errorMessage?: string;
+  trialEndDate: string;
+  errorMessage: string;
 }
 
 export interface InvoiceResponse {
@@ -45,7 +45,7 @@ export interface InvoiceResponse {
   tax: number;
   total: number;
   dueDate: string;
-  paidDate?: string;
+  paidDate: string;
   status: 'Pending' | 'Paid' | 'Failed' | 'Cancelled';
   planType: PlanType;
   periodStart: string;
@@ -63,10 +63,10 @@ export interface TrialLimits {
 export interface TrialStatusResponse {
   isActive: boolean;
   isExpired: boolean;
-  startDate?: string;
-  endDate?: string;
+  startDate: string;
+  endDate: string;
   remainingDays: number;
-  limits?: TrialLimits;
+  limits: TrialLimits;
 }
 
 export interface WorkspaceUsageDto {
@@ -88,9 +88,9 @@ export interface WorkspaceUsageDto {
 export interface PlanLimits {
   planType: PlanType;
   monthlyPrice: number;
-  maxDrivers?: number;
-  maxVehicles?: number;
-  maxCustomers?: number;
+  maxDrivers: number;
+  maxVehicles: number;
+  maxCustomers: number;
   maxUsers: number;
   includedMonthlyStops: number;
   additionalStopPrice: number;

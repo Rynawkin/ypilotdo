@@ -12,7 +12,7 @@ export default function Support() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const mailtoLink = `mailto:info@yolpilot.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
+    const mailtoLink = `mailto:info@yolpilot.comsubject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(
       `Ad Soyad: ${formData.name}\nE-posta: ${formData.email}\n\nMesaj:\n${formData.message}`
     )}`;
     
@@ -101,7 +101,7 @@ export default function Support() {
           <div className="space-y-6">
             <div className="border-b pb-4">
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Uygulamaya nasıl kayıt olabilirim?
+                Uygulamaya nasıl kayıt olabilirim
               </h3>
               <p className="text-gray-600">
                 Yeni kullanıcı kayıtları web panelimizden yapılmaktadır. 
@@ -113,7 +113,7 @@ export default function Support() {
 
             <div className="border-b pb-4">
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Şifremi unuttum, ne yapmalıyım?
+                Şifremi unuttum, ne yapmalıyım
               </h3>
               <p className="text-gray-600">
                 Uygulama giriş ekranında "Şifremi Unuttum" bağlantısını tıklayın. 
@@ -123,7 +123,7 @@ export default function Support() {
 
             <div className="border-b pb-4">
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                GPS konumum doğru çalışmıyor, ne yapmalıyım?
+                GPS konumum doğru çalışmıyor, ne yapmalıyım
               </h3>
               <p className="text-gray-600">
                 Cihazınızın konum servislerinin açık olduğundan emin olun. 
@@ -133,7 +133,7 @@ export default function Support() {
 
             <div className="border-b pb-4">
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Teslimat fotoğrafı çekemiyorum, sorun nedir?
+                Teslimat fotoğrafı çekemiyorum, sorun nedir
               </h3>
               <p className="text-gray-600">
                 Cihazınızın kamera izinlerinin YolPilot uygulaması için açık olduğundan emin olun. 

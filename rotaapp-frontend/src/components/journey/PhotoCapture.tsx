@@ -5,7 +5,7 @@ import { Camera, X, Upload, RotateCcw, Check } from 'lucide-react';
 interface PhotoCaptureProps {
   onCapture: (photoBlob: Blob) => void;
   onCancel: () => void;
-  maxSizeMB?: number;
+  maxSizeMB: number;
 }
 
 export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
@@ -86,7 +86,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
 
   // Handle file upload
   const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files.[0];
     if (!file) return;
 
     // Check file size
@@ -103,7 +103,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      setCapturedImage(event.target?.result as string);
+      setCapturedImage(event.target.result as string);
     };
     reader.readAsDataURL(file);
   }, [maxSizeMB]);
@@ -175,7 +175,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
                   onClick={() => setMode('camera')}
                   className={`flex-1 px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2 ${
                     mode === 'camera' 
-                      ? 'bg-blue-600 text-white' 
+                       'bg-blue-600 text-white' 
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
@@ -186,7 +186,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
                   onClick={() => setMode('upload')}
                   className={`flex-1 px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2 ${
                     mode === 'upload' 
-                      ? 'bg-blue-600 text-white' 
+                       'bg-blue-600 text-white' 
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
@@ -195,7 +195,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
                 </button>
               </div>
 
-              {mode === 'camera' ? (
+              {mode === 'camera'  (
                 <div className="relative bg-black rounded-lg overflow-hidden">
                   <video
                     ref={videoRef}
@@ -232,7 +232,7 @@ export const PhotoCapture: React.FC<PhotoCaptureProps> = ({
                     className="hidden"
                   />
                   <button
-                    onClick={() => fileInputRef.current?.click()}
+                    onClick={() => fileInputRef.current.click()}
                     className="w-full flex flex-col items-center justify-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
                   >
                     <Upload className="w-12 h-12" />

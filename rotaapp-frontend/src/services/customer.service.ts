@@ -2,18 +2,18 @@ import { api } from './api';
 import { Customer } from '@/types';
 
 export interface CreateCustomerDto {
-  code?: string;
+  code: string;
   name: string;
   address: string;
   phone: string;
-  email?: string;
+  email: string;
   latitude: number;
   longitude: number;
   priority: 'high' | 'normal' | 'low';
   estimatedServiceTime: number;
-  notes?: string;
-  tags?: string[];
-  timeWindow?: {
+  notes: string;
+  tags: string[];
+  timeWindow: {
     start: string;
     end: string;
   };
@@ -91,7 +91,7 @@ class CustomerService {
   // Update customer
   async update(id: number | string, data: Partial<UpdateCustomerDto>): Promise<Customer> {
     try {
-      const numericId = typeof id === 'string' ? parseInt(id) : id;
+      const numericId = typeof id === 'string'  parseInt(id) : id;
       const response = await api.put(`/workspace/customers/${id}`, { ...data, id: numericId });
       return response.data;
     } catch (error) {
@@ -137,7 +137,7 @@ class CustomerService {
     try {
       const customers = await this.getAll();
       return customers.filter(c => 
-        c.tags && tags.some(tag => c.tags?.includes(tag))
+        c.tags && tags.some(tag => c.tags.includes(tag))
       );
     } catch (error) {
       console.error('Error fetching customers by tags:', error);
@@ -178,8 +178,8 @@ class CustomerService {
       customer.phone,
       customer.email || '',
       this.getPriorityLabel(customer.priority),
-      customer.timeWindow ? `${customer.timeWindow.start}-${customer.timeWindow.end}` : '',
-      customer.tags?.join(', ') || '',
+      customer.timeWindow  `${customer.timeWindow.start}-${customer.timeWindow.end}` : '',
+      customer.tags.join(', ') || '',
       customer.notes || ''
     ]);
 

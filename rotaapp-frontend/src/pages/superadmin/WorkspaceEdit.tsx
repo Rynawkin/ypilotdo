@@ -41,10 +41,10 @@ const WorkspaceEdit: React.FC = () => {
           name: data.name,
           email: data.email || '',
           phoneNumber: data.phoneNumber || '',
-          plan: data.subscription?.plan || 'basic',
-          maxDrivers: data.subscription?.maxDrivers || 10,
-          maxRoutes: data.subscription?.maxRoutes || 50,
-          maxCustomers: data.subscription?.maxCustomers || 200,
+          plan: data.subscription.plan || 'basic',
+          maxDrivers: data.subscription.maxDrivers || 10,
+          maxRoutes: data.subscription.maxRoutes || 50,
+          maxCustomers: data.subscription.maxCustomers || 200,
           active: data.active
         });
       }
@@ -145,7 +145,7 @@ const WorkspaceEdit: React.FC = () => {
                 Durum
               </label>
               <select
-                value={formData.active ? 'active' : 'inactive'}
+                value={formData.active  'active' : 'inactive'}
                 onChange={(e) => setFormData({...formData, active: e.target.value === 'active'})}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
@@ -244,7 +244,7 @@ const WorkspaceEdit: React.FC = () => {
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
           >
             <Save className="w-4 h-4 mr-2 inline" />
-            {saving ? 'Kaydediliyor...' : 'Kaydet'}
+            {saving  'Kaydediliyor...' : 'Kaydet'}
           </button>
         </div>
       </form>

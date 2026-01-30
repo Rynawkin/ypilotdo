@@ -73,7 +73,7 @@ export const formatPhone = (phone: string): string => {
  * @param password Password to validate
  * @returns Object with isValid and error message
  */
-export const validatePassword = (password: string): { isValid: boolean; error?: string } => {
+export const validatePassword = (password: string): { isValid: boolean; error: string } => {
   if (!password || typeof password !== 'string') {
     return { isValid: false, error: 'Şifre gereklidir' };
   }
@@ -107,7 +107,7 @@ export const validatePassword = (password: string): { isValid: boolean; error?: 
  * @param fieldName Field name for error message
  * @returns Object with isValid and error message
  */
-export const validateRequired = (value: any, fieldName: string = 'Alan'): { isValid: boolean; error?: string } => {
+export const validateRequired = (value: any, fieldName: string = 'Alan'): { isValid: boolean; error: string } => {
   if (value === null || value === undefined || value === '') {
     return { isValid: false, error: `${fieldName} gereklidir` };
   }
@@ -165,9 +165,9 @@ export const isValidTCKN = (tc: string): boolean => {
  */
 export const validateNumeric = (
   value: any,
-  min?: number,
-  max?: number
-): { isValid: boolean; error?: string } => {
+  min: number,
+  max: number
+): { isValid: boolean; error: string } => {
   const num = Number(value);
 
   if (isNaN(num)) {

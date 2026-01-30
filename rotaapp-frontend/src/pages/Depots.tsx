@@ -162,7 +162,7 @@ const Depots: React.FC = () => {
             <div>
               <p className="text-sm text-gray-600">Ana Depo</p>
               <p className="text-lg font-semibold text-gray-900">
-                {depots.find(d => d.isDefault)?.name || 'Belirtilmemiş'}
+                {depots.find(d => d.isDefault).name || 'Belirtilmemiş'}
               </p>
             </div>
             <Star className="w-8 h-8 text-yellow-500 fill-yellow-500" />
@@ -199,15 +199,15 @@ const Depots: React.FC = () => {
       </div>
 
       {/* Depots List */}
-      {filteredDepots.length === 0 ? (
+      {filteredDepots.length === 0  (
         <div className="bg-white rounded-lg shadow-sm border p-12 text-center">
           <Building2 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">
-            {searchTerm ? 'Depo Bulunamadı' : 'Henüz Depo Eklenmemiş'}
+            {searchTerm  'Depo Bulunamadı' : 'Henüz Depo Eklenmemiş'}
           </h3>
           <p className="text-gray-600 mb-4">
             {searchTerm 
-              ? 'Arama kriterlerinize uygun depo bulunamadı.' 
+               'Arama kriterlerinize uygun depo bulunamadı.' 
               : 'İlk deponuzu ekleyerek başlayın.'}
           </p>
           {!searchTerm && (
@@ -275,7 +275,7 @@ const Depots: React.FC = () => {
                       </button>
                     )}
                     <a
-                      href={`https://www.google.com/maps?q=${depot.latitude},${depot.longitude}`}
+                      href={`https://www.google.com/mapsq=${depot.latitude},${depot.longitude}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-3 py-1.5 text-sm bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors flex items-center"
@@ -305,7 +305,7 @@ const Depots: React.FC = () => {
                       title="Sil"
                       disabled={depot.isDefault}
                     >
-                      <Trash2 className={`w-4 h-4 ${depot.isDefault ? 'opacity-50' : ''}`} />
+                      <Trash2 className={`w-4 h-4 ${depot.isDefault  'opacity-50' : ''}`} />
                     </button>
                   </div>
                 </div>
@@ -324,7 +324,7 @@ const Depots: React.FC = () => {
               <h3 className="text-lg font-semibold text-gray-900">Depoyu Sil</h3>
             </div>
             <p className="text-gray-600 mb-6">
-              <strong>{deleteModal.depot.name}</strong> deposunu silmek istediğinizden emin misiniz?
+              <strong>{deleteModal.depot.name}</strong> deposunu silmek istediğinizden emin misiniz
               Bu işlem geri alınamaz.
             </p>
             <div className="flex justify-end gap-3">

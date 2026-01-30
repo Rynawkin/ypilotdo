@@ -54,7 +54,7 @@ const Settings: React.FC = () => {
   
   // ROL BAZLI SEKME KONTROLÜ
   const getAvailableTabs = () => {
-    if (user?.isSuperAdmin) {
+    if (user.isSuperAdmin) {
       return ['company', 'users', 'delivery', 'notifications', 'templates', 'subscription', 'payment', 'regional', 'data'];
     }
     if (canAccessAdminFeatures()) {
@@ -244,7 +244,7 @@ const Settings: React.FC = () => {
       setBillingData(billingSummary);
     } catch (error: any) {
       console.error('Error loading subscription data:', error);
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Abonelik verileri yüklenirken hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Abonelik verileri yüklenirken hata oluştu';
       console.error('User-friendly error:', errorMessage);
     } finally {
       setLoadingSubscription(false);
@@ -266,7 +266,7 @@ const Settings: React.FC = () => {
       setMembers(data);
     } catch (error: any) {
       console.error('Error loading members:', error);
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Kullanıcılar yüklenirken hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Kullanıcılar yüklenirken hata oluştu';
       setError(errorMessage);
     } finally {
       setLoadingMembers(false);
@@ -283,7 +283,7 @@ const Settings: React.FC = () => {
       }
     } catch (error: any) {
       console.error('Error loading depots:', error);
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Depolar yüklenirken hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Depolar yüklenirken hata oluştu';
       console.error('User-friendly error:', errorMessage);
     }
   };
@@ -294,7 +294,7 @@ const Settings: React.FC = () => {
       email: '',
       password: '',
       phoneNumber: '',
-      depotId: depots.length > 0 ? depots[0].id : null
+      depotId: depots.length > 0  depots[0].id : null
     });
     setShowMemberModal(true);
   };
@@ -327,11 +327,11 @@ const Settings: React.FC = () => {
         email: '',
         password: '',
         phoneNumber: '',
-        depotId: depots.length > 0 ? depots[0].id : null
+        depotId: depots.length > 0  depots[0].id : null
       });
     } catch (error: any) {
       console.error('Error creating dispatcher:', error);
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Dispatcher oluşturulurken hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Dispatcher oluşturulurken hata oluştu';
       setError(errorMessage);
     } finally {
       setSavingMember(false);
@@ -359,7 +359,7 @@ const Settings: React.FC = () => {
       setTimeout(() => setShowSuccessMessage(false), 3000);
     } catch (error: any) {
       console.error('Error deleting member:', error);
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Kullanıcı silinirken hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Kullanıcı silinirken hata oluştu';
       setError(errorMessage);
     }
   };
@@ -390,7 +390,7 @@ const Settings: React.FC = () => {
         settingsService.getWorkspaceSettings().catch(() => null),
         settingsService.getDeliverySettings().catch(() => null),
         settingsService.getNotificationSettings().catch(() => null),
-        canAccessDispatcherFeatures() ? settingsService.getDelayAlertSettings().catch(() => null) : Promise.resolve(null)
+        canAccessDispatcherFeatures()  settingsService.getDelayAlertSettings().catch(() => null) : Promise.resolve(null)
       ]);
 
       if (workspace) {
@@ -409,14 +409,14 @@ const Settings: React.FC = () => {
           twilioAccountSid: workspace.twilioAccountSid || '',
           twilioWhatsAppNumber: workspace.twilioWhatsAppNumber || '',
           twilioVerified: workspace.twilioVerified || false,
-          twilioConnectedAt: workspace.twilioConnectedAt ? new Date(workspace.twilioConnectedAt) : null
+          twilioConnectedAt: workspace.twilioConnectedAt  new Date(workspace.twilioConnectedAt) : null
         });
         
         setRegionalSettings(prev => ({
           ...prev,
           currency: workspace.currency || 'TRY',
           timezone: workspace.timeZone || 'Europe/Istanbul',
-          language: (workspace.language?.toLowerCase() || 'tr') as 'tr' | 'en',
+          language: (workspace.language.toLowerCase() || 'tr') as 'tr' | 'en',
           dateFormat: workspace.dateFormat || 'DD/MM/YYYY',
           firstDayOfWeek: (workspace.firstDayOfWeek || 'monday') as 'monday' | 'sunday'
         }));
@@ -442,7 +442,7 @@ const Settings: React.FC = () => {
           });
 
           // WhatsApp Mode'u ayarla
-          if (notifications.whatsAppSettings?.mode) {
+          if (notifications.whatsAppSettings.mode) {
               setWhatsAppMode(notifications.whatsAppSettings.mode as any);
           }
       }
@@ -457,7 +457,7 @@ const Settings: React.FC = () => {
 
     } catch (error: any) {
       console.error('Error loading settings:', error);
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Ayarlar yüklenirken bir hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Ayarlar yüklenirken bir hata oluştu';
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -480,7 +480,7 @@ const Settings: React.FC = () => {
 
         // Popup'ı dinle
         const checkInterval = setInterval(() => {
-          if (popup?.closed) {
+          if (popup.closed) {
             clearInterval(checkInterval);
             checkTwilioStatus();
           }
@@ -488,7 +488,7 @@ const Settings: React.FC = () => {
       }
     } catch (error: any) {
       console.error('WhatsApp connect error:', error);
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'WhatsApp bağlantısı başlatılamadı';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'WhatsApp bağlantısı başlatılamadı';
       setError(errorMessage);
     } finally {
       setConnectingWhatsApp(false);
@@ -497,7 +497,7 @@ const Settings: React.FC = () => {
 
   // WhatsApp Disconnect
   const handleDisconnectWhatsApp = async () => {
-    if (!confirm('WhatsApp bağlantısını kaldırmak istediğinizden emin misiniz?')) {
+    if (!confirm('WhatsApp bağlantısını kaldırmak istediğinizden emin misiniz')) {
       return;
     }
 
@@ -518,7 +518,7 @@ const Settings: React.FC = () => {
       setTimeout(() => setShowSuccessMessage(false), 3000);
     } catch (error: any) {
       console.error('WhatsApp disconnect error:', error);
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'WhatsApp bağlantısı kaldırılamadı';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'WhatsApp bağlantısı kaldırılamadı';
       setError(errorMessage);
     } finally {
       setDisconnectingWhatsApp(false);
@@ -539,7 +539,7 @@ const Settings: React.FC = () => {
       }));
     } catch (error: any) {
       console.error('Error checking Twilio status:', error);
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Twilio durumu kontrol edilirken hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Twilio durumu kontrol edilirken hata oluştu';
       console.error('User-friendly error:', errorMessage);
     }
   };
@@ -594,7 +594,7 @@ const Settings: React.FC = () => {
       
     } catch (error: any) {
       console.error('Error saving settings:', error);
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Ayarlar kaydedilirken bir hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Ayarlar kaydedilirken bir hata oluştu';
       setError(errorMessage);
     } finally {
       setSaving(false);
@@ -603,7 +603,7 @@ const Settings: React.FC = () => {
   };
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -634,19 +634,19 @@ const Settings: React.FC = () => {
   };
 
   const importSettings = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
         try {
-          const settings = JSON.parse(event.target?.result as string);
+          const settings = JSON.parse(event.target.result as string);
           if (settings.company) setCompanySettings(settings.company);
           if (settings.delivery) setDeliverySettings(prev => ({ ...prev, ...settings.delivery }));
           if (settings.notifications) setNotificationSettings(prev => ({ ...prev, ...settings.notifications }));
           if (settings.regional) setRegionalSettings(settings.regional);
           setHasChanges(true);
         } catch (error: any) {
-          const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Geçersiz ayar dosyası!';
+          const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Geçersiz ayar dosyası!';
           alert(errorMessage);
         }
       };
@@ -696,7 +696,7 @@ const Settings: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900">Ayarlar</h1>
           <p className="text-gray-600 mt-1">
             {canAccessDispatcherFeatures() && !canAccessAdminFeatures()
-              ? 'Operasyonel ayarlarınız'
+               'Operasyonel ayarlarınız'
               : 'Sistem ve şirket ayarlarını yönetin'}
           </p>
         </div>
@@ -707,7 +707,7 @@ const Settings: React.FC = () => {
             disabled={saving}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:opacity-50"
           >
-            {saving ? (
+            {saving  (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                 Kaydediliyor...
@@ -756,7 +756,7 @@ const Settings: React.FC = () => {
                 onClick={() => setActiveTab(item.id as typeof activeTab)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                   activeTab === item.id
-                    ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600'
+                     'bg-blue-50 text-blue-600 border-l-4 border-blue-600'
                     : 'text-gray-700 hover:bg-gray-50'
                 }`}
               >
@@ -780,7 +780,7 @@ const Settings: React.FC = () => {
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Şirket Logosu</label>
                     <div className="flex items-center gap-4">
-                      {companySettings.logo ? (
+                      {companySettings.logo  (
                         <img src={companySettings.logo} alt="Logo" className="w-20 h-20 object-contain border rounded-lg" />
                       ) : (
                         <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
@@ -949,7 +949,7 @@ const Settings: React.FC = () => {
                   </div>
                 </div>
 
-                {loadingMembers ? (
+                {loadingMembers  (
                   <div className="flex justify-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                   </div>
@@ -961,7 +961,7 @@ const Settings: React.FC = () => {
                           <div className="flex items-center gap-4">
                             <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
                               <span className="text-sm font-medium text-gray-600">
-                                {member.fullName?.split(' ').map(n => n[0]).join('') || member.email[0].toUpperCase()}
+                                {member.fullName.split(' ').map(n => n[0]).join('') || member.email[0].toUpperCase()}
                               </span>
                             </div>
                             <div>
@@ -1125,12 +1125,12 @@ const Settings: React.FC = () => {
                           className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
                         />
                         <span className="w-24 font-medium text-gray-700 capitalize">
-                          {day === 'monday' ? 'Pazartesi' : 
-                          day === 'tuesday' ? 'Salı' : 
-                          day === 'wednesday' ? 'Çarşamba' : 
-                          day === 'thursday' ? 'Perşembe' : 
-                          day === 'friday' ? 'Cuma' : 
-                          day === 'saturday' ? 'Cumartesi' : 'Pazar'}
+                          {day === 'monday'  'Pazartesi' : 
+                          day === 'tuesday'  'Salı' : 
+                          day === 'wednesday'  'Çarşamba' : 
+                          day === 'thursday'  'Perşembe' : 
+                          day === 'friday'  'Cuma' : 
+                          day === 'saturday'  'Cumartesi' : 'Pazar'}
                         </span>
                         <input
                           type="time"
@@ -1177,7 +1177,7 @@ const Settings: React.FC = () => {
                       <div key={priority} className="border rounded-lg p-4">
                         <div className="flex items-center justify-between mb-3">
                           <span className="font-medium text-gray-900 capitalize">
-                            {priority === 'high' ? 'Yüksek' : priority === 'normal' ? 'Normal' : 'Düşük'}
+                            {priority === 'high'  'Yüksek' : priority === 'normal'  'Normal' : 'Düşük'}
                           </span>
                           <div className="flex items-center gap-2">
                             <input
@@ -1331,7 +1331,7 @@ const Settings: React.FC = () => {
                   {/* Custom mode seçiliyse mevcut Twilio bağlama UI'ını göster */}
                   {whatsAppMode === 'custom' && (
                     <>
-                      {!companySettings.twilioConnected ? (
+                      {!companySettings.twilioConnected  (
                         <div className="space-y-4">
                           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                             <h4 className="font-medium text-yellow-900 mb-2">WhatsApp Business'ı Bağlayın</h4>
@@ -1343,7 +1343,7 @@ const Settings: React.FC = () => {
                               disabled={connectingWhatsApp}
                               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 disabled:opacity-50"
                             >
-                              {connectingWhatsApp ? (
+                              {connectingWhatsApp  (
                                 <>
                                   <Loader2 className="w-4 h-4 animate-spin" />
                                   Bağlanıyor...
@@ -1380,7 +1380,7 @@ const Settings: React.FC = () => {
                                 disabled={disconnectingWhatsApp}
                                 className="px-3 py-1 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors flex items-center gap-1 disabled:opacity-50"
                               >
-                                {disconnectingWhatsApp ? (
+                                {disconnectingWhatsApp  (
                                   <>
                                     <Loader2 className="w-3 h-3 animate-spin" />
                                     Kaldırılıyor...
@@ -1417,7 +1417,7 @@ const Settings: React.FC = () => {
                   {whatsAppMode !== 'disabled' && (
                     <>
                       <div className="space-y-3 mt-4">
-                        <h4 className="text-sm font-medium text-gray-700">Hangi durumlarda WhatsApp gönderilsin?</h4>
+                        <h4 className="text-sm font-medium text-gray-700">Hangi durumlarda WhatsApp gönderilsin</h4>
                         
                         {/* Mevcut checkbox'lar aynı kalacak */}
                         <label className="flex items-center gap-3 p-3 bg-white rounded-lg border hover:bg-gray-50">
@@ -1503,7 +1503,7 @@ const Settings: React.FC = () => {
                         <div className="text-sm text-blue-800">
                           <p className="font-medium mb-1">WhatsApp Kullanım Bilgisi</p>
                           <ul className="space-y-1">
-                            {whatsAppMode === 'shared' ? (
+                            {whatsAppMode === 'shared'  (
                               <>
                                 <li>• YolPilot'un resmi numarasından gönderim yapılır</li>
                                 <li>• Mesajın başında şirket adınız görünür</li>
@@ -1673,11 +1673,11 @@ const Settings: React.FC = () => {
                 {subscriptionData && getPlanBadge(subscriptionData.currentPlan)}
               </div>
               
-              {loadingSubscription ? (
+              {loadingSubscription  (
                 <div className="flex justify-center py-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                 </div>
-              ) : billingData ? (
+              ) : billingData  (
                 <>
                   {/* Plan Özeti */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1730,7 +1730,7 @@ const Settings: React.FC = () => {
                           <div 
                             className={`h-2 rounded-full ${
                               billingData.usage.stops.used > billingData.usage.stops.included 
-                                ? 'bg-red-600' 
+                                 'bg-red-600' 
                                 : 'bg-blue-600'
                             }`}
                             style={{ 
@@ -1760,7 +1760,7 @@ const Settings: React.FC = () => {
                           <div 
                             className={`h-2 rounded-full ${
                               billingData.usage.whatsApp.used > billingData.usage.whatsApp.included 
-                                ? 'bg-red-600' 
+                                 'bg-red-600' 
                                 : 'bg-green-600'
                             }`}
                             style={{ 
@@ -1784,15 +1784,15 @@ const Settings: React.FC = () => {
                       <ul className="space-y-2">
                         <li className="flex items-center gap-2">
                           <Check className="w-5 h-5 text-green-600" />
-                          <span className="text-gray-700">{subscriptionData?.limits.includedMonthlyStops} teslimat noktası/ay</span>
+                          <span className="text-gray-700">{subscriptionData.limits.includedMonthlyStops} teslimat noktası/ay</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <Check className="w-5 h-5 text-green-600" />
-                          <span className="text-gray-700">{subscriptionData?.limits.includedWhatsAppMessages} WhatsApp mesajı/ay</span>
+                          <span className="text-gray-700">{subscriptionData.limits.includedWhatsAppMessages} WhatsApp mesajı/ay</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <Check className="w-5 h-5 text-green-600" />
-                          <span className="text-gray-700">{subscriptionData?.limits.maxDrivers} sürücü</span>
+                          <span className="text-gray-700">{subscriptionData.limits.maxDrivers} sürücü</span>
                         </li>
                         <li className="flex items-center gap-2">
                           <Check className="w-5 h-5 text-green-600" />
@@ -1868,7 +1868,7 @@ const Settings: React.FC = () => {
                     <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
                       <UpgradePlan 
                         onClose={() => setShowUpgradePlan(false)}
-                        currentPlan={(billingData?.plan?.name || subscriptionData?.currentPlan || (trialStatus?.isActive ? 'Trial' : 'Starter')) as any}
+                        currentPlan={(billingData.plan.name || subscriptionData.currentPlan || (trialStatus.isActive  'Trial' : 'Starter')) as any}
                       />
                     </div>
                   </div>
@@ -2077,7 +2077,7 @@ const Settings: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-1">Depo</label>
                 <select
                   value={newMember.depotId || ''}
-                  onChange={(e) => setNewMember({ ...newMember, depotId: e.target.value ? parseInt(e.target.value) : null })}
+                  onChange={(e) => setNewMember({ ...newMember, depotId: e.target.value  parseInt(e.target.value) : null })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Depo Seçin (Opsiyonel)</option>
@@ -2101,7 +2101,7 @@ const Settings: React.FC = () => {
                 disabled={savingMember}
                 className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
               >
-                {savingMember ? (
+                {savingMember  (
                   <>
                     <Loader2 className="w-4 h-4 inline mr-2 animate-spin" />
                     Oluşturuluyor...

@@ -5,9 +5,9 @@ import { Clock, AlertTriangle, CheckCircle, X } from 'lucide-react';
 import { paymentService, type TrialStatusResponse } from '../../services/payment.service';
 
 interface TrialBannerProps {
-  onUpgradeClick?: () => void;
-  onDismiss?: () => void;
-  className?: string;
+  onUpgradeClick: () => void;
+  onDismiss: () => void;
+  className: string;
 }
 
 export const TrialBanner: React.FC<TrialBannerProps> = ({
@@ -36,10 +36,10 @@ export const TrialBanner: React.FC<TrialBannerProps> = ({
 
   const handleDismiss = () => {
     setDismissed(true);
-    onDismiss?.();
+    onDismiss.();
   };
 
-  if (loading || dismissed || !trialStatus?.isActive) {
+  if (loading || dismissed || !trialStatus.isActive) {
     return null;
   }
 
@@ -83,7 +83,7 @@ export const TrialBanner: React.FC<TrialBannerProps> = ({
           {getIcon()}
           <div className="flex-1">
             <h3 className="text-sm font-medium">
-              {isExpired ? 'Deneme Süresi Bitti' : 'Deneme Süresi'}
+              {isExpired  'Deneme Süresi Bitti' : 'Deneme Süresi'}
             </h3>
             <p className="mt-1 text-sm">{getMessage()}</p>
             

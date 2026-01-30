@@ -5,9 +5,9 @@ import { API_BASE_URL } from './api';
 export interface LiveLocation {
   latitude: number;
   longitude: number;
-  speed?: number;
-  heading?: number;
-  accuracy?: number;
+  speed: number;
+  heading: number;
+  accuracy: number;
   timestamp: Date;
 }
 
@@ -17,10 +17,10 @@ export interface ActiveVehicle {
   plateNumber: string;
   driverId: number;
   driverName: string;
-  location?: LiveLocation;
+  location: LiveLocation;
   currentStopIndex: number;
   totalStops: number;
-  startedAt?: Date;
+  startedAt: Date;
 }
 
 class TrackingService {
@@ -92,7 +92,7 @@ class TrackingService {
 
   // Bağlantı durumunu kontrol et
   isConnected(): boolean {
-    return this.hubConnection?.state === signalR.HubConnectionState.Connected;
+    return this.hubConnection.state === signalR.HubConnectionState.Connected;
   }
 
   async getActiveVehicles(): Promise<ActiveVehicle[]> {
@@ -165,7 +165,7 @@ class TrackingService {
   }
 
   // Simulator için
-  async updateLocation(journeyId: number, lat: number, lng: number, speed?: number): Promise<void> {
+  async updateLocation(journeyId: number, lat: number, lng: number, speed: number): Promise<void> {
     if (!this.isConnected()) {
       console.warn('Not connected to tracking hub');
       return;

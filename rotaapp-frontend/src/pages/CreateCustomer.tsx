@@ -11,7 +11,7 @@ const CreateCustomer: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (formData: Partial<Customer>, contacts?: CustomerContact[]) => {
+  const handleSubmit = async (formData: Partial<Customer>, contacts: CustomerContact[]) => {
     setLoading(true);
     setError(null);
     
@@ -33,7 +33,7 @@ const CreateCustomer: React.FC = () => {
       
       navigate(`/customers/${newCustomer.id}`);
     } catch (err: any) {
-      const errorMessage = err.userFriendlyMessage || err.response?.data?.message || 'Müşteri oluşturulurken bir hata oluştu.';
+      const errorMessage = err.userFriendlyMessage || err.response.data.message || 'Müşteri oluşturulurken bir hata oluştu.';
       setError(errorMessage);
       console.error('Error creating customer:', err);
     } finally {

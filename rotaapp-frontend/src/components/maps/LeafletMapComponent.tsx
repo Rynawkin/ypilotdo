@@ -3,12 +3,12 @@ import { MapPin, Navigation, Home } from 'lucide-react';
 import { Customer } from '@/types';
 
 interface LeafletMapProps {
-  center?: { lat: number; lng: number };
-  zoom?: number;
-  height?: string;
-  customers?: Customer[];
-  depot?: { lat: number; lng: number };
-  stops?: Array<{
+  center: { lat: number; lng: number };
+  zoom: number;
+  height: string;
+  customers: Customer[];
+  depot: { lat: number; lng: number };
+  stops: Array<{
     customer: Customer;
     order: number;
   }>;
@@ -139,7 +139,7 @@ const LeafletMapComponent: React.FC<LeafletMapProps> = ({
                 <b>${stop.customer.name}</b><br>
                 <small>${stop.customer.address}</small><br>
                 <small>📞 ${stop.customer.phone || 'Tel yok'}</small><br>
-                <small>🕐 ${stop.customer.timeWindow?.start || '09:00'} - ${stop.customer.timeWindow?.end || '17:00'}</small>
+                <small>🕐 ${stop.customer.timeWindow.start || '09:00'} - ${stop.customer.timeWindow.end || '17:00'}</small>
               </div>
             `)
             .addTo(map);

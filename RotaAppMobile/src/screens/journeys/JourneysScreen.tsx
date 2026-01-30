@@ -345,6 +345,7 @@ const JourneysScreen: React.FC = () => {
   }, []);
 
   const renderJourneyCard = useCallback(({ item }: { item: JourneyResponse }) => {
+    const isCompleted = item.status?.toLowerCase() === 'completed';
     const completedStops = item.stops?.filter(s => 
       s.status?.toLowerCase() === 'completed'
     ).length || 0;
@@ -370,6 +371,7 @@ const JourneysScreen: React.FC = () => {
       <Card 
         style={[
           styles.journeyCard,
+          isCompleted && styles.journeyCardCompleted,
           isLargeScreen && styles.journeyCardLarge
         ]}
         onPress={() => navigation.navigate('JourneyDetail', { journeyId: item.id })}
@@ -642,6 +644,11 @@ const styles = StyleSheet.create({
     marginBottom: hp(1.5),
     borderRadius: 12,
     elevation: 2,
+  },
+  journeyCardCompleted: {
+    backgroundColor: '#E9F7EF',
+    borderWidth: 1,
+    borderColor: '#A7F3D0',
   },
   journeyCardLarge: {
     marginBottom: hp(2),

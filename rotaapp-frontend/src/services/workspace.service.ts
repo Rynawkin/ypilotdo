@@ -4,8 +4,8 @@ import { api } from './api';
 export interface Workspace {
   id: string;
   name: string;
-  email?: string;
-  phoneNumber?: string;
+  email: string;
+  phoneNumber: string;
   distanceUnit: 'km' | 'mi';
   currency: string;
   timeZone: string;
@@ -14,7 +14,7 @@ export interface Workspace {
   maximumDriverCount: number;
   active: boolean;
   createdAt: Date;
-  subscription?: {
+  subscription: {
     plan: 'trial' | 'basic' | 'premium' | 'enterprise';
     startDate: Date;
     endDate: Date;

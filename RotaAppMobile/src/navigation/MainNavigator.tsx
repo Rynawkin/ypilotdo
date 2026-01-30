@@ -1,7 +1,7 @@
 // C:\Projects\RotaAppMobile\src\navigation\MainNavigator.tsx
 
 import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet, Alert, Modal, Text, Pressable } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Alert, Modal, Text, Pressable, Dimensions, Platform, StatusBar } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Badge } from 'react-native-paper';
@@ -667,6 +667,13 @@ const MainNavigator: React.FC = () => {
 const TabNavigator = () => {
   const { isDispatcher } = useAuth(); // Auth context'ten rol kontrolü
   const insets = useSafeAreaInsets(); // YENİ
+  const screenHeight = Dimensions.get('screen').height;
+  const windowHeight = Dimensions.get('window').height;
+  const statusBarHeight = Platform.OS === 'android' ? (StatusBar.currentHeight || 0) : 0;
+  const androidNavBarHeight = Platform.OS === 'android'
+    ? Math.max(0, screenHeight - windowHeight - statusBarHeight)
+    : 0;
+  const bottomInset = Math.max(insets.bottom, androidNavBarHeight);
 
   return (
     <Tab.Navigator
@@ -702,10 +709,11 @@ const TabNavigator = () => {
         },
         tabBarActiveTintColor: '#3B82F6',
         tabBarInactiveTintColor: 'gray',
+        tabBarSafeAreaInsets: { bottom: bottomInset },
         tabBarStyle: {
           paddingVertical: 5,
-          height: 60 + insets.bottom,
-          paddingBottom: insets.bottom, // YENİ
+          height: 60 + bottomInset,
+          paddingBottom: bottomInset, // YENİ
         },
         tabBarLabelStyle: {
           fontSize: 12,

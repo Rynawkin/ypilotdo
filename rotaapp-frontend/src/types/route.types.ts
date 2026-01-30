@@ -2,27 +2,27 @@
 
 export interface RouteStopFormData {
   customerId: string;
-  customer?: Customer;
+  customer: Customer;
   order: number;
   
   // Time window override
-  overrideTimeWindow?: {
+  overrideTimeWindow: {
     start: string;
     end: string;
   };
   
   // Priority override
-  overridePriority?: 'high' | 'normal' | 'low';
+  overridePriority: 'high' | 'normal' | 'low';
   
   // Service settings
-  serviceTime?: number;
-  signatureRequired?: boolean;  // YENİ
-  photoRequired?: boolean;      // YENİ
+  serviceTime: number;
+  signatureRequired: boolean;  // YENİ
+  photoRequired: boolean;      // YENİ
   
   // Notes
-  stopNotes?: string;
+  stopNotes: string;
   
   // Optimization results
-  estimatedArrivalTime?: string;
-  estimatedDepartureTime?: string;
+  estimatedArrivalTime: string;
+  estimatedDepartureTime: string;
 }

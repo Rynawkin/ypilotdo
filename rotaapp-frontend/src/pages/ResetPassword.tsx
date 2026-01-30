@@ -50,7 +50,7 @@ const ResetPassword: React.FC = () => {
         navigate('/login');
       }, 3000);
     } catch (error: any) {
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Bir hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Bir hata oluştu';
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -114,7 +114,7 @@ const ResetPassword: React.FC = () => {
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword  'text' : 'password'}
                   value={formData.newPassword}
                   onChange={(e) => setFormData({...formData, newPassword: e.target.value})}
                   className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -126,7 +126,7 @@ const ResetPassword: React.FC = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword  <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
@@ -138,7 +138,7 @@ const ResetPassword: React.FC = () => {
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword  'text' : 'password'}
                   value={formData.confirmPassword}
                   onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
                   className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -159,7 +159,7 @@ const ResetPassword: React.FC = () => {
               disabled={loading}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
-              {loading ? (
+              {loading  (
                 <>
                   <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                   Güncelleniyor...

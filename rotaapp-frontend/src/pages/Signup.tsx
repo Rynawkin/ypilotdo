@@ -108,7 +108,7 @@ const Signup: React.FC = () => {
     if (!/[0-9]/.test(password)) {
       errors.push('En az 1 rakam içermeli');
     }
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/]/.test(password)) {
       errors.push('En az 1 özel karakter içermeli (!@#$% vb.)');
     }
     
@@ -158,7 +158,7 @@ const Signup: React.FC = () => {
     
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === 'checkbox'  checked : value
     }));
   };
 
@@ -245,9 +245,9 @@ const Signup: React.FC = () => {
       
       // Fallback: eski error handling mantığı
       if (!err.userFriendlyMessage) {
-        if (err.response?.data?.message) {
+        if (err.response.data.message) {
           errorMessage = err.response.data.message;
-        } else if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+        } else if (err.response.data.errors && Array.isArray(err.response.data.errors)) {
           errorMessage = err.response.data.errors.join(', ');
         } else if (err.message) {
           errorMessage = err.message;
@@ -273,7 +273,7 @@ const Signup: React.FC = () => {
               />
             </Link>
             <Link to="/login" className="text-sm text-gray-600 hover:text-gray-900">
-              Zaten hesabınız var mı? <span className="text-blue-600">Giriş yapın</span>
+              Zaten hesabınız var mı <span className="text-blue-600">Giriş yapın</span>
             </Link>
           </div>
         </div>
@@ -287,12 +287,12 @@ const Signup: React.FC = () => {
               <div key={i} className="flex items-center">
                 <div className={`
                   w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium
-                  ${step >= i ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}
+                  ${step >= i  'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}
                 `}>
-                  {step > i ? <CheckCircle className="w-5 h-5" /> : i}
+                  {step > i  <CheckCircle className="w-5 h-5" /> : i}
                 </div>
                 {i < 3 && (
-                  <div className={`w-24 lg:w-32 h-1 ${step > i ? 'bg-blue-600' : 'bg-gray-200'}`} />
+                  <div className={`w-24 lg:w-32 h-1 ${step > i  'bg-blue-600' : 'bg-gray-200'}`} />
                 )}
               </div>
             ))}
@@ -350,7 +350,7 @@ const Signup: React.FC = () => {
                       onChange={handleInputChange}
                       className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                         formData.workspaceEmail && !validateEmail(formData.workspaceEmail) 
-                          ? 'border-red-500' 
+                           'border-red-500' 
                           : 'border-gray-300'
                       }`}
                       placeholder="info@firma.com"
@@ -374,7 +374,7 @@ const Signup: React.FC = () => {
                       onChange={handleInputChange}
                       className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                         formData.workspacePhone && !validatePhone(formData.workspacePhone) 
-                          ? 'border-red-500' 
+                           'border-red-500' 
                           : 'border-gray-300'
                       }`}
                       placeholder="0532 123 45 67"
@@ -423,7 +423,7 @@ const Signup: React.FC = () => {
                       onChange={handleInputChange}
                       className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                         formData.adminEmail && !validateEmail(formData.adminEmail) 
-                          ? 'border-red-500' 
+                           'border-red-500' 
                           : 'border-gray-300'
                       }`}
                       placeholder="admin@firma.com"
@@ -447,7 +447,7 @@ const Signup: React.FC = () => {
                       onChange={handleInputChange}
                       className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                         formData.adminPassword && passwordErrors.length > 0 
-                          ? 'border-red-500' 
+                           'border-red-500' 
                           : 'border-gray-300'
                       }`}
                       placeholder="••••••••"
@@ -461,36 +461,36 @@ const Signup: React.FC = () => {
                         <Info className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
                         <div className="text-xs space-y-1">
                           <p className="font-medium text-gray-700 mb-1">Şifre gereksinimleri:</p>
-                          <div className={`flex items-center ${formData.adminPassword.length >= 6 ? 'text-green-600' : 'text-gray-500'}`}>
-                            {formData.adminPassword.length >= 6 ? 
+                          <div className={`flex items-center ${formData.adminPassword.length >= 6  'text-green-600' : 'text-gray-500'}`}>
+                            {formData.adminPassword.length >= 6  
                               <CheckCircle className="w-3 h-3 mr-1" /> : 
                               <div className="w-3 h-3 mr-1 border border-gray-400 rounded-full" />
                             }
                             En az 6 karakter
                           </div>
-                          <div className={`flex items-center ${/[A-Z]/.test(formData.adminPassword) ? 'text-green-600' : 'text-gray-500'}`}>
-                            {/[A-Z]/.test(formData.adminPassword) ? 
+                          <div className={`flex items-center ${/[A-Z]/.test(formData.adminPassword)  'text-green-600' : 'text-gray-500'}`}>
+                            {/[A-Z]/.test(formData.adminPassword)  
                               <CheckCircle className="w-3 h-3 mr-1" /> : 
                               <div className="w-3 h-3 mr-1 border border-gray-400 rounded-full" />
                             }
                             En az 1 büyük harf
                           </div>
-                          <div className={`flex items-center ${/[a-z]/.test(formData.adminPassword) ? 'text-green-600' : 'text-gray-500'}`}>
-                            {/[a-z]/.test(formData.adminPassword) ? 
+                          <div className={`flex items-center ${/[a-z]/.test(formData.adminPassword)  'text-green-600' : 'text-gray-500'}`}>
+                            {/[a-z]/.test(formData.adminPassword)  
                               <CheckCircle className="w-3 h-3 mr-1" /> : 
                               <div className="w-3 h-3 mr-1 border border-gray-400 rounded-full" />
                             }
                             En az 1 küçük harf
                           </div>
-                          <div className={`flex items-center ${/[0-9]/.test(formData.adminPassword) ? 'text-green-600' : 'text-gray-500'}`}>
-                            {/[0-9]/.test(formData.adminPassword) ? 
+                          <div className={`flex items-center ${/[0-9]/.test(formData.adminPassword)  'text-green-600' : 'text-gray-500'}`}>
+                            {/[0-9]/.test(formData.adminPassword)  
                               <CheckCircle className="w-3 h-3 mr-1" /> : 
                               <div className="w-3 h-3 mr-1 border border-gray-400 rounded-full" />
                             }
                             En az 1 rakam
                           </div>
-                          <div className={`flex items-center ${/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(formData.adminPassword) ? 'text-green-600' : 'text-gray-500'}`}>
-                            {/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(formData.adminPassword) ? 
+                          <div className={`flex items-center ${/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/]/.test(formData.adminPassword)  'text-green-600' : 'text-gray-500'}`}>
+                            {/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/]/.test(formData.adminPassword)  
                               <CheckCircle className="w-3 h-3 mr-1" /> : 
                               <div className="w-3 h-3 mr-1 border border-gray-400 rounded-full" />
                             }
@@ -515,7 +515,7 @@ const Signup: React.FC = () => {
                       onChange={handleInputChange}
                       className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                         formData.adminPasswordConfirm && formData.adminPassword !== formData.adminPasswordConfirm 
-                          ? 'border-red-500' 
+                           'border-red-500' 
                           : 'border-gray-300'
                       }`}
                       placeholder="••••••••"
@@ -542,7 +542,7 @@ const Signup: React.FC = () => {
                     className={`
                       relative border-2 rounded-xl p-6 cursor-pointer transition-all
                       ${formData.plan === plan.id 
-                        ? 'border-blue-600 bg-blue-50' 
+                         'border-blue-600 bg-blue-50' 
                         : 'border-gray-200 hover:border-gray-300'}
                     `}
                   >
@@ -621,14 +621,14 @@ const Signup: React.FC = () => {
               </button>
             )}
             
-            {step < 3 ? (
+            {step < 3  (
               <button
                 onClick={() => setStep(step + 1)}
                 disabled={!validateStep(step)}
                 className={`
                   px-6 py-2 rounded-lg font-medium flex items-center ml-auto
                   ${validateStep(step)
-                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                     'bg-blue-600 text-white hover:bg-blue-700' 
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'}
                 `}
               >
@@ -642,11 +642,11 @@ const Signup: React.FC = () => {
                 className={`
                   px-6 py-2 rounded-lg font-medium flex items-center ml-auto
                   ${validateStep(3) && !loading
-                    ? 'bg-green-600 text-white hover:bg-green-700' 
+                     'bg-green-600 text-white hover:bg-green-700' 
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'}
                 `}
               >
-                {loading ? (
+                {loading  (
                   <>
                     <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                     Hesap oluşturuluyor...

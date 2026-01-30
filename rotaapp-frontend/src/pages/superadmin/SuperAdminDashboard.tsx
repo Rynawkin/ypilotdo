@@ -73,7 +73,7 @@ const DeleteConfirmModal: React.FC<{
             disabled={confirmText !== workspace.workspaceName}
             className={`px-4 py-2 rounded-lg ${
               confirmText === workspace.workspaceName
-                ? 'bg-red-600 text-white hover:bg-red-700'
+                 'bg-red-600 text-white hover:bg-red-700'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
@@ -137,7 +137,7 @@ const SuperAdminDashboard: React.FC = () => {
   };
 
   const handleToggleStatus = async (workspace: WorkspaceUsage) => {
-    const newStatus = workspace.status === 'active' ? false : true;
+    const newStatus = workspace.status === 'active'  false : true;
     await workspaceService.updateStatus(workspace.workspaceId, newStatus);
     await loadData();
     setShowActionMenu(null);
@@ -181,9 +181,9 @@ const SuperAdminDashboard: React.FC = () => {
     {
       title: 'Açık Sorunlar',
       value: openIssuesCount,
-      change: openIssuesCount > 0 ? `${openIssuesCount} bekliyor` : 'Temiz',
+      change: openIssuesCount > 0  `${openIssuesCount} bekliyor` : 'Temiz',
       icon: Bug,
-      color: openIssuesCount > 0 ? 'red' : 'gray',
+      color: openIssuesCount > 0  'red' : 'gray',
       onClick: () => navigate('/superadmin/issues')
     }
   ];
@@ -222,7 +222,7 @@ const SuperAdminDashboard: React.FC = () => {
           <div 
             key={index} 
             className={`bg-white rounded-xl shadow-sm border border-gray-200 p-6 ${
-              stat.onClick ? 'cursor-pointer hover:shadow-md transition-shadow' : ''
+              stat.onClick  'cursor-pointer hover:shadow-md transition-shadow' : ''
             }`}
             onClick={stat.onClick}
           >
@@ -231,9 +231,9 @@ const SuperAdminDashboard: React.FC = () => {
                 <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
               </div>
               <span className={`text-sm font-medium ${
-                stat.color === 'red' ? 'text-red-600' : 
-                stat.change.startsWith('+') ? 'text-green-600' : 
-                stat.change === 'Temiz' ? 'text-gray-500' : 'text-red-600'
+                stat.color === 'red'  'text-red-600' : 
+                stat.change.startsWith('+')  'text-green-600' : 
+                stat.change === 'Temiz'  'text-gray-500' : 'text-red-600'
               }`}>
                 {stat.change}
               </span>
@@ -325,18 +325,18 @@ const SuperAdminDashboard: React.FC = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
-                      ${workspace.plan === 'premium' ? 'bg-purple-100 text-purple-800' : ''}
-                      ${workspace.plan === 'basic' ? 'bg-blue-100 text-blue-800' : ''}
-                      ${workspace.plan === 'trial' ? 'bg-gray-100 text-gray-800' : ''}
+                      ${workspace.plan === 'premium'  'bg-purple-100 text-purple-800' : ''}
+                      ${workspace.plan === 'basic'  'bg-blue-100 text-blue-800' : ''}
+                      ${workspace.plan === 'trial'  'bg-gray-100 text-gray-800' : ''}
                     `}>
                       {workspace.plan.charAt(0).toUpperCase() + workspace.plan.slice(1)}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
-                      ${workspace.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
+                      ${workspace.status === 'active'  'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}
                     `}>
-                      {workspace.status === 'active' ? 'Aktif' : 'Pasif'}
+                      {workspace.status === 'active'  'Aktif' : 'Pasif'}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -356,7 +356,7 @@ const SuperAdminDashboard: React.FC = () => {
                     <div className="relative inline-block text-left">
                       <button
                         onClick={() => setShowActionMenu(
-                          showActionMenu === workspace.workspaceId ? null : workspace.workspaceId
+                          showActionMenu === workspace.workspaceId  null : workspace.workspaceId
                         )}
                         className="text-gray-400 hover:text-gray-600"
                       >
@@ -388,7 +388,7 @@ const SuperAdminDashboard: React.FC = () => {
                               onClick={() => handleToggleStatus(workspace)}
                               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                             >
-                              {workspace.status === 'active' ? (
+                              {workspace.status === 'active'  (
                                 <>
                                   <Lock className="w-4 h-4 mr-2" />
                                   Pasif Yap

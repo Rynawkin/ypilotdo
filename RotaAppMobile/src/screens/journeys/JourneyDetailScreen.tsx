@@ -43,7 +43,7 @@ const hp = (percentage: number) => {
 };
 
 const isSmallDevice = screenWidth < 375;
-import { Card, Button, Menu, Divider, Portal, Modal } from 'react-native-paper';
+import { Card, Button, Menu, Divider, Portal, Modal, Checkbox } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { format, parseISO } from 'date-fns';
@@ -151,6 +151,9 @@ const JourneyDetailScreen: React.FC = () => {
   const [actionLoading, setActionLoading] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
   const [queueStatus, setQueueStatus] = useState<any>(null);
+  const [reoptimizeModalVisible, setReoptimizeModalVisible] = useState(false);
+  const [newlyAddedStops, setNewlyAddedStops] = useState<JourneyStopResponse[]>([]);
+  const [selectedNewStopIds, setSelectedNewStopIds] = useState<Set<number>>(new Set());
 
   // Delay reason modal state
   const [delayReasonModalVisible, setDelayReasonModalVisible] = useState(false);
@@ -266,6 +269,43 @@ const JourneyDetailScreen: React.FC = () => {
     setRefreshing(true);
     loadJourney(false);
   }, [loadJourney]);
+
+  const isDepotStop = (stop: JourneyStopResponse): boolean => {
+    return !stop.routeStop || !stop.routeStop.customerId;
+  };
+
+  const getNewlyAddedStops = (targetJourney: JourneyResponse | null): JourneyStopResponse[] => {
+    if (!targetJourney?.startedAt) return [];
+    const startedAt = new Date(targetJourney.startedAt);
+    if (Number.isNaN(startedAt.getTime())) return [];
+
+    return (targetJourney.stops || []).filter(stop => {
+      if (stop.status !== 'pending') return false;
+      if (isDepotStop(stop)) return false;
+      if (!stop.createdAt) return false;
+      const createdAt = new Date(stop.createdAt);
+      if (Number.isNaN(createdAt.getTime())) return false;
+      return createdAt > startedAt;
+    });
+  };
+
+  const toggleNewStopSelection = (stopId: number) => {
+    setSelectedNewStopIds(prev => {
+      const next = new Set(prev);
+      if (next.has(stopId)) {
+        next.delete(stopId);
+      } else {
+        next.add(stopId);
+      }
+      return next;
+    });
+  };
+
+  const closeReoptimizeModal = () => {
+    setReoptimizeModalVisible(false);
+    setNewlyAddedStops([]);
+    setSelectedNewStopIds(new Set());
+  };
 
   // Yardımcı fonksiyon ekle (handleStartJourney'nin üstüne)
   const checkTimeDeviation = (plannedStartTime: string): number => {
@@ -515,57 +555,67 @@ const JourneyDetailScreen: React.FC = () => {
   };
 
   // ✅ YENİ: Yeni durak eklendikten sonra optimize et
-  const handleReoptimizeJourney = async () => {
-    Alert.alert(
-      '🔄 Rota Optimizasyonu',
-      'Yeni eklenen duraklar için rota yeniden optimize edilecek. Anlık konumunuz kullanılacak.\n\nDevam etmek istiyor musunuz?',
-      [
-        { text: 'İptal', style: 'cancel' },
-        {
-          text: 'Optimize Et',
-          style: 'default',
-          onPress: async () => {
-            try {
-              setActionLoading(true);
+  const performReoptimize = async (deferredStopIds: number[] = []) => {
+    try {
+      setActionLoading(true);
 
-              // Mevcut konumu al
-              const location = await locationService.getCurrentLocation();
-              if (!location) {
-                Alert.alert('Hata', 'Konum bilgisi alınamadı. Lütfen konum izinlerini kontrol edin.');
-                return;
-              }
+      // Mevcut konumu al
+      const location = await locationService.getCurrentLocation();
+      if (!location) {
+        Alert.alert('Hata', 'Konum bilgisi alinamadi. Lutfen konum izinlerini kontrol edin.');
+        return;
+      }
 
-              // Optimize et
-              await journeyService.reoptimizeJourney(
-                journeyId,
-                location.latitude,
-                location.longitude
-              );
+      await journeyService.reoptimizeJourney(
+        journeyId,
+        location.latitude,
+        location.longitude,
+        deferredStopIds
+      );
 
-              // Journey'i yeniden yükle
-              await loadJourney(false);
+      await loadJourney(false);
 
-              Alert.alert(
-                'Başarılı',
-                'Rota başarıyla optimize edildi. Yeni ETA\'lar hesaplandı.',
-                [{ text: 'Tamam' }]
-              );
-            } catch (error: any) {
-              console.log('Reoptimize journey error:', error);
-              Alert.alert(
-                'Hata',
-                error.message || 'Optimizasyon sırasında bir hata oluştu.'
-              );
-            } finally {
-              setActionLoading(false);
-            }
-          }
-        }
-      ]
-    );
+      Alert.alert(
+        'Basarili',
+        "Rota basariyla optimize edildi. Yeni ETA'lar hesaplandi.",
+        [{ text: 'Tamam' }]
+      );
+    } catch (error: any) {
+      console.log('Reoptimize journey error:', error);
+      Alert.alert(
+        'Hata',
+        error.message || 'Optimizasyon sirasinda bir hata olustu.'
+      );
+    } finally {
+      setActionLoading(false);
+    }
   };
 
-  // Journey bitir
+  // ? YEN?: Yeni durak eklendikten sonra optimize et
+  const handleReoptimizeJourney = async () => {
+    const latestJourney = await loadJourney(false);
+    const sourceJourney = latestJourney || journey;
+
+    const newStops = getNewlyAddedStops(sourceJourney || null);
+
+    if (newStops.length === 0) {
+      Alert.alert(
+        'Rota Optimizasyonu',
+        'Rota yeniden optimize edilecek. Anlik konumunuz kullanilacak.\n\nDevam etmek istiyor musunuz?',
+        [
+          { text: 'Iptal', style: 'cancel' },
+          { text: 'Optimize Et', onPress: () => performReoptimize() }
+        ]
+      );
+      return;
+    }
+
+    setNewlyAddedStops(newStops);
+    setSelectedNewStopIds(new Set());
+    setReoptimizeModalVisible(true);
+  };
+
+// Journey bitir
   const handleFinishJourney = async () => {
     Alert.alert(
       'Seferi Bitir',
@@ -1669,6 +1719,74 @@ const JourneyDetailScreen: React.FC = () => {
         />
       )}
 
+      {/* Reoptimize Selection Modal */}
+      <Portal>
+        <Modal
+          visible={reoptimizeModalVisible}
+          onDismiss={closeReoptimizeModal}
+          contentContainerStyle={styles.reoptimizeModalContent}
+        >
+          <View style={styles.reoptimizeModalHeader}>
+            <Text style={styles.reoptimizeModalTitle}>Yeni Duraklar</Text>
+            <TouchableOpacity onPress={closeReoptimizeModal}>
+              <Icon name="close" size={22} color="#666" />
+            </TouchableOpacity>
+          </View>
+
+          <Divider style={styles.modalDivider} />
+
+          <View style={styles.reoptimizeModalBody}>
+            <Text style={styles.reoptimizeModalText}>
+              Yeni eklenen duraklari secin. Isaretlenenler mevcut duraklarla birlikte optimize edilir.
+              Isaretlenmeyenler sona eklenir ve en son depoya donulur.
+            </Text>
+
+            <ScrollView style={styles.reoptimizeStopList}>
+              {newlyAddedStops.map(stop => (
+                <View key={stop.id} style={styles.reoptimizeStopRow}>
+                  <Checkbox
+                    status={selectedNewStopIds.has(stop.id) ? 'checked' : 'unchecked'}
+                    onPress={() => toggleNewStopSelection(stop.id)}
+                  />
+                  <View style={styles.reoptimizeStopInfo}>
+                    <Text style={styles.reoptimizeStopName} numberOfLines={1}>
+                      {stop.routeStop?.name || stop.endAddress}
+                    </Text>
+                    <Text style={styles.reoptimizeStopAddress} numberOfLines={2}>
+                      {stop.routeStop?.address || stop.endAddress}
+                    </Text>
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+
+          <View style={styles.reoptimizeModalActions}>
+            <Button
+              mode="text"
+              onPress={closeReoptimizeModal}
+              disabled={actionLoading}
+            >
+              Vazgec
+            </Button>
+            <Button
+              mode="contained"
+              loading={actionLoading}
+              disabled={actionLoading}
+              onPress={async () => {
+                closeReoptimizeModal();
+                const deferredStopIds = newlyAddedStops
+                  .filter(stop => !selectedNewStopIds.has(stop.id))
+                  .map(stop => stop.id);
+                await performReoptimize(deferredStopIds);
+              }}
+            >
+              Optimize Et
+            </Button>
+          </View>
+        </Modal>
+      </Portal>
+
       {/* Stop Detail Modal */}
       <Portal>
         <Modal
@@ -2438,6 +2556,62 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 24,
     paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#e5e5e5',
+  },
+  reoptimizeModalContent: {
+    backgroundColor: 'white',
+    margin: 20,
+    borderRadius: 12,
+    maxHeight: '80%',
+  },
+  reoptimizeModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+  },
+  reoptimizeModalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+  },
+  reoptimizeModalBody: {
+    padding: 16,
+  },
+  reoptimizeModalText: {
+    fontSize: 13,
+    color: '#666',
+    lineHeight: 18,
+    marginBottom: 12,
+  },
+  reoptimizeStopList: {
+    maxHeight: 260,
+  },
+  reoptimizeStopRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingVertical: 8,
+  },
+  reoptimizeStopInfo: {
+    flex: 1,
+    paddingTop: 2,
+  },
+  reoptimizeStopName: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#111827',
+  },
+  reoptimizeStopAddress: {
+    fontSize: 12,
+    color: '#6B7280',
+    marginTop: 2,
+  },
+  reoptimizeModalActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    gap: 8,
+    padding: 16,
     borderTopWidth: 1,
     borderTopColor: '#e5e5e5',
   },

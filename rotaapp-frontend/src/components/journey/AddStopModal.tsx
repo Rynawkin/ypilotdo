@@ -10,18 +10,18 @@ interface AddStopModalProps {
   onClose: () => void;
   journeyId: number;
   onStopAdded: () => void;
-  activeStopCustomerIds?: number[]; // ✅ Seferdeki aktif durakların müşteri ID'leri
+  activeStopCustomerIds: number[]; // ✅ Seferdeki aktif durakların müşteri ID'leri
 }
 
 interface Customer {
   id: number;
   name: string;
-  address?: string;
-  latitude?: number;
-  longitude?: number;
-  phone?: string;
-  email?: string;
-  serviceTime?: string; // ✅ Müşterinin varsayılan servis süresi
+  address: string;
+  latitude: number;
+  longitude: number;
+  phone: string;
+  email: string;
+  serviceTime: string; // ✅ Müşterinin varsayılan servis süresi
 }
 
 export const AddStopModal: React.FC<AddStopModalProps> = ({
@@ -114,7 +114,7 @@ export const AddStopModal: React.FC<AddStopModalProps> = ({
         address.trim(),
         Number(latitude),
         Number(longitude),
-        serviceTimeMinutes ? Number(serviceTimeMinutes) : undefined,
+        serviceTimeMinutes  Number(serviceTimeMinutes) : undefined,
         notes.trim() || undefined,
         arriveBetweenStart || undefined,
         arriveBetweenEnd || undefined
@@ -175,7 +175,7 @@ export const AddStopModal: React.FC<AddStopModalProps> = ({
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Müşteri <span className="text-red-500">*</span>
             </label>
-            {loadingCustomers ? (
+            {loadingCustomers  (
               <div className="flex items-center justify-center p-4">
                 <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
               </div>
@@ -196,7 +196,7 @@ export const AddStopModal: React.FC<AddStopModalProps> = ({
                       value={customer.id}
                       disabled={isActiveInJourney}
                     >
-                      {customer.name} {isActiveInJourney ? '(Seferde aktif)' : ''}
+                      {customer.name} {isActiveInJourney  '(Seferde aktif)' : ''}
                     </option>
                   );
                 })}
@@ -230,7 +230,7 @@ export const AddStopModal: React.FC<AddStopModalProps> = ({
                 type="number"
                 step="any"
                 value={latitude}
-                onChange={(e) => setLatitude(e.target.value ? Number(e.target.value) : '')}
+                onChange={(e) => setLatitude(e.target.value  Number(e.target.value) : '')}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="40.7128"
                 required
@@ -245,7 +245,7 @@ export const AddStopModal: React.FC<AddStopModalProps> = ({
                 type="number"
                 step="any"
                 value={longitude}
-                onChange={(e) => setLongitude(e.target.value ? Number(e.target.value) : '')}
+                onChange={(e) => setLongitude(e.target.value  Number(e.target.value) : '')}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="29.0469"
                 required
@@ -263,7 +263,7 @@ export const AddStopModal: React.FC<AddStopModalProps> = ({
               type="number"
               min="0"
               value={serviceTimeMinutes}
-              onChange={(e) => setServiceTimeMinutes(e.target.value ? Number(e.target.value) : '')}
+              onChange={(e) => setServiceTimeMinutes(e.target.value  Number(e.target.value) : '')}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Varsayılan süre kullanılacak"
               disabled={submitting}
@@ -339,7 +339,7 @@ export const AddStopModal: React.FC<AddStopModalProps> = ({
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={submitting}
             >
-              {submitting ? (
+              {submitting  (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
                   <span>Ekleniyor...</span>

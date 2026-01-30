@@ -14,17 +14,17 @@ export interface UserResponse {
   id: string;
   fullName: string;
   email: string;
-  phoneNumber?: string;
+  phoneNumber: string;
   isDriver: boolean;
   isDispatcher: boolean;
   isAdmin: boolean;
   workspaceId: number;
-  depotId?: number;
+  depotId: number;
 }
 
 export interface WorkspaceResponse {
   id: number;
   name: string;
-  phoneNumber?: string;
-  email?: string;
+  phoneNumber: string;
+  email: string;
 }

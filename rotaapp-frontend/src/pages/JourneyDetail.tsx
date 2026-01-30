@@ -174,12 +174,12 @@ const StopDetailsSection: React.FC<{
           disabled={!details.signatureUrl}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors text-sm ${
             details.signatureUrl 
-              ? 'bg-gray-50 hover:bg-gray-100 cursor-pointer' 
+               'bg-gray-50 hover:bg-gray-100 cursor-pointer' 
               : 'bg-gray-50 opacity-50 cursor-not-allowed'
           }`}
         >
-          <Edit3 className={`w-4 h-4 ${details.signatureUrl ? 'text-gray-600' : 'text-gray-400'}`} />
-          <span className={details.signatureUrl ? 'text-gray-700' : 'text-gray-400'}>
+          <Edit3 className={`w-4 h-4 ${details.signatureUrl  'text-gray-600' : 'text-gray-400'}`} />
+          <span className={details.signatureUrl  'text-gray-700' : 'text-gray-400'}>
             İmza {!details.signatureUrl && '(Yok)'}
           </span>
         </button>
@@ -191,12 +191,12 @@ const StopDetailsSection: React.FC<{
             disabled={!hasPhotos}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors text-sm ${
               hasPhotos 
-                ? 'bg-gray-50 hover:bg-gray-100 cursor-pointer' 
+                 'bg-gray-50 hover:bg-gray-100 cursor-pointer' 
                 : 'bg-gray-50 opacity-50 cursor-not-allowed'
             }`}
           >
-            <Camera className={`w-4 h-4 ${hasPhotos ? 'text-gray-600' : 'text-gray-400'}`} />
-            <span className={hasPhotos ? 'text-gray-700' : 'text-gray-400'}>
+            <Camera className={`w-4 h-4 ${hasPhotos  'text-gray-600' : 'text-gray-400'}`} />
+            <span className={hasPhotos  'text-gray-700' : 'text-gray-400'}>
               Fotoğraflar {!hasPhotos && '(Yok)'}
             </span>
           </button>
@@ -210,7 +210,7 @@ const JourneyDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
-  const journeyId = id ? parseInt(id) : null;
+  const journeyId = id  parseInt(id) : null;
 
   const [journey, setJourney] = useState<Journey | null>(null);
   const [loading, setLoading] = useState(true);
@@ -278,7 +278,7 @@ const JourneyDetail: React.FC = () => {
 
   // Geri dönüş işlevi
   const handleGoBack = () => {
-    const fromPath = (location.state as { from?: string })?.from;
+    const fromPath = (location.state as { from: string }).from;
     if (fromPath) {
       navigate(fromPath);
     } else {
@@ -367,7 +367,7 @@ const JourneyDetail: React.FC = () => {
 
       return () => clearInterval(interval);
     }
-  }, [journey?.status, id]);
+  }, [journey.status, id]);
 
   // Initial load
   useEffect(() => {
@@ -404,7 +404,7 @@ const JourneyDetail: React.FC = () => {
       }
     } catch (error: any) {
       console.error('Error loading journey:', error);
-      if (error?.code !== 'ECONNABORTED') {
+      if (error.code !== 'ECONNABORTED') {
         handleGoBack();
       }
     } finally {
@@ -439,14 +439,14 @@ const JourneyDetail: React.FC = () => {
   const handleStartJourney = async () => {
     if (!journey) return;
 
-    if (window.confirm('Seferi başlatmak istediğinizden emin misiniz?')) {
+    if (window.confirm('Seferi başlatmak istediğinizden emin misiniz')) {
       try {
         await journeyService.start(journey.id);
         toast.success('Sefer başlatıldı');
         loadJourney();
       } catch (error: any) {
         console.error('Error starting journey:', error);
-        const errorMessage = error.response?.data?.message || 'Sefer başlatılamadı';
+        const errorMessage = error.response.data.message || 'Sefer başlatılamadı';
         toast.error(errorMessage);
       }
     }
@@ -456,7 +456,7 @@ const JourneyDetail: React.FC = () => {
   const handleRemoveStop = async (stop: JourneyStop) => {
     if (!journey) return;
 
-    if (window.confirm(`"${stop.routeStop?.customer?.name || stop.routeStop?.address}" durağını silmek istediğinizden emin misiniz?`)) {
+    if (window.confirm(`"${stop.routeStop.customer.name || stop.routeStop.address}" durağını silmek istediğinizden emin misiniz`)) {
       try {
         await journeyService.removeStopFromJourney(Number(journey.id), Number(stop.id));
         toast.success('Durak silindi. Optimizasyon gerekiyor.');
@@ -473,12 +473,12 @@ const JourneyDetail: React.FC = () => {
   const handleOptimizeJourney = async () => {
     if (!journey) return;
 
-    if (window.confirm('Rota optimize edilecek. Devam etmek istiyor musunuz?')) {
+    if (window.confirm('Rota optimize edilecek. Devam etmek istiyor musunuz')) {
       try {
         // Planned seferlerde şoför henüz yola çıkmadığı için depo konumunu kullan
         // Route'dan veya StartDetails'dan konumu al
-        const lat = journey.startDetails?.latitude || journey.route?.startDetails?.latitude || 0;
-        const lng = journey.startDetails?.longitude || journey.route?.startDetails?.longitude || 0;
+        const lat = journey.startDetails.latitude || journey.route.startDetails.latitude || 0;
+        const lng = journey.startDetails.longitude || journey.route.startDetails.longitude || 0;
 
         console.log('Optimizing with coordinates:', { lat, lng });
 
@@ -491,7 +491,7 @@ const JourneyDetail: React.FC = () => {
         loadJourney();
       } catch (error: any) {
         console.error('Error optimizing journey:', error);
-        const errorMessage = error.response?.data?.message || error.message || 'Optimizasyon başarısız';
+        const errorMessage = error.response.data.message || error.message || 'Optimizasyon başarısız';
         toast.error(errorMessage);
       }
     }
@@ -608,9 +608,9 @@ const JourneyDetail: React.FC = () => {
       setJourney(prev => {
         if (!prev) return prev;
 
-        const updatedStops = prev.stops?.map(s =>
+        const updatedStops = prev.stops.map(s =>
           s.id === selectedStop.id
-            ? {
+             {
               ...s,
               status: 'InProgress' as any,
               checkInTime: new Date().toISOString() as any
@@ -621,7 +621,7 @@ const JourneyDetail: React.FC = () => {
         return {
           ...prev,
           stops: updatedStops,
-          currentStopIndex: updatedStops?.findIndex(s =>
+          currentStopIndex: updatedStops.findIndex(s =>
             s.status === 'Pending' || s.status === 'InProgress'
           ) || 0
         };
@@ -683,9 +683,9 @@ const JourneyDetail: React.FC = () => {
       setJourney(prev => {
         if (!prev) return prev;
 
-        const updatedStops = prev.stops?.map(s =>
+        const updatedStops = prev.stops.map(s =>
           s.id === selectedStop.id
-            ? {
+             {
               ...s,
               status: 'Completed' as any,
               checkOutTime: new Date().toISOString() as any
@@ -693,14 +693,14 @@ const JourneyDetail: React.FC = () => {
             : s
         );
 
-        const completedCount = updatedStops?.filter(s =>
+        const completedCount = updatedStops.filter(s =>
           s.status === 'Completed' || s.status === 'Failed'
         ).length || 0;
 
         return {
           ...prev,
           stops: updatedStops,
-          route: prev.route ? {
+          route: prev.route  {
             ...prev.route,
             completedDeliveries: completedCount
           } : prev.route
@@ -743,9 +743,9 @@ const JourneyDetail: React.FC = () => {
       setJourney(prev => {
         if (!prev) return prev;
 
-        const updatedStops = prev.stops?.map(s =>
+        const updatedStops = prev.stops.map(s =>
           s.id === selectedStop.id
-            ? { ...s, status: 'Failed' as any }
+             { ...s, status: 'Failed' as any }
             : s
         );
 
@@ -832,7 +832,7 @@ const JourneyDetail: React.FC = () => {
       loadJourney();
     } catch (error: any) {
       console.error('Error completing journey:', error);
-      const errorMessage = error.response?.data?.message || 'Sefer tamamlanamadı';
+      const errorMessage = error.response.data.message || 'Sefer tamamlanamadı';
       toast.error(errorMessage);
     }
   };
@@ -885,7 +885,7 @@ const JourneyDetail: React.FC = () => {
     doc.text('SEFER DETAY RAPORU', pageWidth / 2, 20, { align: 'center' });
 
     // Journey Name
-    const journeyName = fixTurkish(journey.name || journey.route?.name || `Sefer #${journey.id}`);
+    const journeyName = fixTurkish(journey.name || journey.route.name || `Sefer #${journey.id}`);
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(255, 255, 255);
@@ -914,25 +914,25 @@ const JourneyDetail: React.FC = () => {
 
     // Info cards in 2x4 grid
     const infoData = [
-      { label: 'Surucu', value: fixTurkish(journey.driver?.fullName || journey.driver?.name || journey.route?.driver?.name || '-') },
-      { label: 'Arac', value: fixTurkish(journey.route?.vehicle?.plateNumber || journey.vehicle?.plateNumber || '-') },
+      { label: 'Surucu', value: fixTurkish(journey.driver.fullName || journey.driver.name || journey.route.driver.name || '-') },
+      { label: 'Arac', value: fixTurkish(journey.route.vehicle.plateNumber || journey.vehicle.plateNumber || '-') },
       { label: 'Durum', value: fixTurkish(
-        journey.status === 'preparing' ? 'Hazirlaniyor' :
-        journey.status === 'planned' ? 'Planlandi' :
-        journey.status === 'started' ? 'Basladi' :
-        journey.status === 'in_progress' ? 'Devam Ediyor' :
-        journey.status === 'completed' ? 'Tamamlandi' : 'Iptal Edildi'
+        journey.status === 'preparing'  'Hazirlaniyor' :
+        journey.status === 'planned'  'Planlandi' :
+        journey.status === 'started'  'Basladi' :
+        journey.status === 'in_progress'  'Devam Ediyor' :
+        journey.status === 'completed'  'Tamamlandi' : 'Iptal Edildi'
       )},
-      { label: 'Toplam Mesafe', value: `${journey.totalDistance?.toFixed(1) || 0} km` },
-      { label: 'Toplam Sure', value: `${journey.totalDuration ? Math.round(journey.totalDuration / 60) : 0} saat` },
-      { label: 'Basarili', value: `${normalStops.filter((s: JourneyStop) => s.status?.toLowerCase() === 'completed').length}` },
-      { label: 'Basarisiz', value: `${normalStops.filter((s: JourneyStop) => s.status?.toLowerCase() === 'failed').length}` },
+      { label: 'Toplam Mesafe', value: `${journey.totalDistance.toFixed(1) || 0} km` },
+      { label: 'Toplam Sure', value: `${journey.totalDuration  Math.round(journey.totalDuration / 60) : 0} saat` },
+      { label: 'Basarili', value: `${normalStops.filter((s: JourneyStop) => s.status.toLowerCase() === 'completed').length}` },
+      { label: 'Basarisiz', value: `${normalStops.filter((s: JourneyStop) => s.status.toLowerCase() === 'failed').length}` },
       { label: 'Toplam Durak', value: `${normalStops.length}` },
-      ...(journey.startKm !== undefined ? [{ label: 'Baslangic Km', value: journey.startKm.toLocaleString('tr-TR') }] : []),
-      ...(journey.endKm !== undefined ? [{ label: 'Bitis Km', value: journey.endKm.toLocaleString('tr-TR') }] : []),
-      ...(journey.startKm !== undefined && journey.endKm !== undefined ? [{ label: 'Kat Edilen Km', value: (journey.endKm - journey.startKm).toLocaleString('tr-TR') }] : []),
-      ...(journey.startFuel && journey.endFuel ? [{ label: 'Yakit', value: fixTurkish(`${getFuelLabel(journey.startFuel)} -> ${getFuelLabel(journey.endFuel)}`) }] : []),
-      ...(journey.vehicleCondition ? [{ label: 'Arac Durumu', value: fixTurkish(getVehicleConditionLabel(journey.vehicleCondition)) }] : []),
+      ...(journey.startKm !== undefined  [{ label: 'Baslangic Km', value: journey.startKm.toLocaleString('tr-TR') }] : []),
+      ...(journey.endKm !== undefined  [{ label: 'Bitis Km', value: journey.endKm.toLocaleString('tr-TR') }] : []),
+      ...(journey.startKm !== undefined && journey.endKm !== undefined  [{ label: 'Kat Edilen Km', value: (journey.endKm - journey.startKm).toLocaleString('tr-TR') }] : []),
+      ...(journey.startFuel && journey.endFuel  [{ label: 'Yakit', value: fixTurkish(`${getFuelLabel(journey.startFuel)} -> ${getFuelLabel(journey.endFuel)}`) }] : []),
+      ...(journey.vehicleCondition  [{ label: 'Arac Durumu', value: fixTurkish(getVehicleConditionLabel(journey.vehicleCondition)) }] : []),
     ];
 
     // Draw info cards
@@ -971,11 +971,11 @@ const JourneyDetail: React.FC = () => {
     yPos += 3;
 
     const stopsData = normalStops.map((stop: JourneyStop) => {
-      const statusLower = stop.status?.toLowerCase() || 'pending';
+      const statusLower = stop.status.toLowerCase() || 'pending';
       const statusText = fixTurkish(
-        statusLower === 'completed' ? 'Tamamlandi' :
-        statusLower === 'failed' ? 'Basarisiz' :
-        statusLower === 'inprogress' || statusLower === 'in_progress' ? 'Devam Ediyor' :
+        statusLower === 'completed'  'Tamamlandi' :
+        statusLower === 'failed'  'Basarisiz' :
+        statusLower === 'inprogress' || statusLower === 'in_progress'  'Devam Ediyor' :
         'Bekliyor'
       );
 
@@ -985,18 +985,18 @@ const JourneyDetail: React.FC = () => {
         const checkIn = new Date(stop.checkInTime);
         const checkOut = new Date(stop.checkOutTime);
         const durationMinutes = Math.round((checkOut.getTime() - checkIn.getTime()) / (1000 * 60));
-        duration = durationMinutes > 0 ? `${durationMinutes} dk` : '0 dk';
+        duration = durationMinutes > 0  `${durationMinutes} dk` : '0 dk';
       } else if (stop.checkOutTime) {
         duration = '0 dk';
       }
 
       // İkon - Fotoğraf ve İmza kontrolü
       const stopIdNum = parseInt(stop.id);
-      const hasPhoto = journey?.statuses?.some(s =>
+      const hasPhoto = journey.statuses.some(s =>
         s.stopId == stopIdNum && // == ile hem string hem number eşitliği
         (s.photoUrl || s.photoBase64)
       );
-      const hasSignature = journey?.statuses?.some(s =>
+      const hasSignature = journey.statuses.some(s =>
         s.stopId == stopIdNum && // == ile hem string hem number eşitliği
         (s.signatureUrl || s.signatureBase64)
       );
@@ -1012,11 +1012,11 @@ const JourneyDetail: React.FC = () => {
 
       return [
         stop.order.toString(),
-        fixTurkish(stop.routeStop?.customer?.name || stop.routeStop?.name || `Durak ${stop.order}`),
-        stop.estimatedArrivalTime ? formatTimeSpan(stop.estimatedArrivalTime) : '-',
-        stop.checkInTime ? formatTime(stop.checkInTime) : '-',
-        stop.estimatedDepartureTime ? formatTimeSpan(stop.estimatedDepartureTime) : '-',
-        stop.checkOutTime ? formatTime(stop.checkOutTime) : '-',
+        fixTurkish(stop.routeStop.customer.name || stop.routeStop.name || `Durak ${stop.order}`),
+        stop.estimatedArrivalTime  formatTimeSpan(stop.estimatedArrivalTime) : '-',
+        stop.checkInTime  formatTime(stop.checkInTime) : '-',
+        stop.estimatedDepartureTime  formatTimeSpan(stop.estimatedDepartureTime) : '-',
+        stop.checkOutTime  formatTime(stop.checkOutTime) : '-',
         duration,
         statusText,
         icons
@@ -1129,33 +1129,33 @@ const JourneyDetail: React.FC = () => {
     const generalInfo = [
       ['SEFER DETAY RAPORU'],
       [],
-      ['Sefer', journey.name || journey.route?.name || `#${journey.id}`],
+      ['Sefer', journey.name || journey.route.name || `#${journey.id}`],
       ['Tarih', new Date().toLocaleDateString('tr-TR')],
-      ['Sürücü', journey.driver?.fullName || journey.driver?.name || journey.route?.driver?.name || '-'],
-      ['Araç', `${journey.route?.vehicle?.plateNumber || journey.vehicle?.plateNumber || '-'}`],
+      ['Sürücü', journey.driver.fullName || journey.driver.name || journey.route.driver.name || '-'],
+      ['Araç', `${journey.route.vehicle.plateNumber || journey.vehicle.plateNumber || '-'}`],
       ['Durum',
-        journey.status === 'preparing' ? 'Hazırlanıyor' :
-        journey.status === 'planned' ? 'Planlandı' :
-        journey.status === 'started' ? 'Başladı' :
-        journey.status === 'in_progress' ? 'Devam Ediyor' :
-        journey.status === 'completed' ? 'Tamamlandı' : 'İptal Edildi'
+        journey.status === 'preparing'  'Hazırlanıyor' :
+        journey.status === 'planned'  'Planlandı' :
+        journey.status === 'started'  'Başladı' :
+        journey.status === 'in_progress'  'Devam Ediyor' :
+        journey.status === 'completed'  'Tamamlandı' : 'İptal Edildi'
       ],
-      ['Toplam Mesafe', `${journey.totalDistance?.toFixed(1) || 0} km`],
-      ['Toplam Süre', `${journey.totalDuration ? Math.round(journey.totalDuration / 60) : 0} saat`],
-      ['Başarılı Teslimat', `${normalStops.filter((s: JourneyStop) => s.status?.toLowerCase() === 'completed').length}`],
-      ['Başarısız Teslimat', `${normalStops.filter((s: JourneyStop) => s.status?.toLowerCase() === 'failed').length}`],
-      ...(journey.startKm !== undefined ? [['Başlangıç Km', journey.startKm.toLocaleString('tr-TR')]] : []),
-      ...(journey.endKm !== undefined ? [['Bitiş Km', journey.endKm.toLocaleString('tr-TR')]] : []),
-      ...(journey.startKm !== undefined && journey.endKm !== undefined ? [['Kat Edilen Km', (journey.endKm - journey.startKm).toLocaleString('tr-TR')]] : []),
-      ...(journey.startFuel && journey.endFuel ? [['Yakıt Seviyesi', `${getFuelLabel(journey.startFuel)} → ${getFuelLabel(journey.endFuel)}`]] : []),
-      ...(journey.vehicleCondition ? [['Araç Durumu', getVehicleConditionLabel(journey.vehicleCondition)]] : []),
+      ['Toplam Mesafe', `${journey.totalDistance.toFixed(1) || 0} km`],
+      ['Toplam Süre', `${journey.totalDuration  Math.round(journey.totalDuration / 60) : 0} saat`],
+      ['Başarılı Teslimat', `${normalStops.filter((s: JourneyStop) => s.status.toLowerCase() === 'completed').length}`],
+      ['Başarısız Teslimat', `${normalStops.filter((s: JourneyStop) => s.status.toLowerCase() === 'failed').length}`],
+      ...(journey.startKm !== undefined  [['Başlangıç Km', journey.startKm.toLocaleString('tr-TR')]] : []),
+      ...(journey.endKm !== undefined  [['Bitiş Km', journey.endKm.toLocaleString('tr-TR')]] : []),
+      ...(journey.startKm !== undefined && journey.endKm !== undefined  [['Kat Edilen Km', (journey.endKm - journey.startKm).toLocaleString('tr-TR')]] : []),
+      ...(journey.startFuel && journey.endFuel  [['Yakıt Seviyesi', `${getFuelLabel(journey.startFuel)} → ${getFuelLabel(journey.endFuel)}`]] : []),
+      ...(journey.vehicleCondition  [['Araç Durumu', getVehicleConditionLabel(journey.vehicleCondition)]] : []),
       [],
       ['PERFORMANS ANALİZİ'],
       ['Toplam Gecikme', `${totalDelay} dakika`],
       ['Ortalama Gecikme', `${averageDelay.toFixed(1)} dakika`],
       ['Gecikmeli Durak Sayısı', `${delayedStops.length} / ${normalStops.length}`],
-      ['Zamanında Teslimat Oranı', `${completedStopsForSLA.length > 0 ? Math.round(((ontimeStops.length) / completedStopsForSLA.length) * 100) : 0}%`],
-      ['En Gecikmeli Durak', maxDelay > 0 ? `Durak #${maxDelayStop?.order} (+${maxDelay} dk)` : 'Yok'],
+      ['Zamanında Teslimat Oranı', `${completedStopsForSLA.length > 0  Math.round(((ontimeStops.length) / completedStopsForSLA.length) * 100) : 0}%`],
+      ['En Gecikmeli Durak', maxDelay > 0  `Durak #${maxDelayStop.order} (+${maxDelay} dk)` : 'Yok'],
       [],
       ['DURAKLAR'],
       ['Sıra', 'Müşteri', 'Adres', 'Telefon', 'Orijinal Plan', 'Güncel Plan', 'Gerç. Varış', 'Sapma (dk)', 'Gecikme Sebebi', 'Açıklama', 'Plan. Tamamlanma', 'Gerç. Tamamlanma', 'Planlanan Süre', 'Gerçekleşen Süre', 'Durum']
@@ -1163,11 +1163,11 @@ const JourneyDetail: React.FC = () => {
 
     // Duraklar
     const stopsData = normalStops.map((stop: JourneyStop) => {
-      const statusLower = stop.status?.toLowerCase() || 'pending';
+      const statusLower = stop.status.toLowerCase() || 'pending';
       const statusText =
-        statusLower === 'completed' ? 'Tamamlandı' :
-        statusLower === 'failed' ? 'Başarısız' :
-        statusLower === 'inprogress' || statusLower === 'in_progress' ? 'Devam Ediyor' :
+        statusLower === 'completed'  'Tamamlandı' :
+        statusLower === 'failed'  'Başarısız' :
+        statusLower === 'inprogress' || statusLower === 'in_progress'  'Devam Ediyor' :
         'Bekliyor';
 
       // Planlanan süre
@@ -1178,7 +1178,7 @@ const JourneyDetail: React.FC = () => {
         const arrivalMinutes = parseInt(arrivalParts[0]) * 60 + parseInt(arrivalParts[1]);
         const departureMinutes = parseInt(departureParts[0]) * 60 + parseInt(departureParts[1]);
         const durationMinutes = departureMinutes - arrivalMinutes;
-        plannedDuration = durationMinutes > 0 ? `${durationMinutes} dk` : '-';
+        plannedDuration = durationMinutes > 0  `${durationMinutes} dk` : '-';
       }
 
       // Gerçekleşen süre
@@ -1187,34 +1187,34 @@ const JourneyDetail: React.FC = () => {
         const checkIn = new Date(stop.checkInTime);
         const checkOut = new Date(stop.checkOutTime);
         const durationMinutes = Math.round((checkOut.getTime() - checkIn.getTime()) / (1000 * 60));
-        actualDuration = durationMinutes > 0 ? `${durationMinutes} dk` : '-';
+        actualDuration = durationMinutes > 0  `${durationMinutes} dk` : '-';
       }
 
       // Gecikme hesapla
       const delay = calculateActualDelay(stop);
-      const delayText = delay === 0 ? 'Zamanında' : delay > 0 ? `+${delay}` : `${delay}`;
+      const delayText = delay === 0  'Zamanında' : delay > 0  `+${delay}` : `${delay}`;
 
       // Gecikme sebebi
       const delayReasonText = delay > 0 && stop.delayReasonCategory
-        ? getDelayReasonLabel(stop.delayReasonCategory)
+         getDelayReasonLabel(stop.delayReasonCategory)
         : '-';
       const delayReasonDescription = delay > 0 && stop.delayReason
-        ? stop.delayReason
+         stop.delayReason
         : '-';
 
       return [
         stop.order,
-        stop.routeStop?.customer?.name || stop.routeStop?.name || `Durak ${stop.order}`,
-        stop.endAddress || stop.routeStop?.address || stop.routeStop?.customer?.address || '-',
-        stop.routeStop?.customer?.phone || '-',
-        stop.originalEstimatedArrivalTime ? formatTimeSpan(stop.originalEstimatedArrivalTime) : '-',
-        stop.estimatedArrivalTime ? formatTimeSpan(stop.estimatedArrivalTime) : '-',
-        stop.checkInTime ? formatTime(stop.checkInTime) : '-',
+        stop.routeStop.customer.name || stop.routeStop.name || `Durak ${stop.order}`,
+        stop.endAddress || stop.routeStop.address || stop.routeStop.customer.address || '-',
+        stop.routeStop.customer.phone || '-',
+        stop.originalEstimatedArrivalTime  formatTimeSpan(stop.originalEstimatedArrivalTime) : '-',
+        stop.estimatedArrivalTime  formatTimeSpan(stop.estimatedArrivalTime) : '-',
+        stop.checkInTime  formatTime(stop.checkInTime) : '-',
         delayText,
         delayReasonText,
         delayReasonDescription,
-        stop.estimatedDepartureTime ? formatTimeSpan(stop.estimatedDepartureTime) : '-',
-        stop.checkOutTime ? formatTime(stop.checkOutTime) : '-',
+        stop.estimatedDepartureTime  formatTimeSpan(stop.estimatedDepartureTime) : '-',
+        stop.checkOutTime  formatTime(stop.checkOutTime) : '-',
         plannedDuration,
         actualDuration,
         statusText
@@ -1259,7 +1259,7 @@ const JourneyDetail: React.FC = () => {
 
   // ✅ DÜZELTİLDİ: Case-insensitive status kontrolü
   const getStopStatusIcon = (status: string) => {
-    const statusLower = status?.toLowerCase() || 'pending';
+    const statusLower = status.toLowerCase() || 'pending';
     switch (statusLower) {
       case 'completed':
         return <CheckCircle className="w-5 h-5 text-green-500" />;
@@ -1275,7 +1275,7 @@ const JourneyDetail: React.FC = () => {
     }
   };
 
-  const formatTime = (date?: Date | string) => {
+  const formatTime = (date: Date | string) => {
     if (!date) return '-';
     return new Date(date).toLocaleTimeString('tr-TR', {
       hour: '2-digit',
@@ -1283,7 +1283,7 @@ const JourneyDetail: React.FC = () => {
     });
   };
 
-  const formatTimeSpan = (timespan?: string) => {
+  const formatTimeSpan = (timespan: string) => {
     if (!timespan) return '-';
     const parts = timespan.split(':');
     if (parts.length >= 2) {
@@ -1292,7 +1292,7 @@ const JourneyDetail: React.FC = () => {
     return timespan;
   };
 
-  const formatETA = (eta?: string) => {
+  const formatETA = (eta: string) => {
     if (!eta) return '-';
     return eta;
   };
@@ -1388,7 +1388,7 @@ const JourneyDetail: React.FC = () => {
 
   // ✅ BUGFIX: SLA hesaplaması - Sadece tamamlanan durakları say
   const completedStopsForSLA = normalStops.filter((s: JourneyStop) =>
-    s.status?.toLowerCase() === 'completed' || s.status?.toLowerCase() === 'failed'
+    s.status.toLowerCase() === 'completed' || s.status.toLowerCase() === 'failed'
   );
 
   const delayedStops = completedStopsForSLA.filter((s: JourneyStop) => calculateActualDelay(s) > 0);
@@ -1396,13 +1396,13 @@ const JourneyDetail: React.FC = () => {
   const ontimeStops = completedStopsForSLA.filter((s: JourneyStop) => calculateActualDelay(s) === 0);
 
   const totalDelay = completedStopsForSLA.reduce((sum, s) => sum + Math.max(0, calculateActualDelay(s)), 0);
-  const averageDelay = completedStopsForSLA.length > 0 ? totalDelay / completedStopsForSLA.length : 0;
-  const maxDelayStop = completedStopsForSLA.length > 0 ? completedStopsForSLA.reduce((max, s) => {
+  const averageDelay = completedStopsForSLA.length > 0  totalDelay / completedStopsForSLA.length : 0;
+  const maxDelayStop = completedStopsForSLA.length > 0  completedStopsForSLA.reduce((max, s) => {
     const delay = calculateActualDelay(s);
     const maxDelay = calculateActualDelay(max);
-    return delay > maxDelay ? s : max;
+    return delay > maxDelay  s : max;
   }, completedStopsForSLA[0]) : null;
-  const maxDelay = maxDelayStop ? calculateActualDelay(maxDelayStop) : 0;
+  const maxDelay = maxDelayStop  calculateActualDelay(maxDelayStop) : 0;
 
   // ✅ Filtre ve Sıralama Mantığı
   const getFilteredAndSortedStops = () => {
@@ -1422,8 +1422,8 @@ const JourneyDetail: React.FC = () => {
       filtered.sort((a, b) => calculateActualDelay(b) - calculateActualDelay(a));
     } else if (sortBy === 'customer') {
       filtered.sort((a, b) => {
-        const nameA = a.routeStop?.customer?.name || a.routeStop?.name || '';
-        const nameB = b.routeStop?.customer?.name || b.routeStop?.name || '';
+        const nameA = a.routeStop.customer.name || a.routeStop.name || '';
+        const nameB = b.routeStop.customer.name || b.routeStop.name || '';
         return nameA.localeCompare(nameB);
       });
     } else {
@@ -1438,26 +1438,26 @@ const JourneyDetail: React.FC = () => {
 
   // Progress hesaplaması - sadece normal stops için
   const completedStops = normalStops.filter((s: JourneyStop) =>
-    s.status?.toLowerCase() === 'completed'
+    s.status.toLowerCase() === 'completed'
   ).length;
 
   const failedStops = normalStops.filter((s: JourneyStop) =>
-    s.status?.toLowerCase() === 'failed'
+    s.status.toLowerCase() === 'failed'
   ).length;
 
   // Toplam işlenen duraklar (başarılı + başarısız)
   const totalProcessedStops = completedStops + failedStops;
   const overallProgress = normalStops.length > 0
-    ? (totalProcessedStops / normalStops.length) * 100
+     (totalProcessedStops / normalStops.length) * 100
     : 0;
 
   // Başarı oranları
   const successRate = normalStops.length > 0
-    ? (completedStops / normalStops.length) * 100
+     (completedStops / normalStops.length) * 100
     : 0;
 
   const failureRate = normalStops.length > 0
-    ? (failedStops / normalStops.length) * 100
+     (failedStops / normalStops.length) * 100
     : 0;
 
   // Journey durumlarını kontrol et
@@ -1466,7 +1466,7 @@ const JourneyDetail: React.FC = () => {
 
   const canCompleteJourney = isJourneyStarted &&
     normalStops.every((s: JourneyStop) => {
-      const statusLower = s.status?.toLowerCase() || 'pending';
+      const statusLower = s.status.toLowerCase() || 'pending';
       return statusLower === 'completed' || statusLower === 'failed' || statusLower === 'skipped';
     });
 
@@ -1482,7 +1482,7 @@ const JourneyDetail: React.FC = () => {
           </button>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              {journey.name || journey.route?.name || `Sefer #${journey.id}`}
+              {journey.name || journey.route.name || `Sefer #${journey.id}`}
             </h1>
             <p className="text-gray-600">Sefer Detayları</p>
           </div>
@@ -1512,7 +1512,7 @@ const JourneyDetail: React.FC = () => {
           </button>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              {journey.name || journey.route?.name || `Sefer #${journey.id}`}
+              {journey.name || journey.route.name || `Sefer #${journey.id}`}
             </h1>
             <p className="text-gray-600">Sefer Detayları</p>
           </div>
@@ -1521,10 +1521,10 @@ const JourneyDetail: React.FC = () => {
         <div className="flex items-center space-x-3">
           {/* SignalR Connection Status */}
           <div className={`flex items-center px-3 py-1 rounded-lg text-xs ${isConnected
-              ? 'bg-green-50 border border-green-200 text-green-700'
+               'bg-green-50 border border-green-200 text-green-700'
               : 'bg-yellow-50 border border-yellow-200 text-yellow-700'
             }`}>
-            {isConnected ? (
+            {isConnected  (
               <>
                 <Wifi className="w-3 h-3 mr-1" />
                 Real-time bağlantı aktif
@@ -1609,12 +1609,12 @@ const JourneyDetail: React.FC = () => {
               <h3 className="font-semibold text-yellow-900">Optimizasyon Gerekiyor</h3>
               <p className="text-sm text-yellow-700 mt-1">
                 {isJourneyStarted
-                  ? 'Yeni durak eklendi. Şoför mobil uygulamadan rotayı optimize etmelidir.'
+                   'Yeni durak eklendi. Şoför mobil uygulamadan rotayı optimize etmelidir.'
                   : 'Durak değişikliği yapıldı. Rotayı yeniden optimize edin.'}
               </p>
             </div>
           </div>
-          {isJourneyStarted ? (
+          {isJourneyStarted  (
             <div className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-lg text-sm font-medium">
               📱 Mobil Uygulama
             </div>
@@ -1645,7 +1645,7 @@ const JourneyDetail: React.FC = () => {
                 <div>
                   <div className="text-xs opacity-75">Planlanan</div>
                   <div className="text-2xl font-bold">
-                    {journey.totalDistance?.toFixed(1) || 0} km
+                    {journey.totalDistance.toFixed(1) || 0} km
                   </div>
                 </div>
                 {journey.startKm !== undefined && journey.endKm !== undefined && (
@@ -1670,7 +1670,7 @@ const JourneyDetail: React.FC = () => {
                   <div className="text-xs opacity-75">Planlanan</div>
                   <div className="text-2xl font-bold">
                     {journey.totalDuration
-                      ? `${Math.floor(journey.totalDuration / 60)}sa ${Math.round(journey.totalDuration % 60)}dk`
+                       `${Math.floor(journey.totalDuration / 60)}sa ${Math.round(journey.totalDuration % 60)}dk`
                       : '0sa 0dk'}
                   </div>
                 </div>
@@ -1693,7 +1693,7 @@ const JourneyDetail: React.FC = () => {
                     actualDuration = `${hours}sa ${minutes}dk`;
                   }
 
-                  return actualDuration ? (
+                  return actualDuration  (
                     <>
                       <div className="text-2xl opacity-50 mx-4">→</div>
                       <div>
@@ -1719,15 +1719,15 @@ const JourneyDetail: React.FC = () => {
             <User className="w-4 h-4 text-gray-400" />
           </div>
           <p className="font-semibold text-gray-900">
-            {journey.driver?.fullName || journey.driver?.name || journey.route?.driver?.name || 'Atanmadı'}
+            {journey.driver.fullName || journey.driver.name || journey.route.driver.name || 'Atanmadı'}
           </p>
-          {(journey.driver?.phoneNumber || journey.driver?.phone || journey.route?.driver?.phone) && (
+          {(journey.driver.phoneNumber || journey.driver.phone || journey.route.driver.phone) && (
             <a
-              href={`tel:${journey.driver?.phoneNumber || journey.driver?.phone || journey.route?.driver?.phone}`}
+              href={`tel:${journey.driver.phoneNumber || journey.driver.phone || journey.route.driver.phone}`}
               className="text-sm text-blue-600 hover:text-blue-700 flex items-center mt-1"
             >
               <Phone className="w-3 h-3 mr-1" />
-              {journey.driver?.phoneNumber || journey.driver?.phone || journey.route?.driver?.phone}
+              {journey.driver.phoneNumber || journey.driver.phone || journey.route.driver.phone}
             </a>
           )}
         </div>
@@ -1738,10 +1738,10 @@ const JourneyDetail: React.FC = () => {
             <Truck className="w-4 h-4 text-gray-400" />
           </div>
           <p className="font-semibold text-gray-900">
-            {journey.route?.vehicle?.plateNumber || journey.vehicle?.plateNumber || 'Atanmadı'}
+            {journey.route.vehicle.plateNumber || journey.vehicle.plateNumber || 'Atanmadı'}
           </p>
           <p className="text-sm text-gray-500">
-            {journey.route?.vehicle?.brand || journey.vehicle?.brand} {journey.route?.vehicle?.model || journey.vehicle?.model}
+            {journey.route.vehicle.brand || journey.vehicle.brand} {journey.route.vehicle.model || journey.vehicle.model}
           </p>
         </div>
 
@@ -1765,7 +1765,7 @@ const JourneyDetail: React.FC = () => {
           </div>
           {journey.liveLocation && (
             <p className="text-sm text-gray-500 mt-1">
-              Hız: {journey.liveLocation.speed?.toFixed(0)} km/h
+              Hız: {journey.liveLocation.speed.toFixed(0)} km/h
             </p>
           )}
         </div>
@@ -1810,13 +1810,13 @@ const JourneyDetail: React.FC = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
           <div className="text-center">
             <p className="text-2xl font-bold text-gray-900">
-              {journey.totalDistance ? journey.totalDistance.toFixed(1) : '0.0'}
+              {journey.totalDistance  journey.totalDistance.toFixed(1) : '0.0'}
             </p>
             <p className="text-sm text-gray-600">Toplam Mesafe (km)</p>
           </div>
           <div className="text-center">
             <p className="text-2xl font-bold text-gray-900">
-              {journey.totalDuration ? Math.round(journey.totalDuration / 60) : 0}
+              {journey.totalDuration  Math.round(journey.totalDuration / 60) : 0}
             </p>
             <p className="text-sm text-gray-600">Süre (saat)</p>
           </div>
@@ -1898,17 +1898,17 @@ const JourneyDetail: React.FC = () => {
                   <XCircle className="w-5 h-5 text-red-500 mt-1" />
                   <div className="flex-1">
                     <h4 className="font-medium text-gray-900">
-                      {stop.routeStop?.customer?.name ||
-                        stop.routeStop?.name ||
+                      {stop.routeStop.customer.name ||
+                        stop.routeStop.name ||
                         'Müşteri'}
                     </h4>
                     <p className="text-sm text-gray-600 mt-1">
                       {stop.endAddress ||
-                        stop.routeStop?.address ||
-                        stop.routeStop?.customer?.address ||
+                        stop.routeStop.address ||
+                        stop.routeStop.customer.address ||
                         'Adres bilgisi yok'}
                     </p>
-                    {stop.routeStop?.customer?.timeWindowStart && (
+                    {stop.routeStop.customer.timeWindowStart && (
                       <p className="text-xs text-red-600 mt-2">
                         Teslimat penceresi: {stop.routeStop.customer.timeWindowStart} - {stop.routeStop.customer.timeWindowEnd}
                       </p>
@@ -1994,7 +1994,7 @@ const JourneyDetail: React.FC = () => {
               <tbody className="divide-y divide-gray-200">
                 {filteredAndSortedStops.map((stop: JourneyStop) => {
                   const delay = calculateActualDelay(stop);
-                  const stopStatusLower = stop.status?.toLowerCase() || 'pending';
+                  const stopStatusLower = stop.status.toLowerCase() || 'pending';
 
                   return (
                     <tr key={stop.id} className="hover:bg-gray-50 transition-colors">
@@ -2002,31 +2002,31 @@ const JourneyDetail: React.FC = () => {
                         Durak #{stop.order}
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-600">
-                        {stop.routeStop?.customer?.name || stop.routeStop?.name || 'Müşteri'}
+                        {stop.routeStop.customer.name || stop.routeStop.name || 'Müşteri'}
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-500">
                         {stop.originalEstimatedArrivalTime
-                          ? formatTimeSpan(stop.originalEstimatedArrivalTime)
+                           formatTimeSpan(stop.originalEstimatedArrivalTime)
                           : '-'}
                       </td>
                       <td className="px-4 py-3 text-sm">
                         <span className={`font-semibold ${
-                          delay > 0 ? 'text-orange-600' : delay < 0 ? 'text-blue-600' : 'text-gray-700'
+                          delay > 0  'text-orange-600' : delay < 0  'text-blue-600' : 'text-gray-700'
                         }`}>
-                          {stop.estimatedArrivalTime ? formatTimeSpan(stop.estimatedArrivalTime) : '-'}
+                          {stop.estimatedArrivalTime  formatTimeSpan(stop.estimatedArrivalTime) : '-'}
                         </span>
                       </td>
                       <td className="px-4 py-3 text-sm font-bold text-green-700">
-                        {stop.checkInTime ? formatTime(stop.checkInTime) : '-'}
+                        {stop.checkInTime  formatTime(stop.checkInTime) : '-'}
                       </td>
                       <td className="px-4 py-3 text-sm">
-                        {delay !== 0 ? (
+                        {delay !== 0  (
                           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                             delay > 0
-                              ? 'bg-red-100 text-red-800'
+                               'bg-red-100 text-red-800'
                               : 'bg-green-100 text-green-800'
                           }`}>
-                            {delay > 0 ? '+' : ''}{delay} dk
+                            {delay > 0  '+' : ''}{delay} dk
                           </span>
                         ) : (
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
@@ -2035,7 +2035,7 @@ const JourneyDetail: React.FC = () => {
                         )}
                       </td>
                       <td className="px-4 py-3 text-sm">
-                        {delay > 0 && stop.delayReasonCategory ? (
+                        {delay > 0 && stop.delayReasonCategory  (
                           <div>
                             <div className="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800">
                               {getDelayReasonLabel(stop.delayReasonCategory)}
@@ -2061,7 +2061,7 @@ const JourneyDetail: React.FC = () => {
                             ✗ Başarısız
                           </span>
                         )}
-                        {stopStatusLower === 'inprogress' || stopStatusLower === 'in_progress' ? (
+                        {stopStatusLower === 'inprogress' || stopStatusLower === 'in_progress'  (
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                             ⟳ Devam Ediyor
                           </span>
@@ -2088,7 +2088,7 @@ const JourneyDetail: React.FC = () => {
         </div>
         <div className="divide-y">
           {/* BAŞLANGIÇ DEPOSU - EN BAŞA EKLENDİ */}
-          {journey.route?.depot && (
+          {journey.route.depot && (
             <div className="p-4 bg-blue-50 border-b-2 border-blue-200">
               <div className="flex items-start">
                 <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-semibold text-sm mr-3 flex-shrink-0">
@@ -2106,7 +2106,7 @@ const JourneyDetail: React.FC = () => {
                   <p className="text-sm text-blue-700 mb-2">
                     {journey.route.depot.name} - {journey.route.depot.address}
                   </p>
-                  {journey.route.startDetails?.plannedStartTime && (
+                  {journey.route.startDetails.plannedStartTime && (
                     <div className="mt-2 p-2 bg-blue-100 border border-blue-300 rounded">
                       <div className="text-xs font-medium text-blue-800 mb-1">
                         Planlanan Çıkış Saati
@@ -2125,12 +2125,12 @@ const JourneyDetail: React.FC = () => {
           )}
 
           {normalStops.map((stop: JourneyStop, index: number) => {
-            const stopStatusLower = stop.status?.toLowerCase() || 'pending';
+            const stopStatusLower = stop.status.toLowerCase() || 'pending';
 
             return (
               <div
                 key={stop.id}
-                className={`p-4 hover:bg-gray-50 transition-colors ${index === currentStopIndex ? 'bg-blue-50' : ''}`}
+                className={`p-4 hover:bg-gray-50 transition-colors ${index === currentStopIndex  'bg-blue-50' : ''}`}
               >
                 <div className="flex items-start gap-6">
                   {/* Sol taraf - Müşteri bilgileri */}
@@ -2147,8 +2147,8 @@ const JourneyDetail: React.FC = () => {
                         <div className="flex items-center space-x-2 flex-wrap">
                           <span className="text-xs text-gray-500">#{stop.order}</span>
                           <h4 className="font-medium text-gray-900">
-                            {stop.routeStop?.customer?.name ||
-                              stop.routeStop?.name ||
+                            {stop.routeStop.customer.name ||
+                              stop.routeStop.name ||
                               `Durak ${stop.order}`}
                           </h4>
                           {index === currentStopIndex && isJourneyStarted && (
@@ -2181,13 +2181,13 @@ const JourneyDetail: React.FC = () => {
 
                       <p className="text-sm text-gray-600 mb-2">
                         {stop.endAddress ||
-                          stop.routeStop?.address ||
-                          stop.routeStop?.customer?.address ||
+                          stop.routeStop.address ||
+                          stop.routeStop.customer.address ||
                           'Adres bilgisi yok'}
                       </p>
 
                       <div className="flex items-center gap-3 text-sm mb-2">
-                        {stop.routeStop?.customer?.phone && (
+                        {stop.routeStop.customer.phone && (
                           <a
                             href={`tel:${stop.routeStop.customer.phone}`}
                             className="flex items-center text-blue-600 hover:text-blue-700"
@@ -2204,7 +2204,7 @@ const JourneyDetail: React.FC = () => {
                         )}
                       </div>
 
-                      {stop.routeStop?.notes && (
+                      {stop.routeStop.notes && (
                         <p className="text-sm text-gray-500 mt-2 italic">
                           Not: {stop.routeStop.notes}
                         </p>
@@ -2235,7 +2235,7 @@ const JourneyDetail: React.FC = () => {
                               disabled={processingStopId === parseInt(stop.id)}
                               className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                             >
-                              {processingStopId === parseInt(stop.id) ? (
+                              {processingStopId === parseInt(stop.id)  (
                                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                               ) : (
                                 <CheckSquare className="w-4 h-4 mr-2" />
@@ -2260,7 +2260,7 @@ const JourneyDetail: React.FC = () => {
                                 disabled={processingStopId === parseInt(stop.id)}
                                 className="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                               >
-                                {processingStopId === parseInt(stop.id) ? (
+                                {processingStopId === parseInt(stop.id)  (
                                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                                 ) : (
                                   <CheckCircle className="w-4 h-4 mr-2" />
@@ -2302,7 +2302,7 @@ const JourneyDetail: React.FC = () => {
                           {(stop.estimatedArrivalTime || stop.checkInTime) && (
                             <div className="bg-white rounded-lg p-2.5 shadow-sm">
                               <div className="text-xs font-semibold text-gray-700 mb-2 text-center">Varış Saati</div>
-                              {stop.originalEstimatedArrivalTime && (stop.checkInTime || stop.originalEstimatedArrivalTime !== stop.estimatedArrivalTime) ? (
+                              {stop.originalEstimatedArrivalTime && (stop.checkInTime || stop.originalEstimatedArrivalTime !== stop.estimatedArrivalTime)  (
                                 /* Timeline gösterimi - Gecikme varsa veya gerçekleşen saat varsa */
                                 <div className="space-y-2">
                                   <div className="flex items-center gap-2">
@@ -2314,11 +2314,11 @@ const JourneyDetail: React.FC = () => {
                                     </div>
                                     <div className="flex-shrink-0 w-6 h-0.5 bg-gradient-to-r from-gray-400 to-orange-400"></div>
                                     <div className="flex-1 text-center">
-                                      <div className="text-xs text-orange-600 mb-1">{stop.checkInTime ? 'Gerçekleşen' : 'Güncel'}</div>
+                                      <div className="text-xs text-orange-600 mb-1">{stop.checkInTime  'Gerçekleşen' : 'Güncel'}</div>
                                       <div className={`px-2 py-1 rounded text-xs font-bold border-l-2 ${
-                                        stop.checkInTime ? 'bg-green-50 text-green-700 border-green-500' : 'bg-orange-50 text-orange-700 border-orange-500'
+                                        stop.checkInTime  'bg-green-50 text-green-700 border-green-500' : 'bg-orange-50 text-orange-700 border-orange-500'
                                       }`}>
-                                        {stop.checkInTime ? formatTime(stop.checkInTime) : formatTimeSpan(stop.estimatedArrivalTime)}
+                                        {stop.checkInTime  formatTime(stop.checkInTime) : formatTimeSpan(stop.estimatedArrivalTime)}
                                       </div>
                                     </div>
                                   </div>
@@ -2326,9 +2326,9 @@ const JourneyDetail: React.FC = () => {
                                     const delay = calculateActualDelay(stop);
                                     return delay !== 0 && (
                                       <div>
-                                        <div className={`text-center px-2 py-1 rounded ${delay > 0 ? 'bg-red-50' : 'bg-green-50'}`}>
-                                          <span className={`text-xs font-bold ${delay > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                                            {delay > 0 ? '+' : ''}{delay} dakika {stop.checkInTime ? '' : '(tahmini)'}
+                                        <div className={`text-center px-2 py-1 rounded ${delay > 0  'bg-red-50' : 'bg-green-50'}`}>
+                                          <span className={`text-xs font-bold ${delay > 0  'text-red-600' : 'text-green-600'}`}>
+                                            {delay > 0  '+' : ''}{delay} dakika {stop.checkInTime  '' : '(tahmini)'}
                                           </span>
                                         </div>
                                         {/* Gecikme Sebebi */}
@@ -2365,13 +2365,13 @@ const JourneyDetail: React.FC = () => {
                                   <div>
                                     <div className="text-xs text-gray-500 mb-1 text-center">Planlanan</div>
                                     <div className="text-center text-sm font-bold text-blue-700">
-                                      {stop.estimatedArrivalTime ? formatTimeSpan(stop.estimatedArrivalTime) : '-'}
+                                      {stop.estimatedArrivalTime  formatTimeSpan(stop.estimatedArrivalTime) : '-'}
                                     </div>
                                   </div>
                                   <div className="pt-2 border-t border-gray-100">
                                     <div className="text-xs text-gray-500 mb-1 text-center">Gerçekleşen</div>
                                     <div className="text-center text-sm font-bold text-green-700">
-                                      {stop.checkInTime ? formatTime(stop.checkInTime) : '-'}
+                                      {stop.checkInTime  formatTime(stop.checkInTime) : '-'}
                                     </div>
                                   </div>
                                 </div>
@@ -2383,7 +2383,7 @@ const JourneyDetail: React.FC = () => {
                           {(stop.estimatedDepartureTime || stop.checkOutTime) && (
                             <div className="bg-white rounded-lg p-2.5 shadow-sm">
                               <div className="text-xs font-semibold text-gray-700 mb-2 text-center">Tamamlanma Saati</div>
-                              {stop.originalEstimatedDepartureTime && (stop.checkOutTime || (stop.originalEstimatedDepartureTime !== stop.estimatedDepartureTime && stop.estimatedDepartureTime)) ? (
+                              {stop.originalEstimatedDepartureTime && (stop.checkOutTime || (stop.originalEstimatedDepartureTime !== stop.estimatedDepartureTime && stop.estimatedDepartureTime))  (
                                 /* Timeline gösterimi - Gecikme varsa veya gerçekleşen saat varsa */
                                 <div className="space-y-2">
                                   <div className="flex items-center gap-2">
@@ -2395,20 +2395,20 @@ const JourneyDetail: React.FC = () => {
                                     </div>
                                     <div className="flex-shrink-0 w-6 h-0.5 bg-gradient-to-r from-gray-400 to-orange-400"></div>
                                     <div className="flex-1 text-center">
-                                      <div className="text-xs text-orange-600 mb-1">{stop.checkOutTime ? 'Gerçekleşen' : 'Güncel'}</div>
+                                      <div className="text-xs text-orange-600 mb-1">{stop.checkOutTime  'Gerçekleşen' : 'Güncel'}</div>
                                       <div className={`px-2 py-1 rounded text-xs font-bold border-l-2 ${
-                                        stop.checkOutTime ? 'bg-green-50 text-green-700 border-green-500' : 'bg-orange-50 text-orange-700 border-orange-500'
+                                        stop.checkOutTime  'bg-green-50 text-green-700 border-green-500' : 'bg-orange-50 text-orange-700 border-orange-500'
                                       }`}>
-                                        {stop.checkOutTime ? formatTime(stop.checkOutTime) : formatTimeSpan(stop.estimatedDepartureTime)}
+                                        {stop.checkOutTime  formatTime(stop.checkOutTime) : formatTimeSpan(stop.estimatedDepartureTime)}
                                       </div>
                                     </div>
                                   </div>
                                   {(() => {
                                     const delay = calculateDepartureDelay(stop);
                                     return delay !== 0 && (
-                                      <div className={`text-center px-2 py-1 rounded ${delay > 0 ? 'bg-red-50' : 'bg-green-50'}`}>
-                                        <span className={`text-xs font-bold ${delay > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                                          {delay > 0 ? '+' : ''}{delay} dakika {stop.checkOutTime ? '' : '(tahmini)'}
+                                      <div className={`text-center px-2 py-1 rounded ${delay > 0  'bg-red-50' : 'bg-green-50'}`}>
+                                        <span className={`text-xs font-bold ${delay > 0  'text-red-600' : 'text-green-600'}`}>
+                                          {delay > 0  '+' : ''}{delay} dakika {stop.checkOutTime  '' : '(tahmini)'}
                                         </span>
                                       </div>
                                     );
@@ -2428,13 +2428,13 @@ const JourneyDetail: React.FC = () => {
                                   <div>
                                     <div className="text-xs text-gray-500 mb-1 text-center">Planlanan</div>
                                     <div className="text-center text-sm font-bold text-blue-700">
-                                      {stop.estimatedDepartureTime ? formatTimeSpan(stop.estimatedDepartureTime) : '-'}
+                                      {stop.estimatedDepartureTime  formatTimeSpan(stop.estimatedDepartureTime) : '-'}
                                     </div>
                                   </div>
                                   <div className="pt-2 border-t border-gray-100">
                                     <div className="text-xs text-gray-500 mb-1 text-center">Gerçekleşen</div>
                                     <div className="text-center text-sm font-bold text-green-700">
-                                      {stop.checkOutTime ? formatTime(stop.checkOutTime) : '-'}
+                                      {stop.checkOutTime  formatTime(stop.checkOutTime) : '-'}
                                     </div>
                                   </div>
                                 </div>
@@ -2450,25 +2450,25 @@ const JourneyDetail: React.FC = () => {
                                 <div>
                                   <div className="text-xs text-gray-500 mb-0.5">Planlanan</div>
                                   <div className="text-sm font-bold text-blue-700">
-                                    {stop.estimatedArrivalTime && stop.estimatedDepartureTime ? (() => {
+                                    {stop.estimatedArrivalTime && stop.estimatedDepartureTime  (() => {
                                       const arrivalParts = stop.estimatedArrivalTime.split(':');
                                       const departureParts = stop.estimatedDepartureTime.split(':');
                                       const arrivalMinutes = parseInt(arrivalParts[0]) * 60 + parseInt(arrivalParts[1]);
                                       const departureMinutes = parseInt(departureParts[0]) * 60 + parseInt(departureParts[1]);
                                       const durationMinutes = departureMinutes - arrivalMinutes;
-                                      return durationMinutes > 0 ? `${durationMinutes} dk` : '-';
+                                      return durationMinutes > 0  `${durationMinutes} dk` : '-';
                                     })() : '-'}
                                   </div>
                                 </div>
                                 <div>
                                   <div className="text-xs text-gray-500 mb-0.5">Gerçekleşen</div>
                                   <div className="text-sm font-bold text-green-700">
-                                    {stop.checkInTime && stop.checkOutTime ? (() => {
+                                    {stop.checkInTime && stop.checkOutTime  (() => {
                                       const checkIn = new Date(stop.checkInTime);
                                       const checkOut = new Date(stop.checkOutTime);
                                       const durationMinutes = Math.round((checkOut.getTime() - checkIn.getTime()) / (1000 * 60));
-                                      return durationMinutes > 0 ? `${durationMinutes} dk` : '-';
-                                    })() : stop.checkOutTime ? '0 dk' : '-'}
+                                      return durationMinutes > 0  `${durationMinutes} dk` : '-';
+                                    })() : stop.checkOutTime  '0 dk' : '-'}
                                   </div>
                                 </div>
                               </div>
@@ -2485,7 +2485,7 @@ const JourneyDetail: React.FC = () => {
         </div>
 
         {/* Depo Dönüş - SON DURAKTAN SONRA EKLENEN */}
-        {journey.route?.optimized && journey.route?.endDetails && journey.route?.endDetails.estimatedArrivalTime && (
+        {journey.route.optimized && journey.route.endDetails && journey.route.endDetails.estimatedArrivalTime && (
           <div className="p-4 bg-green-50 border-t-2 border-green-200">
             <div className="flex items-start">
               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white font-semibold text-sm mr-3 flex-shrink-0">
@@ -2525,10 +2525,10 @@ const JourneyDetail: React.FC = () => {
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Durağa Varış</h2>
             <p className="text-gray-600 mb-4">
-              <strong>{selectedStop.routeStop?.customer?.name || selectedStop.routeStop?.name || 'Durak'}</strong> adresine vardınız mı?
+              <strong>{selectedStop.routeStop.customer.name || selectedStop.routeStop.name || 'Durak'}</strong> adresine vardınız mı
             </p>
             <p className="text-sm text-gray-500 mb-6">
-              {selectedStop.endAddress || selectedStop.routeStop?.address || 'Adres bilgisi yok'}
+              {selectedStop.endAddress || selectedStop.routeStop.address || 'Adres bilgisi yok'}
             </p>
 
             <div className="flex justify-end space-x-3">
@@ -2562,7 +2562,7 @@ const JourneyDetail: React.FC = () => {
           <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-bold mb-4">Teslimatı Tamamla</h2>
             <p className="text-gray-600 mb-4">
-              <strong>{selectedStop.routeStop?.customer?.name || selectedStop.routeStop?.name || 'Durak'}</strong> teslimatı tamamlandı mı?
+              <strong>{selectedStop.routeStop.customer.name || selectedStop.routeStop.name || 'Durak'}</strong> teslimatı tamamlandı mı
             </p>
 
             {/* ✅ YENİ: Teslim Alan Kişi */}
@@ -2700,7 +2700,7 @@ const JourneyDetail: React.FC = () => {
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Teslimat Başarısız</h2>
             <p className="text-gray-600 mb-4">
-              <strong>{selectedStop.routeStop?.customer?.name || selectedStop.routeStop?.name || 'Durak'}</strong> teslimatı neden başarısız?
+              <strong>{selectedStop.routeStop.customer.name || selectedStop.routeStop.name || 'Durak'}</strong> teslimatı neden başarısız
             </p>
 
             <div className="mb-4">
@@ -2828,7 +2828,7 @@ const JourneyDetail: React.FC = () => {
               />
 
               <button
-                onClick={() => fileInputRef.current?.click()}
+                onClick={() => fileInputRef.current.click()}
                 className="w-full p-8 border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 transition-colors flex flex-col items-center"
               >
                 <Camera className="w-12 h-12 text-gray-400 mb-3" />
@@ -3040,7 +3040,7 @@ const JourneyDetail: React.FC = () => {
                   key={index}
                   onClick={() => setCurrentPhotoIndex(index)}
                   className={`flex-shrink-0 w-16 h-16 rounded overflow-hidden border-2 transition-all ${
-                    index === currentPhotoIndex ? 'border-white' : 'border-transparent opacity-60 hover:opacity-100'
+                    index === currentPhotoIndex  'border-white' : 'border-transparent opacity-60 hover:opacity-100'
                   }`}
                 >
                   <img
@@ -3061,7 +3061,7 @@ const JourneyDetail: React.FC = () => {
           <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-bold mb-4">Seferi Tamamla</h2>
             <p className="text-gray-600 mb-6">
-              Sefer tamamlandı mı? Lütfen aşağıdaki bilgileri doldurun.
+              Sefer tamamlandı mı Lütfen aşağıdaki bilgileri doldurun.
             </p>
 
             {/* Bitiş Kilometresi */}
@@ -3165,15 +3165,15 @@ const JourneyDetail: React.FC = () => {
       <AddStopModal
         isOpen={showAddStopModal}
         onClose={() => setShowAddStopModal(false)}
-        journeyId={journey?.id ? Number(journey.id) : 0}
+        journeyId={journey.id  Number(journey.id) : 0}
         onStopAdded={() => {
           loadJourney(); // Reload journey data
           toast.success('Durak eklendi! Mobil uygulamada optimize edilmesi gerekiyor.');
         }}
         activeStopCustomerIds={
-          journey?.stops
-            ?.filter(stop => stop.status === 'pending' || stop.status === 'in_progress')
-            .map(stop => stop.routeStop?.customer?.id || stop.routeStop?.customerId)
+          journey.stops
+            .filter(stop => stop.status === 'pending' || stop.status === 'in_progress')
+            .map(stop => stop.routeStop.customer.id || stop.routeStop.customerId)
             .filter((id): id is number => id !== undefined) || []
         }
       />

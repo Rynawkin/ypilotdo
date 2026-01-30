@@ -48,10 +48,10 @@ const formatPhoneForWhatsApp = (phone: string): string => {
 };
 
 interface CustomerFormProps {
-  initialData?: Customer;
-  onSubmit: (data: Partial<Customer>, contacts?: CustomerContact[]) => void;
-  loading?: boolean;
-  isEdit?: boolean;
+  initialData: Customer;
+  onSubmit: (data: Partial<Customer>, contacts: CustomerContact[]) => void;
+  loading: boolean;
+  isEdit: boolean;
 }
 
 const CustomerForm: React.FC<CustomerFormProps> = ({
@@ -73,30 +73,30 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
 
   // Form State - WhatsApp alanları eklendi
   const [formData, setFormData] = useState<Partial<Customer>>({
-    code: initialData?.code || '',
-    name: initialData?.name || '',
-    address: initialData?.address || '',
-    phone: initialData?.phone || '',
-    email: initialData?.email || '',
+    code: initialData.code || '',
+    name: initialData.name || '',
+    address: initialData.address || '',
+    phone: initialData.phone || '',
+    email: initialData.email || '',
 
     // WhatsApp Alanları - Format düzeltmesi
-    whatsApp: initialData?.whatsApp || formatPhoneForWhatsApp(initialData?.phone || ''),
-    whatsAppOptIn: initialData?.whatsAppOptIn || false,
-    whatsAppVerified: initialData?.whatsAppVerified || false,
-    whatsAppOptInDate: initialData?.whatsAppOptInDate,
+    whatsApp: initialData.whatsApp || formatPhoneForWhatsApp(initialData.phone || ''),
+    whatsAppOptIn: initialData.whatsAppOptIn || false,
+    whatsAppVerified: initialData.whatsAppVerified || false,
+    whatsAppOptInDate: initialData.whatsAppOptInDate,
 
-    latitude: initialData?.latitude || undefined,
-    longitude: initialData?.longitude || undefined,
-    estimatedServiceTime: initialData?.estimatedServiceTime || defaultServiceTime,
-    notes: initialData?.notes || '',
-    tags: initialData?.tags || [],
-    timeWindow: initialData?.timeWindow || undefined
+    latitude: initialData.latitude || undefined,
+    longitude: initialData.longitude || undefined,
+    estimatedServiceTime: initialData.estimatedServiceTime || defaultServiceTime,
+    notes: initialData.notes || '',
+    tags: initialData.tags || [],
+    timeWindow: initialData.timeWindow || undefined
   });
 
   // Time window state
-  const [hasTimeWindow, setHasTimeWindow] = useState(!!initialData?.timeWindow);
-  const [timeWindowStart, setTimeWindowStart] = useState(initialData?.timeWindow?.start || '09:00');
-  const [timeWindowEnd, setTimeWindowEnd] = useState(initialData?.timeWindow?.end || '17:00');
+  const [hasTimeWindow, setHasTimeWindow] = useState(!!initialData.timeWindow);
+  const [timeWindowStart, setTimeWindowStart] = useState(initialData.timeWindow.start || '09:00');
+  const [timeWindowEnd, setTimeWindowEnd] = useState(initialData.timeWindow.end || '17:00');
 
   // Tags state
   const [tagInput, setTagInput] = useState('');
@@ -122,10 +122,10 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
 
   // Load contacts when editing customer
   useEffect(() => {
-    if (isEdit && initialData?.id) {
+    if (isEdit && initialData.id) {
       loadCustomerContacts();
     }
-  }, [isEdit, initialData?.id]);
+  }, [isEdit, initialData.id]);
 
   const loadDefaultServiceTime = async () => {
     try {
@@ -133,7 +133,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
       if (deliverySettings && deliverySettings.defaultServiceTime) {
         setDefaultServiceTime(deliverySettings.defaultServiceTime);
         // Eğer form data'da service time yoksa veya edit modda değilsek, varsayılanı kullan
-        if (!initialData?.estimatedServiceTime) {
+        if (!initialData.estimatedServiceTime) {
           setFormData(prev => ({
             ...prev,
             estimatedServiceTime: deliverySettings.defaultServiceTime
@@ -142,10 +142,10 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
       }
     } catch (error: any) {
       console.error('Error loading default service time:', error);
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Varsayılan servis süresi yüklenirken hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Varsayılan servis süresi yüklenirken hata oluştu';
       console.error('User-friendly error:', errorMessage);
       // Hata durumunda varsayılan 15 dakika kullan
-      if (!initialData?.estimatedServiceTime) {
+      if (!initialData.estimatedServiceTime) {
         setFormData(prev => ({
           ...prev,
           estimatedServiceTime: 15
@@ -155,7 +155,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
   };
 
   const loadCustomerContacts = async () => {
-    if (!initialData?.id) return;
+    if (!initialData.id) return;
     
     try {
       const contacts = await customerContactService.getByCustomerId(initialData.id.toString());
@@ -255,7 +255,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
 
           const newTags = place.types
             .map(type => typeMapping[type])
-            .filter(tag => tag && !formData.tags?.includes(tag));
+            .filter(tag => tag && !formData.tags.includes(tag));
 
           if (newTags.length > 0) {
             setFormData(prev => ({
@@ -275,22 +275,22 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.name?.trim()) {
+    if (!formData.name.trim()) {
       newErrors.name = 'Müşteri adı zorunludur';
     }
 
-    if (!formData.address?.trim()) {
+    if (!formData.address.trim()) {
       newErrors.address = 'Adres zorunludur';
     }
 
-    if (!formData.phone?.trim()) {
+    if (!formData.phone.trim()) {
       newErrors.phone = 'Telefon numarası zorunludur';
     } else if (!/^[0-9\s\-\+\(\)]+$/.test(formData.phone)) {
       newErrors.phone = 'Geçerli bir telefon numarası girin';
     }
 
     // Email validation - zorunlu değil ama format kontrolü yap
-    const emailValue = formData.email?.trim();
+    const emailValue = formData.email.trim();
     if (emailValue && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
       newErrors.email = 'Geçerli bir email adresi girin';
     }
@@ -385,7 +385,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
     const submitData: Partial<Customer> = {
       ...formData,
       whatsApp: whatsAppNumber,
-      timeWindow: hasTimeWindow ? { start: timeWindowStart, end: timeWindowEnd } : undefined
+      timeWindow: hasTimeWindow  { start: timeWindowStart, end: timeWindowEnd } : undefined
     };
 
     onSubmit(submitData, contacts);
@@ -399,7 +399,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
   // Add tag
   const addTag = (tag: string) => {
     const trimmedTag = tag.trim().toLowerCase();
-    if (trimmedTag && !formData.tags?.includes(trimmedTag)) {
+    if (trimmedTag && !formData.tags.includes(trimmedTag)) {
       setFormData({
         ...formData,
         tags: [...(formData.tags || []), trimmedTag]
@@ -412,7 +412,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
   const removeTag = (tag: string) => {
     setFormData({
       ...formData,
-      tags: formData.tags?.filter(t => t !== tag) || []
+      tags: formData.tags.filter(t => t !== tag) || []
     });
   };
 
@@ -524,7 +524,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                 name="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.name ? 'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300'
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.name  'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300'
                   }`}
                 placeholder="Örn: Bakkal Mehmet"
               />
@@ -556,7 +556,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                     });
                   }}
                   name="phone"
-                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.phone ? 'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300'
+                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.phone  'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300'
                     }`}
                   placeholder="0532 111 2233"
                 />
@@ -581,7 +581,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                   name="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.email ? 'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300'
+                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.email  'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300'
                     }`}
                   placeholder="Örn: mehmet@example.com (opsiyonel)"
                 />
@@ -612,7 +612,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
               <textarea
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.address ? 'border-red-300' : 'border-gray-300'
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.address  'border-red-300' : 'border-gray-300'
                   }`}
                 rows={2}
                 placeholder="Örn: Kadıköy, Moda Cad. No:45"
@@ -642,7 +642,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                 className="text-sm text-blue-600 hover:text-blue-700 flex items-center"
               >
                 <Navigation className="w-4 h-4 mr-1" />
-                {showCoordinateInput ? 'Koordinatları Gizle' : 'Koordinatları Düzenle'}
+                {showCoordinateInput  'Koordinatları Gizle' : 'Koordinatları Düzenle'}
               </button>
             </div>
 
@@ -659,7 +659,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                     name="latitude"
                     value={formData.latitude}
                     onChange={(e) => setFormData({ ...formData, latitude: parseFloat(e.target.value) })}
-                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.latitude ? 'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
+                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.latitude  'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
                     placeholder="40.9869"
                   />
                   {errors.latitude && (
@@ -679,7 +679,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                     name="longitude"
                     value={formData.longitude}
                     onChange={(e) => setFormData({ ...formData, longitude: parseFloat(e.target.value) })}
-                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.longitude ? 'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
+                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.longitude  'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
                     placeholder="29.0252"
                   />
                   {errors.longitude && (
@@ -718,7 +718,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                     ...formData,
                     estimatedServiceTime: parseInt(e.target.value) || defaultServiceTime
                   })}
-                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.serviceTime ? 'border-red-300' : 'border-gray-300'
+                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.serviceTime  'border-red-300' : 'border-gray-300'
                     }`}
                   placeholder={defaultServiceTime.toString()}
                 />
@@ -803,7 +803,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
           <CustomerContactsForm
             contacts={contacts}
             onChange={setContacts}
-            customerId={isEdit ? initialData?.id : undefined}
+            customerId={isEdit  initialData.id : undefined}
             viewMode={isEdit}
             onContactSaved={loadCustomerContacts}
           />
@@ -853,7 +853,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                     setFormData({
                       ...formData,
                       whatsAppOptIn: optIn,
-                      whatsAppOptInDate: optIn ? new Date() : undefined
+                      whatsAppOptInDate: optIn  new Date() : undefined
                     });
                   }}
                   className="w-5 h-5 text-green-600 rounded focus:ring-green-500"
@@ -939,7 +939,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                 Etiketler
               </label>
               <div className="flex flex-wrap gap-2 mb-3">
-                {formData.tags?.map((tag) => (
+                {formData.tags.map((tag) => (
                   <span
                     key={tag}
                     className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm flex items-center gap-1"
@@ -973,7 +973,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                 </button>
               </div>
               <div className="flex flex-wrap gap-2 mt-2">
-                {commonTags.filter(tag => !formData.tags?.includes(tag)).map((tag) => (
+                {commonTags.filter(tag => !formData.tags.includes(tag)).map((tag) => (
                   <button
                     key={tag}
                     type="button"
@@ -1009,7 +1009,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
             disabled={loading}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center"
           >
-            {loading ? (
+            {loading  (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 Kaydediliyor...
@@ -1017,7 +1017,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
             ) : (
               <>
                 <Save className="w-4 h-4 mr-2" />
-                {isEdit ? 'Güncelle' : 'Kaydet'}
+                {isEdit  'Güncelle' : 'Kaydet'}
               </>
             )}
           </button>
