@@ -56,9 +56,10 @@ public class ParamPOSProvider : IPaymentProvider
             var amountStr = FormatAmount(request.Amount);
             var totalStr = amountStr;
             var installment = "1";
+            var guid = settings.Guid.ToLowerInvariant();
             var successReturnUrl = BuildReturnUrl(settings.ApiBaseUrl, "success");
             var failReturnUrl = BuildReturnUrl(settings.ApiBaseUrl, "fail");
-            var hashInput = $"{settings.ClientCode}{settings.Guid}{installment}{amountStr}{totalStr}{orderId}{failReturnUrl}{successReturnUrl}";
+            var hashInput = $"{settings.ClientCode}{guid}{installment}{amountStr}{totalStr}{orderId}{failReturnUrl}{successReturnUrl}";
             var islemHash = await ComputeSha2B64Async(settings, hashInput);
 
             var cardHolderName = string.IsNullOrWhiteSpace(request.Card.CardHolderName)
@@ -81,7 +82,7 @@ public class ParamPOSProvider : IPaymentProvider
 
             var body = new XElement(settings.XmlNamespace + "TP_WMD_UCD",
                 BuildSecurityNode(settings),
-                new XElement(settings.XmlNamespace + "GUID", settings.Guid),
+                new XElement(settings.XmlNamespace + "GUID", guid),
                 new XElement(settings.XmlNamespace + "KK_Sahibi", cardHolderName),
                 new XElement(settings.XmlNamespace + "KK_No", cardNumber),
                 new XElement(settings.XmlNamespace + "KK_SK_Ay", cardMonth),
@@ -261,7 +262,7 @@ public class ParamPOSProvider : IPaymentProvider
             };
         }
 
-        var expectedHash = ComputeSha1Base64($"{islemGuid}{md}{mdStatus}{orderId}{settings.Guid}");
+        var expectedHash = ComputeSha1Base64($"{islemGuid}{md}{mdStatus}{orderId}{settings.Guid.ToLowerInvariant()}");
         if (!string.Equals(expectedHash, islemHash, StringComparison.OrdinalIgnoreCase))
         {
             return new PaymentResult
@@ -290,7 +291,7 @@ public class ParamPOSProvider : IPaymentProvider
 
         var body = new XElement(settings.XmlNamespace + "TP_WMD_Pay",
             BuildSecurityNode(settings),
-            new XElement(settings.XmlNamespace + "GUID", settings.Guid),
+            new XElement(settings.XmlNamespace + "GUID", settings.Guid.ToLowerInvariant()),
             new XElement(settings.XmlNamespace + "UCD_MD", md),
             new XElement(settings.XmlNamespace + "Islem_GUID", islemGuid),
             new XElement(settings.XmlNamespace + "Siparis_ID", orderId)
@@ -345,7 +346,7 @@ public class ParamPOSProvider : IPaymentProvider
         var tahsilat = GetValue(form, "TURKPOS_RETVAL_Tahsilat_Tutari");
         var hash = GetValue(form, "TURKPOS_RETVAL_Hash");
 
-        var expectedHash = ComputeSha1Base64($"{settings.ClientCode}{settings.Guid}{dekontId}{tahsilat}{siparisId}{islemId}");
+        var expectedHash = ComputeSha1Base64($"{settings.ClientCode}{settings.Guid.ToLowerInvariant()}{dekontId}{tahsilat}{siparisId}{islemId}");
         if (!string.IsNullOrWhiteSpace(hash) && !string.Equals(hash, expectedHash, StringComparison.OrdinalIgnoreCase))
         {
             return new PaymentResult
