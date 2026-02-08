@@ -241,7 +241,7 @@ const Reports: React.FC = () => {
           acc + (j.stops.filter(s => s.status === 'Completed').length || 0), 0
         );
         const avgTime = completedJourneys.length > 0
-           completedJourneys.reduce((acc, j) => acc + (j.totalDuration || 0), 0) / completedJourneys.length
+          ? completedJourneys.reduce((acc, j) => acc + (j.totalDuration || 0), 0) / completedJourneys.length
           : 0;
 
         return {
@@ -259,6 +259,7 @@ const Reports: React.FC = () => {
         acc + (j.stops.filter(s => s.status === 'Completed').length || 0), 0
       );
       const avgTime = completedJourneys.length > 0
+        ?
          completedJourneys.reduce((acc, j) => acc + (j.totalDuration || 0), 0) / completedJourneys.length
         : 0;
 
@@ -298,7 +299,7 @@ const Reports: React.FC = () => {
       ];
       const total = customerDistribution.reduce((sum, item) => sum + item.value, 0);
       customerDistribution.forEach(item => {
-        item.percentage = total > 0  Math.round((item.value / total) * 100) : 0;
+        item.percentage = total > 0 ? Math.round((item.value / total) * 100) : 0;
       });
     }
 
@@ -343,7 +344,7 @@ const Reports: React.FC = () => {
       planned: route.totalDeliveries,
       actual: route.completedDeliveries,
       efficiency: route.totalDeliveries > 0 
-         Math.round((route.completedDeliveries / route.totalDeliveries) * 100)
+        ? Math.round((route.completedDeliveries / route.totalDeliveries) * 100)
         : 0
     }));
 
@@ -361,6 +362,7 @@ const Reports: React.FC = () => {
       const delayedStops = dayJourneys.flatMap(j => j.stops || []).filter(s => s.newDelay && s.newDelay > 0);
       const totalDelays = delayedStops.length;
       const avgDelay = totalDelays > 0
+        ?
          Math.round(delayedStops.reduce((sum, s) => sum + (s.newDelay || 0), 0) / totalDelays)
         : 0;
 
@@ -403,7 +405,7 @@ const Reports: React.FC = () => {
       const categoryStops = allDelayedStops.filter(s => s.delayReasonCategory === category);
       const count = categoryStops.length;
       const totalMinutes = categoryStops.reduce((sum, s) => sum + (s.newDelay || 0), 0);
-      const percentage = totalDelayMinutes > 0  Math.round((totalMinutes / totalDelayMinutes) * 100) : 0;
+        const percentage = totalDelayMinutes > 0 ? Math.round((totalMinutes / totalDelayMinutes) * 100) : 0;
 
       return {
         category: getDelayReasonLabel(category),
@@ -503,9 +505,9 @@ const Reports: React.FC = () => {
       });
 
       const delayCount = hourStops.length;
-      const avgDelay = delayCount > 0
-         Math.round(hourStops.reduce((sum, s) => sum + (s.newDelay || 0), 0) / delayCount)
-        : 0;
+        const avgDelay = delayCount > 0 ?
+           Math.round(hourStops.reduce((sum, s) => sum + (s.newDelay || 0), 0) / delayCount)
+          : 0;
 
       if (delayCount > 0) {
         delayByTimeOfDay.push({ hour: hourStr, avgDelay, delayCount });
@@ -526,7 +528,7 @@ const Reports: React.FC = () => {
       const onTime = completedStops.filter(s => !s.newDelay || s.newDelay <= 15).length;
       const delayed = completedStops.filter(s => s.newDelay && s.newDelay > 15).length;
       const early = completedStops.filter(s => s.newDelay && s.newDelay < 0).length;
-      const slaRate = completedStops.length > 0  Math.round((onTime / completedStops.length) * 100) : 0;
+        const slaRate = completedStops.length > 0 ? Math.round((onTime / completedStops.length) * 100) : 0;
 
       slaCompliance.push({
         date: dateStr,
@@ -585,7 +587,7 @@ const Reports: React.FC = () => {
           address: c.address,
           deliveries: c.deliveries,
           onTimeRate: Math.round((c.onTimeDeliveries / c.deliveries) * 100),
-          avgDelay: c.delayCount > 0  Math.round(c.totalDelay / c.delayCount) : 0
+            avgDelay: c.delayCount > 0 ? Math.round(c.totalDelay / c.delayCount) : 0
         }))
         .sort((a, b) => b.deliveries - a.deliveries)
         .slice(0, 20);
@@ -635,7 +637,7 @@ const Reports: React.FC = () => {
           address: s.address,
           delayFrequency: s.delayFrequency,
           avgDelay: Math.round(s.totalDelay / s.delayFrequency),
-          lastDelay: s.lastDelay  format(new Date(s.lastDelay), 'dd MMM yyyy', { locale: tr }) : '-'
+            lastDelay: s.lastDelay ? format(new Date(s.lastDelay), 'dd MMM yyyy', { locale: tr }) : '-'
         }))
         .sort((a, b) => b.delayFrequency - a.delayFrequency)
         .slice(0, 15);
@@ -665,18 +667,18 @@ const Reports: React.FC = () => {
     const totalPlanned = filteredJourneys.reduce((acc, j) =>
       acc + (j.stops.length || 0), 0
     );
-    const successRate = totalPlanned > 0  Math.round((totalDeliveries / totalPlanned) * 100) : 0;
-    const avgDeliveryTime = filteredJourneys.length > 0
-       Math.round(filteredJourneys.reduce((acc, j) => acc + (j.totalDuration || 0), 0) / filteredJourneys.length)
-      : 0;
-    const activeDriversCount = canAccessDispatcherFeatures()
-       drivers.filter(d => d.status === 'available' || d.status === 'busy').length
-      : (user.isDriver  1 : 0);
+      const successRate = totalPlanned > 0 ? Math.round((totalDeliveries / totalPlanned) * 100) : 0;
+      const avgDeliveryTime = filteredJourneys.length > 0 ?
+         Math.round(filteredJourneys.reduce((acc, j) => acc + (j.totalDuration || 0), 0) / filteredJourneys.length)
+        : 0;
+      const activeDriversCount = canAccessDispatcherFeatures() ?
+         drivers.filter(d => d.status === 'available' || d.status === 'busy').length
+        : (user.isDriver ? 1 : 0);
     const totalDistance = Math.round(filteredJourneys.reduce((acc, j) => acc + (j.totalDistance || 0), 0));
 
     const metrics: KPIMetric[] = [
       {
-        title: user.isDriver && !canAccessDispatcherFeatures()  'Benim Teslimatlarım' : 'Toplam Teslimat',
+          title: user.isDriver && !canAccessDispatcherFeatures() ? 'Benim Teslimatlarım' : 'Toplam Teslimat',
         value: totalDeliveries.toLocaleString('tr-TR'),
         change: 12.5,
         trend: 'up',
@@ -825,9 +827,9 @@ const Reports: React.FC = () => {
   }
 
   // Driver için tab kısıtlaması
-  const availableTabs = user.isDriver && !canAccessDispatcherFeatures()
-     ['overview', 'deliveries', 'vehicles', 'delays'] // Driver can see delays (own data)
-    : ['overview', 'deliveries', 'drivers', 'vehicles', 'customers', 'delays', 'sla', 'customer-performance', 'critical-stops', 'feedback'];
+    const availableTabs = user.isDriver && !canAccessDispatcherFeatures() ?
+       ['overview', 'deliveries', 'vehicles', 'delays'] // Driver can see delays (own data)
+      : ['overview', 'deliveries', 'drivers', 'vehicles', 'customers', 'delays', 'sla', 'customer-performance', 'critical-stops', 'feedback'];
 
   return (
     <div className="space-y-6">
@@ -836,8 +838,8 @@ const Reports: React.FC = () => {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Raporlar</h1>
           <p className="text-gray-600 mt-1">
-            {user.isDriver && !canAccessDispatcherFeatures() 
-               'Kişisel performans analizleriniz'
+              {user.isDriver && !canAccessDispatcherFeatures() ?
+                 'Kişisel performans analizleriniz'
               : 'Detaylı performans analizleri ve istatistikler'}
           </p>
         </div>
@@ -917,8 +919,8 @@ const Reports: React.FC = () => {
               onClick={() => setSelectedTab(tab.id as typeof selectedTab)}
               className={`
                 flex items-center gap-2 py-3 px-1 border-b-2 font-medium text-sm transition-colors
-                ${selectedTab === tab.id
-                   'border-blue-500 text-blue-600'
+                  ${selectedTab === tab.id ?
+                     'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }
               `}
@@ -942,7 +944,7 @@ const Reports: React.FC = () => {
               <Users className="w-4 h-4 text-gray-500" />
               <select
                 value={selectedDriverId || ''}
-                onChange={(e) => setSelectedDriverId(e.target.value  Number(e.target.value) : null)}
+                  onChange={(e) => setSelectedDriverId(e.target.value ? Number(e.target.value) : null)}
                 className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               >
                 <option value="">Tüm Sürücüler</option>
@@ -955,7 +957,7 @@ const Reports: React.FC = () => {
               <Truck className="w-4 h-4 text-gray-500" />
               <select
                 value={selectedVehicleId || ''}
-                onChange={(e) => setSelectedVehicleId(e.target.value  Number(e.target.value) : null)}
+                  onChange={(e) => setSelectedVehicleId(e.target.value ? Number(e.target.value) : null)}
                 className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               >
                 <option value="">Tüm Araçlar</option>
@@ -988,11 +990,11 @@ const Reports: React.FC = () => {
                 <div className={`p-2 rounded-lg bg-${metric.color}-100`}>
                   <metric.icon className={`w-5 h-5 text-${metric.color}-600`} />
                 </div>
-                <div className={`flex items-center text-xs font-medium ${
-                  metric.trend === 'up'  'text-green-600' :
-                  metric.trend === 'down'  'text-red-600' :
-                  'text-gray-600'
-                }`}>
+                  <div className={`flex items-center text-xs font-medium ${
+                    metric.trend === 'up' ? 'text-green-600' :
+                    metric.trend === 'down' ? 'text-red-600' :
+                    'text-gray-600'
+                  }`}>
                   {metric.trend === 'up' && <ArrowUp className="w-3 h-3 mr-1" />}
                   {metric.trend === 'down' && <ArrowDown className="w-3 h-3 mr-1" />}
                   {metric.change !== 0 && `${Math.abs(metric.change)}%`}
@@ -1017,7 +1019,7 @@ const Reports: React.FC = () => {
               {/* Teslimat Trendleri */}
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  {user.isDriver && !canAccessDispatcherFeatures()  'Benim Teslimat Trendlerim' : 'Teslimat Trendleri'}
+                    {user.isDriver && !canAccessDispatcherFeatures() ? 'Benim Teslimat Trendlerim' : 'Teslimat Trendleri'}
                 </h3>
                 <ResponsiveContainer width="100%" height={300}>
                   <AreaChart data={reportData.deliveryTrends}>
@@ -1035,7 +1037,7 @@ const Reports: React.FC = () => {
               {/* Müşteri Dağılımı veya Sefer Durumları */}
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  {canAccessDispatcherFeatures()  'Şehirlere Göre Müşteri Dağılımı' : 'Sefer Durumları'}
+                    {canAccessDispatcherFeatures() ? 'Şehirlere Göre Müşteri Dağılımı' : 'Sefer Durumları'}
                 </h3>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
@@ -1080,7 +1082,7 @@ const Reports: React.FC = () => {
               {/* Rota Verimliliği */}
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  {user.isDriver && !canAccessDispatcherFeatures()  'Benim Rota Verimliliğim' : 'Rota Verimliliği'}
+                    {user.isDriver && !canAccessDispatcherFeatures() ? 'Benim Rota Verimliliğim' : 'Rota Verimliliği'}
                 </h3>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={reportData.routeEfficiency} layout="horizontal">
@@ -1112,14 +1114,14 @@ const Reports: React.FC = () => {
                           <p className="text-2xl font-bold text-gray-900">{route.efficiency}%</p>
                           <p className="text-xs text-gray-600">Verimlilik</p>
                         </div>
-                        <div className={`p-2 rounded-full ${
-                          route.efficiency >= 90  'bg-green-100' :
-                          route.efficiency >= 70  'bg-yellow-100' :
-                          'bg-red-100'
-                        }`}>
-                          {route.efficiency >= 90  (
+                          <div className={`p-2 rounded-full ${
+                            route.efficiency >= 90 ? 'bg-green-100' :
+                            route.efficiency >= 70 ? 'bg-yellow-100' :
+                            'bg-red-100'
+                          }`}>
+                            {route.efficiency >= 90 ? (
                             <CheckCircle className="w-5 h-5 text-green-600" />
-                          ) : route.efficiency >= 70  (
+                            ) : route.efficiency >= 70 ? (
                             <AlertCircle className="w-5 h-5 text-yellow-600" />
                           ) : (
                             <XCircle className="w-5 h-5 text-red-600" />
@@ -1224,11 +1226,11 @@ const Reports: React.FC = () => {
                           <Truck className="w-5 h-5 text-gray-600" />
                           <span className="font-medium text-gray-900">{vehicle.vehicle}</span>
                         </div>
-                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                          vehicle.utilization >= 80  'bg-red-100 text-red-700' :
-                          vehicle.utilization >= 50  'bg-yellow-100 text-yellow-700' :
-                          'bg-green-100 text-green-700'
-                        }`}>
+                          <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                            vehicle.utilization >= 80 ? 'bg-red-100 text-red-700' :
+                            vehicle.utilization >= 50 ? 'bg-yellow-100 text-yellow-700' :
+                            'bg-green-100 text-green-700'
+                          }`}>
                           {vehicle.utilization}% Kullanım
                         </span>
                       </div>
@@ -1404,7 +1406,7 @@ const Reports: React.FC = () => {
             {/* Delay Reasons Pie Chart */}
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Gecikme Sebepleri Dağılımı</h3>
-              {reportData.delayReasons.length > 0  (
+              {reportData.delayReasons.length > 0 ? (
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <Pie
@@ -1433,7 +1435,7 @@ const Reports: React.FC = () => {
             {/* Most Delayed Routes */}
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">En Gecikmeli Rotalar</h3>
-              {reportData.mostDelayedRoutes.length > 0  (
+              {reportData.mostDelayedRoutes.length > 0 ? (
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={reportData.mostDelayedRoutes.slice(0, 5)} layout="horizontal">
                     <CartesianGrid strokeDasharray="3 3" />
@@ -1456,7 +1458,7 @@ const Reports: React.FC = () => {
             {canAccessDispatcherFeatures() && (
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">En Gecikmeli Sürücüler</h3>
-                {reportData.mostDelayedDrivers.length > 0  (
+                {reportData.mostDelayedDrivers.length > 0 ? (
                   <div className="space-y-3">
                     {reportData.mostDelayedDrivers.slice(0, 6).map((driver, index) => (
                       <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
@@ -1488,7 +1490,7 @@ const Reports: React.FC = () => {
           {/* Delay Reasons Table */}
           <div className="bg-white rounded-xl shadow-sm p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Gecikme Sebepleri Detayı</h3>
-            {reportData.delayReasons.length > 0  (
+            {reportData.delayReasons.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -1651,7 +1653,7 @@ const Reports: React.FC = () => {
         <div className="space-y-6">
           <div className="bg-white rounded-xl shadow-sm p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Müşteri Performans Analizi</h3>
-            {reportData.customerPerformance.length > 0  (
+            {reportData.customerPerformance.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -1671,19 +1673,19 @@ const Reports: React.FC = () => {
                         <td className="py-3 px-2 text-sm text-gray-600">{customer.address}</td>
                         <td className="text-center py-3 px-2 text-gray-700">{customer.deliveries}</td>
                         <td className="text-center py-3 px-2">
-                          <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-                            customer.onTimeRate >= 90  'bg-green-100 text-green-700' :
-                            customer.onTimeRate >= 70  'bg-yellow-100 text-yellow-700' :
-                            'bg-red-100 text-red-700'
-                          }`}>
+                            <span className={`px-2 py-1 text-xs font-medium rounded-full ${
+                              customer.onTimeRate >= 90 ? 'bg-green-100 text-green-700' :
+                              customer.onTimeRate >= 70 ? 'bg-yellow-100 text-yellow-700' :
+                              'bg-red-100 text-red-700'
+                            }`}>
                             {customer.onTimeRate}%
                           </span>
                         </td>
                         <td className="text-center py-3 px-2 text-gray-700">{customer.avgDelay} dk</td>
                         <td className="text-center py-3 px-2">
-                          {customer.onTimeRate >= 90  (
+                            {customer.onTimeRate >= 90 ? (
                             <CheckCircle className="w-5 h-5 text-green-600 mx-auto" />
-                          ) : customer.onTimeRate >= 70  (
+                            ) : customer.onTimeRate >= 70 ? (
                             <AlertCircle className="w-5 h-5 text-yellow-600 mx-auto" />
                           ) : (
                             <XCircle className="w-5 h-5 text-red-600 mx-auto" />
@@ -1708,7 +1710,7 @@ const Reports: React.FC = () => {
         <div className="space-y-6">
           <div className="bg-white rounded-xl shadow-sm p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Kritik Duraklar (Sık Geciken Lokasyonlar)</h3>
-            {reportData.criticalStops.length > 0  (
+            {reportData.criticalStops.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -1734,11 +1736,11 @@ const Reports: React.FC = () => {
                         <td className="text-center py-3 px-2 text-gray-700">{stop.avgDelay} dk</td>
                         <td className="text-center py-3 px-2 text-gray-700">{stop.lastDelay}</td>
                         <td className="text-center py-3 px-2">
-                          {stop.delayFrequency >= 5 && stop.avgDelay >= 30  (
+                          {stop.delayFrequency >= 5 && stop.avgDelay >= 30 ? (
                             <span className="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-700">
                               Yüksek Risk
                             </span>
-                          ) : stop.delayFrequency >= 3 || stop.avgDelay >= 20  (
+                          ) : stop.delayFrequency >= 3 || stop.avgDelay >= 20 ? (
                             <span className="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-700">
                               Orta Risk
                             </span>

@@ -56,7 +56,8 @@ class MemberService {
         if (filters.isAdmin !== undefined) params.append('isAdmin', filters.isAdmin.toString());
         if (filters.searchQuery) params.append('searchQuery', filters.searchQuery);
 
-        const response = await api.get(`/members${params.toString()  `${params}` : ''}`);
+        const query = params.toString();
+        const response = await api.get(`/members${query ? `?${query}` : ''}`);
         return response.data;
     }
 

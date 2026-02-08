@@ -142,9 +142,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                 type="text"
                 value={formData.plateNumber}
                 onChange={(e) => setFormData({ ...formData, plateNumber: e.target.value.toUpperCase() })}
-                className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.plateNumber  'border-red-300' : 'border-gray-300'
-                }`}
+                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.plateNumber ? 'border-red-300' : 'border-gray-300'
+                  }`}
                 placeholder="34 ABC 123"
                 maxLength={11}
               />
@@ -173,11 +173,11 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   key={type.value}
                   type="button"
                   onClick={() => setFormData({ ...formData, type: type.value as any })}
-                  className={`px-2 py-2 rounded-lg border text-xs font-medium transition-colors flex flex-col items-center justify-center ${
-                    formData.type === type.value 
-                       'bg-blue-100 text-blue-700 border-blue-300' 
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                  }`}
+                    className={`px-2 py-2 rounded-lg border text-xs font-medium transition-colors flex flex-col items-center justify-center ${
+                      formData.type === type.value
+                        ? 'bg-blue-100 text-blue-700 border-blue-300'
+                        : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                    }`}
                 >
                   {type.icon}
                   <span className="mt-1">{type.label}</span>
@@ -194,9 +194,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
             <select
               value={formData.brand}
               onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.brand  'border-red-300' : 'border-gray-300'
-              }`}
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors.brand ? 'border-red-300' : 'border-gray-300'
+                }`}
             >
               <option value="">Marka seçin</option>
               {currentBrands.map(brand => (
@@ -229,9 +229,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
               type="text"
               value={formData.model}
               onChange={(e) => setFormData({ ...formData, model: e.target.value })}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.model  'border-red-300' : 'border-gray-300'
-              }`}
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors.model ? 'border-red-300' : 'border-gray-300'
+                }`}
               placeholder="Örn: Transit, Doblo, Sprinter"
             />
             {errors.model && (
@@ -255,9 +255,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                 max={new Date().getFullYear() + 1}
                 value={formData.year}
                 onChange={(e) => setFormData({ ...formData, year: parseInt(e.target.value) || 0 })}
-                className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.year  'border-red-300' : 'border-gray-300'
-                }`}
+                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.year ? 'border-red-300' : 'border-gray-300'
+                  }`}
                 placeholder={new Date().getFullYear().toString()}
               />
             </div>
@@ -281,9 +281,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                 min="0"
                 value={formData.capacity}
                 onChange={(e) => setFormData({ ...formData, capacity: parseInt(e.target.value) || 0 })}
-                className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.capacity  'border-red-300' : 'border-gray-300'
-                }`}
+                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.capacity ? 'border-red-300' : 'border-gray-300'
+                  }`}
                 placeholder="1000"
               />
             </div>
@@ -319,10 +319,10 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                 type="number"
                 min="0"
                 value={formData.currentKm || ''}
-                onChange={(e) => setFormData({ ...formData, currentKm: e.target.value  parseInt(e.target.value) : undefined })}
-                className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.currentKm  'border-red-300' : 'border-gray-300'
-                }`}
+                  onChange={(e) => setFormData({ ...formData, currentKm: e.target.value ? parseInt(e.target.value) : undefined })}
+                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.currentKm ? 'border-red-300' : 'border-gray-300'
+                  }`}
                 placeholder="Örn: 50000"
               />
             </div>
@@ -353,11 +353,11 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
                   key={fuel.value}
                   type="button"
                   onClick={() => setFormData({ ...formData, fuelType: fuel.value as any })}
-                  className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors flex items-center justify-center ${
-                    formData.fuelType === fuel.value 
-                       'bg-green-100 text-green-700 border-green-300' 
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                  }`}
+                    className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors flex items-center justify-center ${
+                      formData.fuelType === fuel.value
+                        ? 'bg-green-100 text-green-700 border-green-300'
+                        : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                    }`}
                 >
                   {fuel.icon}
                   <span className="ml-2">{fuel.label}</span>
@@ -375,11 +375,11 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
               <button
                 type="button"
                 onClick={() => setFormData({ ...formData, status: 'active' })}
-                className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors flex items-center justify-center ${
-                  formData.status === 'active' 
-                     'bg-green-100 text-green-700 border-green-300' 
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                }`}
+                  className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors flex items-center justify-center ${
+                    formData.status === 'active'
+                      ? 'bg-green-100 text-green-700 border-green-300'
+                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  }`}
               >
                 <CheckCircle className="w-4 h-4 mr-1" />
                 Aktif
@@ -387,11 +387,11 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
               <button
                 type="button"
                 onClick={() => setFormData({ ...formData, status: 'maintenance' })}
-                className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors flex items-center justify-center ${
-                  formData.status === 'maintenance' 
-                     'bg-orange-100 text-orange-700 border-orange-300' 
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                }`}
+                  className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors flex items-center justify-center ${
+                    formData.status === 'maintenance'
+                      ? 'bg-orange-100 text-orange-700 border-orange-300'
+                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  }`}
               >
                 <Wrench className="w-4 h-4 mr-1" />
                 Bakımda
@@ -399,11 +399,11 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
               <button
                 type="button"
                 onClick={() => setFormData({ ...formData, status: 'inactive' })}
-                className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors flex items-center justify-center ${
-                  formData.status === 'inactive' 
-                     'bg-gray-100 text-gray-700 border-gray-300' 
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                }`}
+                  className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors flex items-center justify-center ${
+                    formData.status === 'inactive'
+                      ? 'bg-gray-100 text-gray-700 border-gray-300'
+                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  }`}
               >
                 <XCircle className="w-4 h-4 mr-1" />
                 Pasif
@@ -427,9 +427,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
               </div>
               <p className="text-xs text-gray-600">Tip</p>
               <p className="text-sm font-medium text-gray-900">
-                {formData.type === 'car'  'Otomobil' :
-                 formData.type === 'van'  'Panelvan' :
-                 formData.type === 'truck'  'Kamyon' : 'Motosiklet'}
+                  {formData.type === 'car' ? 'Otomobil' :
+                   formData.type === 'van' ? 'Panelvan' :
+                   formData.type === 'truck' ? 'Kamyon' : 'Motosiklet'}
               </p>
             </div>
             <div className="p-3 bg-gray-50 rounded-lg">
@@ -441,9 +441,9 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
               <Fuel className="w-6 h-6 text-blue-600 mx-auto mb-2" />
               <p className="text-xs text-gray-600">Yakıt</p>
               <p className="text-sm font-medium text-gray-900">
-                {formData.fuelType === 'diesel'  'Dizel' :
-                 formData.fuelType === 'gasoline'  'Benzin' :
-                 formData.fuelType === 'electric'  'Elektrik' : 'Hibrit'}
+                {formData.fuelType === 'diesel' ? 'Dizel' :
+                 formData.fuelType === 'gasoline' ? 'Benzin' :
+                 formData.fuelType === 'electric' ? 'Elektrik' : 'Hibrit'}
               </p>
             </div>
             <div className="p-3 bg-gray-50 rounded-lg">
@@ -462,7 +462,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
           disabled={loading}
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center"
         >
-          {loading  (
+          {loading ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
               Kaydediliyor...
@@ -470,7 +470,7 @@ const VehicleForm: React.FC<VehicleFormProps> = ({
           ) : (
             <>
               <Save className="w-4 h-4 mr-2" />
-              {isEdit  'Güncelle' : 'Kaydet'}
+              {isEdit ? 'Güncelle' : 'Kaydet'}
             </>
           )}
         </button>

@@ -80,7 +80,7 @@ const istanbulFormatter = new Intl.DateTimeFormat('tr-TR', {
 function parseISOAsUTC(input: string): Date {
   if (!input) return new Date(NaN);
   const hasTZ = /Z$|[+\-]\d\d:\d\d$/.test(input);
-  const iso = hasTZ  input : (input + 'Z');
+  const iso = hasTZ ? input : (input + 'Z');
   return new Date(iso);
 }
 
@@ -93,7 +93,7 @@ function formatTR(input: string | null): string {
 
 function formatCoordRaw(v: number | string | null | undefined): string {
   if (v === null || v === undefined) return '';
-  const s = typeof v === 'string'  v : String(v);
+  const s = typeof v === 'string' ? v : String(v);
   return s.replace(',', '.');
 }
 
@@ -110,12 +110,12 @@ function classNames(...xs: Array<string | false | null | undefined>): string {
 // -------------------- API Katmanı --------------------
 async function fetchPending(): Promise<PendingLocationUpdateRequestDto[]> {
   const { data } = await http.get('/workspace/location-update-requests/pending');
-  return data  [];
+  return data ?? [];
 }
 
 async function fetchHistory(status: HistoryStatusTab): Promise<HistoryLocationUpdateRequestDto[]> {
   const { data } = await http.get('/workspace/location-update-requests/history', { params: { status }});
-  return data  [];
+  return data ?? [];
 }
 
 async function approveRequest(id: Id, payload: ApprovePayload): Promise<void> {
@@ -169,8 +169,8 @@ const LocationUpdateRequests: React.FC = () => {
   const filteredList = useMemo(() => {
     const q = search.trim().toLowerCase();
     const list =
-      tab === 'Pending'  pending :
-      tab === 'Approved'  approved : rejected;
+      tab === 'Pending' ? pending :
+      tab === 'Approved' ? approved : rejected;
 
     if (!q) return list;
 
@@ -283,11 +283,11 @@ const LocationUpdateRequests: React.FC = () => {
             <div className="flex items-center gap-2 mb-2">
               <div className={classNames(
                 "px-2 py-1 rounded-full text-xs font-medium",
-                isPending  "bg-yellow-100 text-yellow-800" :
-                status === 'Approved'  "bg-green-100 text-green-800" :
+                isPending ? "bg-yellow-100 text-yellow-800" :
+                status === 'Approved' ? "bg-green-100 text-green-800" :
                 "bg-red-100 text-red-800"
               )}>
-                {isPending  'Bekliyor' : status === 'Approved'  'Onaylandı' : 'Reddedildi'}
+                {isPending ? 'Bekliyor' : status === 'Approved' ? 'Onaylandı' : 'Reddedildi'}
               </div>
               <span className="text-xs text-gray-500">#{it.id}</span>
             </div>
@@ -359,7 +359,7 @@ const LocationUpdateRequests: React.FC = () => {
 
         {/* Alt Aksiyonlar */}
         <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-          {isPending  (
+          {isPending ? (
             <div className="flex items-center gap-2">
               <button
                 className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 text-sm font-medium"
@@ -415,7 +415,7 @@ const LocationUpdateRequests: React.FC = () => {
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
               disabled={loading}
             >
-              {loading  <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
               Yenile
             </button>
           </div>
@@ -432,8 +432,8 @@ const LocationUpdateRequests: React.FC = () => {
                   onClick={() => setTab(t)}
                   className={classNames(
                     'whitespace-nowrap border-b-2 pb-4 px-1 text-sm font-medium transition-colors',
-                    tab === t
-                       'border-blue-600 text-blue-600'
+                      tab === t ?
+                         'border-blue-600 text-blue-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   )}
                 >
@@ -441,9 +441,9 @@ const LocationUpdateRequests: React.FC = () => {
                     {t === 'Pending' && <Clock className="w-4 h-4" />}
                     {t === 'Approved' && <CheckCircle2 className="w-4 h-4" />}
                     {t === 'Rejected' && <XCircle className="w-4 h-4" />}
-                    <span>{t === 'Pending'  'Bekleyen' : t === 'Approved'  'Onaylanan' : 'Reddedilen'}</span>
+                      <span>{t === 'Pending' ? 'Bekleyen' : t === 'Approved' ? 'Onaylanan' : 'Reddedilen'}</span>
                     <span className="ml-2 px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
-                      {tab === 'Pending'  pending.length : tab === 'Approved'  approved.length : rejected.length}
+                        {tab === 'Pending' ? pending.length : tab === 'Approved' ? approved.length : rejected.length}
                     </span>
                   </div>
                 </button>

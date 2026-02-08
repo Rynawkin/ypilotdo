@@ -134,7 +134,7 @@ class WeatherService {
         icon: this.getWeatherIcon(currentData.weather[0].icon),
         humidity: currentData.main.humidity,
         windSpeed: Math.round(currentData.wind.speed * 3.6), // m/s to km/h
-        rainChance: currentData.rain  Math.round((currentData.rain['1h'] || 0) * 10) : 0,
+        rainChance: currentData.rain ? Math.round((currentData.rain['1h'] || 0) * 10) : 0,
         forecast
       };
 
@@ -201,7 +201,7 @@ class WeatherService {
       const noonItem = items.reduce((prev, curr) => {
         const prevHour = new Date(prev.dt * 1000).getHours();
         const currHour = new Date(curr.dt * 1000).getHours();
-        return Math.abs(currHour - 12) < Math.abs(prevHour - 12)  curr : prev;
+          return Math.abs(currHour - 12) < Math.abs(prevHour - 12) ? curr : prev;
       });
 
       // Yağış ihtimali hesapla (pop - probability of precipitation)

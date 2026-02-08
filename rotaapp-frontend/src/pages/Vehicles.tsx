@@ -128,13 +128,13 @@ const Vehicles: React.FC = () => {
         break;
     }
 
-    return sortDirection === 'asc'  comparison : -comparison;
+      return sortDirection === 'asc' ? comparison : -comparison;
   });
 
   // Sorting
   const handleSort = (field: SortField) => {
     if (sortField === field) {
-      setSortDirection(sortDirection === 'asc'  'desc' : 'asc');
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
       setSortField(field);
       setSortDirection('asc');
@@ -146,7 +146,7 @@ const Vehicles: React.FC = () => {
       return <ArrowUpDown className="w-3 h-3 ml-1 text-gray-400" />;
     }
     return sortDirection === 'asc'
-       <ArrowUp className="w-3 h-3 ml-1 text-blue-600" />
+      ? <ArrowUp className="w-3 h-3 ml-1 text-blue-600" />
       : <ArrowDown className="w-3 h-3 ml-1 text-blue-600" />;
   };
 
@@ -220,7 +220,7 @@ const Vehicles: React.FC = () => {
   // Export to Excel/CSV
   const handleExport = () => {
     const vehiclesToExport = selectedVehicles.size > 0
-       sortedVehicles.filter(v => selectedVehicles.has(v.id))
+      ? sortedVehicles.filter(v => selectedVehicles.has(v.id))
       : sortedVehicles;
 
     const csvContent = vehicleService.exportToCSV(vehiclesToExport);
@@ -506,12 +506,12 @@ const Vehicles: React.FC = () => {
             disabled={isImporting}
             className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isImporting  (
+            {isImporting ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             ) : (
               <Upload className="w-4 h-4 mr-2" />
             )}
-            {isImporting  'İçe Aktarılıyor...' : 'Import'}
+            {isImporting ? 'İçe Aktarılıyor...' : 'Import'}
           </button>
           <button
             onClick={handleExport}
@@ -535,9 +535,9 @@ const Vehicles: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <div
           onClick={() => setQuickFilter('all')}
-          className={`bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer ${
-            quickFilter === 'all'  'ring-2 ring-blue-500' : ''
-          }`}
+            className={`bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer ${
+              quickFilter === 'all' ? 'ring-2 ring-blue-500' : ''
+            }`}
         >
           <div className="flex items-center justify-between">
             <div>
@@ -552,9 +552,9 @@ const Vehicles: React.FC = () => {
 
         <div
           onClick={() => setQuickFilter('active')}
-          className={`bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer ${
-            quickFilter === 'active'  'ring-2 ring-green-500' : ''
-          }`}
+            className={`bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer ${
+              quickFilter === 'active' ? 'ring-2 ring-green-500' : ''
+            }`}
         >
           <div className="flex items-center justify-between">
             <div>
@@ -571,9 +571,9 @@ const Vehicles: React.FC = () => {
 
         <div
           onClick={() => setQuickFilter('maintenance')}
-          className={`bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer ${
-            quickFilter === 'maintenance'  'ring-2 ring-orange-500' : ''
-          }`}
+            className={`bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer ${
+              quickFilter === 'maintenance' ? 'ring-2 ring-orange-500' : ''
+            }`}
         >
           <div className="flex items-center justify-between">
             <div>
@@ -590,9 +590,9 @@ const Vehicles: React.FC = () => {
 
         <div
           onClick={() => setQuickFilter('inactive')}
-          className={`bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer ${
-            quickFilter === 'inactive'  'ring-2 ring-gray-500' : ''
-          }`}
+            className={`bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer ${
+              quickFilter === 'inactive' ? 'ring-2 ring-gray-500' : ''
+            }`}
         >
           <div className="flex items-center justify-between">
             <div>
@@ -610,7 +610,7 @@ const Vehicles: React.FC = () => {
         <div
           onClick={() => setQuickFilter('electric')}
           className={`bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer ${
-            quickFilter === 'electric'  'ring-2 ring-green-500' : ''
+            quickFilter === 'electric' ? 'ring-2 ring-green-500' : ''
           }`}
         >
           <div className="flex items-center justify-between">
@@ -672,13 +672,13 @@ const Vehicles: React.FC = () => {
             <div className="flex items-center bg-gray-100 rounded-lg p-1">
               <button
                 onClick={() => setViewMode('table')}
-                className={`p-2 rounded ${viewMode === 'table'  'bg-white shadow-sm' : 'text-gray-600'}`}
+                className={`p-2 rounded ${viewMode === 'table' ? 'bg-white shadow-sm' : 'text-gray-600'}`}
               >
                 <List className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded ${viewMode === 'grid'  'bg-white shadow-sm' : 'text-gray-600'}`}
+                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'text-gray-600'}`}
               >
                 <Grid className="w-4 h-4" />
               </button>
@@ -710,7 +710,7 @@ const Vehicles: React.FC = () => {
       </div>
 
       {/* Table View */}
-      {viewMode === 'table'  (
+      {viewMode === 'table' ? (
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -775,7 +775,7 @@ const Vehicles: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {sortedVehicles.length === 0  (
+                {sortedVehicles.length === 0 ? (
                   <tr>
                     <td colSpan={9} className="px-6 py-12 text-center text-gray-500">
                       <Car className="w-12 h-12 mx-auto text-gray-300 mb-3" />
@@ -824,7 +824,7 @@ const Vehicles: React.FC = () => {
                       <td className="px-6 py-4">
                         <div className="flex items-center text-sm text-gray-600">
                           <Gauge className="w-4 h-4 mr-1" />
-                          {vehicle.currentKm  vehicle.currentKm.toLocaleString('tr-TR') : '-'}
+                          {vehicle.currentKm ? vehicle.currentKm.toLocaleString('tr-TR') : '-'}
                         </div>
                       </td>
                       <td className="px-6 py-4">
@@ -847,7 +847,7 @@ const Vehicles: React.FC = () => {
                       <td className="px-6 py-4">
                         <div className="relative">
                           <button
-                            onClick={() => setDropdownOpen(dropdownOpen === vehicle.id.toString()  null : vehicle.id.toString())}
+                            onClick={() => setDropdownOpen(dropdownOpen === vehicle.id.toString() ? null : vehicle.id.toString())}
                             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                           >
                             <MoreVertical className="w-5 h-5 text-gray-600" />
@@ -893,15 +893,15 @@ const Vehicles: React.FC = () => {
                                     handleDelete(vehicle.id);
                                     setDropdownOpen(null);
                                   }}
-                                  disabled={isDeleting === vehicle.id}
-                                  className="flex items-center px-4 py-2 hover:bg-gray-50 text-red-600 w-full text-left disabled:opacity-50"
-                                >
-                                  {isDeleting === vehicle.id  (
+                                disabled={isDeleting === vehicle.id}
+                                className="flex items-center px-4 py-2 hover:bg-gray-50 text-red-600 w-full text-left disabled:opacity-50"
+                              >
+                                  {isDeleting === vehicle.id ? (
                                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                                   ) : (
                                     <Trash2 className="w-4 h-4 mr-2" />
                                   )}
-                                  {isDeleting === vehicle.id  'Siliniyor...' : 'Sil'}
+                                  {isDeleting === vehicle.id ? 'Siliniyor...' : 'Sil'}
                                 </button>
                               </div>
                             </>
@@ -918,7 +918,7 @@ const Vehicles: React.FC = () => {
       ) : (
         /* Grid View */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {sortedVehicles.length === 0  (
+          {sortedVehicles.length === 0 ? (
             <div className="col-span-full text-center py-12">
               <Car className="w-12 h-12 mx-auto text-gray-300 mb-3" />
               <p className="text-gray-500">Araç bulunamadı</p>
@@ -947,7 +947,7 @@ const Vehicles: React.FC = () => {
                   </div>
                   <div className="relative">
                     <button
-                      onClick={() => setDropdownOpen(dropdownOpen === vehicle.id.toString()  null : vehicle.id.toString())}
+                        onClick={() => setDropdownOpen(dropdownOpen === vehicle.id.toString() ? null : vehicle.id.toString())}
                       className="p-1 hover:bg-gray-100 rounded transition-colors"
                     >
                       <MoreVertical className="w-4 h-4 text-gray-600" />
@@ -996,12 +996,12 @@ const Vehicles: React.FC = () => {
                             disabled={isDeleting === vehicle.id}
                             className="flex items-center px-3 py-1.5 hover:bg-gray-50 text-red-600 w-full text-left text-sm disabled:opacity-50"
                           >
-                            {isDeleting === vehicle.id  (
+                              {isDeleting === vehicle.id ? (
                               <Loader2 className="w-3 h-3 mr-2 animate-spin" />
                             ) : (
                               <Trash2 className="w-3 h-3 mr-2" />
                             )}
-                            {isDeleting === vehicle.id  'Siliniyor...' : 'Sil'}
+                              {isDeleting === vehicle.id ? 'Siliniyor...' : 'Sil'}
                           </button>
                         </div>
                       </>
@@ -1027,7 +1027,7 @@ const Vehicles: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">Kilometre:</span>
                     <span className="font-medium text-gray-900">
-                      {vehicle.currentKm  vehicle.currentKm.toLocaleString('tr-TR') : '-'}
+                        {vehicle.currentKm ? vehicle.currentKm.toLocaleString('tr-TR') : '-'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">

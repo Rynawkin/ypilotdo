@@ -138,10 +138,10 @@ export const TemplateEditor: React.FC = () => {
       
       let value: any = data;
       for (const part of parts) {
-        value = value.[part];
+        value = value?.[part];
       }
       
-      return value !== undefined && value !== null  String(value) : match;
+      return value !== undefined && value !== null ? String(value) : match;
     });
     
     return result;
@@ -158,7 +158,7 @@ export const TemplateEditor: React.FC = () => {
     if (!editingTemplate || !showLivePreview) return null;
     
     return {
-      subject: editingTemplate.subject  processTemplate(editingTemplate.subject, sampleData) : undefined,
+      subject: editingTemplate.subject ? processTemplate(editingTemplate.subject, sampleData) : undefined,
       body: processTemplate(editingTemplate.body, sampleData)
     };
   }, [editingTemplate, sampleData, showLivePreview]);
@@ -361,7 +361,7 @@ export const TemplateEditor: React.FC = () => {
               key={type}
               onClick={() => setActiveTab(type)}
               className={`pb-3 px-1 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === type
+                activeTab === type ?
                    'border-blue-600 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
@@ -374,7 +374,7 @@ export const TemplateEditor: React.FC = () => {
 
       {/* Templates List */}
       <div className="space-y-4">
-        {getTemplatesByType(activeTab).length === 0  (
+        {getTemplatesByType(activeTab).length === 0 ? (
           <div className="text-center py-8 bg-gray-50 rounded-lg">
             <FileText className="w-12 h-12 text-gray-400 mx-auto mb-3" />
             <p className="text-gray-600">Bu tip için henüz şablon oluşturulmamış</p>
@@ -398,18 +398,18 @@ export const TemplateEditor: React.FC = () => {
                       </span>
                     )}
                     <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
-                      template.channel === TemplateChannel.Email
+                        template.channel === TemplateChannel.Email ?
                          'bg-purple-100 text-purple-700'
                         : 'bg-green-100 text-green-700'
                     }`}>
-                      {template.channel === TemplateChannel.Email  (
+                      {template.channel === TemplateChannel.Email ? (
                         <Mail className="w-3 h-3 inline mr-1" />
                       ) : (
                         <MessageSquare className="w-3 h-3 inline mr-1" />
                       )}
                       {TEMPLATE_CHANNEL_LABELS[template.channel]}
                     </span>
-                    {template.isActive  (
+                    {template.isActive ? (
                       <span className="px-2 py-0.5 text-xs font-medium bg-green-100 text-green-700 rounded-full">
                         Aktif
                       </span>
@@ -466,7 +466,7 @@ export const TemplateEditor: React.FC = () => {
           <div className="bg-white rounded-lg w-full max-w-7xl h-[90vh] overflow-hidden flex flex-col">
             <div className="px-6 py-4 border-b flex items-center justify-between">
               <h3 className="text-lg font-semibold text-gray-900">
-                {editingTemplate.id  'Şablonu Düzenle' : 'Yeni Şablon Oluştur'}
+                  {editingTemplate.id ? '?ablonu D?zenle' : 'Yeni ?ablon Olu?tur'}
               </h3>
               <div className="flex items-center gap-3">
                 {invalidVariables.length > 0 && (
@@ -479,7 +479,7 @@ export const TemplateEditor: React.FC = () => {
                   onClick={() => setShowLivePreview(!showLivePreview)}
                   className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm"
                 >
-                  {showLivePreview  'Önizlemeyi Gizle' : 'Önizlemeyi Göster'}
+                    {showLivePreview ? '?nizlemeyi Gizle' : '?nizlemeyi G?ster'}
                 </button>
                 <button
                   onClick={() => {
@@ -495,7 +495,7 @@ export const TemplateEditor: React.FC = () => {
             
             <div className="flex flex-1 overflow-hidden">
               {/* Left Side - Form */}
-              <div className={`${showLivePreview  'w-1/2' : 'flex-1'} p-6 overflow-y-auto`}>
+              <div className={`${showLivePreview ? 'w-1/2' : 'flex-1'} p-6 overflow-y-auto`}>
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -547,7 +547,7 @@ export const TemplateEditor: React.FC = () => {
                   <div>
                     <div className="flex items-center justify-between mb-1">
                       <label className="block text-sm font-medium text-gray-700">
-                        {editingTemplate.channel === TemplateChannel.Email  'E-posta İçeriği' : 'Mesaj İçeriği'}
+                        {editingTemplate.channel === TemplateChannel.Email ? 'E-posta İçeriği' : 'Mesaj İçeriği'}
                       </label>
                       <div className="flex items-center gap-2">
                         <button
@@ -556,7 +556,7 @@ export const TemplateEditor: React.FC = () => {
                           disabled={loadingDefaults}
                           className="px-3 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 flex items-center gap-1"
                         >
-                          {loadingDefaults  (
+                          {loadingDefaults ? (
                             <Loader2 className="w-3 h-3 animate-spin" />
                           ) : (
                             <Download className="w-3 h-3" />
@@ -577,7 +577,7 @@ export const TemplateEditor: React.FC = () => {
                       </div>
                     </div>
                     
-                    {editingTemplate.channel === TemplateChannel.Email  (
+                    {editingTemplate.channel === TemplateChannel.Email ? (
                       <div className="border rounded-lg">
                         <ReactQuill
                           ref={quillRef}
@@ -632,14 +632,14 @@ export const TemplateEditor: React.FC = () => {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => setPreviewMode('desktop')}
-                        className={`p-2 rounded ${previewMode === 'desktop'  'bg-white shadow' : 'hover:bg-gray-200'}`}
+                          className={`p-2 rounded ${previewMode === 'desktop' ? 'bg-white shadow' : 'hover:bg-gray-200'}`}
                         title="Masaüstü"
                       >
                         <Monitor className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setPreviewMode('mobile')}
-                        className={`p-2 rounded ${previewMode === 'mobile'  'bg-white shadow' : 'hover:bg-gray-200'}`}
+                          className={`p-2 rounded ${previewMode === 'mobile' ? 'bg-white shadow' : 'hover:bg-gray-200'}`}
                         title="Mobil"
                       >
                         <Smartphone className="w-4 h-4" />
@@ -647,7 +647,7 @@ export const TemplateEditor: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className={`${previewMode === 'mobile'  'max-w-sm mx-auto' : ''}`}>
+                    <div className={`${previewMode === 'mobile' ? 'max-w-sm mx-auto' : ''}`}>
                     <div className="bg-white rounded-lg shadow-sm border">
                       {livePreviewContent.subject && (
                         <div className="p-4 border-b">
@@ -656,7 +656,7 @@ export const TemplateEditor: React.FC = () => {
                         </div>
                       )}
                       <div className="p-4">
-                        {editingTemplate.channel === TemplateChannel.Email  (
+                        {editingTemplate.channel === TemplateChannel.Email ? (
                           <div dangerouslySetInnerHTML={{ __html: livePreviewContent.body || '' }} />
                         ) : (
                           <div className="whitespace-pre-wrap">{livePreviewContent.body}</div>
@@ -760,7 +760,7 @@ export const TemplateEditor: React.FC = () => {
                   disabled={saving || invalidVariables.length > 0}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 disabled:opacity-50"
                 >
-                  {saving  (
+                    {saving ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
                       Kaydediliyor...

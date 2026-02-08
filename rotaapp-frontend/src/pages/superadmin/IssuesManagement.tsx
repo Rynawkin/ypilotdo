@@ -22,7 +22,7 @@ const IssuesManagement: React.FC = () => {
   const loadIssues = async () => {
     setLoading(true);
     try {
-      const params = statusFilter !== 'all'  { status: statusFilter } : {};
+      const params = statusFilter !== 'all' ? { status: statusFilter } : {};
       const response = await adminService.getIssues(params);
       setIssues(response);
     } catch (error) {
@@ -130,11 +130,11 @@ const IssuesManagement: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {loading  (
+              {loading ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-4 text-center">Yükleniyor...</td>
                 </tr>
-              ) : issues.length === 0  (
+              ) : issues.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-4 text-center text-gray-500">Sorun bildirimi bulunamadı</td>
                 </tr>

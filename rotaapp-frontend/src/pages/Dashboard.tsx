@@ -138,10 +138,10 @@ const Dashboard: React.FC = () => {
         .filter(r => r.status === 'fulfilled')
         .map(r => (r as PromiseFulfilledResult<any>).value);
 
-      const customersData = canAccessDispatcherFeatures() && successfulResults[0]  successfulResults[0] : [];
-      const driversData = canAccessDispatcherFeatures() && successfulResults[1]  successfulResults[1] : [];
-      const journeysData = canAccessDispatcherFeatures()  successfulResults[2] || [] : successfulResults[0] || [];
-      const routesData = canAccessDispatcherFeatures()  successfulResults[3] || [] : successfulResults[1] || [];
+      const customersData = canAccessDispatcherFeatures() && successfulResults[0] ? successfulResults[0] : [];
+      const driversData = canAccessDispatcherFeatures() && successfulResults[1] ? successfulResults[1] : [];
+      const journeysData = canAccessDispatcherFeatures() ? successfulResults[2] || [] : successfulResults[0] || [];
+      const routesData = canAccessDispatcherFeatures() ? successfulResults[3] || [] : successfulResults[1] || [];
 
       calculateStats(customersData, driversData, journeysData, routesData);
       filterTodayRoutes(routesData, journeysData, driversData);
@@ -263,7 +263,7 @@ const Dashboard: React.FC = () => {
     // Gerçek değişim hesaplamaları
     const thisMonthDeliveries = thisMonthJourneys.reduce((total, j) => total + j.completedStops, 0);
     const previousMonthDeliveries = previousMonthJourneys.reduce((total, j) => total + j.completedStops, 0);
-    const deliveryChange = previousMonthDeliveries > 0
+    const deliveryChange = previousMonthDeliveries > 0 ?
        ((thisMonthDeliveries - previousMonthDeliveries) / previousMonthDeliveries * 100).toFixed(0)
       : '0';
 
@@ -278,13 +278,13 @@ const Dashboard: React.FC = () => {
     const previousMonthCompletedJourneys = previousMonthJourneys.filter(j => j.status === 'completed').length;
 
     const journeyChange = previousMonthCompletedJourneys > 0
-       ((thisMonthCompletedJourneys - previousMonthCompletedJourneys) / previousMonthCompletedJourneys * 100).toFixed(0)
-      : thisMonthCompletedJourneys > 0  '100' : '0';
+      ? ((thisMonthCompletedJourneys - previousMonthCompletedJourneys) / previousMonthCompletedJourneys * 100).toFixed(0)
+      : thisMonthCompletedJourneys > 0 ? '100' : '0';
 
     // Başarı oranı (completed / total journeys)
     const totalJourneysThisMonth = thisMonthJourneys.length;
     const successRate = totalJourneysThisMonth > 0
-       Math.round((thisMonthCompletedJourneys / totalJourneysThisMonth) * 100)
+      ? Math.round((thisMonthCompletedJourneys / totalJourneysThisMonth) * 100)
       : 0;
 
     const statsData = [];
@@ -293,8 +293,8 @@ const Dashboard: React.FC = () => {
     statsData.push({
       title: 'Toplam Teslimat',
       value: thisMonthDeliveries.toString(),
-      change: `${deliveryChange > '0'  '+' : ''}${deliveryChange}%`,
-      trend: Number(deliveryChange) > 0  'up' : Number(deliveryChange) < 0  'down' : 'neutral',
+      change: `${deliveryChange > '0' ? '+' : ''}${deliveryChange}%`,
+      trend: Number(deliveryChange) > 0 ? 'up' : Number(deliveryChange) < 0 ? 'down' : 'neutral',
       icon: Package,
       color: 'blue',
       subtitle: 'Bu ay (son 30 gün)'
@@ -331,8 +331,8 @@ const Dashboard: React.FC = () => {
       statsData.push({
         title: 'Tamamlanan Sefer',
         value: thisMonthCompletedJourneys.toString(),
-        change: `${Number(journeyChange) > 0  '+' : ''}${journeyChange}%`,
-        trend: Number(journeyChange) > 0  'up' : Number(journeyChange) < 0  'down' : 'neutral',
+        change: `${Number(journeyChange) > 0 ? '+' : ''}${journeyChange}%`,
+        trend: Number(journeyChange) > 0 ? 'up' : Number(journeyChange) < 0 ? 'down' : 'neutral',
         icon: CheckCircle,
         color: 'orange',
         subtitle: 'Bu ay'
@@ -345,7 +345,7 @@ const Dashboard: React.FC = () => {
         title: 'Müşteri Memnuniyeti',
         value: feedbackStats.averageRating.toFixed(1),
         change: `${feedbackStats.totalFeedbacks} değerlendirme`,
-        trend: feedbackStats.averageRating >= 4  'up' : feedbackStats.averageRating >= 3  'neutral' : 'down',
+        trend: feedbackStats.averageRating >= 4 ? 'up' : feedbackStats.averageRating >= 3 ? 'neutral' : 'down',
         icon: Star,
         color: 'yellow',
         subtitle: 'Ortalama puan'
@@ -398,23 +398,23 @@ const Dashboard: React.FC = () => {
         const driver = drivers.find(d => d.id === Number(route.driverId));
 
         const progress = journey
-           Math.round((journey.completedStops / journey.totalStops) * 100)
+          ? Math.round((journey.completedStops / journey.totalStops) * 100)
           : 0;
 
         let status = 'pending';
         if (journey) {
-          status = journey.status === 'completed'  'completed' :
-                  journey.status === 'in_progress'  'active' :
+          status = journey.status === 'completed' ? 'completed' :
+                  journey.status === 'in_progress' ? 'active' :
                   'pending';
         }
 
         return {
           id: route.id,
-          driver: driver.name || route.driver.name || (user.isDriver  user.fullName : 'Atanmadı'),
+          driver: driver.name || route.driver.name || (user.isDriver ? user.fullName : 'Atanmadı'),
           vehicle: journey.vehiclePlateNumber || route.vehicle.plateNumber || 'Atanmadı',
           status: status,
           progress: progress,
-          deliveries: journey  `${journey.completedStops}/${journey.totalStops}` : '0/0'
+          deliveries: journey ? `${journey.completedStops}/${journey.totalStops}` : '0/0'
         };
       })
       .slice(0, 5);
@@ -496,7 +496,7 @@ const Dashboard: React.FC = () => {
       }, 0);
 
       weekData.push({
-        day: daysOfWeek[date.getDay() === 0  6 : date.getDay() - 1],
+        day: daysOfWeek[date.getDay() === 0 ? 6 : date.getDay() - 1],
         deliveries: dayDeliveries
       });
     }
@@ -586,7 +586,7 @@ const Dashboard: React.FC = () => {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-gray-600 mt-1">
-            Hoş geldiniz {user.fullName}! İşte {user.isDriver && !canAccessDispatcherFeatures()  'size özel' : 'bugünkü'} özet bilgileriniz.
+            Hoş geldiniz {user.fullName}! İşte {user.isDriver && !canAccessDispatcherFeatures() ? 'size özel' : 'bugünkü'} özet bilgileriniz.
           </p>
         </div>
         <div className="mt-4 sm:mt-0 flex items-center gap-2">
@@ -656,7 +656,7 @@ const Dashboard: React.FC = () => {
               <p className="text-sm text-blue-100 mb-1">Bugünkü İlerleme</p>
               <p className="text-4xl font-bold">
                 {todayRoutes.length > 0
-                   Math.round(
+                  ? Math.round(
                       todayRoutes.reduce((sum, r) => sum + r.progress, 0) / todayRoutes.length
                     )
                   : 0}%
@@ -698,8 +698,8 @@ const Dashboard: React.FC = () => {
                 <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />
               </div>
               <div className={`flex items-center text-sm font-medium ${
-                stat.trend === 'up'  'text-green-600' :
-                stat.trend === 'down'  'text-red-600' :
+                stat.trend === 'up' ? 'text-green-600' :
+                stat.trend === 'down' ? 'text-red-600' :
                 'text-gray-600'
               }`}>
                 {stat.trend === 'up' && <ArrowUp className="w-4 h-4 mr-1" />}
@@ -725,7 +725,7 @@ const Dashboard: React.FC = () => {
         <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-semibold text-gray-900">
-              {user.isDriver && !canAccessDispatcherFeatures()  'Benim Haftalık Performansım' : 'Haftalık Teslimat Performansı'}
+              {user.isDriver && !canAccessDispatcherFeatures() ? 'Benim Haftalık Performansım' : 'Haftalık Teslimat Performansı'}
             </h2>
             <BarChart3 className="w-5 h-5 text-gray-400" />
           </div>
@@ -759,7 +759,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Top Drivers - Dispatcher only */}
-        {canAccessDispatcherFeatures() && topDrivers.length > 0  (
+        {canAccessDispatcherFeatures() && topDrivers.length > 0 ? (
           <div className="bg-white rounded-xl shadow-sm p-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-lg font-semibold text-gray-900">🏆 En İyi Sürücüler</h2>
@@ -770,9 +770,9 @@ const Dashboard: React.FC = () => {
                 <div key={item.driver.id} className="flex items-center justify-between py-2 border-b last:border-0">
                   <div className="flex items-center">
                     <span className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold mr-3 ${
-                      index === 0  'bg-yellow-100 text-yellow-700' :
-                      index === 1  'bg-gray-100 text-gray-700' :
-                      index === 2  'bg-orange-100 text-orange-700' :
+                      index === 0 ? 'bg-yellow-100 text-yellow-700' :
+                      index === 1 ? 'bg-gray-100 text-gray-700' :
+                      index === 2 ? 'bg-orange-100 text-orange-700' :
                       'bg-blue-50 text-blue-600'
                     }`}>
                       {index + 1}
@@ -795,7 +795,7 @@ const Dashboard: React.FC = () => {
               <Activity className="w-5 h-5 text-gray-400" />
             </div>
             <div className="space-y-4">
-              {recentActivities.length > 0  (
+              {recentActivities.length > 0 ? (
                 recentActivities.map((activity) => (
                   <div key={activity.id} className="flex items-start space-x-3">
                     <activity.icon className={`w-5 h-5 mt-0.5 ${activity.color}`} />
@@ -824,7 +824,7 @@ const Dashboard: React.FC = () => {
         <div className="p-6 border-b">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900">
-              {user.isDriver && !canAccessDispatcherFeatures()  'Benim Bugünkü Rotalarım' : 'Bugünkü Rotalar'}
+              {user.isDriver && !canAccessDispatcherFeatures() ? 'Benim Bugünkü Rotalarım' : 'Bugünkü Rotalar'}
             </h2>
             <Link
               to="/routes"
@@ -835,7 +835,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
         <div className="overflow-x-auto">
-          {todayRoutes.length > 0  (
+          {todayRoutes.length > 0 ? (
             <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
@@ -886,7 +886,7 @@ const Dashboard: React.FC = () => {
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
                               className={`h-2 rounded-full ${
-                                route.progress === 100  'bg-green-500' : 'bg-blue-500'
+                                route.progress === 100 ? 'bg-green-500' : 'bg-blue-500'
                               }`}
                               style={{ width: `${route.progress}%` }}
                             />
@@ -915,7 +915,7 @@ const Dashboard: React.FC = () => {
               <MapPin className="w-12 h-12 mx-auto text-gray-300 mb-3" />
               <p>
                 {user.isDriver && !canAccessDispatcherFeatures()
-                   'Size atanmış rota bulunmuyor'
+                  ? 'Size atanmış rota bulunmuyor'
                   : 'Bugün için planlanmış rota bulunmuyor'}
               </p>
             </div>

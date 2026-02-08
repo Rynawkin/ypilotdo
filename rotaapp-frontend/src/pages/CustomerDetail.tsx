@@ -572,7 +572,7 @@ const CustomerDetail: React.FC = () => {
               disabled={deleting}
               className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:bg-gray-300 transition-colors flex items-center"
             >
-              {deleting  (
+              {deleting ? (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
               ) : (
                 <Trash2 className="w-4 h-4 mr-2" />
@@ -591,7 +591,7 @@ const CustomerDetail: React.FC = () => {
               onClick={() => setActiveTab('overview')}
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'overview'
-                   'border-blue-500 text-blue-600'
+                  ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -602,7 +602,7 @@ const CustomerDetail: React.FC = () => {
               onClick={() => setActiveTab('contacts')}
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'contacts'
-                   'border-blue-500 text-blue-600'
+                  ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -613,7 +613,7 @@ const CustomerDetail: React.FC = () => {
               onClick={() => setActiveTab('routes')}
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'routes'
-                   'border-blue-500 text-blue-600'
+                  ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -624,7 +624,7 @@ const CustomerDetail: React.FC = () => {
               onClick={() => setActiveTab('proofs')}
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'proofs'
-                   'border-blue-500 text-blue-600'
+                  ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -825,7 +825,7 @@ const CustomerDetail: React.FC = () => {
               </h2>
             </div>
             <div className="divide-y divide-gray-200">
-              {allRouteData.length === 0  (
+              {allRouteData.length === 0 ? (
                 <div className="p-6 text-center text-gray-500">
                   <Navigation className="w-12 h-12 mx-auto text-gray-300 mb-3" />
                   <p>Henüz rota veya sefer bulunmuyor</p>
@@ -834,7 +834,7 @@ const CustomerDetail: React.FC = () => {
                 allRouteData.slice(0, 5).map((route, index) => (
                   <Link
                     key={`route-${route.id}-${index}`}
-                    to={customerJourneys.includes(route)  `/journeys/${route.id}` : `/routes/${route.id}`}
+                    to={customerJourneys.includes(route) ? `/journeys/${route.id}` : `/routes/${route.id}`}
                     state={{ from: `/customers/${id}tab=overview` }}
                     className="block p-4 hover:bg-gray-50 transition-colors"
                   >
@@ -844,7 +844,7 @@ const CustomerDetail: React.FC = () => {
                           {route.name || route.routeName || `Rota #${route.id}`}
                         </p>
                         <p className="text-sm text-gray-600 mt-1">
-                          {route.date  formatDate(route.date) : 'Tarih belirtilmemiş'} • {route.stops.length || 0} durak
+                          {route.date ? formatDate(route.date) : 'Tarih belirtilmemiş'} • {route.stops.length || 0} durak
                         </p>
                         <span className="text-xs text-purple-600 mt-1">Sefer</span>
                       </div>
@@ -986,7 +986,7 @@ const CustomerDetail: React.FC = () => {
               </div>
             </div>
 
-            {contactsLoading  (
+            {contactsLoading ? (
               <div className="flex items-center justify-center h-32">
                 <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
                 <span className="ml-2 text-gray-600">İletişim kişileri yükleniyor...</span>
@@ -1015,7 +1015,7 @@ const CustomerDetail: React.FC = () => {
               </h2>
             </div>
             <div className="divide-y divide-gray-200">
-              {customerJourneys.length === 0  (
+              {customerJourneys.length === 0 ? (
                 <div className="p-6 text-center text-gray-500">
                   <Navigation className="w-12 h-12 mx-auto text-gray-300 mb-3" />
                   <p>Henüz sefer bulunmuyor</p>
@@ -1034,7 +1034,7 @@ const CustomerDetail: React.FC = () => {
                           {route.name || route.routeName || `Rota #${route.id}`}
                         </p>
                         <p className="text-sm text-gray-600 mt-1">
-                          {route.date  formatDate(route.date) : 'Tarih belirtilmemiş'} • {route.stops.length || 0} durak
+                          {route.date ? formatDate(route.date) : 'Tarih belirtilmemiş'} • {route.stops.length || 0} durak
                         </p>
                         <span className="text-xs text-purple-600 mt-1">Sefer</span>
                       </div>
@@ -1073,7 +1073,7 @@ const CustomerDetail: React.FC = () => {
               </p>
             </div>
 
-            {proofsLoading  (
+            {proofsLoading ? (
               <div className="flex items-center justify-center h-32">
                 <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
                 <span className="ml-2 text-gray-600">Teslimat kanıtları yükleniyor...</span>
@@ -1142,18 +1142,18 @@ const CustomerDetail: React.FC = () => {
                 </div>
 
                 {/* Delivery Proofs Grid or Empty State */}
-                {filteredProofs.length === 0  (
+                {filteredProofs.length === 0 ? (
                   <div className="text-center py-12">
                     <Camera className="w-12 h-12 mx-auto text-gray-400 mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">
-                      {deliveryProofs.length === 0 
-                         "Henüz teslimat kanıtı yok" 
+                        {deliveryProofs.length === 0 ? 
+                           "Henüz teslimat kanıtı yok" 
                         : "Aradığınız kriterlere uygun teslimat kanıtı bulunamadı"
                       }
                     </h3>
                     <p className="text-gray-600 mb-6">
-                      {deliveryProofs.length === 0
-                         "Bu müşteri için henüz hiç teslimat fotoğrafı veya imzası çekilmemiş."
+                        {deliveryProofs.length === 0 ?
+                           "Bu müşteri için henüz hiç teslimat fotoğrafı veya imzası çekilmemiş."
                         : "Filtreleri değiştirerek tekrar deneyebilirsiniz."
                       }
                     </p>
@@ -1180,7 +1180,7 @@ const CustomerDetail: React.FC = () => {
                       <div key={index} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                         {/* Photo/Signature Display */}
                         <div className="aspect-square bg-gray-200 rounded-lg mb-3 flex items-center justify-center overflow-hidden">
-                          {proof.type === 'photo'  (
+                          {proof.type === 'photo' ? (
                             <img
                               src={proof.url}
                               alt="Teslimat Fotoğrafı"
@@ -1206,7 +1206,7 @@ const CustomerDetail: React.FC = () => {
                           <div className="text-center hidden flex-col">
                             <FileText className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                             <p className="text-xs text-gray-500">
-                              {proof.type === 'photo'  'Fotoğraf Yüklenemedi' : 'İmza Yüklenemedi'}
+                                {proof.type === 'photo' ? 'Fotoğraf Yüklenemedi' : 'İmza Yüklenemedi'}
                             </p>
                           </div>
                         </div>

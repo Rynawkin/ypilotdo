@@ -104,11 +104,11 @@ export default function PublicFeedback() {
                         type="button"
                         disabled={disabled}
                         onClick={() => !disabled && setRating(value)}
-                        className={`transition-all ${disabled  'cursor-default' : 'cursor-pointer hover:scale-110'}`}
+                        className={`transition-all ${disabled ? 'cursor-default' : 'cursor-pointer hover:scale-110'}`}
                     >
                         <Star
                             className={`w-8 h-8 ${value <= rating
-                                     'text-yellow-400 fill-current'
+                                    ? 'text-yellow-400 fill-current'
                                     : 'text-gray-300'
                                 }`}
                         />
@@ -345,7 +345,7 @@ export default function PublicFeedback() {
                             disabled={submitting}
                             className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-700 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {submitting  (
+                            {submitting ? (
                                 <span className="flex items-center justify-center gap-2">
                                     <Loader className="w-5 h-5 animate-spin" />
                                     Gönderiliyor...

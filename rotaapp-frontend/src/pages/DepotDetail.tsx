@@ -120,21 +120,21 @@ const DepotDetail: React.FC = () => {
       
       // Ortalama rota süresi (saat cinsinden)
       const avgRouteTime = completedRoutes.length > 0
-         completedRoutes.reduce((sum, r) => sum + (r.totalDuration || 0), 0) / completedRoutes.length / 60
+        ? completedRoutes.reduce((sum, r) => sum + (r.totalDuration || 0), 0) / completedRoutes.length / 60
         : 0;
       
       // Verimlilik (tamamlanan/toplam)
       const totalDeliveries = filtered.reduce((sum, r) => sum + (r.totalDeliveries || 0), 0);
       const completedDeliveries = filtered.reduce((sum, r) => sum + (r.completedDeliveries || 0), 0);
-      const efficiency = totalDeliveries > 0  (completedDeliveries / totalDeliveries) * 100 : 0;
+      const efficiency = totalDeliveries > 0 ? (completedDeliveries / totalDeliveries) * 100 : 0;
       
       // Zamanında teslimat oranı (tamamlanan rotalar için %92 simüle)
-      const onTimeDelivery = completedRoutes.length > 0  92 : 0;
+      const onTimeDelivery = completedRoutes.length > 0 ? 92 : 0;
       
       // Aylık toplam mesafe
       const monthlyDistance = monthlyRoutes.reduce((sum, r) => {
-        const distance = typeof r.totalDistance === 'string' 
-           parseFloat(r.totalDistance) 
+        const distance = typeof r.totalDistance === 'string'
+          ? parseFloat(r.totalDistance)
           : (r.totalDistance || 0);
         return sum + distance;
       }, 0);
@@ -234,7 +234,7 @@ const DepotDetail: React.FC = () => {
                     Ana Depo
                   </span>
                 )}
-                {isOpenNow()  (
+                {isOpenNow() ? (
                   <span className="px-3 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-full">
                     Açık
                   </span>
@@ -296,7 +296,7 @@ const DepotDetail: React.FC = () => {
               onClick={() => setActiveTab('overview')}
               className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                 activeTab === 'overview'
-                   'border-blue-600 text-blue-600'
+                  ? 'border-blue-600 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -306,7 +306,7 @@ const DepotDetail: React.FC = () => {
               onClick={() => setActiveTab('routes')}
               className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                 activeTab === 'routes'
-                   'border-blue-600 text-blue-600'
+                  ? 'border-blue-600 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -316,7 +316,7 @@ const DepotDetail: React.FC = () => {
               onClick={() => setActiveTab('stats')}
               className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                 activeTab === 'stats'
-                   'border-blue-600 text-blue-600'
+                  ? 'border-blue-600 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
@@ -352,7 +352,7 @@ const DepotDetail: React.FC = () => {
                     <Clock className="w-5 h-5 mr-2 text-blue-600" />
                     Çalışma Saatleri
                   </h3>
-                  {depot.workingHours  (
+                  {depot.workingHours ? (
                     <div className="space-y-2">
                       {Object.entries(depot.workingHours).map(([day, hours]) => {
                         const dayIndex = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'].indexOf(day);
@@ -361,18 +361,18 @@ const DepotDetail: React.FC = () => {
                           <div 
                             key={day} 
                             className={`flex justify-between py-1 px-2 rounded ${
-                              isToday  'bg-blue-50' : ''
+                              isToday ? 'bg-blue-50' : ''
                             }`}
                           >
-                            <span className={`text-sm ${isToday  'font-semibold' : ''}`}>
+                            <span className={`text-sm ${isToday ? 'font-semibold' : ''}`}>
                               {DAYS_TR[day as keyof typeof DAYS_TR]}
                             </span>
                             <span className={`text-sm ${
                               hours.open === 'closed' 
-                                 'text-red-600' 
-                                : isToday  'font-semibold text-blue-600' : 'text-gray-700'
+                                ? 'text-red-600' 
+                                : isToday ? 'font-semibold text-blue-600' : 'text-gray-700'
                             }`}>
-                              {hours.open === 'closed'  'Kapalı' : `${hours.open} - ${hours.close}`}
+                              {hours.open === 'closed' ? 'Kapalı' : `${hours.open} - ${hours.close}`}
                             </span>
                           </div>
                         );
@@ -388,7 +388,7 @@ const DepotDetail: React.FC = () => {
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Harita Konumu</h3>
                 <div className="h-96 rounded-lg overflow-hidden border border-gray-200 bg-gray-100">
-                  {isLoaded && depot  (
+                  {isLoaded && depot ? (
                     <MapComponent
                       center={{ lat: depot.latitude, lng: depot.longitude }}
                       markers={[
@@ -416,7 +416,7 @@ const DepotDetail: React.FC = () => {
 
           {activeTab === 'routes' && (
             <div>
-              {relatedRoutes.length === 0  (
+              {relatedRoutes.length === 0 ? (
                 <div className="text-center py-8">
                   <Route className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                   <p className="text-gray-600">Bu depoya bağlı rota bulunmuyor</p>
@@ -441,18 +441,18 @@ const DepotDetail: React.FC = () => {
                           <p className="text-sm text-gray-600 mt-1">
                             {route.totalDeliveries} teslimat • {
                               typeof route.totalDistance === 'string' 
-                                 route.totalDistance 
+                                ? route.totalDistance 
                                 : `${route.totalDistance} km`
                             }
                           </p>
                         </div>
                         <span className={`px-3 py-1 text-xs font-medium rounded-full ${
-                          route.status === 'completed'  'bg-green-100 text-green-700' :
-                          route.status === 'in_progress'  'bg-blue-100 text-blue-700' :
+                          route.status === 'completed' ? 'bg-green-100 text-green-700' :
+                          route.status === 'in_progress' ? 'bg-blue-100 text-blue-700' :
                           'bg-gray-100 text-gray-700'
                         }`}>
-                          {route.status === 'completed'  'Tamamlandı' :
-                           route.status === 'in_progress'  'Devam Ediyor' :
+                          {route.status === 'completed' ? 'Tamamlandı' :
+                           route.status === 'in_progress' ? 'Devam Ediyor' :
                            'Planlandı'}
                         </span>
                       </div>

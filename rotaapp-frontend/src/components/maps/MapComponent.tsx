@@ -438,13 +438,13 @@ const MapComponent: React.FC<MapComponentProps> = ({
         <Marker
           key="depot-marker"
           position={depot}
-          icon={markerStyle === 'emoji'  undefined : createMarkerIcon('#2563EB', markerStyle)}
+            icon={markerStyle === 'emoji' ? undefined : createMarkerIcon('#2563EB', markerStyle)}
           title="Ana Depo"
           zIndex={1000}
           label={{
-            text: markerStyle === 'emoji'  '🏢' : '🏢',
+            text: markerStyle === 'emoji' ? '🏢' : '🏢',
             color: 'white',
-            fontSize: markerStyle === 'emoji'  '32px' : '16px',
+            fontSize: markerStyle === 'emoji' ? '32px' : '16px',
             fontWeight: 'bold'
           }}
         />
@@ -466,20 +466,20 @@ const MapComponent: React.FC<MapComponentProps> = ({
         const isSingleMarker = markers.length === 1 && !depot;
 
         // Marker rengi - gradient renkler (sosyal medya için daha çekici)
-        const markerColor = isSelected  '#EF4444' : isSingleMarker  '#2563EB' : '#10B981';
+        const markerColor = isSelected ? '#EF4444' : isSingleMarker ? '#2563EB' : '#10B981';
 
         markerElements.push(
           <Marker
             key={`marker-${marker.customerId || index}`}
             position={marker.position}
-            icon={markerStyle === 'emoji'  undefined : createMarkerIcon(markerColor, markerStyle)}
+            icon={markerStyle === 'emoji' ? undefined : createMarkerIcon(markerColor, markerStyle)}
             title={marker.title || `Müşteri ${index + 1}`}
-            zIndex={isSelected  2000 : 500 + index}
-            label={markerStyle === 'emoji'  {
+            zIndex={isSelected ? 2000 : 500 + index}
+            label={markerStyle === 'emoji' ? {
               text: '📍',
               fontSize: '32px',
               fontWeight: 'bold'
-            } : (marker.label  {
+            } : (marker.label ? {
               text: orderNumber,
               color: 'white',
               fontSize: '14px',

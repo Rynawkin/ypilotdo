@@ -1,20 +1,20 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-const runtimeOrigin = typeof window !== 'undefined'  window.location.origin : '';
+const runtimeOrigin = typeof window !== 'undefined' ? window.location.origin : '';
 const envBaseUrl =
   import.meta.env.VITE_API_BASE_URL ||
   import.meta.env.VITE_SIGNALR_URL ||
-  (import.meta.env.VITE_API_URL  import.meta.env.VITE_API_URL.replace('/api', '') : '');
+  (import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : '');
 
 // Production'da relative path (/api), development'ta absolute URL
 export const API_URL = import.meta.env.MODE === 'production'
-   '/api'  // Vercel rewrite kullan
+  ? '/api'  // Vercel rewrite kullan
   : (import.meta.env.VITE_API_URL || 'http://localhost:5055/api');
 
 // Base URL (uploads, SignalR vb.)
 export const API_BASE_URL =
   envBaseUrl ||
-  (import.meta.env.MODE === 'development'  'http://localhost:5055' : runtimeOrigin);
+  (import.meta.env.MODE === 'development' ? 'http://localhost:5055' : runtimeOrigin);
 
 console.log('API URL:', API_URL);
 
@@ -233,7 +233,7 @@ if (initialToken) {
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
-    console.log('Token from localStorage:', token  'exists' : 'missing');
+    console.log('Token from localStorage:', token ? 'exists' : 'missing');
     
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;

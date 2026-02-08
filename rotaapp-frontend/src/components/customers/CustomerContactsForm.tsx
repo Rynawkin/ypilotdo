@@ -305,10 +305,10 @@ const CustomerContactsForm: React.FC<CustomerContactsFormProps> = ({
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => setExpandedContact(expandedContact === index  null : index)}
+                    onClick={() => setExpandedContact(expandedContact === index ? null : index)}
                   className="text-sm text-blue-600 hover:text-blue-700"
                 >
-                  {expandedContact === index  'Kapat' : 'Detay'}
+                    {expandedContact === index ? 'Kapat' : 'Detay'}
                 </button>
                 <button
                   type="button"
@@ -317,7 +317,7 @@ const CustomerContactsForm: React.FC<CustomerContactsFormProps> = ({
                   className="p-1 text-green-600 hover:text-green-700 mr-2"
                   title="Kaydet"
                 >
-                  {saving === index  (
+                    {saving === index ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <Save className="w-4 h-4" />
@@ -330,7 +330,7 @@ const CustomerContactsForm: React.FC<CustomerContactsFormProps> = ({
                   className="p-1 text-red-600 hover:text-red-700"
                   title="Sil"
                 >
-                  {deleting === index  (
+                    {deleting === index ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <Trash2 className="w-4 h-4" />
@@ -350,7 +350,7 @@ const CustomerContactsForm: React.FC<CustomerContactsFormProps> = ({
                   value={contact.firstName}
                   onChange={(e) => updateContact(index, 'firstName', e.target.value)}
                   className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors[`contacts[${index}].firstName`]  'border-red-500' : 'border-gray-300'
+                    errors[`contacts[${index}].firstName`] ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Adı"
                 />
@@ -365,7 +365,7 @@ const CustomerContactsForm: React.FC<CustomerContactsFormProps> = ({
                   value={contact.lastName}
                   onChange={(e) => updateContact(index, 'lastName', e.target.value)}
                   className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors[`contacts[${index}].lastName`]  'border-red-500' : 'border-gray-300'
+                    errors[`contacts[${index}].lastName`] ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Soyadı"
                 />
@@ -382,7 +382,7 @@ const CustomerContactsForm: React.FC<CustomerContactsFormProps> = ({
                     value={contact.email}
                     onChange={(e) => updateContact(index, 'email', e.target.value)}
                     className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors[`contacts[${index}].email`]  'border-red-500' : 'border-gray-300'
+                      errors[`contacts[${index}].email`] ? 'border-red-500' : 'border-gray-300'
                     }`}
                     placeholder="ornek@email.com"
                   />

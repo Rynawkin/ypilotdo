@@ -199,15 +199,15 @@ const Depots: React.FC = () => {
       </div>
 
       {/* Depots List */}
-      {filteredDepots.length === 0  (
+      {filteredDepots.length === 0 ? (
         <div className="bg-white rounded-lg shadow-sm border p-12 text-center">
           <Building2 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 mb-2">
-            {searchTerm  'Depo Bulunamadı' : 'Henüz Depo Eklenmemiş'}
+            {searchTerm ? 'Depo Bulunamadı' : 'Henüz Depo Eklenmemiş'}
           </h3>
           <p className="text-gray-600 mb-4">
-            {searchTerm 
-               'Arama kriterlerinize uygun depo bulunamadı.' 
+            {searchTerm
+              ? 'Arama kriterlerinize uygun depo bulunamadı.'
               : 'İlk deponuzu ekleyerek başlayın.'}
           </p>
           {!searchTerm && (
@@ -305,7 +305,7 @@ const Depots: React.FC = () => {
                       title="Sil"
                       disabled={depot.isDefault}
                     >
-                      <Trash2 className={`w-4 h-4 ${depot.isDefault  'opacity-50' : ''}`} />
+                      <Trash2 className={`w-4 h-4 ${depot.isDefault ? 'opacity-50' : ''}`} />
                     </button>
                   </div>
                 </div>

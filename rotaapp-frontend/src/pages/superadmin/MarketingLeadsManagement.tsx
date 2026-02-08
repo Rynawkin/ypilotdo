@@ -225,7 +225,7 @@ const MarketingLeadsManagement: React.FC = () => {
           <div className="flex gap-2">
             <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value === 'all'  'all' : parseInt(e.target.value))}
+              onChange={(e) => setStatusFilter(e.target.value === 'all' ? 'all' : parseInt(e.target.value))}
               className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">Tüm Durumlar</option>
@@ -267,11 +267,11 @@ const MarketingLeadsManagement: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {loading  (
+              {loading ? (
                 <tr>
                   <td colSpan={7} className="px-6 py-4 text-center">Yükleniyor...</td>
                 </tr>
-              ) : leads.length === 0  (
+              ) : leads.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-6 py-4 text-center text-gray-500">Marketing lead bulunamadı</td>
                 </tr>
@@ -302,7 +302,7 @@ const MarketingLeadsManagement: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {lead.selectedPlan  (
+                      {lead.selectedPlan ? (
                         <span className="px-2 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs font-medium">
                           {planNames[lead.selectedPlan as keyof typeof planNames] || lead.selectedPlan}
                         </span>
@@ -391,7 +391,7 @@ const MarketingLeadsManagement: React.FC = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Seçilen Plan:</label>
                     <p className="mt-1 text-sm text-gray-900">
-                      {selectedLead.selectedPlan  planNames[selectedLead.selectedPlan as keyof typeof planNames] || selectedLead.selectedPlan : '-'}
+                        {selectedLead.selectedPlan ? planNames[selectedLead.selectedPlan as keyof typeof planNames] || selectedLead.selectedPlan : '-'}
                     </p>
                   </div>
                   <div>
@@ -430,8 +430,8 @@ const MarketingLeadsManagement: React.FC = () => {
                         key={value}
                         onClick={() => handleStatusChange(selectedLead.id, parseInt(value))}
                         className={`p-2 rounded-lg text-xs font-medium transition-colors ${
-                          selectedLead.status === parseInt(value)
-                             status.color
+                            selectedLead.status === parseInt(value) ?
+                               status.color
                             : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         }`}
                       >

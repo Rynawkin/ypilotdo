@@ -156,12 +156,12 @@ const Customers: React.FC = () => {
         comparison = 0;
     }
 
-    return sortDirection === 'asc'  comparison : -comparison;
+    return sortDirection === 'asc' ? comparison : -comparison;
   });
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
-      setSortDirection(sortDirection === 'asc'  'desc' : 'asc');
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
       setSortField(field);
       setSortDirection('desc');
@@ -216,7 +216,7 @@ const Customers: React.FC = () => {
   // Export customers to CSV
   const handleExport = () => {
     const dataToExport = selectedCustomers.size > 0
-       sortedCustomers.filter(c => selectedCustomers.has(c.id))
+      ? sortedCustomers.filter(c => selectedCustomers.has(c.id))
       : sortedCustomers;
 
     const csvHeaders = ['Kod', 'İsim', 'Adres', 'Telefon', 'Email', 'Zaman Penceresi', 'Etiketler', 'Notlar'];
@@ -227,7 +227,7 @@ const Customers: React.FC = () => {
       customer.address,
       customer.phone,
       customer.email || '',
-      customer.timeWindow  `${customer.timeWindow.start}-${customer.timeWindow.end}` : '',
+      customer.timeWindow ? `${customer.timeWindow.start}-${customer.timeWindow.end}` : '',
       customer.tags.join(', ') || '',
       customer.notes || ''
     ]);
@@ -242,7 +242,7 @@ const Customers: React.FC = () => {
     const link = document.createElement('a');
     link.href = url;
     const fileName = selectedCustomers.size > 0
-       `secili_musteriler_${new Date().toISOString().split('T')[0]}.csv`
+      ? `secili_musteriler_${new Date().toISOString().split('T')[0]}.csv`
       : `tum_musteriler_${new Date().toISOString().split('T')[0]}.csv`;
     link.download = fileName;
     link.click();
@@ -251,7 +251,7 @@ const Customers: React.FC = () => {
 
   // Import customers from CSV
   const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files.[0];
+    const file = event.target.files?.[0];
     if (!file) return;
 
     // BUGFIX S5.4: File validation
@@ -317,8 +317,8 @@ const Customers: React.FC = () => {
           const values = line.match(/(".*"|[^,]+)/g).map(v => v.replace(/"/g, '').trim()) || [];
 
           if (values.length >= 4) { // En az kod, isim, adres, telefon olmalı
-            const [timeStart, timeEnd] = values[5]  values[5].split('-') : ['', ''];
-            const tags = values[6]  values[6].split(',').map(t => t.trim()) : [];
+            const [timeStart, timeEnd] = values[5] ? values[5].split('-') : ['', ''];
+            const tags = values[6] ? values[6].split(',').map(t => t.trim()) : [];
 
             newCustomers.push({
               code: values[0],
@@ -326,8 +326,8 @@ const Customers: React.FC = () => {
               address: values[2],
               phone: values[3],
               email: values[4] || undefined,
-              timeWindow: timeStart && timeEnd  { start: timeStart.trim(), end: timeEnd.trim() } : undefined,
-              tags: tags.length > 0  tags : undefined,
+              timeWindow: timeStart && timeEnd ? { start: timeStart.trim(), end: timeEnd.trim() } : undefined,
+              tags: tags.length > 0 ? tags : undefined,
               notes: values[7] || undefined,
               // ⚠️ UYARI: Koordinat bilgisi yok - manuel girilmeli
               latitude: undefined,
@@ -399,16 +399,16 @@ const Customers: React.FC = () => {
   const getDropdownPosition = (index: number, totalItems: number) => {
     // Son 2 satırda veya tek kayıt varsa yukarı aç
     const shouldOpenUpward = totalItems <= 2 || index >= totalItems - 2;
-    return shouldOpenUpward  'bottom-full mb-2' : 'top-full mt-2';
+    return shouldOpenUpward ? 'bottom-full mb-2' : 'top-full mt-2';
   };
 
   const SortIcon = ({ field }: { field: SortField }) => {
     if (sortField !== field) {
       return <ChevronUp className="w-4 h-4 text-gray-300" />;
     }
-    return sortDirection === 'asc' 
-      <ChevronUp className="w-4 h-4 text-blue-600" /> :
-      <ChevronDown className="w-4 h-4 text-blue-600" />;
+    return sortDirection === 'asc'
+      ? <ChevronUp className="w-4 h-4 text-blue-600" />
+      : <ChevronDown className="w-4 h-4 text-blue-600" />;
   };
 
   if (loading) {
@@ -530,7 +530,7 @@ const Customers: React.FC = () => {
             className="px-4 py-2 bg-green-600 border border-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center"
           >
             <FileDown className="w-4 h-4 mr-2" />
-            {selectedCustomers.size > 0  `Seçilenleri Dışa Aktar (${selectedCustomers.size})` : 'Dışa Aktar'}
+            {selectedCustomers.size > 0 ? `Seçilenleri Dışa Aktar (${selectedCustomers.size})` : 'Dışa Aktar'}
           </button>
 
           <Link
@@ -592,7 +592,7 @@ const Customers: React.FC = () => {
             onClick={() => applyQuickFilter('all')}
             className={`px-4 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors ${
               quickFilter === 'all'
-                 'bg-blue-600 text-white'
+                ? 'bg-blue-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -602,7 +602,7 @@ const Customers: React.FC = () => {
             onClick={() => applyQuickFilter('vip')}
             className={`px-4 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors ${
               quickFilter === 'vip'
-                 'bg-yellow-600 text-white'
+                ? 'bg-yellow-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -612,7 +612,7 @@ const Customers: React.FC = () => {
             onClick={() => applyQuickFilter('time_window')}
             className={`px-4 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors ${
               quickFilter === 'time_window'
-                 'bg-green-600 text-white'
+                ? 'bg-green-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -622,7 +622,7 @@ const Customers: React.FC = () => {
             onClick={() => applyQuickFilter('recent')}
             className={`px-4 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors ${
               quickFilter === 'recent'
-                 'bg-purple-600 text-white'
+                ? 'bg-purple-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -632,7 +632,7 @@ const Customers: React.FC = () => {
             onClick={() => applyQuickFilter('last_1_month')}
             className={`px-4 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors ${
               quickFilter === 'last_1_month'
-                 'bg-orange-600 text-white'
+                ? 'bg-orange-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -647,7 +647,7 @@ const Customers: React.FC = () => {
             onClick={() => applyQuickFilter('last_3_months')}
             className={`px-4 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors ${
               quickFilter === 'last_3_months'
-                 'bg-teal-600 text-white'
+                ? 'bg-teal-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -683,7 +683,7 @@ const Customers: React.FC = () => {
                 onClick={() => setViewMode('table')}
                 className={`px-3 py-2 rounded-md transition-all ${
                   viewMode === 'table'
-                     'bg-white shadow-md text-blue-600'
+                    ? 'bg-white shadow-md text-blue-600'
                     : 'text-gray-600 hover:bg-gray-200'
                 }`}
                 title="Tablo Görünümü"
@@ -697,7 +697,7 @@ const Customers: React.FC = () => {
                 onClick={() => setViewMode('grid')}
                 className={`px-3 py-2 rounded-md transition-all ${
                   viewMode === 'grid'
-                     'bg-white shadow-md text-blue-600'
+                    ? 'bg-white shadow-md text-blue-600'
                     : 'text-gray-600 hover:bg-gray-200'
                 }`}
                 title="Kart Görünümü"
@@ -711,7 +711,7 @@ const Customers: React.FC = () => {
                 onClick={() => setViewMode('map')}
                 className={`px-3 py-2 rounded-md transition-all ${
                   viewMode === 'map'
-                     'bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg text-white'
+                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 shadow-lg text-white'
                     : 'text-gray-600 hover:bg-gray-200'
                 }`}
                 title="Harita Görünümü"
@@ -749,13 +749,13 @@ const Customers: React.FC = () => {
                   key={tag}
                   onClick={() => {
                     const newTags = selectedTags.includes(tag)
-                       selectedTags.filter(t => t !== tag)
+                      ? selectedTags.filter(t => t !== tag)
                       : [...selectedTags, tag];
                     setSelectedTags(newTags);
                   }}
                   className={`px-3 py-1 rounded-full text-sm transition-colors ${
                     selectedTags.includes(tag)
-                       'bg-blue-600 text-white'
+                      ? 'bg-blue-600 text-white'
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
@@ -800,7 +800,7 @@ const Customers: React.FC = () => {
       </div>
 
       {/* Map View */}
-      {viewMode === 'map'  (
+      {viewMode === 'map' ? (
         <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
           {/* Marker Style Selector */}
           <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100">
@@ -819,7 +819,7 @@ const Customers: React.FC = () => {
                     onClick={() => setMarkerStyle('bubble')}
                     className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${
                       markerStyle === 'bubble'
-                         'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
                         : 'text-gray-600 hover:bg-gray-100'
                     }`}
                     title="Yuvarlak baloncuk marker - Sosyal medya için ideal"
@@ -833,7 +833,7 @@ const Customers: React.FC = () => {
                     onClick={() => setMarkerStyle('pin')}
                     className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${
                       markerStyle === 'pin'
-                         'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
                         : 'text-gray-600 hover:bg-gray-100'
                     }`}
                     title="Modern pin marker - Klasik stil"
@@ -847,7 +847,7 @@ const Customers: React.FC = () => {
                     onClick={() => setMarkerStyle('shield')}
                     className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${
                       markerStyle === 'shield'
-                         'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
                         : 'text-gray-600 hover:bg-gray-100'
                     }`}
                     title="Kalkan marker - Premium görünüm"
@@ -861,7 +861,7 @@ const Customers: React.FC = () => {
                     onClick={() => setMarkerStyle('emoji')}
                     className={`px-3 py-2 rounded-md text-xs font-medium transition-all ${
                       markerStyle === 'emoji'
-                         'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
                         : 'text-gray-600 hover:bg-gray-100'
                     }`}
                     title="Emoji marker - Eğlenceli ve renkli"
@@ -889,7 +889,7 @@ const Customers: React.FC = () => {
             }
             center={
               sortedCustomers.length > 0 && sortedCustomers[0].latitude && sortedCustomers[0].longitude
-                 { lat: sortedCustomers[0].latitude, lng: sortedCustomers[0].longitude }
+                ? { lat: sortedCustomers[0].latitude, lng: sortedCustomers[0].longitude }
                 : undefined
             }
             zoom={11}
@@ -913,7 +913,7 @@ const Customers: React.FC = () => {
             </div>
           )}
         </div>
-      ) : viewMode === 'table'  (
+      ) : viewMode === 'table' ? (
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -954,7 +954,7 @@ const Customers: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {sortedCustomers.length === 0  (
+                {sortedCustomers.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
                       <MapPin className="w-12 h-12 mx-auto text-gray-300 mb-3" />
@@ -1002,7 +1002,7 @@ const Customers: React.FC = () => {
                         <p className="text-sm text-gray-900">{customer.address}</p>
                       </td>
                       <td className="px-6 py-4">
-                        {customer.timeWindow  (
+                        {customer.timeWindow ? (
                           <div className="flex items-center text-sm text-gray-600">
                             <Clock className="w-4 h-4 mr-1" />
                             {customer.timeWindow.start} - {customer.timeWindow.end}
@@ -1012,7 +1012,7 @@ const Customers: React.FC = () => {
                         )}
                       </td>
                       <td className="px-6 py-4">
-                        {customer.tags && customer.tags.length > 0  (
+                        {customer.tags && customer.tags.length > 0 ? (
                           <div className="flex flex-wrap gap-1">
                             {customer.tags.map(tag => (
                               <span key={tag} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
@@ -1027,7 +1027,7 @@ const Customers: React.FC = () => {
                       <td className="px-6 py-4">
                         <div className="relative">
                           <button
-                            onClick={() => setDropdownOpen(dropdownOpen === customer.id  null : customer.id)}
+                            onClick={() => setDropdownOpen(dropdownOpen === customer.id ? null : customer.id)}
                             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                           >
                             <MoreVertical className="w-5 h-5 text-gray-600" />
@@ -1082,7 +1082,7 @@ const Customers: React.FC = () => {
       ) : (
         /* Grid View */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {sortedCustomers.length === 0  (
+          {sortedCustomers.length === 0 ? (
             <div className="col-span-full text-center py-12">
               <MapPin className="w-12 h-12 mx-auto text-gray-300 mb-3" />
               <p className="text-gray-500">Müşteri bulunamadı</p>
@@ -1111,7 +1111,7 @@ const Customers: React.FC = () => {
                   </div>
                   <div className="relative">
                     <button
-                      onClick={() => setDropdownOpen(dropdownOpen === customer.id  null : customer.id)}
+                        onClick={() => setDropdownOpen(dropdownOpen === customer.id ? null : customer.id)}
                       className="p-1 hover:bg-gray-100 rounded transition-colors"
                     >
                       <MoreVertical className="w-4 h-4 text-gray-600" />

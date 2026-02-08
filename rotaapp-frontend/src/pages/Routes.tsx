@@ -111,7 +111,7 @@ const Routes: React.FC = () => {
   // Sıralama
   const handleSort = (field: SortField) => {
     if (sortField === field) {
-      setSortDirection(sortDirection === 'asc'  'desc' : 'asc');
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
       setSortField(field);
       setSortDirection('desc');
@@ -137,8 +137,8 @@ const Routes: React.FC = () => {
           bValue = b.totalDistance || 0;
           break;
         case 'progress':
-          aValue = a.totalDeliveries > 0  (a.completedDeliveries / a.totalDeliveries) : 0;
-          bValue = b.totalDeliveries > 0  (b.completedDeliveries / b.totalDeliveries) : 0;
+          aValue = a.totalDeliveries > 0 ? (a.completedDeliveries / a.totalDeliveries) : 0;
+          bValue = b.totalDeliveries > 0 ? (b.completedDeliveries / b.totalDeliveries) : 0;
           break;
         case 'stops':
           aValue = a.stops.length || 0;
@@ -148,8 +148,8 @@ const Routes: React.FC = () => {
           return 0;
       }
 
-      if (aValue < bValue) return sortDirection === 'asc'  -1 : 1;
-      if (aValue > bValue) return sortDirection === 'asc'  1 : -1;
+        if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+        if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
       return 0;
     });
   };
@@ -208,7 +208,7 @@ const Routes: React.FC = () => {
   // Excel export
   const handleExcelExport = () => {
     const dataToExport = selectedRoutes.size > 0
-       filteredRoutes.filter(r => selectedRoutes.has(r.id))
+      ? filteredRoutes.filter(r => selectedRoutes.has(r.id))
       : filteredRoutes;
 
     const csvData = [
@@ -378,7 +378,7 @@ const Routes: React.FC = () => {
   const SortIcon = ({ field }: { field: SortField }) => {
     if (sortField !== field) return <ArrowUpDown className="w-4 h-4 ml-1 text-gray-400" />;
     return sortDirection === 'asc'
-       <ArrowUp className="w-4 h-4 ml-1 text-blue-600" />
+      ? <ArrowUp className="w-4 h-4 ml-1 text-blue-600" />
       : <ArrowDown className="w-4 h-4 ml-1 text-blue-600" />;
   };
 
@@ -497,21 +497,21 @@ const Routes: React.FC = () => {
       <div className="flex flex-wrap gap-2">
         <button
           onClick={() => applyQuickFilter('all')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-            selectedDate === '' && selectedStatus === 'all' && searchQuery === ''
-               'bg-blue-600 text-white'
-              : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
-          }`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              selectedDate === '' && selectedStatus === 'all' && searchQuery === ''
+                ? 'bg-blue-600 text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+            }`}
         >
           Tümü
         </button>
         <button
           onClick={() => applyQuickFilter('today')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-            selectedDate === new Date().toISOString().split('T')[0]
-               'bg-blue-600 text-white'
-              : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
-          }`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              selectedDate === new Date().toISOString().split('T')[0]
+                ? 'bg-blue-600 text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+            }`}
         >
           Bugün
         </button>
@@ -523,21 +523,21 @@ const Routes: React.FC = () => {
         </button>
         <button
           onClick={() => applyQuickFilter('active')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-            selectedStatus === 'in_progress'
-               'bg-green-600 text-white'
-              : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
-          }`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              selectedStatus === 'in_progress'
+                ? 'bg-green-600 text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+            }`}
         >
           Aktif
         </button>
         <button
           onClick={() => applyQuickFilter('completed')}
-          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-            selectedStatus === 'completed'
-               'bg-blue-600 text-white'
-              : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
-          }`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              selectedStatus === 'completed'
+                ? 'bg-blue-600 text-white'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+            }`}
         >
           Tamamlananlar
         </button>
@@ -588,7 +588,7 @@ const Routes: React.FC = () => {
               <button
                 onClick={() => setViewMode('list')}
                 className={`p-2 rounded-md transition-colors ${
-                  viewMode === 'list'  'bg-white shadow-sm' : 'hover:bg-gray-200'
+                  viewMode === 'list' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'
                 }`}
               >
                 <List className="w-4 h-4" />
@@ -596,7 +596,7 @@ const Routes: React.FC = () => {
               <button
                 onClick={() => setViewMode('grid')}
                 className={`p-2 rounded-md transition-colors ${
-                  viewMode === 'grid'  'bg-white shadow-sm' : 'hover:bg-gray-200'
+                  viewMode === 'grid' ? 'bg-white shadow-sm' : 'hover:bg-gray-200'
                 }`}
               >
                 <Grid3x3 className="w-4 h-4" />
@@ -683,7 +683,7 @@ const Routes: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {filteredRoutes.length === 0  (
+                {filteredRoutes.length === 0 ? (
                   <tr>
                     <td colSpan={9} className="px-6 py-12 text-center text-gray-500">
                       <MapPin className="w-12 h-12 mx-auto text-gray-300 mb-3" />
@@ -725,7 +725,7 @@ const Routes: React.FC = () => {
                         )}
                       </td>
                       <td className="px-6 py-4">
-                        {route.driver  (
+                        {route.driver ? (
                           <div className="flex items-center">
                             <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center mr-2">
                               <span className="text-xs font-medium text-gray-600">
@@ -739,7 +739,7 @@ const Routes: React.FC = () => {
                         )}
                       </td>
                       <td className="px-6 py-4">
-                        {route.vehicle  (
+                        {route.vehicle ? (
                           <div className="flex items-center">
                             <Truck className="w-4 h-4 text-gray-400 mr-2" />
                             <span className="text-sm text-gray-900">{route.vehicle.plateNumber}</span>
@@ -757,12 +757,12 @@ const Routes: React.FC = () => {
                             <div className="w-full bg-gray-200 rounded-full h-2">
                               <div
                                 className={`h-2 rounded-full transition-all ${
-                                  route.status === 'completed'  'bg-green-500' :
-                                  route.status === 'in_progress'  'bg-blue-500' :
+                                  route.status === 'completed' ? 'bg-green-500' :
+                                  route.status === 'in_progress' ? 'bg-blue-500' :
                                   'bg-gray-300'
                                 }`}
                                 style={{
-                                  width: `${route.totalDeliveries > 0  (route.completedDeliveries / route.totalDeliveries) * 100 : 0}%`
+                                  width: `${route.totalDeliveries > 0 ? (route.completedDeliveries / route.totalDeliveries) * 100 : 0}%`
                                 }}
                               />
                             </div>
@@ -775,7 +775,7 @@ const Routes: React.FC = () => {
                       <td className="px-6 py-4">
                         <div className="flex items-center text-sm text-gray-600">
                           <MapPin className="w-4 h-4 mr-1" />
-                          {route.totalDistance  `${route.totalDistance} km` : '-'}
+                          {route.totalDistance ? `${route.totalDistance} km` : '-'}
                         </div>
                         {route.totalDuration && (
                           <div className="flex items-center text-xs text-gray-500 mt-1">
@@ -787,7 +787,7 @@ const Routes: React.FC = () => {
                       <td className="px-6 py-4">
                         <div className="relative">
                           <button
-                            onClick={() => setDropdownOpen(dropdownOpen === route.id  null : route.id)}
+                            onClick={() => setDropdownOpen(dropdownOpen === route.id ? null : route.id)}
                             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                           >
                             <MoreVertical className="w-5 h-5 text-gray-600" />
@@ -884,7 +884,7 @@ const Routes: React.FC = () => {
       {/* Routes - Grid View */}
       {viewMode === 'grid' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredRoutes.length === 0  (
+          {filteredRoutes.length === 0 ? (
             <div className="col-span-full text-center py-12">
               <MapPin className="w-12 h-12 mx-auto text-gray-300 mb-3" />
               <p className="text-gray-500">Rota bulunamadı</p>
@@ -904,7 +904,7 @@ const Routes: React.FC = () => {
                 {/* Menu */}
                 <div className="absolute top-4 right-4">
                   <button
-                    onClick={() => setDropdownOpen(dropdownOpen === route.id  null : route.id)}
+                    onClick={() => setDropdownOpen(dropdownOpen === route.id ? null : route.id)}
                     className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                   >
                     <MoreVertical className="w-5 h-5 text-gray-600" />
@@ -1000,12 +1000,12 @@ const Routes: React.FC = () => {
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div
                       className={`h-2 rounded-full transition-all ${
-                        route.status === 'completed'  'bg-green-500' :
-                        route.status === 'in_progress'  'bg-blue-500' :
+                        route.status === 'completed' ? 'bg-green-500' :
+                        route.status === 'in_progress' ? 'bg-blue-500' :
                         'bg-gray-300'
                       }`}
                       style={{
-                        width: `${route.totalDeliveries > 0  (route.completedDeliveries / route.totalDeliveries) * 100 : 0}%`
+                        width: `${route.totalDeliveries > 0 ? (route.completedDeliveries / route.totalDeliveries) * 100 : 0}%`
                       }}
                     />
                   </div>

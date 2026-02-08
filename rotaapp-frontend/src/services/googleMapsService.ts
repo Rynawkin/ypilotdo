@@ -176,7 +176,7 @@ class GoogleMapsService {
     
     // Sonra normal öncelikli müşteriler
     if (priorityGroups.normal.length > 0) {
-      const lastLocation = sortedWaypoints.length > 0 
+      const lastLocation = sortedWaypoints.length > 0 ?
          sortedWaypoints[sortedWaypoints.length - 1].location 
         : depot;
       
@@ -190,7 +190,7 @@ class GoogleMapsService {
     
     // En son düşük öncelikli müşteriler
     if (priorityGroups.low.length > 0) {
-      const lastLocation = sortedWaypoints.length > 0 
+      const lastLocation = sortedWaypoints.length > 0 ? 
          sortedWaypoints[sortedWaypoints.length - 1].location 
         : depot;
       
@@ -308,7 +308,7 @@ class GoogleMapsService {
 
       for (let i = 0; i < n; i++) {
         if (!visited[i]) {
-          const value = mode === 'distance' 
+          const value = mode === 'distance' ?
              distanceMatrix[current][i].distance 
             : distanceMatrix[current][i].duration;
 
@@ -342,9 +342,9 @@ class GoogleMapsService {
       currentTime += wp.serviceTime || 10;
       
       // Öncelik bazlı max gecikme kontrolü
-      const maxDelay = wp.priority === 'high' 
+        const maxDelay = wp.priority === 'high' ?
          prioritySettings.high.maxDelay
-        : wp.priority === 'normal'
+          : wp.priority === 'normal' ?
          prioritySettings.normal.maxDelay
         : prioritySettings.low.maxDelay;
 
@@ -426,9 +426,9 @@ class GoogleMapsService {
       const windowEnd = this.timeToMinutes(wp.timeWindow.end);
       
       // Öncelik bazlı max gecikme toleransı ekle
-      const maxDelay = wp.priority === 'high' 
+        const maxDelay = wp.priority === 'high' ?
          prioritySettings.high.maxDelay
-        : wp.priority === 'normal'
+          : wp.priority === 'normal' ?
          prioritySettings.normal.maxDelay
         : prioritySettings.low.maxDelay;
       

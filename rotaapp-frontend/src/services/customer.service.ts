@@ -91,7 +91,7 @@ class CustomerService {
   // Update customer
   async update(id: number | string, data: Partial<UpdateCustomerDto>): Promise<Customer> {
     try {
-      const numericId = typeof id === 'string'  parseInt(id) : id;
+      const numericId = typeof id === 'string' ? parseInt(id) : id;
       const response = await api.put(`/workspace/customers/${id}`, { ...data, id: numericId });
       return response.data;
     } catch (error) {
@@ -178,7 +178,7 @@ class CustomerService {
       customer.phone,
       customer.email || '',
       this.getPriorityLabel(customer.priority),
-      customer.timeWindow  `${customer.timeWindow.start}-${customer.timeWindow.end}` : '',
+      customer.timeWindow ? `${customer.timeWindow.start}-${customer.timeWindow.end}` : '',
       customer.tags.join(', ') || '',
       customer.notes || ''
     ]);

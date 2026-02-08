@@ -206,7 +206,7 @@ export const authService = {
   getUser(): MeUserModel | null {
     try {
       const userStr = localStorage.getItem('user');
-      return userStr  JSON.parse(userStr) : null;
+      return userStr ? JSON.parse(userStr) : null;
     } catch (error) {
       console.error('Error parsing user from localStorage:', error);
       return null;

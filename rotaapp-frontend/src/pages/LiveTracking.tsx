@@ -468,7 +468,7 @@ const LiveTracking: React.FC = () => {
           <div className="flex items-center space-x-2">
             {getConnectionIcon()}
             <span className="text-sm text-gray-600">
-              {isConnected  'Bağlı' : 'Bağlantı Yok'}
+              {isConnected ? 'Bağlı' : 'Bağlantı Yok'}
             </span>
           </div>
 
@@ -490,11 +490,11 @@ const LiveTracking: React.FC = () => {
             onClick={() => setAutoRefresh(!autoRefresh)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
               autoRefresh 
-                 'bg-green-100 text-green-700 hover:bg-green-200' 
+                ? 'bg-green-100 text-green-700 hover:bg-green-200' 
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            {autoRefresh  (
+            {autoRefresh ? (
               <>
                 <RefreshCw className="w-4 h-4 animate-spin" />
                 <span>Otomatik (10sn)</span>
@@ -527,7 +527,7 @@ const LiveTracking: React.FC = () => {
             disabled={loading}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-blue-400"
           >
-            <RefreshCw className={`w-4 h-4 ${loading  'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             <span>Yenile</span>
           </button>
         </div>
@@ -688,7 +688,7 @@ const LiveTracking: React.FC = () => {
               </div>
             </div>
             <div className="p-4">
-              {filteredJourneys.length === 0  (
+              {filteredJourneys.length === 0 ? (
                 <div className="flex items-center justify-center bg-gray-50 rounded-lg" style={{ height: '600px' }}>
                   <div className="text-center">
                     <Car className="w-16 h-16 text-gray-300 mx-auto mb-4" />
@@ -698,14 +698,14 @@ const LiveTracking: React.FC = () => {
                     </p>
                   </div>
                 </div>
-              ) : selectedJourney && selectedJourney.route  (
+              ) : selectedJourney && selectedJourney.route ? (
                 <LiveMap
                   journeys={[selectedJourney]}
                   selectedJourneyId={selectedJourney.id}
                   onJourneySelect={handleJourneySelect}
                   height="600px"
                 />
-              ) : selectedJourney && !selectedJourney.route  (
+              ) : selectedJourney && !selectedJourney.route ? (
                 <div className="flex items-center justify-center bg-gray-50 rounded-lg" style={{ height: '600px' }}>
                   <div className="text-center">
                     <AlertCircle className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
@@ -739,7 +739,7 @@ const LiveTracking: React.FC = () => {
               </h2>
             </div>
             <div className="divide-y max-h-[600px] overflow-y-auto">
-              {filteredJourneys.length === 0  (
+              {filteredJourneys.length === 0 ? (
                 <div className="p-8 text-center">
                   <Car className="w-12 h-12 text-gray-300 mx-auto mb-3" />
                   <p className="text-gray-500">Aktif sefer bulunmuyor</p>

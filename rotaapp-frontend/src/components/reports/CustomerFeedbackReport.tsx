@@ -69,13 +69,13 @@ export const CustomerFeedbackReport: React.FC<Props> = ({ startDate, endDate }) 
     setLoading(true);
     try {
       const [statsData, feedbacksData] = await Promise.all([
-        feedbackService.getFeedbackStats(
-          startDate  new Date(startDate) : undefined,
-          endDate  new Date(endDate) : undefined
-        ),
+          feedbackService.getFeedbackStats(
+            startDate ? new Date(startDate) : undefined,
+            endDate ? new Date(endDate) : undefined
+          ),
         feedbackService.getFeedbacks({
-          startDate: startDate  new Date(startDate) : undefined,
-          endDate: endDate  new Date(endDate) : undefined,
+          startDate: startDate ? new Date(startDate) : undefined,
+          endDate: endDate ? new Date(endDate) : undefined,
           page: currentPage,
           pageSize: 10,
           minRating: filterRating || undefined,
@@ -97,8 +97,8 @@ export const CustomerFeedbackReport: React.FC<Props> = ({ startDate, endDate }) 
   const exportToCSV = async () => {
     try {
       const blob = await feedbackService.exportFeedbacksCSV({
-        startDate: startDate  new Date(startDate) : undefined,
-        endDate: endDate  new Date(endDate) : undefined
+        startDate: startDate ? new Date(startDate) : undefined,
+        endDate: endDate ? new Date(endDate) : undefined
       });
       
       const url = window.URL.createObjectURL(blob);
@@ -137,8 +137,8 @@ export const CustomerFeedbackReport: React.FC<Props> = ({ startDate, endDate }) 
       <Star
         key={index}
         className={`w-4 h-4 ${
-          index < Math.floor(rating)
-             'text-yellow-400 fill-current'
+          index < Math.floor(rating) ?
+            'text-yellow-400 fill-current'
             : 'text-gray-300'
         }`}
       />
@@ -176,7 +176,7 @@ export const CustomerFeedbackReport: React.FC<Props> = ({ startDate, endDate }) 
         compareValue = new Date(a.journey.date).getTime() - new Date(b.journey.date).getTime();
       }
 
-      return sortOrder === 'asc'  compareValue : -compareValue;
+                          {sortOrder === 'asc' ? '?' : '?'}
     });
 
     return filtered;
@@ -184,7 +184,7 @@ export const CustomerFeedbackReport: React.FC<Props> = ({ startDate, endDate }) 
 
   const handleSort = (field: 'submittedAt' | 'rating' | 'routeDate') => {
     if (sortBy === field) {
-      setSortOrder(sortOrder === 'asc'  'desc' : 'asc');
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
     } else {
       setSortBy(field);
       setSortOrder('desc');
@@ -274,7 +274,7 @@ export const CustomerFeedbackReport: React.FC<Props> = ({ startDate, endDate }) 
             <button
               onClick={() => setView('overview')}
               className={`px-3 py-1 rounded ${
-                view === 'overview'
+                view === 'overview' ?
                    'bg-blue-100 text-blue-700'
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
@@ -284,7 +284,7 @@ export const CustomerFeedbackReport: React.FC<Props> = ({ startDate, endDate }) 
             <button
               onClick={() => setView('details')}
               className={`px-3 py-1 rounded ${
-                view === 'details'
+                view === 'details' ?
                    'bg-blue-100 text-blue-700'
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
@@ -292,7 +292,7 @@ export const CustomerFeedbackReport: React.FC<Props> = ({ startDate, endDate }) 
               Detaylı Liste
             </button>
           </div>
-          {view === 'overview'  (
+          {view === 'overview' ? (
             <button
               onClick={exportToCSV}
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
@@ -313,7 +313,7 @@ export const CustomerFeedbackReport: React.FC<Props> = ({ startDate, endDate }) 
         </div>
       </div>
 
-      {view === 'overview'  (
+      {view === 'overview' ? (
         <>
           {/* KPI Kartları */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -321,9 +321,9 @@ export const CustomerFeedbackReport: React.FC<Props> = ({ startDate, endDate }) 
               <div className="flex items-center justify-between mb-4">
                 <Star className="w-8 h-8 text-yellow-400 fill-current" />
                 <span className={`text-xs font-medium ${
-                  stats.averageOverallRating >= 4  'text-green-600' : 'text-orange-600'
+                  stats.averageOverallRating >= 4 ? 'text-green-600' : 'text-orange-600'
                 }`}>
-                  {stats.averageOverallRating >= 4  '↑' : '↓'} 
+                  {stats.averageOverallRating >= 4 ? '?' : '?'}
                 </span>
               </div>
               <p className="text-2xl font-bold text-gray-900">
@@ -549,7 +549,7 @@ export const CustomerFeedbackReport: React.FC<Props> = ({ startDate, endDate }) 
                 {/* Puan Filtresi */}
                 <select
                   value={filterRating || ''}
-                  onChange={(e) => setFilterRating(e.target.value  Number(e.target.value) : null)}
+                  onChange={(e) => setFilterRating(e.target.value ? Number(e.target.value) : null)}
                   className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Tüm Puanlar</option>
@@ -563,7 +563,7 @@ export const CustomerFeedbackReport: React.FC<Props> = ({ startDate, endDate }) 
                 {/* Şoför Filtresi */}
                 <select
                   value={filterDriverId || ''}
-                  onChange={(e) => setFilterDriverId(e.target.value  Number(e.target.value) : null)}
+                  onChange={(e) => setFilterDriverId(e.target.value ? Number(e.target.value) : null)}
                   className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Tüm Şoförler</option>
@@ -605,7 +605,7 @@ export const CustomerFeedbackReport: React.FC<Props> = ({ startDate, endDate }) 
                       Genel Puan
                       {sortBy === 'rating' && (
                         <span className="text-blue-600">
-                          {sortOrder === 'asc'  '↑' : '↓'}
+                          {sortOrder === 'asc' ? '?' : '?'}
                         </span>
                       )}
                     </div>
@@ -622,7 +622,7 @@ export const CustomerFeedbackReport: React.FC<Props> = ({ startDate, endDate }) 
                       Rota Tarihi
                       {sortBy === 'routeDate' && (
                         <span className="text-blue-600">
-                          {sortOrder === 'asc'  '↑' : '↓'}
+                          {sortOrder === 'asc' ? '?' : '?'}
                         </span>
                       )}
                     </div>
@@ -635,7 +635,7 @@ export const CustomerFeedbackReport: React.FC<Props> = ({ startDate, endDate }) 
                       Form Tarihi
                       {sortBy === 'submittedAt' && (
                         <span className="text-blue-600">
-                          {sortOrder === 'asc'  '↑' : '↓'}
+                          {sortOrder === 'asc' ? '?' : '?'}
                         </span>
                       )}
                     </div>
@@ -661,28 +661,28 @@ export const CustomerFeedbackReport: React.FC<Props> = ({ startDate, endDate }) 
                       </div>
                     </td>
                     <td className="text-center py-3 px-4">
-                      {feedback.deliverySpeedRating  (
+                      {feedback.deliverySpeedRating ? (
                         <span className={getRatingColor(feedback.deliverySpeedRating)}>
                           {feedback.deliverySpeedRating}
                         </span>
                       ) : '-'}
                     </td>
                     <td className="text-center py-3 px-4">
-                      {feedback.driverBehaviorRating  (
+                      {feedback.driverBehaviorRating ? (
                         <span className={getRatingColor(feedback.driverBehaviorRating)}>
                           {feedback.driverBehaviorRating}
                         </span>
                       ) : '-'}
                     </td>
                     <td className="text-center py-3 px-4">
-                      {feedback.packageConditionRating  (
+                      {feedback.packageConditionRating ? (
                         <span className={getRatingColor(feedback.packageConditionRating)}>
                           {feedback.packageConditionRating}
                         </span>
                       ) : '-'}
                     </td>
                     <td className="py-3 px-4">
-                      {feedback.comments  (
+                      {feedback.comments ? (
                         <p className="text-sm text-gray-700 truncate max-w-xs">
                           {feedback.comments}
                         </p>

@@ -80,7 +80,7 @@ const WorkspaceDetail: React.FC = () => {
     if (!workspace) return;
     
     const newStatus = !workspace.active;
-    const message = newStatus 
+    const message = newStatus ? 
        'Bu firmayı aktif hale getirmek istediğinize emin misiniz' 
       : 'Bu firmayı pasif hale getirmek istediğinize emin misiniz Firma sisteme giriş yapamayacak.';
     
@@ -153,9 +153,9 @@ const WorkspaceDetail: React.FC = () => {
               {availablePlans.map((plan) => (
                 <div
                   key={plan.planTypeValue}
-                  className={`border rounded-lg p-4 cursor-pointer ${
-                    selectedPlan == plan.planTypeValue  'border-blue-500 bg-blue-50' : 'border-gray-300'
-                  }`}
+                    className={`border rounded-lg p-4 cursor-pointer ${
+                      selectedPlan == plan.planTypeValue ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+                    }`}
                   onClick={() => setSelectedPlan(plan.planTypeValue)}
                 >
                   <div className="flex justify-between items-start mb-2">
@@ -188,7 +188,7 @@ const WorkspaceDetail: React.FC = () => {
                 disabled={loadingPlanChange}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
               >
-                {loadingPlanChange  'Değiştiriliyor...' : 'Planı Değiştir'}
+                  {loadingPlanChange ? 'Değiştiriliyor...' : 'Planı Değiştir'}
               </button>
             </div>
           </div>
@@ -213,15 +213,15 @@ const WorkspaceDetail: React.FC = () => {
             <div>
               <h1 className="text-2xl font-bold text-gray-900">{workspace.name}</h1>
               <div className="flex items-center space-x-4 mt-1">
-                <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                  workspace.active  'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                }`}>
-                  {workspace.active  'Aktif' : 'Pasif'}
+                  <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                    workspace.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  }`}>
+                    {workspace.active ? 'Aktif' : 'Pasif'}
                 </span>
                 <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                  subscription.currentPlan === 'Business'  'bg-purple-100 text-purple-800' :
-                  subscription.currentPlan === 'Professional'  'bg-blue-100 text-blue-800' :
-                  subscription.currentPlan === 'Growth'  'bg-green-100 text-green-800' :
+                  subscription.currentPlan === 'Business' ? 'bg-purple-100 text-purple-800' :
+                  subscription.currentPlan === 'Professional' ? 'bg-blue-100 text-blue-800' :
+                  subscription.currentPlan === 'Growth' ? 'bg-green-100 text-green-800' :
                   'bg-gray-100 text-gray-800'
                 }`}>
                   {subscription.currentPlan}
@@ -240,14 +240,14 @@ const WorkspaceDetail: React.FC = () => {
             </button>
             <button
               onClick={handleToggleStatus}
-              className={`px-4 py-2 rounded-lg flex items-center ${
-                workspace.active 
-                   'bg-red-600 text-white hover:bg-red-700' 
-                  : 'bg-green-600 text-white hover:bg-green-700'
-              }`}
+                className={`px-4 py-2 rounded-lg flex items-center ${
+                  workspace.active ? 
+                     'bg-red-600 text-white hover:bg-red-700' 
+                    : 'bg-green-600 text-white hover:bg-green-700'
+                }`}
             >
               <Power className="w-4 h-4 mr-2" />
-              {workspace.active  'Pasif Yap' : 'Aktif Yap'}
+                {workspace.active ? 'Pasif Yap' : 'Aktif Yap'}
             </button>
           </div>
         </div>
@@ -426,7 +426,7 @@ const WorkspaceDetail: React.FC = () => {
                 <h3 className="text-sm font-medium text-gray-700 mb-2">Plan Özellikleri</h3>
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div className="flex items-center">
-                    {subscription.limits.hasTimeWindows  (
+                    {subscription.limits.hasTimeWindows ? (
                       <CheckCircle className="w-4 h-4 text-green-500 mr-1" />
                     ) : (
                       <AlertCircle className="w-4 h-4 text-gray-400 mr-1" />
@@ -434,7 +434,7 @@ const WorkspaceDetail: React.FC = () => {
                     <span>Zaman Aralıklı Teslimat</span>
                   </div>
                   <div className="flex items-center">
-                    {subscription.limits.hasCustomerSatisfactionReport  (
+                    {subscription.limits.hasCustomerSatisfactionReport ? (
                       <CheckCircle className="w-4 h-4 text-green-500 mr-1" />
                     ) : (
                       <AlertCircle className="w-4 h-4 text-gray-400 mr-1" />

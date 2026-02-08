@@ -291,11 +291,11 @@ class RouteService {
       
       const createDto: any = {
         Name: data.name || `Rota ${new Date().toLocaleDateString('tr-TR')}`,
-        Date: data.date  new Date(data.date).toISOString() : new Date().toISOString(),
-        DepotId: data.depotId  Number(data.depotId) : 0,
-        DriverId: data.driverId  Number(data.driverId) : undefined,
-        VehicleId: data.vehicleId  Number(data.vehicleId) : undefined,
-        CurrentKm: data.currentKm !== undefined  Number(data.currentKm) : undefined,
+        Date: data.date ? new Date(data.date).toISOString() : new Date().toISOString(),
+        DepotId: data.depotId ? Number(data.depotId) : 0,
+        DriverId: data.driverId ? Number(data.driverId) : undefined,
+        VehicleId: data.vehicleId ? Number(data.vehicleId) : undefined,
+        CurrentKm: data.currentKm !== undefined ? Number(data.currentKm) : undefined,
         Optimized: data.optimized || false,
         AvoidTolls: false, // Default to false for new routes
         TotalDistance: data.totalDistance || 0,
@@ -338,25 +338,25 @@ class RouteService {
             ProofOfDeliveryRequired: stop.proofOfDeliveryRequired || false,  // ✅ DÜZELTME
             SignatureRequired: stop.signatureRequired || false,              // ✅ YENİ
             PhotoRequired: stop.photoRequired || false,                      // ✅ YENİ
-            ArriveBetweenStart: stop.arriveBetweenStart 
-              (stop.arriveBetweenStart.includes(':')  `${stop.arriveBetweenStart}:00` : stop.arriveBetweenStart) :
-              (stop.overrideTimeWindow.start  `${stop.overrideTimeWindow.start}:00` : null),
-            ArriveBetweenEnd: stop.arriveBetweenEnd 
-              (stop.arriveBetweenEnd.includes(':')  `${stop.arriveBetweenEnd}:00` : stop.arriveBetweenEnd) :
-              (stop.overrideTimeWindow.end  `${stop.overrideTimeWindow.end}:00` : null),
+            ArriveBetweenStart: stop.arriveBetweenStart
+              ? (stop.arriveBetweenStart.includes(':') ? `${stop.arriveBetweenStart}:00` : stop.arriveBetweenStart)
+              : (stop.overrideTimeWindow.start ? `${stop.overrideTimeWindow.start}:00` : null),
+            ArriveBetweenEnd: stop.arriveBetweenEnd
+              ? (stop.arriveBetweenEnd.includes(':') ? `${stop.arriveBetweenEnd}:00` : stop.arriveBetweenEnd)
+              : (stop.overrideTimeWindow.end ? `${stop.overrideTimeWindow.end}:00` : null),
             ServiceTime: serviceTimeSpan,
             EstimatedArrivalTime: stop.estimatedArrivalTime || null,
             EstimatedDepartureTime: stop.estimatedDepartureTime || null
           };
         }) || [],
-        StartDetails: depotInfo  {
+        StartDetails: depotInfo ? {
           Name: depotInfo.name || 'Ana Depo',
           Address: this.truncateAddress(depotInfo.address || 'Depo Adresi'),
           Latitude: depotInfo.latitude || 0,
           Longitude: depotInfo.longitude || 0,
           StartTime: data.startDetails.startTime || this.getCurrentTimeAsTimeSpan()
         } : null,
-        EndDetails: depotInfo  {
+        EndDetails: depotInfo ? {
           Name: depotInfo.name || 'Ana Depo',
           Address: this.truncateAddress(depotInfo.address || 'Depo Adresi'),
           Latitude: depotInfo.latitude || 0,
@@ -421,11 +421,11 @@ class RouteService {
       
       const updateDto: any = {
         Name: data.name,
-        Date: data.date  new Date(data.date).toISOString() : undefined,
-        DepotId: data.depotId  Number(data.depotId) : undefined,
-        DriverId: data.driverId  Number(data.driverId) : undefined,
-        VehicleId: data.vehicleId  Number(data.vehicleId) : undefined,
-        CurrentKm: data.currentKm !== undefined  Number(data.currentKm) : undefined,
+        Date: data.date ? new Date(data.date).toISOString() : undefined,
+        DepotId: data.depotId ? Number(data.depotId) : undefined,
+        DriverId: data.driverId ? Number(data.driverId) : undefined,
+        VehicleId: data.vehicleId ? Number(data.vehicleId) : undefined,
+        CurrentKm: data.currentKm !== undefined ? Number(data.currentKm) : undefined,
         Optimized: data.optimized,
         TotalDistance: data.totalDistance,
         TotalDuration: data.totalDuration,
@@ -465,25 +465,25 @@ class RouteService {
             ProofOfDeliveryRequired: stop.proofOfDeliveryRequired || false,  // ✅ DÜZELTME
             SignatureRequired: stop.signatureRequired || false,              // ✅ YENİ
             PhotoRequired: stop.photoRequired || false,                      // ✅ YENİ
-            ArriveBetweenStart: stop.arriveBetweenStart 
-              (stop.arriveBetweenStart.includes(':')  `${stop.arriveBetweenStart}:00` : stop.arriveBetweenStart) :
-              (stop.overrideTimeWindow.start  `${stop.overrideTimeWindow.start}:00` : null),
-            ArriveBetweenEnd: stop.arriveBetweenEnd 
-              (stop.arriveBetweenEnd.includes(':')  `${stop.arriveBetweenEnd}:00` : stop.arriveBetweenEnd) :
-              (stop.overrideTimeWindow.end  `${stop.overrideTimeWindow.end}:00` : null),
+            ArriveBetweenStart: stop.arriveBetweenStart
+              ? (stop.arriveBetweenStart.includes(':') ? `${stop.arriveBetweenStart}:00` : stop.arriveBetweenStart)
+              : (stop.overrideTimeWindow.start ? `${stop.overrideTimeWindow.start}:00` : null),
+            ArriveBetweenEnd: stop.arriveBetweenEnd
+              ? (stop.arriveBetweenEnd.includes(':') ? `${stop.arriveBetweenEnd}:00` : stop.arriveBetweenEnd)
+              : (stop.overrideTimeWindow.end ? `${stop.overrideTimeWindow.end}:00` : null),
             ServiceTime: this.minutesToTimeSpan(stop.serviceTime),
             EstimatedArrivalTime: stop.estimatedArrivalTime || null,
             EstimatedDepartureTime: stop.estimatedDepartureTime || null
           };
         }),
-        StartDetails: data.startDetails || (depotInfo  {
+        StartDetails: data.startDetails || (depotInfo ? {
           Name: depotInfo.name || 'Ana Depo',
           Address: this.truncateAddress(depotInfo.address || 'Depo Adresi'),
           Latitude: depotInfo.latitude || 0,
           Longitude: depotInfo.longitude || 0,
           StartTime: data.startDetails.startTime || this.getCurrentTimeAsTimeSpan()
         } : undefined),
-        EndDetails: data.endDetails || (depotInfo  {
+        EndDetails: data.endDetails || (depotInfo ? {
           Name: depotInfo.name || 'Ana Depo',
           Address: this.truncateAddress(depotInfo.address || 'Depo Adresi'),
           Latitude: depotInfo.latitude || 0,
@@ -767,8 +767,8 @@ class RouteService {
         ProofOfDeliveryRequired: updates.proofOfDeliveryRequired,
         SignatureRequired: updates.signatureRequired,
         PhotoRequired: updates.photoRequired,
-        ArriveBetweenStart: updates.arriveBetweenStart  `${updates.arriveBetweenStart}:00` : null,
-        ArriveBetweenEnd: updates.arriveBetweenEnd  `${updates.arriveBetweenEnd}:00` : null,
+        ArriveBetweenStart: updates.arriveBetweenStart ? `${updates.arriveBetweenStart}:00` : null,
+        ArriveBetweenEnd: updates.arriveBetweenEnd ? `${updates.arriveBetweenEnd}:00` : null,
         ServiceTime: updates.serviceTime
       };
 

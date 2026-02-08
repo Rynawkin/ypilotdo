@@ -188,9 +188,9 @@ const DepotForm: React.FC<DepotFormProps> = ({ depot, onSubmit, onCancel }) => {
       ...prev,
       workingHours: {
         ...prev.workingHours,
-        [day]: isClosed 
-           { open: '08:00', close: '18:00' }
-          : { open: 'closed', close: 'closed' }
+          [day]: isClosed
+            ? { open: '08:00', close: '18:00' }
+            : { open: 'closed', close: 'closed' }
       }
     }));
   };
@@ -296,9 +296,9 @@ const DepotForm: React.FC<DepotFormProps> = ({ depot, onSubmit, onCancel }) => {
               type="text"
               value={formData.name}
               onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.name  'border-red-500' : 'border-gray-300'
-              }`}
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                  errors.name ? 'border-red-500' : 'border-gray-300'
+                }`}
               placeholder="Örn: Ana Depo - Kadıköy"
             />
             {errors.name && (
@@ -336,9 +336,9 @@ const DepotForm: React.FC<DepotFormProps> = ({ depot, onSubmit, onCancel }) => {
               type="text"
               value={formData.address}
               onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
-              className={`flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                errors.address  'border-red-500' : 'border-gray-300'
-              }`}
+                className={`flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                  errors.address ? 'border-red-500' : 'border-gray-300'
+                }`}
               placeholder="Örn: Kadıköy, Rıhtım Cad. No:1"
             />
             <button
@@ -391,7 +391,7 @@ const DepotForm: React.FC<DepotFormProps> = ({ depot, onSubmit, onCancel }) => {
             className="text-sm text-blue-600 hover:text-blue-700 flex items-center mb-4"
           >
             <MapPin className="w-4 h-4 mr-1" />
-            {showMap  'Haritayı Gizle' : 'Haritada Göster'}
+              {showMap ? 'Haritayı Gizle' : 'Haritada Göster'}
           </button>
           
           {showMap && isLoaded && (
@@ -435,7 +435,7 @@ const DepotForm: React.FC<DepotFormProps> = ({ depot, onSubmit, onCancel }) => {
                 </div>
                 
                 <div className="flex-1 flex items-center gap-3">
-                  {!isClosed  (
+                  {!isClosed ? (
                     <>
                       <input
                         type="time"
@@ -460,13 +460,13 @@ const DepotForm: React.FC<DepotFormProps> = ({ depot, onSubmit, onCancel }) => {
                   <button
                     type="button"
                     onClick={() => toggleDayOff(key)}
-                    className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-                      isClosed 
-                         'bg-gray-100 text-gray-700 hover:bg-gray-200' 
-                        : 'bg-red-50 text-red-600 hover:bg-red-100'
-                    }`}
+                      className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+                        isClosed
+                          ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          : 'bg-red-50 text-red-600 hover:bg-red-100'
+                      }`}
                   >
-                    {isClosed  'Aç' : 'Kapalı'}
+                      {isClosed ? 'Aç' : 'Kapalı'}
                   </button>
                   
                   {!isClosed && (
@@ -513,7 +513,7 @@ const DepotForm: React.FC<DepotFormProps> = ({ depot, onSubmit, onCancel }) => {
           className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center disabled:opacity-50"
         >
           <Save className="w-4 h-4 mr-2" />
-          {loading  'Kaydediliyor...' : (depot  'Güncelle' : 'Kaydet')}
+            {loading ? 'Kaydediliyor...' : (depot ? 'Güncelle' : 'Kaydet')}
         </button>
       </div>
 

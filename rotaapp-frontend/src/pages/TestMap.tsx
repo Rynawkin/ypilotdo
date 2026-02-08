@@ -139,7 +139,7 @@ const TestMap: React.FC = () => {
 
           {/* Map Load Status */}
           <div className="flex items-center space-x-3">
-            {mapLoaded  (
+            {mapLoaded ? (
               <CheckCircle className="w-5 h-5 text-green-600" />
             ) : (
               <AlertCircle className="w-5 h-5 text-gray-400" />
@@ -147,7 +147,7 @@ const TestMap: React.FC = () => {
             <div>
               <p className="font-medium">Harita Yükleme</p>
               <p className="text-sm text-gray-600">
-                {mapLoaded  'Harita başarıyla yüklendi' : 'Harita henüz yüklenmedi'}
+                {mapLoaded ? 'Harita başarıyla yüklendi' : 'Harita henüz yüklenmedi'}
               </p>
             </div>
           </div>

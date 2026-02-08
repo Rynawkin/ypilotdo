@@ -45,13 +45,13 @@ const getMaintenanceRecords = (vehicleId: string): MaintenanceRecord[] => {
     .map((r: MaintenanceRecord) => ({
       ...r,
       date: new Date(r.date),
-      nextMaintenanceDate: r.nextMaintenanceDate  new Date(r.nextMaintenanceDate) : undefined
+      nextMaintenanceDate: r.nextMaintenanceDate ? new Date(r.nextMaintenanceDate) : undefined
     }));
 };
 
 const saveMaintenanceRecords = (vehicleId: string, records: MaintenanceRecord[]) => {
   const stored = localStorage.getItem(MAINTENANCE_STORAGE_KEY);
-  const allRecords = stored  JSON.parse(stored) : [];
+  const allRecords = stored ? JSON.parse(stored) : [];
   const otherRecords = allRecords.filter((r: MaintenanceRecord) => r.vehicleId !== vehicleId);
   const updatedRecords = [...otherRecords, ...records];
   localStorage.setItem(MAINTENANCE_STORAGE_KEY, JSON.stringify(updatedRecords));
@@ -207,16 +207,16 @@ const EditVehicle: React.FC = () => {
       date: new Date(maintenanceForm.date),
       mileage: parseInt(maintenanceForm.mileage),
       description: maintenanceForm.description,
-      cost: maintenanceForm.cost  parseFloat(maintenanceForm.cost) : undefined,
-      nextMaintenanceKm: maintenanceForm.nextMaintenanceKm  parseInt(maintenanceForm.nextMaintenanceKm) : undefined,
-      nextMaintenanceDate: maintenanceForm.nextMaintenanceDate  new Date(maintenanceForm.nextMaintenanceDate) : undefined,
+      cost: maintenanceForm.cost ? parseFloat(maintenanceForm.cost) : undefined,
+      nextMaintenanceKm: maintenanceForm.nextMaintenanceKm ? parseInt(maintenanceForm.nextMaintenanceKm) : undefined,
+      nextMaintenanceDate: maintenanceForm.nextMaintenanceDate ? new Date(maintenanceForm.nextMaintenanceDate) : undefined,
       status: maintenanceForm.status,
       notes: maintenanceForm.notes
     };
 
     let updatedRecords: MaintenanceRecord[];
     if (editingMaintenance) {
-      updatedRecords = maintenanceRecords.map(r => r.id === editingMaintenance.id  newRecord : r);
+      updatedRecords = maintenanceRecords.map(r => r.id === editingMaintenance.id ? newRecord : r);
     } else {
       updatedRecords = [...maintenanceRecords, newRecord];
     }
@@ -319,7 +319,7 @@ const EditVehicle: React.FC = () => {
             onClick={() => setActiveTab('general')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'general'
-                 'border-blue-500 text-blue-600'
+                ? 'border-blue-500 text-blue-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -329,7 +329,7 @@ const EditVehicle: React.FC = () => {
             onClick={() => setActiveTab('maintenance')}
             className={`py-2 px-1 border-b-2 font-medium text-sm ${
               activeTab === 'maintenance'
-                 'border-blue-500 text-blue-600'
+                ? 'border-blue-500 text-blue-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
@@ -339,7 +339,7 @@ const EditVehicle: React.FC = () => {
       </div>
 
       {/* Content */}
-      {activeTab === 'general'  (
+      {activeTab === 'general' ? (
         <VehicleForm
           initialData={vehicle}
           onSubmit={handleSubmit}
@@ -356,6 +356,7 @@ const EditVehicle: React.FC = () => {
                   <p className="text-sm text-gray-600">Son Bakım</p>
                   <p className="text-lg font-semibold text-gray-900 mt-1">
                     {maintenanceRecords.filter(r => r.status === 'completed').length > 0
+                      ?
                        new Date(Math.max(...maintenanceRecords
                           .filter(r => r.status === 'completed')
                           .map(r => r.date.getTime()))).toLocaleDateString('tr-TR')
@@ -374,6 +375,7 @@ const EditVehicle: React.FC = () => {
                   <p className="text-sm text-gray-600">Sonraki Bakım</p>
                   <p className="text-lg font-semibold text-gray-900 mt-1">
                     {maintenanceRecords.filter(r => r.status === 'scheduled').length > 0
+                      ?
                        new Date(Math.min(...maintenanceRecords
                           .filter(r => r.status === 'scheduled')
                           .map(r => r.date.getTime()))).toLocaleDateString('tr-TR')
@@ -442,7 +444,7 @@ const EditVehicle: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {maintenanceRecords.length === 0  (
+                  {maintenanceRecords.length === 0 ? (
                     <tr>
                       <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
                         <Wrench className="w-12 h-12 mx-auto text-gray-300 mb-3" />
@@ -480,7 +482,7 @@ const EditVehicle: React.FC = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className="text-sm text-gray-900">
-                              {record.cost  `₺${record.cost.toLocaleString('tr-TR')}` : '-'}
+                              {record.cost ? `₺${record.cost.toLocaleString('tr-TR')}` : '-'}
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -521,7 +523,7 @@ const EditVehicle: React.FC = () => {
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-gray-900">
-                  {editingMaintenance  'Bakım Düzenle' : 'Yeni Bakım Ekle'}
+                  {editingMaintenance ? 'Bakım Düzenle' : 'Yeni Bakım Ekle'}
                 </h3>
                 <button
                   onClick={() => setShowMaintenanceModal(false)}
@@ -678,7 +680,7 @@ const EditVehicle: React.FC = () => {
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
               >
                 <Save className="w-4 h-4 mr-2" />
-                {editingMaintenance  'Güncelle' : 'Kaydet'}
+                {editingMaintenance ? 'Güncelle' : 'Kaydet'}
               </button>
             </div>
           </div>

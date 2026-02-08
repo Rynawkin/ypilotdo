@@ -278,7 +278,7 @@ const RouteDetail: React.FC = () => {
         totalDeliveries: route.totalDeliveries,
         completedDeliveries: 0,
         optimized: route.optimized,
-        notes: route.notes  `${route.notes} (Kopya)` : '',
+          notes: route.notes ? `${route.notes} (Kopya)` : '',
         driver: route.driver,
         vehicle: route.vehicle,
         depot: depot
@@ -366,8 +366,8 @@ const RouteDetail: React.FC = () => {
         stop.customer.address || '',
         stop.customer.phone || '',
         stop.status,
-        stop.distance  `${stop.distance} km` : '',
-        stop.duration  `${stop.duration} dk` : '',
+        stop.distance ? `${stop.distance} km` : '',
+        stop.duration ? `${stop.duration} dk` : '',
         formatETA(stop.estimatedArrivalTime),
         formatETA(stop.estimatedDepartureTime)
       ])
@@ -444,7 +444,7 @@ const RouteDetail: React.FC = () => {
     doc.text('TARIH', pageWidth - 30, 17, { align: 'center' });
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
-    const formattedDate = route.date  new Date(route.date).toLocaleDateString('tr-TR') : new Date().toLocaleDateString('tr-TR');
+    const formattedDate = route.date ? new Date(route.date).toLocaleDateString('tr-TR') : new Date().toLocaleDateString('tr-TR');
     doc.text(fixTurkish(formattedDate), pageWidth - 30, 24, { align: 'center' });
 
     let yPos = 62;
@@ -457,23 +457,23 @@ const RouteDetail: React.FC = () => {
     yPos += 7;
 
     const statusText =
-      route.status === 'draft'  'Taslak' :
-      route.status === 'planned'  'Planlandi' :
-      route.status === 'in_progress'  'Devam Ediyor' :
-      route.status === 'completed'  'Tamamlandi' : 'Iptal Edildi';
+      route.status === 'draft' ? 'Taslak' :
+      route.status === 'planned' ? 'Planlandi' :
+      route.status === 'in_progress' ? 'Devam Ediyor' :
+      route.status === 'completed' ? 'Tamamlandi' : 'Iptal Edildi';
 
     // Info cards in 2x4 grid
     const infoData = [
       { label: 'Surucu', value: fixTurkish(route.driver.fullName || route.driver.name || '-') },
       { label: 'Arac', value: fixTurkish(route.vehicle.plateNumber || '-') },
       { label: 'Durum', value: fixTurkish(statusText) },
-      { label: 'Rota Tarihi', value: fixTurkish(route.date  new Date(route.date).toLocaleDateString('tr-TR') : '-') },
-      { label: 'Toplam Mesafe', value: `${route.totalDistance  route.totalDistance.toFixed(1) : 0} km` },
+      { label: 'Rota Tarihi', value: fixTurkish(route.date ? new Date(route.date).toLocaleDateString('tr-TR') : '-') },
+      { label: 'Toplam Mesafe', value: `${route.totalDistance ? route.totalDistance.toFixed(1) : 0} km` },
       { label: 'Toplam Sure', value: formatDuration(route.totalDuration || 0) },
       { label: 'Toplam Durak', value: `${route.totalDeliveries || route.stops.length}` },
       { label: 'Tamamlanan', value: `${route.completedDeliveries || 0}` },
-      { label: 'Optimizasyon', value: route.optimized  'Evet' : 'Hayir' },
-      ...(depot.name  [{ label: 'Depo', value: fixTurkish(depot.name) }] : []),
+      { label: 'Optimizasyon', value: route.optimized ? 'Evet' : 'Hayir' },
+      ...(depot.name ? [{ label: 'Depo', value: fixTurkish(depot.name) }] : []),
     ];
 
     // Draw info cards
@@ -514,12 +514,12 @@ const RouteDetail: React.FC = () => {
     const stopsData = route.stops.map((stop: RouteStop) => {
       const stopCustomer = stop.customer || customers.find(c => c.id === stop.customerId);
       const customerName = fixTurkish(stopCustomer.name || `Durak ${stop.order}`);
-      const customerPhone = stopCustomer.phone  `\n${stopCustomer.phone}` : '';
+      const customerPhone = stopCustomer.phone ? `\n${stopCustomer.phone}` : '';
       const customerAddress = fixTurkish(stopCustomer.address || stop.customer.address || '-');
       const statusLabel =
-        stop.status === 'completed'  'Tamamlandi' :
-        stop.status === 'failed'  'Basarisiz' :
-        stop.status === 'arrived'  'Varildi' :
+        stop.status === 'completed' ? 'Tamamlandi' :
+        stop.status === 'failed' ? 'Basarisiz' :
+        stop.status === 'arrived' ? 'Varildi' :
         'Bekliyor';
 
       return [
@@ -527,8 +527,8 @@ const RouteDetail: React.FC = () => {
         `${customerName}${customerPhone}`,
         customerAddress,
         statusLabel,
-        stop.distance  `${stop.distance} km` : '-',
-        stop.duration  `${stop.duration} dk` : '-',
+        stop.distance ? `${stop.distance} km` : '-',
+        stop.duration ? `${stop.duration} dk` : '-',
         formatETA(stop.estimatedArrivalTime),
         formatETA(stop.estimatedDepartureTime)
       ];
@@ -792,7 +792,7 @@ const RouteDetail: React.FC = () => {
           directions={mapDirections}
           customers={customers}
           showTraffic={false}
-          selectedCustomerId={selectedStopId  route.stops.find(s => s.id === selectedStopId).customerId : undefined}
+            selectedCustomerId={selectedStopId ? route.stops.find(s => s.id === selectedStopId)?.customerId : undefined}
           onCustomerSelect={(customerId) => {
             const stop = route.stops.find(s => s.customerId === customerId);
             if (stop) setSelectedStopId(stop.id);
@@ -879,11 +879,11 @@ const RouteDetail: React.FC = () => {
                 onClick={handleStartJourney}
                 disabled={startingJourney}
                 className={`px-4 py-2 ${startingJourney
-                     'bg-gray-400 cursor-not-allowed'
-                    : 'bg-green-600 hover:bg-green-700'
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-green-600 hover:bg-green-700'
                   } text-white rounded-lg transition-colors flex items-center`}
               >
-                {startingJourney  (
+                  {startingJourney ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     Sefer Başlatılıyor...
@@ -1010,7 +1010,7 @@ const RouteDetail: React.FC = () => {
             <div>
               <p className="text-sm text-gray-600">Mesafe</p>
               <p className="text-2xl font-bold text-gray-900">
-                {route.totalDistance  `${route.totalDistance.toFixed(1)}` : '0'} <span className="text-sm">km</span>
+                {route.totalDistance ? `${route.totalDistance.toFixed(1)}` : '0'} <span className="text-sm">km</span>
               </p>
             </div>
             <Navigation className="w-8 h-8 text-purple-600 opacity-20" />
@@ -1022,7 +1022,7 @@ const RouteDetail: React.FC = () => {
             <div>
               <p className="text-sm text-gray-600">Süre</p>
               <p className="text-2xl font-bold text-gray-900">
-                {route.totalDuration  formatDuration(route.totalDuration) : '0 dakika'}
+                {route.totalDuration ? formatDuration(route.totalDuration) : '0 dakika'}
               </p>
             </div>
             <Clock className="w-8 h-8 text-orange-600 opacity-20" />
@@ -1034,7 +1034,7 @@ const RouteDetail: React.FC = () => {
             <div>
               <p className="text-sm text-gray-600">Başarı Oranı</p>
               <p className="text-2xl font-bold text-gray-900">
-                {route.totalDeliveries > 0  calculateProgress() : 0}%
+                {route.totalDeliveries > 0 ? calculateProgress() : 0}%
               </p>
             </div>
             <Star className="w-8 h-8 text-yellow-600 opacity-20" />
@@ -1082,7 +1082,7 @@ const RouteDetail: React.FC = () => {
           </div>
 
           <div className="max-h-[650px] overflow-y-auto">
-            {route.stops.length === 0  (
+            {route.stops.length === 0 ? (
               <div className="p-6 text-center text-gray-500">
                 <MapPin className="w-12 h-12 mx-auto text-gray-300 mb-3" />
                 <p>Bu rotada henüz durak yok</p>
@@ -1136,7 +1136,7 @@ const RouteDetail: React.FC = () => {
                   <div
                     key={stop.id}
                     onClick={() => handleStopClick(stop.id)}
-                    className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors ${selectedStopId === stop.id  'bg-blue-50 border-l-4 border-blue-500' : ''
+                    className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors ${selectedStopId === stop.id ? 'bg-blue-50 border-l-4 border-blue-500' : ''
                       }`}
                   >
                     <div className="flex items-start">
@@ -1317,7 +1317,7 @@ const RouteDetail: React.FC = () => {
               <div className="flex-1">
                 <p className="text-sm text-gray-600">Araç</p>
                 <p className="font-medium">
-                  {route.vehicle  `${route.vehicle.plateNumber} - ${route.vehicle.brand} ${route.vehicle.model}` : 'Atanmadı'}
+                    {route.vehicle ? `${route.vehicle.plateNumber} - ${route.vehicle.brand} ${route.vehicle.model}` : 'Atanmadı'}
                 </p>
               </div>
             </div>
@@ -1335,9 +1335,9 @@ const RouteDetail: React.FC = () => {
               <div className="flex-1">
                 <p className="text-sm text-gray-600">Rota Başlangıç Saati</p>
                 <p className="font-medium">
-                  {route.startDetails.plannedStartTime
+                  {route.startDetails.plannedStartTime ?
                      formatETA(route.startDetails.plannedStartTime)
-                    : route.startDetails.startTime
+                    : route.startDetails.startTime ?
                      formatETA(route.startDetails.startTime)
                     : 'Belirlenmemiş'}
                 </p>

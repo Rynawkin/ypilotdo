@@ -284,9 +284,9 @@ const LiveMap: React.FC<LiveMapProps> = ({
     // Araç ikonu için SVG path
     const vehiclePath = 'M12 2L4 7v6c0 1.1.9 2 2 2h1c0 1.66 1.34 3 3 3s3-1.34 3-3h2c0 1.66 1.34 3 3 3s3-1.34 3-3h1c1.1 0 2-.9 2-2V7l-8-5zM7 14c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm10 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zM5 10V7.5L12 4l7 3.5V10H5z';
     
-    return {
-      path: vehiclePath,
-      fillColor: isSelected  '#EF4444' : '#10B981',
+      return {
+        path: vehiclePath,
+        fillColor: isSelected ? '#EF4444' : '#10B981',
       fillOpacity: 1,
       strokeColor: 'white',
       strokeWeight: 2,
@@ -306,9 +306,9 @@ const LiveMap: React.FC<LiveMapProps> = ({
       failed: '#EF4444'
     };
     
-    return {
-      path: window.google.maps.SymbolPath.CIRCLE,
-      scale: isNext  10 : 8,
+      return {
+        path: window.google.maps.SymbolPath.CIRCLE,
+        scale: isNext ? 10 : 8,
       fillColor: colors[status as keyof typeof colors] || '#9CA3AF',
       fillOpacity: 1,
       strokeColor: 'white',
@@ -423,7 +423,7 @@ const LiveMap: React.FC<LiveMapProps> = ({
                   icon={getVehicleIcon(journey)}
                   title={`${journey.route.driver.name || 'Sürücü'} - ${journey.route.vehicle.plateNumber || 'Araç'}`}
                   onClick={() => handleMarkerClick(journey)}
-                  zIndex={selectedJourneyId === journey.id  1000 : 100}
+                    zIndex={selectedJourneyId === journey.id ? 1000 : 100}
                 />
               )}
 
@@ -446,9 +446,9 @@ const LiveMap: React.FC<LiveMapProps> = ({
                       fontSize: '12px',
                       fontWeight: 'bold'
                     }}
-                    title={`${stop.customer.name} - ${stop.status === 'completed'  'Tamamlandı' : 
-                            stop.status === 'arrived'  'Varıldı' : 'Bekliyor'}`}
-                    zIndex={isNext  90 : 50}
+                    title={`${stop.customer.name} - ${stop.status === 'completed' ? 'Tamamland?' :
+                            stop.status === 'arrived' ? 'Var?ld?' : 'Bekliyor'}`}
+                    zIndex={isNext ? 90 : 50}
                   />
                 );
               })}
@@ -471,11 +471,11 @@ const LiveMap: React.FC<LiveMapProps> = ({
                   {selectedMarker.route.vehicle.plateNumber || 'Araç Bilgisi Yok'}
                 </h3>
                 <span className={`px-2 py-1 text-xs rounded-full ${
-                  selectedMarker.status === 'in_progress' 
+                    selectedMarker.status === 'in_progress' ?
                      'bg-green-100 text-green-700'
                     : 'bg-blue-100 text-blue-700'
                 }`}>
-                  {selectedMarker.status === 'in_progress'  'Aktif' : 'Başladı'}
+                  {selectedMarker.status === 'in_progress' ? 'Aktif' : 'Başladı'}
                 </span>
               </div>
               

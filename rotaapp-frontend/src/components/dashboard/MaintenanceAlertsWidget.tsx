@@ -162,7 +162,7 @@ const MaintenanceAlertsWidget: React.FC = () => {
                   </p>
 
                   <div className="flex items-center mt-2 ml-6 text-xs">
-                    {maintenance.isOverdue  (
+                    {maintenance.isOverdue ? (
                       <div className="flex items-center text-red-600 font-medium">
                         <Clock className="w-3 h-3 mr-1" />
                         <span>{getDaysText(maintenance.daysRemaining)}</span>

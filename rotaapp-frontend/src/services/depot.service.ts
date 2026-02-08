@@ -8,7 +8,7 @@ const basePath = '/workspace/depots';
 export const depotService = {
   // Tüm depoları getir
   async getAll(searchTerm: string): Promise<Depot[]> {
-    const params = searchTerm  { searchTerm } : {};
+    const params = searchTerm ? { searchTerm } : {};
     const response = await api.get(basePath, { params });
     return response.data;
   },

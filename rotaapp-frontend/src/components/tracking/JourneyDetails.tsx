@@ -87,7 +87,7 @@ const JourneyDetails: React.FC<JourneyDetailsProps> = ({ journey, onClose }) => 
   const calculateDuration = () => {
     if (!journey.startedAt) return '0 dk';
     const start = new Date(journey.startedAt).getTime();
-    const end = journey.completedAt  new Date(journey.completedAt).getTime() : Date.now();
+    const end = journey.completedAt ? new Date(journey.completedAt).getTime() : Date.now();
     const duration = Math.floor((end - start) / 60000);
     if (duration < 60) return `${duration} dk`;
     const hours = Math.floor(duration / 60);
@@ -133,7 +133,7 @@ const JourneyDetails: React.FC<JourneyDetailsProps> = ({ journey, onClose }) => 
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
                   <TrendingUp className="w-4 h-4 mr-1" />
-                  Hız: {journey.liveLocation.speed  Math.round(journey.liveLocation.speed) : 0} km/h
+                    Hız: {journey.liveLocation.speed ? Math.round(journey.liveLocation.speed) : 0} km/h
                 </div>
               </div>
               <div className="text-right">
@@ -250,7 +250,7 @@ const JourneyDetails: React.FC<JourneyDetailsProps> = ({ journey, onClose }) => 
                     key={stop.id}
                     className={`border rounded-lg p-4 ${
                       index === journey.currentStopIndex
-                         'border-blue-500 bg-blue-50'
+                        ? 'border-blue-500 bg-blue-50'
                         : 'border-gray-200'
                     }`}
                   >

@@ -264,7 +264,7 @@ const CustomerSelector: React.FC<CustomerSelectorProps> = ({
         {/* Single Select Dropdown */}
         {isDropdownOpen && (
           <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-[500px] overflow-y-auto">
-            {filteredCustomers.length > 0  (
+            {filteredCustomers.length > 0 ? (
               <>
                 <div className="px-4 py-2 bg-gray-50 border-b border-gray-100">
                   <h3 className="text-sm font-semibold text-gray-700 flex items-center">
@@ -280,7 +280,7 @@ const CustomerSelector: React.FC<CustomerSelectorProps> = ({
                       key={customer.id}
                       onClick={() => !selected && handleSelectCustomer(customer)}
                       className={`p-4 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 transition-colors ${
-                        selected  'bg-gray-50 cursor-not-allowed' : 'cursor-pointer'
+                          selected ? 'bg-gray-50 cursor-not-allowed' : 'cursor-pointer'
                       }`}
                     >
                       <div className="flex items-start justify-between">
@@ -341,7 +341,7 @@ const CustomerSelector: React.FC<CustomerSelectorProps> = ({
               </>
             ) : (
               <div className="p-6 text-center">
-                {searchQuery  (
+                {searchQuery ? (
                   <>
                     <Package className="w-12 h-12 text-gray-400 mx-auto mb-3" />
                     <p className="text-gray-600 mb-2">
@@ -417,7 +417,7 @@ const CustomerSelector: React.FC<CustomerSelectorProps> = ({
 
             {/* Modal Content - Scrollable */}
             <div className="flex-1 overflow-y-auto">
-              {modalCustomers.length > 0  (
+              {modalCustomers.length > 0 ? (
                 modalCustomers.map(customer => {
                   const alreadySelected = isSelected(customer.id.toString());
                   const inMultiSelectList = isInMultiSelectList(customer.id.toString());
@@ -432,20 +432,20 @@ const CustomerSelector: React.FC<CustomerSelectorProps> = ({
                         }
                       }}
                       className={`p-4 border-b border-gray-100 transition-colors ${
-                        alreadySelected 
-                           'bg-gray-100 cursor-not-allowed' 
-                          : inMultiSelectList 
-                             'bg-purple-50 hover:bg-purple-100 cursor-pointer' 
+                        alreadySelected
+                          ? 'bg-gray-100 cursor-not-allowed'
+                          : inMultiSelectList
+                            ? 'bg-purple-50 hover:bg-purple-100 cursor-pointer'
                             : 'hover:bg-gray-50 cursor-pointer'
                       }`}
                     >
                       <div className="flex items-start">
                         <div className="mr-4 mt-1">
-                          {alreadySelected  (
+                          {alreadySelected ? (
                             <div className="w-5 h-5 bg-gray-300 rounded flex items-center justify-center">
                               <Check className="w-3 h-3 text-white" />
                             </div>
-                          ) : inMultiSelectList  (
+                          ) : inMultiSelectList ? (
                             <CheckSquare className="w-5 h-5 text-purple-600" />
                           ) : (
                             <Square className="w-5 h-5 text-gray-400" />
@@ -454,7 +454,7 @@ const CustomerSelector: React.FC<CustomerSelectorProps> = ({
                         
                         <div className="flex-1">
                           <div className="flex items-center mb-1">
-                            <h3 className={`font-medium ${alreadySelected  'text-gray-500' : 'text-gray-900'}`}>
+                            <h3 className={`font-medium ${alreadySelected ? 'text-gray-500' : 'text-gray-900'}`}>
                               {customer.name}
                             </h3>
                             {customer.code && (
@@ -469,7 +469,7 @@ const CustomerSelector: React.FC<CustomerSelectorProps> = ({
                             )}
                           </div>
 
-                          <div className={`flex items-start text-sm ${alreadySelected  'text-gray-400' : 'text-gray-600'}`}>
+                            <div className={`flex items-start text-sm ${alreadySelected ? 'text-gray-400' : 'text-gray-600'}`}>
                             <MapPin className="w-4 h-4 mr-1 mt-0.5 flex-shrink-0" />
                             <span>{customer.address}</span>
                           </div>
@@ -477,13 +477,13 @@ const CustomerSelector: React.FC<CustomerSelectorProps> = ({
                           {(customer.phone || customer.estimatedServiceTime) && (
                             <div className="flex items-center space-x-4 text-sm mt-1">
                               {customer.phone && (
-                                <div className={`flex items-center ${alreadySelected  'text-gray-400' : 'text-gray-500'}`}>
+                                  <div className={`flex items-center ${alreadySelected ? 'text-gray-400' : 'text-gray-500'}`}>
                                   <Phone className="w-4 h-4 mr-1" />
                                   <span>{customer.phone}</span>
                                 </div>
                               )}
                               {customer.estimatedServiceTime && (
-                                <div className={`flex items-center ${alreadySelected  'text-gray-400' : 'text-gray-500'}`}>
+                                  <div className={`flex items-center ${alreadySelected ? 'text-gray-400' : 'text-gray-500'}`}>
                                   <Clock className="w-4 h-4 mr-1" />
                                   <span>{customer.estimatedServiceTime} dk</span>
                                 </div>
@@ -499,7 +499,8 @@ const CustomerSelector: React.FC<CustomerSelectorProps> = ({
                 <div className="p-12 text-center">
                   <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                   <p className="text-gray-600 text-lg">
-                    {modalSearchQuery 
+                      {modalSearchQuery
+                        ?
                        `"${modalSearchQuery}" için sonuç bulunamadı`
                       : 'Henüz kayıtlı müşteri yok'}
                   </p>

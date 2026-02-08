@@ -58,7 +58,7 @@ class DriverService {
     }
     
     const queryString = params.toString();
-    const url = queryString  `${this.basePath}${queryString}` : this.basePath;
+    const url = queryString ? `${this.basePath}${queryString}` : this.basePath;
     
     const response = await api.get<Driver[]>(url);
     return response.data;

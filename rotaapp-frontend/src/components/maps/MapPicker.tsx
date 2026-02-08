@@ -191,7 +191,7 @@ const MapPicker: React.FC<MapPickerProps> = ({
               Seçilen Adres
             </label>
             <div className="p-3 bg-white rounded border border-gray-200 min-h-[60px]">
-              {loading  (
+              {loading ? (
                 <div className="flex items-center text-gray-400">
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />
                   Adres alınıyor...

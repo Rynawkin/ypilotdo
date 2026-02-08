@@ -102,7 +102,7 @@ const validateTimeWindow = (start: string, end: string): { start: string; end: s
   if (!start && end) {
     // Bitiş varsa, başlangıç = bitiş - 1 saat
     const [hours, minutes] = end.split(':').map(Number);
-    const startHours = hours === 0  23 : hours - 1;
+    const startHours = hours === 0 ? 23 : hours - 1;
     const startTime = `${startHours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
     return { start: startTime, end };
   }
@@ -169,7 +169,7 @@ const RouteForm: React.FC<RouteFormProps> = ({
   // BUGFIX: Separate local state for currentKm to prevent form updates on every keystroke
   const [currentKmInput, setCurrentKmInput] = useState<string>(() => {
     const km = savedData.currentKm || initialData.currentKm;
-    return km  String(km) : '';
+    return km ? String(km) : '';
   });
 
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -214,8 +214,9 @@ const RouteForm: React.FC<RouteFormProps> = ({
   const [defaultSignatureRequired, setDefaultSignatureRequired] = useState(false);
   const [defaultPhotoRequired, setDefaultPhotoRequired] = useState(false);
   const [optimizedOrder, setOptimizedOrder] = useState<number[]>(() => {
-    return savedData.optimized && savedData.stops 
-      savedData.stops.map((_: any, index: number) => index) : [];
+    return savedData.optimized && savedData.stops
+      ? savedData.stops.map((_: any, index: number) => index)
+      : [];
   });
 
   const [optimizationStatus, setOptimizationStatus] = useState<OptimizationStatus>('none');
@@ -622,10 +623,10 @@ const RouteForm: React.FC<RouteFormProps> = ({
 
         // Convert updates to API format
         const apiUpdates = {
-          customerId: updates.customer.id  parseInt(updates.customer.id.toString()) : undefined,
+            customerId: updates.customer.id ? parseInt(updates.customer.id.toString()) : undefined,
           arriveBetweenStart: updates.overrideTimeWindow.start,
           arriveBetweenEnd: updates.overrideTimeWindow.end,
-          serviceTime: updates.serviceTime  `${updates.serviceTime}` : undefined,
+            serviceTime: updates.serviceTime ? `${updates.serviceTime}` : undefined,
           signatureRequired: updates.signatureRequired,
           photoRequired: updates.photoRequired,
           notes: updates.stopNotes
@@ -729,8 +730,8 @@ const RouteForm: React.FC<RouteFormProps> = ({
             timeWindow = validateTimeWindow(timeWindow.start, timeWindow.end) || undefined;
           }
 
-          const orderType = stopData.positionConstraint === 'first'  10 :
-                           stopData.positionConstraint === 'last'  30 : 20;
+            const orderType = stopData.positionConstraint === 'first' ? 10 :
+                             stopData.positionConstraint === 'last' ? 30 : 20;
 
           console.log(`🚀 DEBUG - Stop ${index + 1} (${stopData.customer.name}):`, {
             positionConstraint: stopData.positionConstraint,
@@ -785,8 +786,8 @@ const RouteForm: React.FC<RouteFormProps> = ({
 
       // Stops'ları pozisyon kısıtlamalarıyla güncelle
       const updatedStops = stopsData.map((stopData, index) => {
-        const orderType = stopData.positionConstraint === 'first'  10 :
-                          stopData.positionConstraint === 'last'  30 : 20;
+        const orderType = stopData.positionConstraint === 'first' ? 10 :
+                          stopData.positionConstraint === 'last' ? 30 : 20;
         const currentStop = currentRoute.stops[index];
 
         console.log(`📍 Updating ${stopData.customer.name}: ${stopData.positionConstraint} → ${orderType}`);
@@ -856,7 +857,7 @@ const RouteForm: React.FC<RouteFormProps> = ({
             customer: customer,
             serviceTime: ex.stop.serviceTime || '00:15:00',
             stopNotes: ex.stop.stopNotes || '',
-            overrideTimeWindow: ex.stop.arriveBetweenStart  {
+            overrideTimeWindow: ex.stop.arriveBetweenStart ? {
               start: ex.stop.arriveBetweenStart,
               end: ex.stop.arriveBetweenEnd
             } : undefined
@@ -897,8 +898,8 @@ const RouteForm: React.FC<RouteFormProps> = ({
 
           return {
             customer: customer,
-            positionConstraint: stop.orderType === 'First'  'first' :
-                               stop.orderType === 'Last'  'last' : 'none',
+            positionConstraint: stop.orderType === 'First' ? 'first' :
+                               stop.orderType === 'Last' ? 'last' : 'none',
             serviceTime: stop.serviceTime,
             stopNotes: stop.stopNotes || existingStopData.stopNotes,
             overrideTimeWindow: existingStopData.overrideTimeWindow,
@@ -931,8 +932,8 @@ const RouteForm: React.FC<RouteFormProps> = ({
 
             return {
               customer: customer,
-              positionConstraint: stop.orderType === 'First'  'first' :
-                                 stop.orderType === 'Last'  'last' : 'none',
+              positionConstraint: stop.orderType === 'First' ? 'first' :
+                                 stop.orderType === 'Last' ? 'last' : 'none',
               serviceTime: stop.serviceTime,
               stopNotes: stop.stopNotes || existingStopData.stopNotes,
               overrideTimeWindow: existingStopData.overrideTimeWindow,
@@ -967,8 +968,8 @@ const RouteForm: React.FC<RouteFormProps> = ({
 
             return {
               customer: customer,
-              positionConstraint: stop.orderType === 'First'  'first' :
-                                 stop.orderType === 'Last'  'last' : 'none',
+              positionConstraint: stop.orderType === 'First' ? 'first' :
+                                 stop.orderType === 'Last' ? 'last' : 'none',
               serviceTime: stop.serviceTime,
               stopNotes: stop.stopNotes || existingStopData.stopNotes,
               overrideTimeWindow: existingStopData.overrideTimeWindow,
@@ -1006,11 +1007,13 @@ const RouteForm: React.FC<RouteFormProps> = ({
         optimized: true
       });
 
-      await updateMapRoute();
+      await updateMapRoute();      const message = optimizationStatus === 'partial'
+        ? `Rota optimize edildi!
+${excludedStops.length} durak zaman uyumsuzlu?u nedeniyle dahil edilemedi.`
+        : `Rota optimize edildi!
 
-      const message = optimizationStatus === 'partial'
-         `Rota optimize edildi!\n${excludedStops.length} durak zaman uyumsuzluğu nedeniyle dahil edilemedi.`
-        : `Rota optimize edildi!\n\nToplam Mesafe: ${optimizedRoute.totalDistance.toFixed(1)} km\nTahmini Süre: ${formatDuration(optimizedRoute.totalDuration)}`;
+Toplam Mesafe: ${optimizedRoute.totalDistance.toFixed(1)} km
+Tahmini S?re: ${formatDuration(optimizedRoute.totalDuration)}`;
 
       alert(message);
 
@@ -1059,8 +1062,8 @@ const RouteForm: React.FC<RouteFormProps> = ({
     if (stopsData.length > 0) {
       // Daha gerçekçi seyahat süresi hesaplaması
       // Ortalama durak arası seyahat süresi (şehir içi trafik dikkate alınarak)
-      const avgTravelTimePerStop = stopsData.length <= 5  20 : // Küçük rotalar: 20dk
-                                   stopsData.length <= 10  15 : // Orta rotalar: 15dk
+      const avgTravelTimePerStop = stopsData.length <= 5 ? 20 : // Küçük rotalar: 20dk
+                                   stopsData.length <= 10 ? 15 : // Orta rotalar: 15dk
                                    12; // Büyük rotalar: 12dk (daha yoğun)
 
       totalMinutes += stopsData.length * avgTravelTimePerStop;
@@ -1154,7 +1157,7 @@ const RouteForm: React.FC<RouteFormProps> = ({
       }
 
       return {
-        id: isEdit && initialData.stops.[index].id  initialData.stops[index].id : `${Date.now()}-${index}`,
+        id: isEdit && initialData.stops?.[index]?.id ? initialData.stops[index].id : `${Date.now()}-${index}`,
         routeId: initialData.id || '',
         customerId: customerId,
         customer: customer,
@@ -1162,8 +1165,8 @@ const RouteForm: React.FC<RouteFormProps> = ({
         status: 'pending',
         arriveBetweenStart: arriveBetweenStart,
         arriveBetweenEnd: arriveBetweenEnd,
-        orderType: stopData.positionConstraint === 'first'  10 :
-                   stopData.positionConstraint === 'last'  30 : 20,
+        orderType: stopData.positionConstraint === 'first' ? 10 :
+                   stopData.positionConstraint === 'last' ? 30 : 20,
         serviceTime: stopData.serviceTime,
         signatureRequired: stopData.signatureRequired,
         photoRequired: stopData.photoRequired,
@@ -1243,7 +1246,7 @@ const RouteForm: React.FC<RouteFormProps> = ({
       }
 
       return {
-        id: isEdit && initialData.stops.[index].id  initialData.stops[index].id : `${Date.now()}-${index}`,
+        id: isEdit && initialData.stops?.[index]?.id ? initialData.stops[index].id : `${Date.now()}-${index}`,
         routeId: initialData.id || '',
         customerId: customerId,
         customer: customer,
@@ -1251,8 +1254,8 @@ const RouteForm: React.FC<RouteFormProps> = ({
         status: 'pending',
         arriveBetweenStart: arriveBetweenStart,
         arriveBetweenEnd: arriveBetweenEnd,
-        orderType: stopData.positionConstraint === 'first'  10 :
-                   stopData.positionConstraint === 'last'  30 : 20,
+        orderType: stopData.positionConstraint === 'first' ? 10 :
+                   stopData.positionConstraint === 'last' ? 30 : 20,
         serviceTime: stopData.serviceTime,
         signatureRequired: stopData.signatureRequired,
         photoRequired: stopData.photoRequired,
@@ -1365,7 +1368,7 @@ const RouteForm: React.FC<RouteFormProps> = ({
                 <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="date"
-                  value={formData.date  new Date(formData.date).toISOString().split('T')[0] : ''}
+                    value={formData.date ? new Date(formData.date).toISOString().split('T')[0] : ''}
                   onChange={(e) => updateFormData({ date: new Date(e.target.value) })}
                   className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
@@ -1471,7 +1474,7 @@ const RouteForm: React.FC<RouteFormProps> = ({
                     }}
                     onBlur={(e) => {
                       // Only update formData when input loses focus
-                      const value = e.target.value  parseInt(e.target.value) : undefined;
+                      const value = e.target.value ? parseInt(e.target.value) : undefined;
                       updateFormData({ currentKm: value });
                     }}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -1515,9 +1518,9 @@ const RouteForm: React.FC<RouteFormProps> = ({
                       {formatDuration(formData.totalDuration || calculateTotalDuration())}
                     </span>
                   </div>
-                  {(formData.totalDistance  0) > 0 && (
+                  {(formData.totalDistance ?? 0) > 0 && (
                     <div className="text-sm text-gray-600">
-                      Mesafe: <span className="font-semibold">{(formData.totalDistance  0).toFixed(1)} km</span>
+                      Mesafe: <span className="font-semibold">{(formData.totalDistance ?? 0).toFixed(1)} km</span>
                     </div>
                   )}
                 </>
@@ -1545,7 +1548,7 @@ const RouteForm: React.FC<RouteFormProps> = ({
                 disabled={stopsData.length < 2 || optimizing || optimizationStatus !== 'none'}
                 className="px-3 py-1.5 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center text-sm"
               >
-                {optimizing  (
+                {optimizing ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
                     Optimize Ediliyor...
@@ -1584,11 +1587,11 @@ const RouteForm: React.FC<RouteFormProps> = ({
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-900">Rota Haritası</h2>
-              {stopsData.length === 0  (
+              {stopsData.length === 0 ? (
                 <span className="text-sm text-gray-500">Müşteri ekleyin</span>
-              ) : (formData.totalDistance  0) > 0  (
+              ) : (formData.totalDistance ?? 0) > 0 ? (
                 <span className="text-sm text-gray-600">
-                  {(formData.totalDistance  0).toFixed(1)} km • {formatDuration(formData.totalDuration || 0)}
+                  {(formData.totalDistance ?? 0).toFixed(1)} km • {formatDuration(formData.totalDuration || 0)}
                 </span>
               ) : (
                 <span className="text-sm text-gray-600">
@@ -1615,9 +1618,9 @@ const RouteForm: React.FC<RouteFormProps> = ({
                   <Navigation className="w-4 h-4 mr-2" />
                   <strong>Rota Bilgisi:</strong>
                   <span className="ml-1">
-                    {optimizationStatus === 'success'
+                      {optimizationStatus === 'success' ?
                        'Rota başarıyla optimize edildi'
-                      : optimizationStatus === 'partial'
+                        : optimizationStatus === 'partial' ?
                          'Bazı duraklar zaman uyumsuzluğu nedeniyle dahil edilemedi'
                         : 'Optimize Et butonuna basarak rotanızı optimize edebilirsiniz'}
                   </span>
@@ -1631,7 +1634,7 @@ const RouteForm: React.FC<RouteFormProps> = ({
               Duraklar {stopsData.length > 0 && `(${stopsData.length})`}
             </h2>
 
-            {stopsData.length > 0 || excludedStops.length > 0  (
+            {stopsData.length > 0 || excludedStops.length > 0 ? (
               <div className="max-h-[600px] overflow-y-auto pr-2">
                 <StopsList
                   stops={stopsData}
@@ -1643,7 +1646,7 @@ const RouteForm: React.FC<RouteFormProps> = ({
                   onMoveExcludedToStops={handleMoveExcludedToStops}
                   depotStart={
                     depots.find(d => d.id.toString() === formData.depotId.toString())
-                       {
+                      ? {
                           name: depots.find(d => d.id.toString() === formData.depotId.toString()).name || '',
                           address: depots.find(d => d.id.toString() === formData.depotId.toString()).address || '',
                           startTime: startTime
@@ -1652,7 +1655,7 @@ const RouteForm: React.FC<RouteFormProps> = ({
                   }
                   depotReturn={
                     optimizationStatus !== 'none' && depots.find(d => d.id.toString() === formData.depotId.toString())
-                       {
+                      ? {
                           name: depots.find(d => d.id.toString() === formData.depotId.toString()).name || 'Depo',
                           address: depots.find(d => d.id.toString() === formData.depotId.toString()).address || '',
                           estimatedArrivalTime: endDetails.estimatedArrivalTime || initialData.endDetails.estimatedArrivalTime
@@ -1691,7 +1694,7 @@ const RouteForm: React.FC<RouteFormProps> = ({
             disabled={loading || stopsData.length === 0 || optimizationStatus === 'none'}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center"
           >
-            {loading  (
+            {loading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 Kaydediliyor...
@@ -1699,7 +1702,7 @@ const RouteForm: React.FC<RouteFormProps> = ({
             ) : (
               <>
                 <Send className="w-4 h-4 mr-2" />
-                {isEdit  'Güncelle' : 'Rota Oluştur'}
+                {isEdit ? 'G?ncelle' : 'Rota Olu?tur'}
               </>
             )}
           </button>

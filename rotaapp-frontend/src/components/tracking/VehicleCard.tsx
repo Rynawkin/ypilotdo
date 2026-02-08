@@ -82,7 +82,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ journey, selected, onClick })
     }
     const completed = journey.route.stops.filter(s => s.status === 'completed').length;
     const total = journey.route.stops.length;
-    return total > 0  Math.round((completed / total) * 100) : 0;
+    return total > 0 ? Math.round((completed / total) * 100) : 0;
   };
 
   const getTimeElapsed = () => {
@@ -123,9 +123,9 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ journey, selected, onClick })
   return (
     <div
       onClick={onClick}
-      className={`p-4 cursor-pointer transition-all hover:bg-gray-50 ${
-        selected  'bg-blue-50 border-l-4 border-blue-600' : ''
-      }`}
+        className={`p-4 cursor-pointer transition-all hover:bg-gray-50 ${
+          selected ? 'bg-blue-50 border-l-4 border-blue-600' : ''
+        }`}
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
@@ -177,7 +177,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ journey, selected, onClick })
             <div className="flex items-center">
               <TrendingUp className="w-3 h-3 text-gray-400 mr-1" />
               <span className="text-xs font-semibold text-gray-700">
-                {journey.liveLocation.speed  Math.round(journey.liveLocation.speed) : 0} km/h
+                  {journey.liveLocation.speed ? Math.round(journey.liveLocation.speed) : 0} km/h
               </span>
             </div>
           </div>

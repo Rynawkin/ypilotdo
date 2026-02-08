@@ -58,13 +58,13 @@ const Onboarding: React.FC = () => {
               <div key={i} className="flex items-center">
                 <div className={`
                   w-12 h-12 rounded-full flex items-center justify-center text-sm font-medium
-                  ${step >= i  'bg-blue-600 text-white' : 'bg-white text-gray-600'}
+                  ${step >= i ? 'bg-blue-600 text-white' : 'bg-white text-gray-600'}
                 `}>
-                  {step > i  <CheckCircle className="w-6 h-6" /> : i}
+                  {step > i ? <CheckCircle className="w-6 h-6" /> : i}
                 </div>
-                {i < 3 && (
-                  <div className={`w-full h-1 ${step > i  'bg-blue-600' : 'bg-gray-300'}`} />
-                )}
+                  {i < 3 && (
+                    <div className={`w-full h-1 ${step > i ? 'bg-blue-600' : 'bg-gray-300'}`} />
+                  )}
               </div>
             ))}
           </div>
@@ -292,7 +292,7 @@ const Onboarding: React.FC = () => {
                 className={`
                   px-6 py-2 rounded-lg font-medium flex items-center ml-auto
                   ${depot.name && depot.address
-                     'bg-blue-600 text-white hover:bg-blue-700' 
+                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'}
                 `}
               >
@@ -317,7 +317,7 @@ const Onboarding: React.FC = () => {
                 disabled={loading}
                 className="px-8 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 flex items-center mx-auto"
               >
-                {loading  (
+                {loading ? (
                   <>
                     <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                     Yönlendiriliyor...

@@ -385,7 +385,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
     const submitData: Partial<Customer> = {
       ...formData,
       whatsApp: whatsAppNumber,
-      timeWindow: hasTimeWindow  { start: timeWindowStart, end: timeWindowEnd } : undefined
+      timeWindow: hasTimeWindow ? { start: timeWindowStart, end: timeWindowEnd } : undefined
     };
 
     onSubmit(submitData, contacts);
@@ -524,7 +524,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                 name="name"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.name  'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300'
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.name ? 'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300'
                   }`}
                 placeholder="Örn: Bakkal Mehmet"
               />
@@ -556,8 +556,8 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                     });
                   }}
                   name="phone"
-                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.phone  'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.phone ? 'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300'
+                      }`}
                   placeholder="0532 111 2233"
                 />
               </div>
@@ -581,8 +581,8 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                   name="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.email  'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.email ? 'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300'
+                      }`}
                   placeholder="Örn: mehmet@example.com (opsiyonel)"
                 />
               </div>
@@ -612,8 +612,8 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
               <textarea
                 value={formData.address}
                 onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.address  'border-red-300' : 'border-gray-300'
-                  }`}
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.address ? 'border-red-300' : 'border-gray-300'
+                    }`}
                 rows={2}
                 placeholder="Örn: Kadıköy, Moda Cad. No:45"
               />
@@ -642,7 +642,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                 className="text-sm text-blue-600 hover:text-blue-700 flex items-center"
               >
                 <Navigation className="w-4 h-4 mr-1" />
-                {showCoordinateInput  'Koordinatları Gizle' : 'Koordinatları Düzenle'}
+                  {showCoordinateInput ? 'Koordinatları Gizle' : 'Koordinatları Düzenle'}
               </button>
             </div>
 
@@ -659,7 +659,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                     name="latitude"
                     value={formData.latitude}
                     onChange={(e) => setFormData({ ...formData, latitude: parseFloat(e.target.value) })}
-                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.latitude  'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
+                      className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.latitude ? 'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
                     placeholder="40.9869"
                   />
                   {errors.latitude && (
@@ -679,7 +679,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                     name="longitude"
                     value={formData.longitude}
                     onChange={(e) => setFormData({ ...formData, longitude: parseFloat(e.target.value) })}
-                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.longitude  'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
+                    className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 ${errors.longitude ? 'border-red-500 bg-red-50 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
                     placeholder="29.0252"
                   />
                   {errors.longitude && (
@@ -718,7 +718,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                     ...formData,
                     estimatedServiceTime: parseInt(e.target.value) || defaultServiceTime
                   })}
-                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.serviceTime  'border-red-300' : 'border-gray-300'
+                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.serviceTime ? 'border-red-300' : 'border-gray-300'
                     }`}
                   placeholder={defaultServiceTime.toString()}
                 />
@@ -803,7 +803,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
           <CustomerContactsForm
             contacts={contacts}
             onChange={setContacts}
-            customerId={isEdit  initialData.id : undefined}
+            customerId={isEdit ? initialData.id : undefined}
             viewMode={isEdit}
             onContactSaved={loadCustomerContacts}
           />
@@ -853,7 +853,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
                     setFormData({
                       ...formData,
                       whatsAppOptIn: optIn,
-                      whatsAppOptInDate: optIn  new Date() : undefined
+                      whatsAppOptInDate: optIn ? new Date() : undefined
                     });
                   }}
                   className="w-5 h-5 text-green-600 rounded focus:ring-green-500"
@@ -1009,7 +1009,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
             disabled={loading}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center"
           >
-            {loading  (
+            {loading ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 Kaydediliyor...
@@ -1017,7 +1017,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
             ) : (
               <>
                 <Save className="w-4 h-4 mr-2" />
-                {isEdit  'Güncelle' : 'Kaydet'}
+                {isEdit ? 'Güncelle' : 'Kaydet'}
               </>
             )}
           </button>

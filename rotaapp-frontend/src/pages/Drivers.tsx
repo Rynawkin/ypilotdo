@@ -134,12 +134,12 @@ const Drivers: React.FC = () => {
         comparison = 0;
     }
 
-    return sortDirection === 'asc'  comparison : -comparison;
+      return sortDirection === 'asc' ? comparison : -comparison;
   });
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
-      setSortDirection(sortDirection === 'asc'  'desc' : 'asc');
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
       setSortField(field);
       setSortDirection('desc');
@@ -221,7 +221,7 @@ const Drivers: React.FC = () => {
   // Export drivers to CSV
   const handleExport = () => {
     const dataToExport = selectedDrivers.size > 0
-       sortedDrivers.filter(d => selectedDrivers.has(d.id))
+      ? sortedDrivers.filter(d => selectedDrivers.has(d.id))
       : sortedDrivers;
 
     const csvContent = driverService.exportToCsv(dataToExport);
@@ -231,7 +231,7 @@ const Drivers: React.FC = () => {
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
     const fileName = selectedDrivers.size > 0
-       `secili_suruculer_${new Date().toISOString().split('T')[0]}.csv`
+      ? `secili_suruculer_${new Date().toISOString().split('T')[0]}.csv`
       : `tum_suruculer_${new Date().toISOString().split('T')[0]}.csv`;
     link.setAttribute('download', fileName);
     link.style.visibility = 'hidden';
@@ -260,7 +260,7 @@ const Drivers: React.FC = () => {
 
   // Import drivers from CSV
   const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files.[0];
+    const file = event.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
@@ -275,7 +275,7 @@ const Drivers: React.FC = () => {
 
           if (result.successCount > 0) {
             loadDrivers();
-            alert(`${result.successCount} sürücü başarıyla eklendi.${result.failureCount > 0  ` ${result.failureCount} başarısız.` : ''}`);
+            alert(`${result.successCount} sürücü başarıyla eklendi.${result.failureCount > 0 ? ` ${result.failureCount} başarısız.` : ''}`);
           }
 
           if (result.errors.length > 0) {
@@ -308,7 +308,7 @@ const Drivers: React.FC = () => {
   // ✅ YENİ: Dropdown pozisyonunu hesapla
   const getDropdownPosition = (index: number, totalItems: number) => {
     const shouldOpenUpward = totalItems <= 2 || index >= totalItems - 2;
-    return shouldOpenUpward  'bottom-full mb-2' : 'top-full mt-2';
+    return shouldOpenUpward ? 'bottom-full mb-2' : 'top-full mt-2';
   };
 
   // Get status color
@@ -366,9 +366,9 @@ const Drivers: React.FC = () => {
     if (sortField !== field) {
       return <ChevronUp className="w-4 h-4 text-gray-300" />;
     }
-    return sortDirection === 'asc' 
-      <ChevronUp className="w-4 h-4 text-blue-600" /> :
-      <ChevronDown className="w-4 h-4 text-blue-600" />;
+    return sortDirection === 'asc'
+      ? <ChevronUp className="w-4 h-4 text-blue-600" />
+      : <ChevronDown className="w-4 h-4 text-blue-600" />;
   };
 
   if (loading) {
@@ -404,12 +404,12 @@ const Drivers: React.FC = () => {
               disabled={isImporting}
               className="px-4 py-2 bg-blue-600 border border-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isImporting  (
+              {isImporting ? (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
               ) : (
                 <FileUp className="w-4 h-4 mr-2" />
               )}
-              {isImporting  'İçe Aktarılıyor...' : 'İçe Aktar'}
+              {isImporting ? 'İçe Aktarılıyor...' : 'İçe Aktar'}
             </button>
             <button
               onClick={() => setShowImportHelp(!showImportHelp)}
@@ -486,7 +486,7 @@ const Drivers: React.FC = () => {
             className="px-4 py-2 bg-green-600 border border-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center"
           >
             <FileDown className="w-4 h-4 mr-2" />
-            {selectedDrivers.size > 0  `Seçilenleri Dışa Aktar (${selectedDrivers.size})` : 'Dışa Aktar'}
+            {selectedDrivers.size > 0 ? `Seçilenleri Dışa Aktar (${selectedDrivers.size})` : 'Dışa Aktar'}
           </button>
 
           <Link
@@ -544,7 +544,7 @@ const Drivers: React.FC = () => {
               <p className="text-sm text-gray-600">Ortalama Puan</p>
               <p className="text-2xl font-bold text-gray-900 mt-1">
                 {drivers.length > 0
-                   (drivers.reduce((sum, d) => sum + (d.rating || 0), 0) / drivers.length).toFixed(1)
+                  ? (drivers.reduce((sum, d) => sum + (d.rating || 0), 0) / drivers.length).toFixed(1)
                   : '0.0'}
               </p>
             </div>
@@ -563,7 +563,7 @@ const Drivers: React.FC = () => {
             onClick={() => applyQuickFilter('all')}
             className={`px-4 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors ${
               quickFilter === 'all'
-                 'bg-blue-600 text-white'
+                ? 'bg-blue-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -573,7 +573,7 @@ const Drivers: React.FC = () => {
             onClick={() => applyQuickFilter('available')}
             className={`px-4 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors ${
               quickFilter === 'available'
-                 'bg-green-600 text-white'
+                ? 'bg-green-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -583,7 +583,7 @@ const Drivers: React.FC = () => {
             onClick={() => applyQuickFilter('busy')}
             className={`px-4 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors ${
               quickFilter === 'busy'
-                 'bg-orange-600 text-white'
+                ? 'bg-orange-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -593,7 +593,7 @@ const Drivers: React.FC = () => {
             onClick={() => applyQuickFilter('offline')}
             className={`px-4 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors ${
               quickFilter === 'offline'
-                 'bg-gray-600 text-white'
+                ? 'bg-gray-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -603,7 +603,7 @@ const Drivers: React.FC = () => {
             onClick={() => applyQuickFilter('high_rated')}
             className={`px-4 py-1.5 rounded-lg text-sm whitespace-nowrap transition-colors ${
               quickFilter === 'high_rated'
-                 'bg-yellow-600 text-white'
+                ? 'bg-yellow-600 text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -632,13 +632,13 @@ const Drivers: React.FC = () => {
             <div className="flex items-center bg-gray-100 rounded-lg p-1">
               <button
                 onClick={() => setViewMode('table')}
-                className={`p-2 rounded ${viewMode === 'table'  'bg-white shadow-sm' : 'text-gray-600'}`}
+                className={`p-2 rounded ${viewMode === 'table' ? 'bg-white shadow-sm' : 'text-gray-600'}`}
               >
                 <List className="w-4 h-4" />
               </button>
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded ${viewMode === 'grid'  'bg-white shadow-sm' : 'text-gray-600'}`}
+                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-white shadow-sm' : 'text-gray-600'}`}
               >
                 <Grid className="w-4 h-4" />
               </button>
@@ -693,7 +693,7 @@ const Drivers: React.FC = () => {
       </div>
 
       {/* Table View */}
-      {viewMode === 'table'  (
+      {viewMode === 'table' ? (
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -749,7 +749,7 @@ const Drivers: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {sortedDrivers.length === 0  (
+                {sortedDrivers.length === 0 ? (
                   <tr>
                     <td colSpan={8} className="px-6 py-12 text-center text-gray-500">
                       <User className="w-12 h-12 mx-auto text-gray-300 mb-3" />
@@ -840,7 +840,7 @@ const Drivers: React.FC = () => {
                       <td className="px-6 py-4">
                         <div className="relative">
                           <button
-                            onClick={() => setDropdownOpen(dropdownOpen === driver.id  null : driver.id)}
+                            onClick={() => setDropdownOpen(dropdownOpen === driver.id ? null : driver.id)}
                             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                           >
                             <MoreVertical className="w-5 h-5 text-gray-600" />
@@ -878,12 +878,12 @@ const Drivers: React.FC = () => {
                                   disabled={isDeleting === driver.id}
                                   className="flex items-center px-4 py-2 hover:bg-gray-50 text-red-600 w-full text-left disabled:opacity-50"
                                 >
-                                  {isDeleting === driver.id  (
+                                  {isDeleting === driver.id ? (
                                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                                   ) : (
                                     <Trash2 className="w-4 h-4 mr-2" />
                                   )}
-                                  {isDeleting === driver.id  'Siliniyor...' : 'Sil'}
+                                  {isDeleting === driver.id ? 'Siliniyor...' : 'Sil'}
                                 </button>
                               </div>
                             </>
@@ -900,7 +900,7 @@ const Drivers: React.FC = () => {
       ) : (
         /* Grid View */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {sortedDrivers.length === 0  (
+          {sortedDrivers.length === 0 ? (
             <div className="col-span-full text-center py-12">
               <User className="w-12 h-12 mx-auto text-gray-300 mb-3" />
               <p className="text-gray-500">Sürücü bulunamadı</p>
@@ -929,7 +929,7 @@ const Drivers: React.FC = () => {
                   </div>
                   <div className="relative">
                     <button
-                      onClick={() => setDropdownOpen(dropdownOpen === driver.id  null : driver.id)}
+                        onClick={() => setDropdownOpen(dropdownOpen === driver.id ? null : driver.id)}
                       className="p-1 hover:bg-gray-100 rounded transition-colors"
                     >
                       <MoreVertical className="w-4 h-4 text-gray-600" />
@@ -967,12 +967,12 @@ const Drivers: React.FC = () => {
                             disabled={isDeleting === driver.id}
                             className="flex items-center px-3 py-1.5 hover:bg-gray-50 text-red-600 w-full text-left text-sm disabled:opacity-50"
                           >
-                            {isDeleting === driver.id  (
+                              {isDeleting === driver.id ? (
                               <Loader2 className="w-3 h-3 mr-2 animate-spin" />
                             ) : (
                               <Trash2 className="w-3 h-3 mr-2" />
                             )}
-                            {isDeleting === driver.id  'Siliniyor...' : 'Sil'}
+                              {isDeleting === driver.id ? 'Siliniyor...' : 'Sil'}
                           </button>
                         </div>
                       </>

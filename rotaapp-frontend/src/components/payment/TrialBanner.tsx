@@ -36,7 +36,7 @@ export const TrialBanner: React.FC<TrialBannerProps> = ({
 
   const handleDismiss = () => {
     setDismissed(true);
-    onDismiss.();
+    onDismiss?.();
   };
 
   if (loading || dismissed || !trialStatus.isActive) {
@@ -83,7 +83,7 @@ export const TrialBanner: React.FC<TrialBannerProps> = ({
           {getIcon()}
           <div className="flex-1">
             <h3 className="text-sm font-medium">
-              {isExpired  'Deneme Süresi Bitti' : 'Deneme Süresi'}
+              {isExpired ? 'Deneme S?resi Bitti' : 'Deneme S?resi'}
             </h3>
             <p className="mt-1 text-sm">{getMessage()}</p>
             

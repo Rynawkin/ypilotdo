@@ -167,8 +167,8 @@ const Journeys: React.FC = () => {
     if (action === 'delete') {
       setShowDeleteConfirmDialog(true);
     } else {
-      const confirmMessage = action === 'cancel' 
-         `${selectedJourneyIds.size} seferi iptal etmek istediğinizden emin misiniz`
+      const confirmMessage = action === 'cancel'
+        ? `${selectedJourneyIds.size} seferi iptal etmek istediğinizden emin misiniz`
         : `${selectedJourneyIds.size} seferi arşivlemek istediğinizden emin misiniz`;
       
       if (window.confirm(confirmMessage)) {
@@ -419,8 +419,8 @@ const Journeys: React.FC = () => {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Seferler</h1>
           <p className="text-gray-600 mt-1">
-            {user.isDriver && !canAccessDispatcherFeatures() 
-               'Seferlerinizi takip edin ve yönetin'
+            {user.isDriver && !canAccessDispatcherFeatures()
+              ? 'Seferlerinizi takip edin ve yönetin'
               : 'Aktif seferleri takip edin ve yönetin'}
           </p>
         </div>
@@ -455,7 +455,7 @@ const Journeys: React.FC = () => {
                 disabled={bulkActionLoading}
                 className="px-3 py-1.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors flex items-center text-sm disabled:opacity-50"
               >
-                {bulkActionLoading && bulkActionType === 'cancel'  (
+                {bulkActionLoading && bulkActionType === 'cancel' ? (
                   <Loader2 className="w-4 h-4 mr-1 animate-spin" />
                 ) : (
                   <Ban className="w-4 h-4 mr-1" />
@@ -468,7 +468,7 @@ const Journeys: React.FC = () => {
                 disabled={bulkActionLoading}
                 className="px-3 py-1.5 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center text-sm disabled:opacity-50"
               >
-                {bulkActionLoading && bulkActionType === 'archive'  (
+                {bulkActionLoading && bulkActionType === 'archive' ? (
                   <Loader2 className="w-4 h-4 mr-1 animate-spin" />
                 ) : (
                   <Archive className="w-4 h-4 mr-1" />
@@ -481,7 +481,7 @@ const Journeys: React.FC = () => {
                 disabled={bulkActionLoading}
                 className="px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center text-sm disabled:opacity-50"
               >
-                {bulkActionLoading && bulkActionType === 'delete'  (
+                {bulkActionLoading && bulkActionType === 'delete' ? (
                   <Loader2 className="w-4 h-4 mr-1 animate-spin" />
                 ) : (
                   <Trash2 className="w-4 h-4 mr-1" />
@@ -525,7 +525,7 @@ const Journeys: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">
-                {user.isDriver && !canAccessDispatcherFeatures()  'Toplam Mesafem' : 'Toplam Mesafe'}
+                {user.isDriver && !canAccessDispatcherFeatures() ? 'Toplam Mesafem' : 'Toplam Mesafe'}
               </p>
               <p className="text-2xl font-bold text-gray-900 mt-1">
                 {journeys.reduce((sum, j) => sum + j.totalDistance, 0).toFixed(1)} km
@@ -542,6 +542,7 @@ const Journeys: React.FC = () => {
               <p className="text-sm text-gray-600">Ortalama Süre</p>
               <p className="text-2xl font-bold text-gray-900 mt-1">
                 {journeys.length > 0 
+                  ?
                    formatDuration(
                       Math.round(journeys.reduce((sum, j) => sum + j.totalDuration, 0) / journeys.length)
                     )
@@ -562,7 +563,7 @@ const Journeys: React.FC = () => {
           onClick={() => setSelectedStatus('all')}
           className={`px-4 py-2 rounded-md transition-colors ${
             selectedStatus === 'all' 
-               'bg-blue-600 text-white' 
+              ? 'bg-blue-600 text-white' 
               : 'text-gray-600 hover:bg-gray-100'
           }`}
         >
@@ -572,7 +573,7 @@ const Journeys: React.FC = () => {
           onClick={() => setSelectedStatus('active')}
           className={`px-4 py-2 rounded-md transition-colors ${
             selectedStatus === 'active' 
-               'bg-blue-600 text-white' 
+              ? 'bg-blue-600 text-white' 
               : 'text-gray-600 hover:bg-gray-100'
           }`}
         >
@@ -582,7 +583,7 @@ const Journeys: React.FC = () => {
           onClick={() => setSelectedStatus('completed')}
           className={`px-4 py-2 rounded-md transition-colors ${
             selectedStatus === 'completed' 
-               'bg-blue-600 text-white' 
+              ? 'bg-blue-600 text-white' 
               : 'text-gray-600 hover:bg-gray-100'
           }`}
         >
@@ -592,7 +593,7 @@ const Journeys: React.FC = () => {
           onClick={() => setSelectedStatus('cancelled')}
           className={`px-4 py-2 rounded-md transition-colors ${
             selectedStatus === 'cancelled' 
-               'bg-blue-600 text-white' 
+              ? 'bg-blue-600 text-white' 
               : 'text-gray-600 hover:bg-gray-100'
           }`}
         >
@@ -602,7 +603,7 @@ const Journeys: React.FC = () => {
           onClick={() => setSelectedStatus('archived')}
           className={`px-4 py-2 rounded-md transition-colors ${
             selectedStatus === 'archived' 
-               'bg-blue-600 text-white' 
+              ? 'bg-blue-600 text-white' 
               : 'text-gray-600 hover:bg-gray-100'
           }`}
         >
@@ -617,9 +618,9 @@ const Journeys: React.FC = () => {
             onClick={handleSelectAll}
             className="flex items-center text-sm text-gray-600 hover:text-gray-900"
           >
-            {selectedJourneyIds.size === filteredJourneys.length  (
+            {selectedJourneyIds.size === filteredJourneys.length ? (
               <CheckSquare className="w-5 h-5 mr-2 text-blue-600" />
-            ) : selectedJourneyIds.size > 0 && selectedJourneyIds.size < filteredJourneys.length  (
+            ) : selectedJourneyIds.size > 0 && selectedJourneyIds.size < filteredJourneys.length ? (
               <div className="w-5 h-5 mr-2 border-2 border-blue-600 rounded">
                 <div className="w-2 h-2 bg-blue-600 m-0.5" />
               </div>
@@ -633,12 +634,12 @@ const Journeys: React.FC = () => {
 
       {/* Journeys List */}
       <div className="space-y-4">
-        {filteredJourneys.length === 0  (
+        {filteredJourneys.length === 0 ? (
           <div className="bg-white rounded-lg shadow-sm p-12 text-center">
             <Package className="w-12 h-12 mx-auto text-gray-300 mb-3" />
             <p className="text-gray-500">
               {user.isDriver && !canAccessDispatcherFeatures() 
-                 'Size ait sefer bulunamadı'
+                ? 'Size ait sefer bulunamadı'
                 : 'Sefer bulunamadı'}
             </p>
             {selectedStatus === 'active' && (
@@ -651,6 +652,7 @@ const Journeys: React.FC = () => {
           filteredJourneys.map((journey) => {
             const failedStops = getFailedStops(journey);
             const displayedCompletedStops = journey.status === 'completed' 
+              ?
                journey.totalStops - failedStops
               : journey.completedStops;
 
@@ -664,7 +666,7 @@ const Journeys: React.FC = () => {
                         onClick={() => handleSelectJourney(journey.id)}
                         className="p-1 hover:bg-gray-100 rounded transition-colors"
                       >
-                        {isJourneySelected(journey.id)  (
+                        {isJourneySelected(journey.id) ? (
                           <CheckSquare className="w-5 h-5 text-blue-600" />
                         ) : (
                           <Square className="w-5 h-5 text-gray-400" />
@@ -704,9 +706,9 @@ const Journeys: React.FC = () => {
                         <span>İlerleme</span>
                         <span>
                           {journey.status === 'completed' 
-                             `${journey.totalStops} / ${journey.totalStops} durak`
+                            ? `${journey.totalStops} / ${journey.totalStops} durak`
                             : failedStops > 0
-                               `${displayedCompletedStops} başarılı, ${failedStops} başarısız / ${journey.totalStops} durak`
+                              ? `${displayedCompletedStops} başarılı, ${failedStops} başarısız / ${journey.totalStops} durak`
                               : `${displayedCompletedStops} / ${journey.totalStops} durak`
                           }
                         </span>
@@ -755,7 +757,7 @@ const Journeys: React.FC = () => {
                   {/* Actions */}
                   <div className="relative ml-4">
                     <button
-                      onClick={() => setDropdownOpen(dropdownOpen === journey.id.toString()  null : journey.id.toString())}
+                      onClick={() => setDropdownOpen(dropdownOpen === journey.id.toString() ? null : journey.id.toString())}
                       className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
                     >
                       <MoreVertical className="w-5 h-5 text-gray-600" />
@@ -836,17 +838,17 @@ const Journeys: React.FC = () => {
           <div className="bg-white rounded-lg p-6 w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Rota Seçin</h2>
             
-            {availableRoutes.length === 0  (
+            {availableRoutes.length === 0 ? (
               <div className="text-center py-8">
                 <AlertCircle className="w-12 h-12 mx-auto text-yellow-500 mb-3" />
                 <p className="text-gray-600">
-                  {user.isDriver && !canAccessDispatcherFeatures()
-                     'Size atanmış başlatılabilecek rota bulunamadı.'
+                    {user.isDriver && !canAccessDispatcherFeatures() ?
+                       'Size atanmış başlatılabilecek rota bulunamadı.'
                     : 'Başlatılabilecek rota bulunamadı.'}
                 </p>
                 <p className="text-sm text-gray-500 mt-2">
-                  {user.isDriver && !canAccessDispatcherFeatures()
-                     'Yöneticinizin size rota atamasını bekleyin.'
+                    {user.isDriver && !canAccessDispatcherFeatures() ?
+                       'Yöneticinizin size rota atamasını bekleyin.'
                     : 'Sefer başlatmak için rotaya sürücü ve araç atamanız gerekiyor.'}
                 </p>
               </div>
@@ -857,8 +859,8 @@ const Journeys: React.FC = () => {
                     key={route.id}
                     onClick={() => setSelectedRoute(route)}
                     className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-                      selectedRoute.id === route.id 
-                         'border-blue-500 bg-blue-50' 
+                        selectedRoute.id === route.id ? 
+                           'border-blue-500 bg-blue-50' 
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
@@ -958,9 +960,9 @@ const Journeys: React.FC = () => {
                 type="number"
                 min="0"
                 value={startKm || ''}
-                onChange={(e) => setStartKm(e.target.value  parseInt(e.target.value) : undefined)}
+                  onChange={(e) => setStartKm(e.target.value ? parseInt(e.target.value) : undefined)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder={selectedRoute.vehicle.currentKm  selectedRoute.vehicle.currentKm.toString() : 'Örn: 50000'}
+                  placeholder={selectedRoute.vehicle.currentKm ? selectedRoute.vehicle.currentKm.toString() : 'Örn: 50000'}
               />
               <p className="text-xs text-gray-500 mt-1">
                 Sefer başlatılırken aracın kilometre bilgisi
@@ -1027,7 +1029,7 @@ const Journeys: React.FC = () => {
                 disabled={bulkActionLoading}
                 className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center disabled:opacity-50"
               >
-                {bulkActionLoading  (
+                {bulkActionLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     Siliniyor...

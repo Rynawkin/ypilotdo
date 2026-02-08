@@ -46,13 +46,13 @@ export const useSignalR = (options: UseSignalROptions = {}) => {
       await signalRService.connect();
       if (mountedRef.current) {
         setIsConnected(true);
-        onConnected.();
+        onConnected?.();
       }
     } catch (error) {
       console.error('Failed to connect to SignalR:', error);
       if (mountedRef.current) {
         setIsConnected(false);
-        onError.(error);
+        onError?.(error);
       }
     } finally {
       connectionRef.current = null;
@@ -64,11 +64,11 @@ export const useSignalR = (options: UseSignalROptions = {}) => {
       await signalRService.disconnect();
       if (mountedRef.current) {
         setIsConnected(false);
-        onDisconnected.();
+        onDisconnected?.();
       }
     } catch (error) {
       console.error('Failed to disconnect from SignalR:', error);
-      onError.(error);
+      onError?.(error);
     }
   };
 
