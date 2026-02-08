@@ -477,8 +477,8 @@ const JourneyDetail: React.FC = () => {
       try {
         // Planned seferlerde şoför henüz yola çıkmadığı için depo konumunu kullan
         // Route'dan veya StartDetails'dan konumu al
-        const lat = journey.startDetails.latitude || journey.route.startDetails.latitude || 0;
-        const lng = journey.startDetails.longitude || journey.route.startDetails.longitude || 0;
+        const lat = journey.startDetails?.latitude || journey.route?.startDetails?.latitude || 0;
+        const lng = journey.startDetails?.longitude || journey.route?.startDetails?.longitude || 0;
 
         console.log('Optimizing with coordinates:', { lat, lng });
 
@@ -885,7 +885,7 @@ const JourneyDetail: React.FC = () => {
     doc.text('SEFER DETAY RAPORU', pageWidth / 2, 20, { align: 'center' });
 
     // Journey Name
-    const journeyName = fixTurkish(journey.name || journey.route.name || `Sefer #${journey.id}`);
+    const journeyName = fixTurkish(journey.name || journey.route?.name || `Sefer #${journey.id}`);
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(255, 255, 255);
@@ -914,8 +914,8 @@ const JourneyDetail: React.FC = () => {
 
     // Info cards in 2x4 grid
     const infoData = [
-      { label: 'Surucu', value: fixTurkish(journey.driver.fullName || journey.driver.name || journey.route.driver.name || '-') },
-      { label: 'Arac', value: fixTurkish(journey.route.vehicle.plateNumber || journey.vehicle.plateNumber || '-') },
+      { label: 'Surucu', value: fixTurkish(journey.driver?.fullName || journey.driver?.name || journey.route?.driver?.name || '-') },
+      { label: 'Arac', value: fixTurkish(journey.route?.vehicle?.plateNumber || journey.vehicle?.plateNumber || '-') },
       { label: 'Durum', value: fixTurkish(
         journey.status === 'preparing' ? 'Hazirlaniyor' :
         journey.status === 'planned' ? 'Planlandi' :
@@ -1129,10 +1129,10 @@ const JourneyDetail: React.FC = () => {
     const generalInfo = [
       ['SEFER DETAY RAPORU'],
       [],
-      ['Sefer', journey.name || journey.route.name || `#${journey.id}`],
+      ['Sefer', journey.name || journey.route?.name || `#${journey.id}`],
       ['Tarih', new Date().toLocaleDateString('tr-TR')],
-      ['Sürücü', journey.driver.fullName || journey.driver.name || journey.route.driver.name || '-'],
-      ['Araç', `${journey.route.vehicle.plateNumber || journey.vehicle.plateNumber || '-'}`],
+      ['Sürücü', journey.driver?.fullName || journey.driver?.name || journey.route?.driver?.name || '-'],
+      ['Araç', `${journey.route?.vehicle?.plateNumber || journey.vehicle?.plateNumber || '-'}`],
       ['Durum',
         journey.status === 'preparing' ? 'Hazırlanıyor' :
         journey.status === 'planned' ? 'Planlandı' :
@@ -1482,7 +1482,7 @@ const JourneyDetail: React.FC = () => {
           </button>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              {journey.name || journey.route.name || `Sefer #${journey.id}`}
+              {journey.name || journey.route?.name || `Sefer #${journey.id}`}
             </h1>
             <p className="text-gray-600">Sefer Detayları</p>
           </div>
@@ -1512,7 +1512,7 @@ const JourneyDetail: React.FC = () => {
           </button>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              {journey.name || journey.route.name || `Sefer #${journey.id}`}
+              {journey.name || journey.route?.name || `Sefer #${journey.id}`}
             </h1>
             <p className="text-gray-600">Sefer Detayları</p>
           </div>
@@ -1719,15 +1719,15 @@ const JourneyDetail: React.FC = () => {
             <User className="w-4 h-4 text-gray-400" />
           </div>
           <p className="font-semibold text-gray-900">
-            {journey.driver.fullName || journey.driver.name || journey.route.driver.name || 'Atanmadı'}
+            {journey.driver?.fullName || journey.driver?.name || journey.route?.driver?.name || 'Atanmadı'}
           </p>
-          {(journey.driver.phoneNumber || journey.driver.phone || journey.route.driver.phone) && (
+          {(journey.driver?.phoneNumber || journey.driver?.phone || journey.route?.driver?.phone) && (
             <a
-              href={`tel:${journey.driver.phoneNumber || journey.driver.phone || journey.route.driver.phone}`}
+              href={`tel:${journey.driver?.phoneNumber || journey.driver?.phone || journey.route?.driver?.phone}`}
               className="text-sm text-blue-600 hover:text-blue-700 flex items-center mt-1"
             >
               <Phone className="w-3 h-3 mr-1" />
-              {journey.driver.phoneNumber || journey.driver.phone || journey.route.driver.phone}
+              {journey.driver?.phoneNumber || journey.driver?.phone || journey.route?.driver?.phone}
             </a>
           )}
         </div>
@@ -1738,10 +1738,10 @@ const JourneyDetail: React.FC = () => {
             <Truck className="w-4 h-4 text-gray-400" />
           </div>
           <p className="font-semibold text-gray-900">
-            {journey.route.vehicle.plateNumber || journey.vehicle.plateNumber || 'Atanmadı'}
+            {journey.route?.vehicle?.plateNumber || journey.vehicle?.plateNumber || 'Atanmadı'}
           </p>
           <p className="text-sm text-gray-500">
-            {journey.route.vehicle.brand || journey.vehicle.brand} {journey.route.vehicle.model || journey.vehicle.model}
+            {journey.route?.vehicle?.brand || journey.vehicle?.brand} {journey.route?.vehicle?.model || journey.vehicle?.model}
           </p>
         </div>
 
@@ -2104,9 +2104,9 @@ const JourneyDetail: React.FC = () => {
                     </span>
                   </div>
                   <p className="text-sm text-blue-700 mb-2">
-                    {journey.route.depot.name} - {journey.route.depot.address}
+                    {journey.route?.depot?.name} - {journey.route?.depot?.address}
                   </p>
-                  {journey.route.startDetails.plannedStartTime && (
+                  {journey.route?.startDetails?.plannedStartTime && (
                     <div className="mt-2 p-2 bg-blue-100 border border-blue-300 rounded">
                       <div className="text-xs font-medium text-blue-800 mb-1">
                         Planlanan Çıkış Saati
@@ -2114,7 +2114,7 @@ const JourneyDetail: React.FC = () => {
                       <div className="flex items-center justify-between">
                         <span className="text-blue-700">Depodan Çıkış:</span>
                         <span className="font-bold text-blue-900 text-sm">
-                          {formatTimeSpan(journey.route.startDetails.plannedStartTime)}
+                          {formatTimeSpan(journey.route?.startDetails?.plannedStartTime)}
                         </span>
                       </div>
                     </div>
@@ -2485,7 +2485,7 @@ const JourneyDetail: React.FC = () => {
         </div>
 
         {/* Depo Dönüş - SON DURAKTAN SONRA EKLENEN */}
-        {journey.route.optimized && journey.route.endDetails && journey.route.endDetails.estimatedArrivalTime && (
+        {journey.route?.optimized && journey.route?.endDetails && journey.route?.endDetails?.estimatedArrivalTime && (
           <div className="p-4 bg-green-50 border-t-2 border-green-200">
             <div className="flex items-start">
               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-green-600 text-white font-semibold text-sm mr-3 flex-shrink-0">
@@ -2507,7 +2507,7 @@ const JourneyDetail: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <span className="text-green-700">Depoya Varış:</span>
                     <span className="font-bold text-green-900 text-sm">
-                      {formatETA(journey.route.endDetails.estimatedArrivalTime)}
+                      {formatETA(journey.route?.endDetails?.estimatedArrivalTime)}
                     </span>
                   </div>
                 </div>
