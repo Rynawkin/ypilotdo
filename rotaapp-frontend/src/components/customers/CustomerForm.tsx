@@ -95,8 +95,8 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
 
   // Time window state
   const [hasTimeWindow, setHasTimeWindow] = useState(!!initialData.timeWindow);
-  const [timeWindowStart, setTimeWindowStart] = useState(initialData.timeWindow.start || '09:00');
-  const [timeWindowEnd, setTimeWindowEnd] = useState(initialData.timeWindow.end || '17:00');
+  const [timeWindowStart, setTimeWindowStart] = useState(initialData.timeWindow?.start || '09:00');
+  const [timeWindowEnd, setTimeWindowEnd] = useState(initialData.timeWindow?.end || '17:00');
 
   // Tags state
   const [tagInput, setTagInput] = useState('');
