@@ -353,7 +353,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, onLogout }) => {
   // Get current page title
   const getCurrentPageTitle = () => {
     const currentItem = menuItems.find(item => item.path === location.pathname);
-    return currentItem.label || 'Dashboard';
+    return currentItem?.label || 'Dashboard';
   };
 
   // Logout handler

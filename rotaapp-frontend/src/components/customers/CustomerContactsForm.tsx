@@ -243,7 +243,7 @@ const CustomerContactsForm: React.FC<CustomerContactsFormProps> = ({
 
 
   const getRoleLabel = (value: string) => {
-    return CONTACT_ROLES.find(r => r.value === value).label || value;
+    return CONTACT_ROLES.find(r => r.value === value)?.label || value;
   };
 
   const getRoleColor = (role: string) => {
