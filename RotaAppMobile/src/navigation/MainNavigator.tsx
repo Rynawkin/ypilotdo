@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, Alert, Modal, Text, Pressable, Dimensions, Platform, StatusBar } from 'react-native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Badge } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -10,7 +10,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import OfflineIndicator from '../components/OfflineIndicator';
 import notificationService from '../services/notificationService';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Screens
 import DashboardScreen from '../screens/dashboard/DashboardScreen';
@@ -62,6 +62,12 @@ import EditDepotScreen from '../screens/depots/EditDepotScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
+
+const AppTabBar = (props: any) => (
+  <SafeAreaView edges={['bottom']} style={styles.tabBarSafeArea}>
+    <BottomTabBar {...props} />
+  </SafeAreaView>
+);
 
 // Header Component - Modal ile dropdown
 const HeaderRight = () => {
@@ -674,10 +680,12 @@ const TabNavigator = () => {
     ? Math.max(0, screenHeight - windowHeight - statusBarHeight)
     : 0;
   const androidFallbackInset = Platform.OS === 'android' ? 48 : 0;
-  const bottomInset = Math.max(insets.bottom, androidNavBarHeight, androidFallbackInset);
+  const rawBottomInset = Math.max(insets.bottom, androidNavBarHeight, androidFallbackInset);
+  const extraBottomInset = Math.max(0, rawBottomInset - insets.bottom);
 
   return (
     <Tab.Navigator
+      tabBar={(props) => <AppTabBar {...props} />}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -710,11 +718,11 @@ const TabNavigator = () => {
         },
         tabBarActiveTintColor: '#3B82F6',
         tabBarInactiveTintColor: 'gray',
-        tabBarSafeAreaInsets: { bottom: bottomInset },
+        tabBarSafeAreaInsets: { bottom: 0 },
         tabBarStyle: {
           paddingVertical: 5,
-          height: 60 + bottomInset,
-          paddingBottom: bottomInset, // YENİ
+          height: 60 + rawBottomInset,
+          paddingBottom: extraBottomInset, // YENİ
         },
         tabBarLabelStyle: {
           fontSize: 12,
@@ -818,6 +826,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 12,
+  },
+  tabBarSafeArea: {
+    backgroundColor: '#fff',
   },
   notificationButton: {
     padding: 8,
