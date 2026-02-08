@@ -454,7 +454,11 @@ const MapComponent: React.FC<MapComponentProps> = ({
     // Customer markers
     if (markers && markers.length > 0) {
       markers.forEach((marker, index) => {
-        if (!marker.position || !marker.position.lat || !marker.position.lng) {
+        if (!marker) {
+          console.warn(`Empty marker at index ${index}`);
+          return;
+        }
+        if (!marker.position || marker.position.lat == null || marker.position.lng == null) {
           console.warn(`Invalid marker position for index ${index}:`, marker);
           return;
         }

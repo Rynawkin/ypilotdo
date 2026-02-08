@@ -2088,7 +2088,7 @@ const JourneyDetail: React.FC = () => {
         </div>
         <div className="divide-y">
           {/* BAŞLANGIÇ DEPOSU - EN BAŞA EKLENDİ */}
-          {journey.route.depot && (
+          {journey.route?.depot && (
             <div className="p-4 bg-blue-50 border-b-2 border-blue-200">
               <div className="flex items-start">
                 <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-600 text-white font-semibold text-sm mr-3 flex-shrink-0">
