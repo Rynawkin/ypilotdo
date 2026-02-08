@@ -65,7 +65,7 @@ const Customers: React.FC = () => {
       setCustomers(data);
     } catch (error: any) {
       console.error('Error loading customers:', error);
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Müşteriler yüklenirken hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Müşteriler yüklenirken hata oluştu';
       console.error('User-friendly error:', errorMessage);
     } finally {
       setLoading(false);
@@ -107,7 +107,7 @@ const Customers: React.FC = () => {
       normalizeSearchText(customer.phone).includes(normalizedSearchQuery);
 
     const matchesTags = selectedTags.length === 0 ||
-      selectedTags.some(tag => customer.tags.includes(tag));
+      selectedTags.some(tag => customer.tags?.includes(tag));
 
     // Quick filter: time window
     const matchesTimeWindow = quickFilter !== 'time_window' || customer.timeWindow;
@@ -189,7 +189,7 @@ const Customers: React.FC = () => {
 
   // Delete customer
   const handleDelete = async (id: number) => {
-    if (window.confirm('Bu müşteriyi silmek istediğinizden emin misiniz')) {
+    if (window.confirm('Bu müşteriyi silmek istediğinizden emin misiniz?')) {
       await customerService.delete(id);
       loadCustomers();
     }
@@ -199,7 +199,7 @@ const Customers: React.FC = () => {
   const handleBulkDelete = async () => {
     if (selectedCustomers.size === 0) return;
 
-    if (window.confirm(`${selectedCustomers.size} müşteriyi silmek istediğinizden emin misiniz`)) {
+    if (window.confirm(`${selectedCustomers.size} müşteriyi silmek istediğinizden emin misiniz?`)) {
       try {
         await Promise.all(
           Array.from(selectedCustomers).map(id => customerService.delete(id))
@@ -228,7 +228,7 @@ const Customers: React.FC = () => {
       customer.phone,
       customer.email || '',
       customer.timeWindow ? `${customer.timeWindow.start}-${customer.timeWindow.end}` : '',
-      customer.tags.join(', ') || '',
+      customer.tags?.join(', ') || '',
       customer.notes || ''
     ]);
 
@@ -275,7 +275,7 @@ const Customers: React.FC = () => {
     const reader = new FileReader();
     reader.onload = async (e) => {
       try {
-        const text = e.target.result as string;
+        const text = e.target?.result as string;
 
         // 3. Malicious content check - script tags, executable code patterns
         const dangerousPatterns = [
@@ -314,7 +314,7 @@ const Customers: React.FC = () => {
           if (!line) continue;
 
           // CSV satırını parse et (tırnak işaretlerini dikkate al)
-          const values = line.match(/(".*"|[^,]+)/g).map(v => v.replace(/"/g, '').trim()) || [];
+          const values = line.match(/(".*?"|[^,]+)/g)?.map(v => v.replace(/"/g, '').trim()) || [];
 
           if (values.length >= 4) { // En az kod, isim, adres, telefon olmalı
             const [timeStart, timeEnd] = values[5] ? values[5].split('-') : ['', ''];
@@ -342,7 +342,7 @@ const Customers: React.FC = () => {
           const confirmMessage = `✅ ${newCustomers.length} müşteri içe aktarılacak.\n\n` +
             `⚠️ ÖNEMLİ: Koordinat bilgileri eksik!\n` +
             `İçe aktarılan müşterilerin koordinatlarını manuel olarak girmeniz gerekecek.\n\n` +
-            `Devam etmek istiyor musunuz`;
+            `Devam etmek istiyor musunuz?`;
 
           if (window.confirm(confirmMessage)) {
             try {
@@ -350,7 +350,7 @@ const Customers: React.FC = () => {
               alert(`✅ ${newCustomers.length} müşteri başarıyla içe aktarıldı!\n\n⚠️ Koordinatları düzenlemeyi unutmayın!`);
               loadCustomers();
             } catch (error: any) {
-              const errorMessage = error.userFriendlyMessage || error.response.data.message || 'İçe aktarma sırasında bir hata oluştu';
+              const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'İçe aktarma sırasında bir hata oluştu';
               alert(`❌ ${errorMessage}`);
               console.error('Import error:', error);
             }
@@ -406,9 +406,9 @@ const Customers: React.FC = () => {
     if (sortField !== field) {
       return <ChevronUp className="w-4 h-4 text-gray-300" />;
     }
-    return sortDirection === 'asc'
-      ? <ChevronUp className="w-4 h-4 text-blue-600" />
-      : <ChevronDown className="w-4 h-4 text-blue-600" />;
+    return sortDirection === 'asc' ?
+      <ChevronUp className="w-4 h-4 text-blue-600" /> :
+      <ChevronDown className="w-4 h-4 text-blue-600" />;
   };
 
   if (loading) {
@@ -440,7 +440,7 @@ const Customers: React.FC = () => {
           {/* Import Button with Help */}
           <div className="relative">
             <button
-              onClick={() => fileInputRef.current.click()}
+              onClick={() => fileInputRef.current?.click()}
               className="px-4 py-2 bg-blue-600 border border-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
             >
               <FileUp className="w-4 h-4 mr-2" />
@@ -451,7 +451,7 @@ const Customers: React.FC = () => {
               className="absolute -top-1 -right-1 w-5 h-5 bg-yellow-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-yellow-600 transition-colors"
               title="Yardım"
             >
-              
+              ?
             </button>
 
             {/* Import Help Modal */}
@@ -561,7 +561,7 @@ const Customers: React.FC = () => {
             <div>
               <p className="text-sm text-gray-600">VIP Müşteri</p>
               <p className="text-2xl font-bold text-gray-900 mt-1">
-                {customers.filter(c => c.tags.includes('vip')).length}
+                {customers.filter(c => c.tags?.includes('vip')).length}
               </p>
             </div>
             <div className="p-3 bg-yellow-100 rounded-lg">
@@ -606,7 +606,7 @@ const Customers: React.FC = () => {
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            VIP ({customers.filter(c => c.tags.includes('vip')).length})
+            VIP ({customers.filter(c => c.tags?.includes('vip')).length})
           </button>
           <button
             onClick={() => applyQuickFilter('time_window')}
@@ -1111,7 +1111,7 @@ const Customers: React.FC = () => {
                   </div>
                   <div className="relative">
                     <button
-                        onClick={() => setDropdownOpen(dropdownOpen === customer.id ? null : customer.id)}
+                      onClick={() => setDropdownOpen(dropdownOpen === customer.id ? null : customer.id)}
                       className="p-1 hover:bg-gray-100 rounded transition-colors"
                     >
                       <MoreVertical className="w-4 h-4 text-gray-600" />

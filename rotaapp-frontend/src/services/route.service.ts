@@ -6,42 +6,42 @@ export interface CreateRouteDto {
   name: string;
   date: string;
   depotId: number;
-  driverId: number;
-  vehicleId: number;
-  isPermanent: boolean;
-  optimized: boolean;
-  totalDistance: number;
-  totalDuration: number;
-  notes: string;
+  driverId?: number;
+  vehicleId?: number;
+  isPermanent?: boolean;
+  optimized?: boolean;
+  totalDistance?: number;
+  totalDuration?: number;
+  notes?: string;
   stops: Array<{
     customerId: number;
     name: string;
     address: string;
     latitude: number;
     longitude: number;
-    notes: string;
-    contactFullName: string;
-    contactPhone: string;
-    contactEmail: string;
+    notes?: string;
+    contactFullName?: string;
+    contactPhone?: string;
+    contactEmail?: string;
     type: number;
     orderType: number;
     proofOfDeliveryRequired: boolean;
-    signatureRequired: boolean;  // ✅ YENİ
-    photoRequired: boolean;       // ✅ YENİ
-    arriveBetweenStart: string | null;
-    arriveBetweenEnd: string | null;
-    serviceTime: string | null;
-    estimatedArrivalTime: string | null;
-    estimatedDepartureTime: string | null;
+    signatureRequired?: boolean;  // ✅ YENİ
+    photoRequired?: boolean;       // ✅ YENİ
+    arriveBetweenStart?: string | null;
+    arriveBetweenEnd?: string | null;
+    serviceTime?: string | null;
+    estimatedArrivalTime?: string | null;
+    estimatedDepartureTime?: string | null;
   }>;
-  startDetails: {
+  startDetails?: {
     startTime: string;
     name: string;
     address: string;
     latitude: number;
     longitude: number;
   };
-  endDetails: {
+  endDetails?: {
     name: string;
     address: string;
     latitude: number;
@@ -50,43 +50,43 @@ export interface CreateRouteDto {
 }
 
 export interface UpdateRouteDto {
-  name: string;
-  date: string;
-  depotId: number;
-  driverId: number;
-  vehicleId: number;
-  optimized: boolean;
-  totalDistance: number;
-  totalDuration: number;
-  stops: Array<{
+  name?: string;
+  date?: string;
+  depotId?: number;
+  driverId?: number;
+  vehicleId?: number;
+  optimized?: boolean;
+  totalDistance?: number;
+  totalDuration?: number;
+  stops?: Array<{
     customerId: number;
     name: string;
     address: string;
     latitude: number;
     longitude: number;
-    notes: string;
-    contactFullName: string;
-    contactPhone: string;
-    contactEmail: string;
+    notes?: string;
+    contactFullName?: string;
+    contactPhone?: string;
+    contactEmail?: string;
     type: number;
     orderType: number;
     proofOfDeliveryRequired: boolean;
-    signatureRequired: boolean;  // ✅ YENİ
-    photoRequired: boolean;       // ✅ YENİ
-    arriveBetweenStart: string | null;
-    arriveBetweenEnd: string | null;
-    serviceTime: string | null;
-    estimatedArrivalTime: string | null;
-    estimatedDepartureTime: string | null;
+    signatureRequired?: boolean;  // ✅ YENİ
+    photoRequired?: boolean;       // ✅ YENİ
+    arriveBetweenStart?: string | null;
+    arriveBetweenEnd?: string | null;
+    serviceTime?: string | null;
+    estimatedArrivalTime?: string | null;
+    estimatedDepartureTime?: string | null;
   }>;
-  startDetails: {
+  startDetails?: {
     startTime: string;
     name: string;
     address: string;
     latitude: number;
     longitude: number;
   };
-  endDetails: {
+  endDetails?: {
     name: string;
     address: string;
     latitude: number;
@@ -116,7 +116,7 @@ class RouteService {
       const response = await api.get(`${this.baseUrl}/optimization-jobs/${jobId}`);
       const job = response.data;
 
-      if (job.status === 'completed' || job.status === 'failed') {
+      if (job?.status === 'completed' || job?.status === 'failed') {
         return job;
       }
 
@@ -127,7 +127,7 @@ class RouteService {
   }
 
   private buildOptimizationResponse(data: any, customers: any[]): OptimizationResponse {
-    const optimizedStops = data.optimizedStops.map((stop: any) => {
+    const optimizedStops = data.optimizedStops?.map((stop: any) => {
       const customer = customers.find(c => c.id.toString() === stop.customerId.toString());
 
       return {
@@ -139,7 +139,7 @@ class RouteService {
       };
     }) || [];
 
-    const excludedStops = data.excludedStops.map((excluded: any) => ({
+    const excludedStops = data.excludedStops?.map((excluded: any) => ({
       stop: {
         ...excluded.stop,
         serviceTime: this.timeSpanToMinutes(excluded.stop.serviceTime),
@@ -208,7 +208,7 @@ class RouteService {
     let shortAddress = address.replace(', Türkiye', '');
     
     if (shortAddress.length > 100) {
-      shortAddress = shortAddress.replace(/,\s*\d{5}\s*/g, ' ');
+      shortAddress = shortAddress.replace(/,?\s*\d{5}\s*/g, ' ');
     }
     
     if (shortAddress.length > 100) {
@@ -227,7 +227,7 @@ class RouteService {
       const routes = response.data.map((route: any) => ({
         ...route,
         currentKm: route.currentKm,
-        stops: route.stops.map((stop: any) => {
+        stops: route.stops?.map((stop: any) => {
           const customer = customers.find(c => c.id.toString() === stop.customerId.toString());
           return {
             ...stop,
@@ -240,7 +240,7 @@ class RouteService {
         totalDistance: route.totalDistance || 0,
         totalDuration: route.totalDuration || 0,
         completedDeliveries: route.completedDeliveries || 0,
-        totalDeliveries: route.totalDeliveries || route.stops.length || 0
+        totalDeliveries: route.totalDeliveries || route.stops?.length || 0
       }));
       
       return routes;
@@ -259,7 +259,7 @@ class RouteService {
       const route = {
         ...response.data,
         currentKm: response.data.currentKm,
-        stops: response.data.stops.map((stop: any) => {
+        stops: response.data.stops?.map((stop: any) => {
           const customer = customers.find(c => c.id.toString() === stop.customerId.toString());
 
           return {
@@ -273,7 +273,7 @@ class RouteService {
         totalDistance: response.data.totalDistance || 0,
         totalDuration: response.data.totalDuration || 0,
         completedDeliveries: response.data.completedDeliveries || 0,
-        totalDeliveries: response.data.totalDeliveries || response.data.stops.length || 0,
+        totalDeliveries: response.data.totalDeliveries || response.data.stops?.length || 0,
         optimized: response.data.optimized === true
       };
       
@@ -286,7 +286,7 @@ class RouteService {
 
   async create(data: Partial<Route>): Promise<Route> {
     try {
-      const originalCustomers = data.stops.map(s => s.customer) || [];
+      const originalCustomers = data.stops?.map(s => s.customer) || [];
       let depotInfo = data.depot;
       
       const createDto: any = {
@@ -301,7 +301,7 @@ class RouteService {
         TotalDistance: data.totalDistance || 0,
         TotalDuration: data.totalDuration || 0,
         Notes: data.notes || '',
-        Stops: data.stops.map((stop, index) => {
+        Stops: data.stops?.map((stop, index) => {
           let customerId: number;
           
           if (stop.customer && typeof stop.customer.id === 'number') {
@@ -325,25 +325,25 @@ class RouteService {
           
           return {
             CustomerId: customerId,
-            Name: customer.name || '',
-            Address: this.truncateAddress(customer.address || ''),
-            Latitude: customer.latitude || 0,
-            Longitude: customer.longitude || 0,
+            Name: customer?.name || '',
+            Address: this.truncateAddress(customer?.address || ''),
+            Latitude: customer?.latitude || 0,
+            Longitude: customer?.longitude || 0,
             Notes: stop.stopNotes || '',
-            ContactFullName: customer.name || '',
-            ContactPhone: customer.phone || '',
-            ContactEmail: customer.email || '',
+            ContactFullName: customer?.name || '',
+            ContactPhone: customer?.phone || '',
+            ContactEmail: customer?.email || '',
             Type: 10,
             OrderType: stop.orderType || 20, // Use orderType from stop data
             ProofOfDeliveryRequired: stop.proofOfDeliveryRequired || false,  // ✅ DÜZELTME
             SignatureRequired: stop.signatureRequired || false,              // ✅ YENİ
             PhotoRequired: stop.photoRequired || false,                      // ✅ YENİ
-            ArriveBetweenStart: stop.arriveBetweenStart
-              ? (stop.arriveBetweenStart.includes(':') ? `${stop.arriveBetweenStart}:00` : stop.arriveBetweenStart)
-              : (stop.overrideTimeWindow.start ? `${stop.overrideTimeWindow.start}:00` : null),
-            ArriveBetweenEnd: stop.arriveBetweenEnd
-              ? (stop.arriveBetweenEnd.includes(':') ? `${stop.arriveBetweenEnd}:00` : stop.arriveBetweenEnd)
-              : (stop.overrideTimeWindow.end ? `${stop.overrideTimeWindow.end}:00` : null),
+            ArriveBetweenStart: stop.arriveBetweenStart ?
+              (stop.arriveBetweenStart.includes(':') ? `${stop.arriveBetweenStart}:00` : stop.arriveBetweenStart) :
+              (stop.overrideTimeWindow?.start ? `${stop.overrideTimeWindow.start}:00` : null),
+            ArriveBetweenEnd: stop.arriveBetweenEnd ?
+              (stop.arriveBetweenEnd.includes(':') ? `${stop.arriveBetweenEnd}:00` : stop.arriveBetweenEnd) :
+              (stop.overrideTimeWindow?.end ? `${stop.overrideTimeWindow.end}:00` : null),
             ServiceTime: serviceTimeSpan,
             EstimatedArrivalTime: stop.estimatedArrivalTime || null,
             EstimatedDepartureTime: stop.estimatedDepartureTime || null
@@ -354,7 +354,7 @@ class RouteService {
           Address: this.truncateAddress(depotInfo.address || 'Depo Adresi'),
           Latitude: depotInfo.latitude || 0,
           Longitude: depotInfo.longitude || 0,
-          StartTime: data.startDetails.startTime || this.getCurrentTimeAsTimeSpan()
+          StartTime: data.startDetails?.startTime || this.getCurrentTimeAsTimeSpan()
         } : null,
         EndDetails: depotInfo ? {
           Name: depotInfo.name || 'Ana Depo',
@@ -391,7 +391,7 @@ class RouteService {
       const createdRoute = {
         ...response.data,
         currentKm: response.data.currentKm || data.currentKm,
-        stops: response.data.stops.map((stop: any, index: number) => ({
+        stops: response.data.stops?.map((stop: any, index: number) => ({
           ...stop,
           serviceTime: this.timeSpanToMinutes(stop.serviceTime),
           estimatedArrivalTime: stop.estimatedArrivalTime,
@@ -401,21 +401,21 @@ class RouteService {
         totalDistance: response.data.totalDistance || data.totalDistance || 0,
         totalDuration: response.data.totalDuration || data.totalDuration || 0,
         completedDeliveries: response.data.completedDeliveries || 0,
-        totalDeliveries: response.data.totalDeliveries || response.data.stops.length || 0,
+        totalDeliveries: response.data.totalDeliveries || response.data.stops?.length || 0,
         optimized: response.data.optimized || data.optimized || false
       };
       
       return createdRoute;
     } catch (error: any) {
       console.error('Error creating route:', error);
-      console.error('Error response:', error.response.data);
+      console.error('Error response:', error.response?.data);
       throw error;
     }
   }
 
   async update(id: string | number, data: Partial<Route>): Promise<Route> {
     try {
-      const originalCustomers = data.stops.map(s => s.customer) || [];
+      const originalCustomers = data.stops?.map(s => s.customer) || [];
       
       let depotInfo = data.depot;
       
@@ -429,7 +429,7 @@ class RouteService {
         Optimized: data.optimized,
         TotalDistance: data.totalDistance,
         TotalDuration: data.totalDuration,
-        Stops: data.stops.map((stop, index) => {
+        Stops: data.stops?.map((stop, index) => {
           let customerId: number;
           
           if (stop.customer && typeof stop.customer.id === 'number') {
@@ -452,25 +452,25 @@ class RouteService {
           
           return {
             CustomerId: customerId,
-            Name: customer.name || '',
-            Address: this.truncateAddress(customer.address || ''),
-            Latitude: customer.latitude || 0,
-            Longitude: customer.longitude || 0,
+            Name: customer?.name || '',
+            Address: this.truncateAddress(customer?.address || ''),
+            Latitude: customer?.latitude || 0,
+            Longitude: customer?.longitude || 0,
             Notes: stop.stopNotes || '',
-            ContactFullName: customer.name || '',
-            ContactPhone: customer.phone || '',
-            ContactEmail: customer.email || '',
+            ContactFullName: customer?.name || '',
+            ContactPhone: customer?.phone || '',
+            ContactEmail: customer?.email || '',
             Type: 10,
             OrderType: stop.orderType || 20, // Use existing orderType from stop
             ProofOfDeliveryRequired: stop.proofOfDeliveryRequired || false,  // ✅ DÜZELTME
             SignatureRequired: stop.signatureRequired || false,              // ✅ YENİ
             PhotoRequired: stop.photoRequired || false,                      // ✅ YENİ
-            ArriveBetweenStart: stop.arriveBetweenStart
-              ? (stop.arriveBetweenStart.includes(':') ? `${stop.arriveBetweenStart}:00` : stop.arriveBetweenStart)
-              : (stop.overrideTimeWindow.start ? `${stop.overrideTimeWindow.start}:00` : null),
-            ArriveBetweenEnd: stop.arriveBetweenEnd
-              ? (stop.arriveBetweenEnd.includes(':') ? `${stop.arriveBetweenEnd}:00` : stop.arriveBetweenEnd)
-              : (stop.overrideTimeWindow.end ? `${stop.overrideTimeWindow.end}:00` : null),
+            ArriveBetweenStart: stop.arriveBetweenStart ?
+              (stop.arriveBetweenStart.includes(':') ? `${stop.arriveBetweenStart}:00` : stop.arriveBetweenStart) :
+              (stop.overrideTimeWindow?.start ? `${stop.overrideTimeWindow.start}:00` : null),
+            ArriveBetweenEnd: stop.arriveBetweenEnd ?
+              (stop.arriveBetweenEnd.includes(':') ? `${stop.arriveBetweenEnd}:00` : stop.arriveBetweenEnd) :
+              (stop.overrideTimeWindow?.end ? `${stop.overrideTimeWindow.end}:00` : null),
             ServiceTime: this.minutesToTimeSpan(stop.serviceTime),
             EstimatedArrivalTime: stop.estimatedArrivalTime || null,
             EstimatedDepartureTime: stop.estimatedDepartureTime || null
@@ -481,7 +481,7 @@ class RouteService {
           Address: this.truncateAddress(depotInfo.address || 'Depo Adresi'),
           Latitude: depotInfo.latitude || 0,
           Longitude: depotInfo.longitude || 0,
-          StartTime: data.startDetails.startTime || this.getCurrentTimeAsTimeSpan()
+          StartTime: data.startDetails?.startTime || this.getCurrentTimeAsTimeSpan()
         } : undefined),
         EndDetails: data.endDetails || (depotInfo ? {
           Name: depotInfo.name || 'Ana Depo',
@@ -496,7 +496,7 @@ class RouteService {
       const updatedRoute = {
         ...response.data,
         currentKm: response.data.currentKm || data.currentKm,
-        stops: response.data.stops.map((stop: any, index: number) => ({
+        stops: response.data.stops?.map((stop: any, index: number) => ({
           ...stop,
           serviceTime: this.timeSpanToMinutes(stop.serviceTime),
           estimatedArrivalTime: stop.estimatedArrivalTime,
@@ -506,7 +506,7 @@ class RouteService {
         totalDistance: response.data.totalDistance || data.totalDistance || 0,
         totalDuration: response.data.totalDuration || data.totalDuration || 0,
         completedDeliveries: response.data.completedDeliveries || 0,
-        totalDeliveries: response.data.totalDeliveries || response.data.stops.length || 0,
+        totalDeliveries: response.data.totalDeliveries || response.data.stops?.length || 0,
         optimized: response.data.optimized || data.optimized || false
       };
       
@@ -546,10 +546,10 @@ class RouteService {
       const customers = await this.loadCustomersSafely();
       const responseData = response.data;
 
-      if (responseData.jobId) {
+      if (responseData?.jobId) {
         const jobResult = await this.waitForOptimizationJob(responseData.jobId, 10 * 60 * 1000);
 
-        if (jobResult.status === 'failed') {
+        if (jobResult?.status === 'failed') {
           return {
             success: false,
             message: jobResult.message || 'Optimization failed.',
@@ -561,7 +561,7 @@ class RouteService {
           };
         }
 
-        if (!jobResult.result) {
+        if (!jobResult?.result) {
           return {
             success: false,
             message: jobResult.message || 'Optimization result not ready.',
@@ -601,13 +601,13 @@ class RouteService {
 
   async getByVehicleId(vehicleId: string | number): Promise<Route[]> {
     try {
-      const response = await api.get(`${this.baseUrl}vehicleId=${vehicleId}`);
+      const response = await api.get(`${this.baseUrl}?vehicleId=${vehicleId}`);
       
       const customers = await this.loadCustomersSafely();
       
       const routes = response.data.map((route: any) => ({
         ...route,
-        stops: route.stops.map((stop: any) => {
+        stops: route.stops?.map((stop: any) => {
           const customer = customers.find(c => c.id.toString() === stop.customerId.toString());
           return {
             ...stop,
@@ -620,7 +620,7 @@ class RouteService {
         totalDistance: route.totalDistance || 0,
         totalDuration: route.totalDuration || 0,
         completedDeliveries: route.completedDeliveries || 0,
-        totalDeliveries: route.totalDeliveries || route.stops.length || 0
+        totalDeliveries: route.totalDeliveries || route.stops?.length || 0
       }));
       
       return routes;
@@ -632,13 +632,13 @@ class RouteService {
 
   async getByDepot(depotId: string | number): Promise<Route[]> {
     try {
-      const response = await api.get(`${this.baseUrl}depotId=${depotId}`);
+      const response = await api.get(`${this.baseUrl}?depotId=${depotId}`);
       
       const customers = await this.loadCustomersSafely();
       
       const routes = response.data.map((route: any) => ({
         ...route,
-        stops: route.stops.map((stop: any) => {
+        stops: route.stops?.map((stop: any) => {
           const customer = customers.find(c => c.id.toString() === stop.customerId.toString());
           return {
             ...stop,
@@ -662,13 +662,13 @@ class RouteService {
 
   async getByDriver(driverId: string | number): Promise<Route[]> {
     try {
-      const response = await api.get(`${this.baseUrl}driverId=${driverId}`);
+      const response = await api.get(`${this.baseUrl}?driverId=${driverId}`);
       
       const customers = await this.loadCustomersSafely();
       
       const routes = response.data.map((route: any) => ({
         ...route,
-        stops: response.data.stops.map((stop: any) => {
+        stops: response.data.stops?.map((stop: any) => {
           const customer = customers.find(c => c.id.toString() === stop.customerId.toString());
           return {
             ...stop,
@@ -703,7 +703,7 @@ class RouteService {
 
       const routes = response.data.map((route: any) => ({
         ...route,
-        stops: response.data.stops.map((stop: any) => {
+        stops: response.data.stops?.map((stop: any) => {
           const customer = customers.find(c => c.id.toString() === stop.customerId.toString());
           return {
             ...stop,
@@ -726,23 +726,23 @@ class RouteService {
   }
 
   async updateStop(routeId: number, stopId: number, updates: {
-    customerId: number;
-    name: string;
-    address: string;
-    latitude: number;
-    longitude: number;
-    notes: string;
-    contactFullName: string;
-    contactPhone: string;
-    contactEmail: string;
-    type: number;
-    orderType: number;
-    proofOfDeliveryRequired: boolean;
-    signatureRequired: boolean;
-    photoRequired: boolean;
-    arriveBetweenStart: string;
-    arriveBetweenEnd: string;
-    serviceTime: string;
+    customerId?: number;
+    name?: string;
+    address?: string;
+    latitude?: number;
+    longitude?: number;
+    notes?: string;
+    contactFullName?: string;
+    contactPhone?: string;
+    contactEmail?: string;
+    type?: number;
+    orderType?: number;
+    proofOfDeliveryRequired?: boolean;
+    signatureRequired?: boolean;
+    photoRequired?: boolean;
+    arriveBetweenStart?: string;
+    arriveBetweenEnd?: string;
+    serviceTime?: string;
   }): Promise<boolean> {
     try {
       console.log('=== UPDATING ROUTE STOP ===');
@@ -781,7 +781,7 @@ class RouteService {
       return response.data;
     } catch (error: any) {
       console.error('Error updating route stop:', error);
-      console.error('Error response:', error.response.data);
+      console.error('Error response:', error.response?.data);
       throw error;
     }
   }

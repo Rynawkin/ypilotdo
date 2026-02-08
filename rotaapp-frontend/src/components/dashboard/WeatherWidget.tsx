@@ -5,7 +5,7 @@ import { Depot } from '@/types';
 
 interface WeatherWidgetProps {
   depots: Depot[];
-  className: string;
+  className?: string;
 }
 
 const WeatherWidget: React.FC<WeatherWidgetProps> = ({ depots, className = '' }) => {
@@ -85,7 +85,7 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ depots, className = '' })
             className="text-sm bg-white/20 hover:bg-white/30 px-3 py-1 rounded-lg transition-colors flex items-center"
           >
             {weatherData.length} Lokasyon
-              {isExpanded ? <ChevronUp className="w-4 h-4 ml-1" /> : <ChevronDown className="w-4 h-4 ml-1" />}
+            {isExpanded ? <ChevronUp className="w-4 h-4 ml-1" /> : <ChevronDown className="w-4 h-4 ml-1" />}
           </button>
         )}
       </div>
@@ -97,11 +97,11 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ depots, className = '' })
             <button
               key={index}
               onClick={() => setSelectedDepotIndex(index)}
-                className={`px-3 py-1 rounded-lg text-sm whitespace-nowrap transition-colors ${
-                  selectedDepotIndex === index
-                    ? 'bg-white text-blue-600 font-medium'
-                    : 'bg-white/20 hover:bg-white/30'
-                }`}
+              className={`px-3 py-1 rounded-lg text-sm whitespace-nowrap transition-colors ${
+                selectedDepotIndex === index
+                  ? 'bg-white text-blue-600 font-medium'
+                  : 'bg-white/20 hover:bg-white/30'
+              }`}
             >
               {weather.location}
             </button>
@@ -128,7 +128,7 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ depots, className = '' })
 
 interface WeatherCardProps {
   weather: WeatherData;
-  compact: boolean;
+  compact?: boolean;
 }
 
 const WeatherCard: React.FC<WeatherCardProps> = ({ weather, compact = false }) => {

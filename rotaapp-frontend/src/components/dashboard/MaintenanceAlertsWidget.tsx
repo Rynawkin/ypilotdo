@@ -6,8 +6,8 @@ import { Link } from 'react-router-dom';
 interface UpcomingMaintenance {
   id: number;
   vehicleId: number;
-  vehiclePlate: string;
-  vehicleBrand: string;
+  vehiclePlate?: string;
+  vehicleBrand?: string;
   type: string;
   title: string;
   nextMaintenanceDate: Date;

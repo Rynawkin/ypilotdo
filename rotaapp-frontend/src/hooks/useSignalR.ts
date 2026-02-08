@@ -3,10 +3,10 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import signalRService, { UpdateLocationDto, EmergencyAlertDto } from '../services/signalr.service';
 
 interface UseSignalROptions {
-  autoConnect: boolean;
-  onConnected: () => void;
-  onDisconnected: () => void;
-  onError: (error: any) => void;
+  autoConnect?: boolean;
+  onConnected?: () => void;
+  onDisconnected?: () => void;
+  onError?: (error: any) => void;
 }
 
 export const useSignalR = (options: UseSignalROptions = {}) => {

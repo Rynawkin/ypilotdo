@@ -110,7 +110,7 @@ const CustomerDetail: React.FC = () => {
           const relatedJourneys = journeysData.filter((journey: any) => {
             return journey.stops && journey.stops.some((stop: any) => {
               // RouteStop içindeki customerId'yi kontrol et
-              const stopCustomerId = stop.routeStop.customerId;
+              const stopCustomerId = stop.routeStop?.customerId;
               return stopCustomerId === customerId || stopCustomerId === parseInt(id!);
             });
           });
@@ -180,7 +180,7 @@ const CustomerDetail: React.FC = () => {
 
           // Bu müşteriye ait durakları filtrele
           const customerStops = journeyDetail.stops.filter((stop: any) => {
-            const stopCustomerId = stop.routeStop.customerId;
+            const stopCustomerId = stop.routeStop?.customerId;
             return stopCustomerId === customer.id || stopCustomerId === parseInt(id!);
           });
 
@@ -208,16 +208,16 @@ const CustomerDetail: React.FC = () => {
                 if (journeyDetail.driverName) {
                   console.log('✅ Using journeyDetail.driverName:', journeyDetail.driverName);
                   driverName = journeyDetail.driverName;
-                } else if (journeyDetail.driver.fullName) {
+                } else if (journeyDetail.driver?.fullName) {
                   console.log('✅ Using journeyDetail.driver.fullName:', journeyDetail.driver.fullName);
                   driverName = journeyDetail.driver.fullName;
-                } else if (journeyDetail.driver.name) {
+                } else if (journeyDetail.driver?.name) {
                   console.log('✅ Using journeyDetail.driver.name:', journeyDetail.driver.name);
                   driverName = journeyDetail.driver.name;
-                } else if (journeyDetail.driver.firstName && journeyDetail.driver.lastName) {
+                } else if (journeyDetail.driver?.firstName && journeyDetail.driver?.lastName) {
                   console.log('✅ Using journeyDetail.driver firstName + lastName:', journeyDetail.driver.firstName, journeyDetail.driver.lastName);
                   driverName = `${journeyDetail.driver.firstName} ${journeyDetail.driver.lastName}`;
-                } else if (journeyDetail.driver.firstName) {
+                } else if (journeyDetail.driver?.firstName) {
                   console.log('✅ Using journeyDetail.driver.firstName:', journeyDetail.driver.firstName);
                   driverName = journeyDetail.driver.firstName;
                 } else if (journey.driverName) {
@@ -276,16 +276,16 @@ const CustomerDetail: React.FC = () => {
             if (journeyDetail.driverName) {
               console.log('✅ Stop details using journeyDetail.driverName:', journeyDetail.driverName);
               driverName = journeyDetail.driverName;
-            } else if (journeyDetail.driver.fullName) {
+            } else if (journeyDetail.driver?.fullName) {
               console.log('✅ Stop details using journeyDetail.driver.fullName:', journeyDetail.driver.fullName);
               driverName = journeyDetail.driver.fullName;
-            } else if (journeyDetail.driver.name) {
+            } else if (journeyDetail.driver?.name) {
               console.log('✅ Stop details using journeyDetail.driver.name:', journeyDetail.driver.name);
               driverName = journeyDetail.driver.name;
-            } else if (journeyDetail.driver.firstName && journeyDetail.driver.lastName) {
+            } else if (journeyDetail.driver?.firstName && journeyDetail.driver?.lastName) {
               console.log('✅ Stop details using firstName + lastName:', journeyDetail.driver.firstName, journeyDetail.driver.lastName);
               driverName = `${journeyDetail.driver.firstName} ${journeyDetail.driver.lastName}`;
-            } else if (journeyDetail.driver.firstName) {
+            } else if (journeyDetail.driver?.firstName) {
               console.log('✅ Stop details using firstName:', journeyDetail.driver.firstName);
               driverName = journeyDetail.driver.firstName;
             } else if (journey.driverName) {
@@ -442,7 +442,7 @@ const CustomerDetail: React.FC = () => {
 
   const handleDelete = async () => {
     if (!id || !customer) return;
-    if (!window.confirm('Bu müşteriyi silmek istediğinizden emin misiniz')) return;
+    if (!window.confirm('Bu müşteriyi silmek istediğinizden emin misiniz?')) return;
 
     setDeleting(true);
     try {
@@ -462,7 +462,7 @@ const CustomerDetail: React.FC = () => {
 
   const handleOpenInMaps = () => {
     if (customer) {
-      const url = `https://www.google.com/maps/search/api=1&query=${customer.latitude},${customer.longitude}`;
+      const url = `https://www.google.com/maps/search/?api=1&query=${customer.latitude},${customer.longitude}`;
       window.open(url, '_blank');
     }
   };
@@ -548,7 +548,7 @@ const CustomerDetail: React.FC = () => {
                   {customer.priority === 'high' && <Star className="w-4 h-4 mr-1" />}
                   {getPriorityLabel(customer.priority)} Öncelik
                 </span>
-                {customer.tags.includes('vip') && (
+                {customer.tags?.includes('vip') && (
                   <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-700">
                     <Star className="w-4 h-4 mr-1" />
                     VIP
@@ -648,7 +648,7 @@ const CustomerDetail: React.FC = () => {
                   <p className="text-sm text-gray-600">Toplam Teslimat</p>
                   <p className="text-2xl font-bold text-gray-900">
                     {allRouteData.reduce((sum, route) => 
-                      sum + (route.stops.filter((s: any) => 
+                      sum + (route.stops?.filter((s: any) => 
                         (s.customerId === customer.id || s.customerId === id) && s.status === 'completed'
                       ).length || 0), 0
                     )}
@@ -835,7 +835,7 @@ const CustomerDetail: React.FC = () => {
                   <Link
                     key={`route-${route.id}-${index}`}
                     to={customerJourneys.includes(route) ? `/journeys/${route.id}` : `/routes/${route.id}`}
-                    state={{ from: `/customers/${id}tab=overview` }}
+                    state={{ from: `/customers/${id}?tab=overview` }}
                     className="block p-4 hover:bg-gray-50 transition-colors"
                   >
                     <div className="flex items-center justify-between">
@@ -844,7 +844,7 @@ const CustomerDetail: React.FC = () => {
                           {route.name || route.routeName || `Rota #${route.id}`}
                         </p>
                         <p className="text-sm text-gray-600 mt-1">
-                          {route.date ? formatDate(route.date) : 'Tarih belirtilmemiş'} • {route.stops.length || 0} durak
+                          {route.date ? formatDate(route.date) : 'Tarih belirtilmemiş'} • {route.stops?.length || 0} durak
                         </p>
                         <span className="text-xs text-purple-600 mt-1">Sefer</span>
                       </div>
@@ -995,7 +995,7 @@ const CustomerDetail: React.FC = () => {
               <CustomerContactsForm
                 contacts={customerContacts}
                 onChange={handleContactsChange}
-                customerId={customer.id}
+                customerId={customer?.id}
                 viewMode={true}
                 onContactSaved={loadCustomerContacts}
               />
@@ -1025,7 +1025,7 @@ const CustomerDetail: React.FC = () => {
                   <Link
                     key={`journey-${route.id}-${index}`}
                     to={`/journeys/${route.id}`}
-                    state={{ from: `/customers/${id}tab=routes` }}
+                    state={{ from: `/customers/${id}?tab=routes` }}
                     className="block p-4 hover:bg-gray-50 transition-colors"
                   >
                     <div className="flex items-center justify-between">
@@ -1034,7 +1034,7 @@ const CustomerDetail: React.FC = () => {
                           {route.name || route.routeName || `Rota #${route.id}`}
                         </p>
                         <p className="text-sm text-gray-600 mt-1">
-                          {route.date ? formatDate(route.date) : 'Tarih belirtilmemiş'} • {route.stops.length || 0} durak
+                          {route.date ? formatDate(route.date) : 'Tarih belirtilmemiş'} • {route.stops?.length || 0} durak
                         </p>
                         <span className="text-xs text-purple-600 mt-1">Sefer</span>
                       </div>
@@ -1146,14 +1146,14 @@ const CustomerDetail: React.FC = () => {
                   <div className="text-center py-12">
                     <Camera className="w-12 h-12 mx-auto text-gray-400 mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">
-                        {deliveryProofs.length === 0 ? 
-                           "Henüz teslimat kanıtı yok" 
+                      {deliveryProofs.length === 0 
+                        ? "Henüz teslimat kanıtı yok" 
                         : "Aradığınız kriterlere uygun teslimat kanıtı bulunamadı"
                       }
                     </h3>
                     <p className="text-gray-600 mb-6">
-                        {deliveryProofs.length === 0 ?
-                           "Bu müşteri için henüz hiç teslimat fotoğrafı veya imzası çekilmemiş."
+                      {deliveryProofs.length === 0
+                        ? "Bu müşteri için henüz hiç teslimat fotoğrafı veya imzası çekilmemiş."
                         : "Filtreleri değiştirerek tekrar deneyebilirsiniz."
                       }
                     </p>
@@ -1206,7 +1206,7 @@ const CustomerDetail: React.FC = () => {
                           <div className="text-center hidden flex-col">
                             <FileText className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                             <p className="text-xs text-gray-500">
-                                {proof.type === 'photo' ? 'Fotoğraf Yüklenemedi' : 'İmza Yüklenemedi'}
+                              {proof.type === 'photo' ? 'Fotoğraf Yüklenemedi' : 'İmza Yüklenemedi'}
                             </p>
                           </div>
                         </div>

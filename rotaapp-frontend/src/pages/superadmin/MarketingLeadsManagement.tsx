@@ -10,18 +10,18 @@ interface MarketingLead {
   name: string;
   email: string;
   company: string;
-  phone: string;
-  vehicleCount: string;
-  message: string;
+  phone?: string;
+  vehicleCount?: string;
+  message?: string;
   source: string;
-  selectedPlan: string;
+  selectedPlan?: string;
   status: number;
-  adminNotes: string;
-  contactedAt: string;
-  closedAt: string;
-  assignedTo: string;
+  adminNotes?: string;
+  contactedAt?: string;
+  closedAt?: string;
+  assignedTo?: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 }
 
 interface LeadStats {
@@ -391,7 +391,7 @@ const MarketingLeadsManagement: React.FC = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Seçilen Plan:</label>
                     <p className="mt-1 text-sm text-gray-900">
-                        {selectedLead.selectedPlan ? planNames[selectedLead.selectedPlan as keyof typeof planNames] || selectedLead.selectedPlan : '-'}
+                      {selectedLead.selectedPlan ? planNames[selectedLead.selectedPlan as keyof typeof planNames] || selectedLead.selectedPlan : '-'}
                     </p>
                   </div>
                   <div>
@@ -430,8 +430,8 @@ const MarketingLeadsManagement: React.FC = () => {
                         key={value}
                         onClick={() => handleStatusChange(selectedLead.id, parseInt(value))}
                         className={`p-2 rounded-lg text-xs font-medium transition-colors ${
-                            selectedLead.status === parseInt(value) ?
-                               status.color
+                          selectedLead.status === parseInt(value)
+                            ? status.color
                             : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                         }`}
                       >

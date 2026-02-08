@@ -162,7 +162,7 @@ const Depots: React.FC = () => {
             <div>
               <p className="text-sm text-gray-600">Ana Depo</p>
               <p className="text-lg font-semibold text-gray-900">
-                {depots.find(d => d.isDefault).name || 'Belirtilmemiş'}
+                {depots.find(d => d.isDefault)?.name || 'Belirtilmemiş'}
               </p>
             </div>
             <Star className="w-8 h-8 text-yellow-500 fill-yellow-500" />
@@ -206,8 +206,8 @@ const Depots: React.FC = () => {
             {searchTerm ? 'Depo Bulunamadı' : 'Henüz Depo Eklenmemiş'}
           </h3>
           <p className="text-gray-600 mb-4">
-            {searchTerm
-              ? 'Arama kriterlerinize uygun depo bulunamadı.'
+            {searchTerm 
+              ? 'Arama kriterlerinize uygun depo bulunamadı.' 
               : 'İlk deponuzu ekleyerek başlayın.'}
           </p>
           {!searchTerm && (
@@ -275,7 +275,7 @@ const Depots: React.FC = () => {
                       </button>
                     )}
                     <a
-                      href={`https://www.google.com/mapsq=${depot.latitude},${depot.longitude}`}
+                      href={`https://www.google.com/maps?q=${depot.latitude},${depot.longitude}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-3 py-1.5 text-sm bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors flex items-center"
@@ -324,7 +324,7 @@ const Depots: React.FC = () => {
               <h3 className="text-lg font-semibold text-gray-900">Depoyu Sil</h3>
             </div>
             <p className="text-gray-600 mb-6">
-              <strong>{deleteModal.depot.name}</strong> deposunu silmek istediğinizden emin misiniz
+              <strong>{deleteModal.depot.name}</strong> deposunu silmek istediğinizden emin misiniz?
               Bu işlem geri alınamaz.
             </p>
             <div className="flex justify-end gap-3">

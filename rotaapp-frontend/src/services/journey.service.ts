@@ -17,17 +17,17 @@ export enum JourneyStatusType {
 export interface JourneySummary {
   id: number;
   routeId: number;
-  name: string;
+  name?: string;
   routeName: string;
   date: string;
   status: string;
 
   // Sürücü
-  driverId: string;
+  driverId?: string;
   driverName: string;
 
   // Araç
-  vehicleId: string;
+  vehicleId?: string;
   vehiclePlateNumber: string;
 
   // Metrikler
@@ -38,15 +38,15 @@ export interface JourneySummary {
   totalDuration: number;
 
   // Zamanlar
-  startedAt: Date;
-  completedAt: Date;
+  startedAt?: Date;
+  completedAt?: Date;
   createdAt: Date;
 
   // Live location
-  liveLocation: {
+  liveLocation?: {
     latitude: number;
     longitude: number;
-    speed: number;
+    speed?: number;
   };
 }
 
@@ -54,51 +54,51 @@ export interface JourneySummary {
 export interface AssignRouteDto {
   routeId: number;
   driverId: number;
-  name: string; // ✅ YENİ EKLENEN
+  name?: string; // ✅ YENİ EKLENEN
   startKm: number; // ✅ YENİ EKLENEN - Başlangıç kilometresi (ZORUNLU)
 }
 
 // ✅ YENİ: Stop detayları interface
 export interface StopDetails {
-  signatureUrl: string;
-  photoUrl: string;
-  receiverName: string;
-  notes: string;
-  failureReason: string;
-  status: string;
-  createdAt: string;
+  signatureUrl?: string;
+  photoUrl?: string;
+  receiverName?: string;
+  notes?: string;
+  failureReason?: string;
+  status?: string;
+  createdAt?: string;
 }
 
 export interface AddJourneyStatusDto {
   stopId: number;
   status: JourneyStatusType;
-  notes: string;
-  failureReason: string;
-  receiverName: string; // ✅ YENİ EKLENEN
-  signatureBase64: string;
-  photoBase64: string;
-  latitude: number;
-  longitude: number;
-  additionalValues: Record<string, string>;
+  notes?: string;
+  failureReason?: string;
+  receiverName?: string; // ✅ YENİ EKLENEN
+  signatureBase64?: string;
+  photoBase64?: string;
+  latitude?: number;
+  longitude?: number;
+  additionalValues?: Record<string, string>;
 }
 
 export interface CompleteStopDto {
-  notes: string;
-  receiverName: string; // ✅ YENİ EKLENEN
-  signature: File | Blob;  // Blob desteği
-  photo: File | Blob;      // Blob desteği
+  notes?: string;
+  receiverName?: string; // ✅ YENİ EKLENEN
+  signature?: File | Blob;  // Blob desteği
+  photo?: File | Blob;      // Blob desteği
 }
 
 export interface CompleteStopWithFilesDto {
-  notes: string;
-  receiverName: string; // ✅ YENİ EKLENEN
-  signatureFile: File;
-  photoFile: File;
+  notes?: string;
+  receiverName?: string; // ✅ YENİ EKLENEN
+  signatureFile?: File;
+  photoFile?: File;
 }
 
 export interface FailStopDto {
   failureReason: string;
-  notes: string;
+  notes?: string;
 }
 
 export interface BulkOperationResult {
@@ -111,25 +111,25 @@ export interface BulkOperationResult {
 
 export interface BulkOperationFailedItem {
   id: number;
-  name: string;
+  name?: string;
   reason: string;
 }
 
 // ✅ YENİ: Cloudinary transformation interface
 export interface ImageTransformation {
-  width: number;
-  height: number;
-  crop: 'fill' | 'limit' | 'thumb' | 'scale';
-  quality: 'auto' | number;
-  format: 'auto' | 'jpg' | 'png' | 'webp';
+  width?: number;
+  height?: number;
+  crop?: 'fill' | 'limit' | 'thumb' | 'scale';
+  quality?: 'auto' | number;
+  format?: 'auto' | 'jpg' | 'png' | 'webp';
 }
 
 // ✅ YENİ: Stop Photo interface
 export interface StopPhoto {
   id: number;
   photoUrl: string;
-  thumbnailUrl: string;
-  caption: string;
+  thumbnailUrl?: string;
+  caption?: string;
   displayOrder: number;
   createdAt: string;
 }
@@ -244,7 +244,7 @@ class JourneyService {
     return `${API_BASE_URL}${url}`;
   }
 
-  async getAllSummary(from: Date, to: Date): Promise<JourneySummary[]> {
+  async getAllSummary(from?: Date, to?: Date): Promise<JourneySummary[]> {
     try {
       const params: any = {};
       if (from) params.from = from.toISOString();
@@ -270,7 +270,7 @@ class JourneyService {
     }
   }
 
-  async getAll(from: Date, to: Date): Promise<Journey[]> {
+  async getAll(from?: Date, to?: Date): Promise<Journey[]> {
     try {
       console.warn('⚠️ getAll() tüm detayları çekiyor. Eğer sadece liste için kullanıyorsanız getAllSummary() kullanın!');
 
@@ -420,7 +420,7 @@ class JourneyService {
   }
 
   // ✅ GÜNCELLENDİ: name ve startKm parametreleri eklendi
-  async startFromRoute(routeId: string | number, driverId: number, name: string, startKm: number): Promise<Journey> {
+  async startFromRoute(routeId: string | number, driverId?: number, name?: string, startKm?: number): Promise<Journey> {
     try {
       console.log('Starting journey from route:', routeId, 'with driver:', driverId, 'name:', name, 'startKm:', startKm);
 
@@ -458,7 +458,7 @@ class JourneyService {
       return assignResponse.data;
     } catch (error: any) {
       console.error('Error starting journey from route:', error);
-      throw new Error(error.response.data.message || error.message || 'Sefer başlatılamadı');
+      throw new Error(error.response?.data?.message || error.message || 'Sefer başlatılamadı');
     }
   }
 
@@ -470,7 +470,7 @@ class JourneyService {
       return response.data;
     } catch (error: any) {
       console.error('Error starting journey:', error);
-      if (error.response.data.message) {
+      if (error.response?.data?.message) {
         throw new Error(error.response.data.message);
       }
       throw error;
@@ -484,7 +484,7 @@ class JourneyService {
       return response.data;
     } catch (error: any) {
       console.error('Error finishing journey:', error);
-      if (error.response.data.message) {
+      if (error.response?.data?.message) {
         throw error;
       }
       throw error;
@@ -512,7 +512,7 @@ class JourneyService {
       return response.data;
     } catch (error: any) {
       console.error('Error checking in stop:', error);
-      console.error('Error response:', error.response.data);
+      console.error('Error response:', error.response?.data);
       throw error;
     }
   }
@@ -540,7 +540,7 @@ class JourneyService {
       return response.data;
     } catch (error: any) {
       console.error('Error completing stop:', error);
-      console.error('Error response:', error.response.data);
+      console.error('Error response:', error.response?.data);
       throw error;
     }
   }
@@ -549,7 +549,7 @@ class JourneyService {
     journeyId: string | number,
     stopId: string | number,
     reason: string,
-    notes: string
+    notes?: string
   ): Promise<boolean> {
     try {
       console.log('Failing stop:', journeyId, stopId, reason, notes);
@@ -568,7 +568,7 @@ class JourneyService {
       return response.data;
     } catch (error: any) {
       console.error('Error failing stop:', error);
-      console.error('Error response:', error.response.data);
+      console.error('Error response:', error.response?.data);
       throw error;
     }
   }
@@ -577,13 +577,13 @@ class JourneyService {
   async completeStop(
     journeyId: string | number,
     stopId: string | number,
-    data: CompleteStopDto & { signatureBase64: string; photoBase64: string; receiverName: string }
+    data?: CompleteStopDto & { signatureBase64?: string; photoBase64?: string; receiverName?: string }
   ): Promise<JourneyStatus> {
     try {
       console.warn('⚠️ completeStop() Base64 kullanıyor. Timeout riski var! completeStopWithFiles() kullanın.');
       console.log('Completing stop (legacy):', journeyId, stopId, data);
 
-      const cleanBase64 = (base64String: string) => {
+      const cleanBase64 = (base64String?: string) => {
         if (!base64String) return undefined;
         const base64Prefix = /^data:image\/[a-z]+;base64,/;
         return base64String.replace(base64Prefix, '');
@@ -592,10 +592,10 @@ class JourneyService {
       const statusData: AddJourneyStatusDto = {
         stopId: Number(stopId),
         status: JourneyStatusType.Completed,
-        notes: data.notes || 'Teslimat tamamlandı',
-        receiverName: data.receiverName, // ✅ YENİ EKLENEN
-        signatureBase64: cleanBase64(data.signatureBase64),
-        photoBase64: cleanBase64(data.photoBase64),
+        notes: data?.notes || 'Teslimat tamamlandı',
+        receiverName: data?.receiverName, // ✅ YENİ EKLENEN
+        signatureBase64: cleanBase64(data?.signatureBase64),
+        photoBase64: cleanBase64(data?.photoBase64),
         latitude: 0,
         longitude: 0
       };
@@ -608,7 +608,7 @@ class JourneyService {
       return response.data;
     } catch (error: any) {
       console.error('Error completing stop:', error);
-      console.error('Error response:', error.response.data);
+      console.error('Error response:', error.response?.data);
       throw error;
     }
   }
@@ -640,7 +640,7 @@ class JourneyService {
       return response.data;
     } catch (error: any) {
       console.error('Error adding stop status:', error);
-      console.error('Error response:', error.response.data);
+      console.error('Error response:', error.response?.data);
       throw error;
     }
   }
@@ -667,7 +667,7 @@ class JourneyService {
     }
   }
 
-  async bulkCancel(journeyIds: number[], reason: string): Promise<BulkOperationResult> {
+  async bulkCancel(journeyIds: number[], reason?: string): Promise<BulkOperationResult> {
     try {
       console.log('Bulk cancelling journeys:', journeyIds);
       const response = await api.post(`${this.baseUrl}/bulk/cancel`, {
@@ -678,7 +678,7 @@ class JourneyService {
       return response.data;
     } catch (error: any) {
       console.error('Error bulk cancelling journeys:', error);
-      throw new Error(error.response.data.message || 'Toplu iptal işlemi başarısız');
+      throw new Error(error.response?.data?.message || 'Toplu iptal işlemi başarısız');
     }
   }
 
@@ -692,7 +692,7 @@ class JourneyService {
       return response.data;
     } catch (error: any) {
       console.error('Error bulk archiving journeys:', error);
-      throw new Error(error.response.data.message || 'Toplu arşivleme işlemi başarısız');
+      throw new Error(error.response?.data?.message || 'Toplu arşivleme işlemi başarısız');
     }
   }
 
@@ -709,7 +709,7 @@ class JourneyService {
       return response.data;
     } catch (error: any) {
       console.error('Error bulk deleting journeys:', error);
-      throw new Error(error.response.data.message || 'Toplu silme işlemi başarısız');
+      throw new Error(error.response?.data?.message || 'Toplu silme işlemi başarısız');
     }
   }
 
@@ -734,10 +734,10 @@ class JourneyService {
     address: string,
     latitude: number,
     longitude: number,
-    serviceTimeMinutes: number,
-    notes: string,
-    arriveBetweenStart: string, // ✅ YENİ - "HH:mm" format
-    arriveBetweenEnd: string    // ✅ YENİ - "HH:mm" format
+    serviceTimeMinutes?: number,
+    notes?: string,
+    arriveBetweenStart?: string, // ✅ YENİ - "HH:mm" format
+    arriveBetweenEnd?: string    // ✅ YENİ - "HH:mm" format
   ): Promise<Journey> {
     try {
       console.log('Adding stop to active journey:', journeyId);
@@ -755,7 +755,7 @@ class JourneyService {
       return response.data;
     } catch (error: any) {
       console.error('Error adding stop to journey:', error);
-      throw new Error(error.response.data.message || 'Durak eklenemedi');
+      throw new Error(error.response?.data?.message || 'Durak eklenemedi');
     }
   }
 
@@ -775,7 +775,7 @@ class JourneyService {
       return response.data;
     } catch (error: any) {
       console.error('Error reoptimizing journey:', error);
-      throw new Error(error.response.data.message || 'Optimizasyon başarısız');
+      throw new Error(error.response?.data?.message || 'Optimizasyon başarısız');
     }
   }
 
@@ -788,7 +788,7 @@ class JourneyService {
       return response.data;
     } catch (error: any) {
       console.error('Error removing stop:', error);
-      throw new Error(error.response.data.message || 'Durak silinemedi');
+      throw new Error(error.response?.data?.message || 'Durak silinemedi');
     }
   }
 }

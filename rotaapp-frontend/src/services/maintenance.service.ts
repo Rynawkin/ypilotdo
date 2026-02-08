@@ -74,7 +74,7 @@ class MaintenanceService {
    */
   async setReminder(data: {
     vehicleId: number;
-    maintenanceId: number;
+    maintenanceId?: number;
     reminderDays: number;
     nextMaintenanceDate: Date;
   }): Promise<MaintenanceReminder> {
@@ -95,8 +95,8 @@ class MaintenanceService {
   async getStats(vehicleId: number): Promise<{
     totalCost: number;
     totalMaintenance: number;
-    lastMaintenance: VehicleMaintenance;
-    nextMaintenance: VehicleMaintenance;
+    lastMaintenance?: VehicleMaintenance;
+    nextMaintenance?: VehicleMaintenance;
     avgCost: number;
   }> {
     const response = await api.get(`${this.basePath}/stats/${vehicleId}`);

@@ -133,8 +133,8 @@ const DepotDetail: React.FC = () => {
       
       // Aylık toplam mesafe
       const monthlyDistance = monthlyRoutes.reduce((sum, r) => {
-        const distance = typeof r.totalDistance === 'string'
-          ? parseFloat(r.totalDistance)
+        const distance = typeof r.totalDistance === 'string' 
+          ? parseFloat(r.totalDistance) 
           : (r.totalDistance || 0);
         return sum + distance;
       }, 0);
@@ -187,7 +187,7 @@ const DepotDetail: React.FC = () => {
   };
 
   const isOpenNow = () => {
-    if (!depot.workingHours) return false;
+    if (!depot?.workingHours) return false;
     
     const now = new Date();
     const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
@@ -262,7 +262,7 @@ const DepotDetail: React.FC = () => {
               </button>
             )}
             <a
-              href={`https://www.google.com/mapsq=${depot.latitude},${depot.longitude}`}
+              href={`https://www.google.com/maps?q=${depot.latitude},${depot.longitude}`}
               target="_blank"
               rel="noopener noreferrer"
               className="px-4 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors flex items-center"
@@ -550,7 +550,7 @@ const DepotDetail: React.FC = () => {
               <h3 className="text-lg font-semibold text-gray-900">Depoyu Sil</h3>
             </div>
             <p className="text-gray-600 mb-6">
-              <strong>{depot.name}</strong> deposunu silmek istediğinizden emin misiniz
+              <strong>{depot.name}</strong> deposunu silmek istediğinizden emin misiniz?
               Bu işlem geri alınamaz.
             </p>
             <div className="flex justify-end gap-3">

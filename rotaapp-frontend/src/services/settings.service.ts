@@ -4,19 +4,19 @@ import { api } from './api';
 
 export interface WorkspaceSettings {
   name: string;
-  logo: string;
-  address: string;
-  city: string;
-  postalCode: string;
-  taxNumber: string;
-  phoneNumber: string;
-  email: string;
-  website: string;
-  currency: string;
-  timeZone: string;
-  language: string;
-  dateFormat: string;
-  firstDayOfWeek: string;
+  logo?: string;
+  address?: string;
+  city?: string;
+  postalCode?: string;
+  taxNumber?: string;
+  phoneNumber?: string;
+  email?: string;
+  website?: string;
+  currency?: string;
+  timeZone?: string;
+  language?: string;
+  dateFormat?: string;
+  firstDayOfWeek?: string;
 }
 
 export interface DeliverySettings {
@@ -38,8 +38,8 @@ export interface DeliverySettings {
   };
   autoOptimize: boolean;
   trafficConsideration: boolean;
-  costPerKm: number;
-  costPerHour: number;
+  costPerKm?: number;
+  costPerHour?: number;
 }
 
 export interface NotificationSettings {
@@ -67,8 +67,8 @@ export interface NotificationSettings {
 
 export interface TwilioStatus {
   connected: boolean;
-  phoneNumber: string;
-  connectedAt: Date;
+  phoneNumber?: string;
+  connectedAt?: Date;
 }
 
 export interface TwilioSignupResponse {

@@ -20,7 +20,7 @@ const ForgotPassword: React.FC = () => {
       await authService.forgotPassword(email);
       setSuccess(true);
     } catch (error: any) {
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Bir hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Bir hata oluştu';
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -67,7 +67,7 @@ const ForgotPassword: React.FC = () => {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               YolPilot
             </h1>
-            <p className="text-gray-600 mt-2">Şifrenizi mi unuttunuz</p>
+            <p className="text-gray-600 mt-2">Şifrenizi mi unuttunuz?</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">

@@ -10,18 +10,18 @@ interface AddStopModalProps {
   onClose: () => void;
   journeyId: number;
   onStopAdded: () => void;
-  activeStopCustomerIds: number[]; // ✅ Seferdeki aktif durakların müşteri ID'leri
+  activeStopCustomerIds?: number[]; // ✅ Seferdeki aktif durakların müşteri ID'leri
 }
 
 interface Customer {
   id: number;
   name: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-  phone: string;
-  email: string;
-  serviceTime: string; // ✅ Müşterinin varsayılan servis süresi
+  address?: string;
+  latitude?: number;
+  longitude?: number;
+  phone?: string;
+  email?: string;
+  serviceTime?: string; // ✅ Müşterinin varsayılan servis süresi
 }
 
 export const AddStopModal: React.FC<AddStopModalProps> = ({
@@ -263,7 +263,7 @@ export const AddStopModal: React.FC<AddStopModalProps> = ({
               type="number"
               min="0"
               value={serviceTimeMinutes}
-                onChange={(e) => setServiceTimeMinutes(e.target.value ? Number(e.target.value) : '')}
+              onChange={(e) => setServiceTimeMinutes(e.target.value ? Number(e.target.value) : '')}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Varsayılan süre kullanılacak"
               disabled={submitting}

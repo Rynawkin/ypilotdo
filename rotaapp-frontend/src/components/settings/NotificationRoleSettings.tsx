@@ -59,7 +59,7 @@ const NotificationRoleSettings: React.FC = () => {
 
   const toggleMapping = (roleKey: string, notificationTypeKey: string, enabled: boolean) => {
     setMappings(prev => {
-      const existing = prev.find(m =>
+      const existing = prev.find(m => 
         m.contactRole === roleKey && m.notificationType === notificationTypeKey
       );
 
@@ -100,7 +100,7 @@ const NotificationRoleSettings: React.FC = () => {
   };
 
   const handleResetToDefaults = async () => {
-    if (!confirm('Tüm bildirim ayarları varsayılan değerlere sıfırlanacak. Emin misiniz')) {
+    if (!confirm('Tüm bildirim ayarları varsayılan değerlere sıfırlanacak. Emin misiniz?')) {
       return;
     }
 

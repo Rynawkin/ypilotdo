@@ -62,9 +62,9 @@ const Onboarding: React.FC = () => {
                 `}>
                   {step > i ? <CheckCircle className="w-6 h-6" /> : i}
                 </div>
-                  {i < 3 && (
-                    <div className={`w-full h-1 ${step > i ? 'bg-blue-600' : 'bg-gray-300'}`} />
-                  )}
+                {i < 3 && (
+                  <div className={`w-full h-1 ${step > i ? 'bg-blue-600' : 'bg-gray-300'}`} />
+                )}
               </div>
             ))}
           </div>

@@ -5,8 +5,8 @@ import { X, RotateCcw, Check } from 'lucide-react';
 interface SignaturePadProps {
   onSave: (signatureBlob: Blob) => void;
   onCancel: () => void;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
 }
 
 export const SignaturePad: React.FC<SignaturePadProps> = ({

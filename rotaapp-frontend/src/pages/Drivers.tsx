@@ -65,7 +65,7 @@ const Drivers: React.FC = () => {
       setDrivers(data);
     } catch (error: any) {
       console.error('Error loading drivers:', error);
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Sürücüler yüklenirken bir hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Sürücüler yüklenirken bir hata oluştu';
       alert(errorMessage);
     } finally {
       setLoading(false);
@@ -134,7 +134,7 @@ const Drivers: React.FC = () => {
         comparison = 0;
     }
 
-      return sortDirection === 'asc' ? comparison : -comparison;
+    return sortDirection === 'asc' ? comparison : -comparison;
   });
 
   const handleSort = (field: SortField) => {
@@ -167,7 +167,7 @@ const Drivers: React.FC = () => {
 
   // Delete driver
   const handleDelete = async (id: string) => {
-    if (window.confirm('Bu sürücüyü silmek istediğinizden emin misiniz')) {
+    if (window.confirm('Bu sürücüyü silmek istediğinizden emin misiniz?')) {
       setIsDeleting(id);
       try {
         await driverService.delete(id);
@@ -175,7 +175,7 @@ const Drivers: React.FC = () => {
         alert('Sürücü başarıyla silindi');
       } catch (error: any) {
         console.error('Delete failed:', error);
-        const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Sürücü silinirken bir hata oluştu!';
+        const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Sürücü silinirken bir hata oluştu!';
         alert(errorMessage);
       } finally {
         setIsDeleting(null);
@@ -187,7 +187,7 @@ const Drivers: React.FC = () => {
   const handleBulkDelete = async () => {
     if (selectedDrivers.size === 0) return;
 
-    if (window.confirm(`${selectedDrivers.size} sürücüyü silmek istediğinizden emin misiniz`)) {
+    if (window.confirm(`${selectedDrivers.size} sürücüyü silmek istediğinizden emin misiniz?`)) {
       try {
         await Promise.all(
           Array.from(selectedDrivers).map(id => driverService.delete(id))
@@ -211,7 +211,7 @@ const Drivers: React.FC = () => {
       alert('Sürücü durumu başarıyla güncellendi');
     } catch (error: any) {
       console.error('Status update failed:', error);
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Durum güncellenirken bir hata oluştu!';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Durum güncellenirken bir hata oluştu!';
       alert(errorMessage);
     } finally {
       setIsStatusChanging(null);
@@ -265,7 +265,7 @@ const Drivers: React.FC = () => {
 
     const reader = new FileReader();
     reader.onload = async (e) => {
-      const csv = e.target.result as string;
+      const csv = e.target?.result as string;
       const driversToImport = driverService.parseCsvForImport(csv);
 
       if (driversToImport.length > 0) {
@@ -287,7 +287,7 @@ const Drivers: React.FC = () => {
           }
         } catch (error: any) {
           console.error('Import failed:', error);
-          const errorMessage = error.userFriendlyMessage || error.response.data.message || 'İçe aktarma sırasında bir hata oluştu!';
+          const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'İçe aktarma sırasında bir hata oluştu!';
           alert(errorMessage);
         } finally {
           setIsImporting(false);
@@ -366,9 +366,9 @@ const Drivers: React.FC = () => {
     if (sortField !== field) {
       return <ChevronUp className="w-4 h-4 text-gray-300" />;
     }
-    return sortDirection === 'asc'
-      ? <ChevronUp className="w-4 h-4 text-blue-600" />
-      : <ChevronDown className="w-4 h-4 text-blue-600" />;
+    return sortDirection === 'asc' ?
+      <ChevronUp className="w-4 h-4 text-blue-600" /> :
+      <ChevronDown className="w-4 h-4 text-blue-600" />;
   };
 
   if (loading) {
@@ -400,7 +400,7 @@ const Drivers: React.FC = () => {
           {/* Import Button with Help */}
           <div className="relative">
             <button
-              onClick={() => fileInputRef.current.click()}
+              onClick={() => fileInputRef.current?.click()}
               disabled={isImporting}
               className="px-4 py-2 bg-blue-600 border border-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -416,7 +416,7 @@ const Drivers: React.FC = () => {
               className="absolute -top-1 -right-1 w-5 h-5 bg-yellow-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-yellow-600 transition-colors"
               title="Yardım"
             >
-              
+              ?
             </button>
 
             {/* Import Help Modal */}
@@ -825,7 +825,7 @@ const Drivers: React.FC = () => {
                         <div className="space-y-1">
                           <div className="flex items-center text-sm">
                             <Star className="w-4 h-4 text-yellow-500 mr-1" />
-                            <span className="font-medium">{driver.rating.toFixed(1) || '0.0'}</span>
+                            <span className="font-medium">{driver.rating?.toFixed(1) || '0.0'}</span>
                             <span className="text-gray-500 ml-1">/ 5.0</span>
                           </div>
                           <div className="flex items-center text-xs text-gray-500">
@@ -929,7 +929,7 @@ const Drivers: React.FC = () => {
                   </div>
                   <div className="relative">
                     <button
-                        onClick={() => setDropdownOpen(dropdownOpen === driver.id ? null : driver.id)}
+                      onClick={() => setDropdownOpen(dropdownOpen === driver.id ? null : driver.id)}
                       className="p-1 hover:bg-gray-100 rounded transition-colors"
                     >
                       <MoreVertical className="w-4 h-4 text-gray-600" />
@@ -967,12 +967,12 @@ const Drivers: React.FC = () => {
                             disabled={isDeleting === driver.id}
                             className="flex items-center px-3 py-1.5 hover:bg-gray-50 text-red-600 w-full text-left text-sm disabled:opacity-50"
                           >
-                              {isDeleting === driver.id ? (
+                            {isDeleting === driver.id ? (
                               <Loader2 className="w-3 h-3 mr-2 animate-spin" />
                             ) : (
                               <Trash2 className="w-3 h-3 mr-2" />
                             )}
-                              {isDeleting === driver.id ? 'Siliniyor...' : 'Sil'}
+                            {isDeleting === driver.id ? 'Siliniyor...' : 'Sil'}
                           </button>
                         </div>
                       </>
@@ -1005,7 +1005,7 @@ const Drivers: React.FC = () => {
                     </span>
                     <div className="flex items-center text-sm">
                       <Star className="w-4 h-4 text-yellow-500 mr-1" />
-                      <span className="font-medium">{driver.rating.toFixed(1) || '0.0'}</span>
+                      <span className="font-medium">{driver.rating?.toFixed(1) || '0.0'}</span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between text-xs text-gray-500">

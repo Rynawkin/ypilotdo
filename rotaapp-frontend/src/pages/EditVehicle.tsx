@@ -27,11 +27,11 @@ interface MaintenanceRecord {
   date: Date;
   mileage: number;
   description: string;
-  cost: number;
-  nextMaintenanceKm: number;
-  nextMaintenanceDate: Date;
+  cost?: number;
+  nextMaintenanceKm?: number;
+  nextMaintenanceDate?: Date;
   status: 'completed' | 'pending' | 'scheduled';
-  notes: string;
+  notes?: string;
 }
 
 // Bakım kayıtlarını localStorage'da saklama
@@ -60,7 +60,7 @@ const saveMaintenanceRecords = (vehicleId: string, records: MaintenanceRecord[])
 const EditVehicle: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const location = useLocation() as { state: { tab: string } };
+  const location = useLocation() as { state?: { tab?: string } };
   const [vehicle, setVehicle] = useState<Vehicle | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -86,7 +86,7 @@ const EditVehicle: React.FC = () => {
   useEffect(() => {
     loadVehicle();
     // URL state'inden tab bilgisini kontrol et
-    if (location.state.tab === 'maintenance') {
+    if (location.state?.tab === 'maintenance') {
       setActiveTab('maintenance');
     }
   }, [id, location.state]);
@@ -111,7 +111,7 @@ const EditVehicle: React.FC = () => {
       }
     } catch (error: any) {
       console.error('Error loading vehicle:', error);
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Araç yüklenirken bir hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Araç yüklenirken bir hata oluştu';
       setError(errorMessage);
       setTimeout(() => navigate('/vehicles'), 2000);
     } finally {
@@ -148,11 +148,11 @@ const EditVehicle: React.FC = () => {
       let errorMessage = error.userFriendlyMessage;
       
       if (!errorMessage) {
-        if (error.response.data.message) {
+        if (error.response?.data?.message) {
           errorMessage = error.response.data.message;
-        } else if (error.response.status === 409) {
+        } else if (error.response?.status === 409) {
           errorMessage = 'Bu plaka numarası başka bir araçta kullanılıyor';
-        } else if (error.response.status === 404) {
+        } else if (error.response?.status === 404) {
           errorMessage = 'Araç bulunamadı';
         } else {
           errorMessage = 'Araç güncellenirken bir hata oluştu';
@@ -188,9 +188,9 @@ const EditVehicle: React.FC = () => {
       date: record.date.toISOString().split('T')[0],
       mileage: record.mileage.toString(),
       description: record.description,
-      cost: record.cost.toString() || '',
-      nextMaintenanceKm: record.nextMaintenanceKm.toString() || '',
-      nextMaintenanceDate: record.nextMaintenanceDate.toISOString().split('T')[0] || '',
+      cost: record.cost?.toString() || '',
+      nextMaintenanceKm: record.nextMaintenanceKm?.toString() || '',
+      nextMaintenanceDate: record.nextMaintenanceDate?.toISOString().split('T')[0] || '',
       status: record.status,
       notes: record.notes || ''
     });
@@ -201,7 +201,7 @@ const EditVehicle: React.FC = () => {
     if (!id) return;
 
     const newRecord: MaintenanceRecord = {
-      id: editingMaintenance.id || Date.now().toString(),
+      id: editingMaintenance?.id || Date.now().toString(),
       vehicleId: id,
       type: maintenanceForm.type,
       date: new Date(maintenanceForm.date),
@@ -230,7 +230,7 @@ const EditVehicle: React.FC = () => {
   const handleDeleteMaintenance = (recordId: string) => {
     if (!id) return;
     
-    if (window.confirm('Bu bakım kaydını silmek istediğinizden emin misiniz')) {
+    if (window.confirm('Bu bakım kaydını silmek istediğinizden emin misiniz?')) {
       const updatedRecords = maintenanceRecords.filter(r => r.id !== recordId);
       setMaintenanceRecords(updatedRecords);
       saveMaintenanceRecords(id, updatedRecords);
@@ -356,8 +356,7 @@ const EditVehicle: React.FC = () => {
                   <p className="text-sm text-gray-600">Son Bakım</p>
                   <p className="text-lg font-semibold text-gray-900 mt-1">
                     {maintenanceRecords.filter(r => r.status === 'completed').length > 0
-                      ?
-                       new Date(Math.max(...maintenanceRecords
+                      ? new Date(Math.max(...maintenanceRecords
                           .filter(r => r.status === 'completed')
                           .map(r => r.date.getTime()))).toLocaleDateString('tr-TR')
                       : 'Kayıt yok'}
@@ -375,8 +374,7 @@ const EditVehicle: React.FC = () => {
                   <p className="text-sm text-gray-600">Sonraki Bakım</p>
                   <p className="text-lg font-semibold text-gray-900 mt-1">
                     {maintenanceRecords.filter(r => r.status === 'scheduled').length > 0
-                      ?
-                       new Date(Math.min(...maintenanceRecords
+                      ? new Date(Math.min(...maintenanceRecords
                           .filter(r => r.status === 'scheduled')
                           .map(r => r.date.getTime()))).toLocaleDateString('tr-TR')
                       : 'Planlanmamış'}

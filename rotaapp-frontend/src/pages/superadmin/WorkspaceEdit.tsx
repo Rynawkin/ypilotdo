@@ -41,10 +41,10 @@ const WorkspaceEdit: React.FC = () => {
           name: data.name,
           email: data.email || '',
           phoneNumber: data.phoneNumber || '',
-          plan: data.subscription.plan || 'basic',
-          maxDrivers: data.subscription.maxDrivers || 10,
-          maxRoutes: data.subscription.maxRoutes || 50,
-          maxCustomers: data.subscription.maxCustomers || 200,
+          plan: data.subscription?.plan || 'basic',
+          maxDrivers: data.subscription?.maxDrivers || 10,
+          maxRoutes: data.subscription?.maxRoutes || 50,
+          maxCustomers: data.subscription?.maxCustomers || 200,
           active: data.active
         });
       }

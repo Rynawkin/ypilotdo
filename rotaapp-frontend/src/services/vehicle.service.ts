@@ -8,21 +8,21 @@ export interface CreateVehicleDto {
   model: string;
   year: number;
   capacity: number;
-  status: 'active' | 'maintenance' | 'inactive';
+  status?: 'active' | 'maintenance' | 'inactive';
   fuelType: 'gasoline' | 'diesel' | 'electric' | 'hybrid';
-  currentKm: number; // ✅ Başlangıç kilometresi (opsiyonel)
+  currentKm?: number; // ✅ Başlangıç kilometresi (opsiyonel)
 }
 
 export interface UpdateVehicleDto {
-  plateNumber: string;
-  type: 'car' | 'van' | 'truck' | 'motorcycle';
-  brand: string;
-  model: string;
-  year: number;
-  capacity: number;
-  status: 'active' | 'maintenance' | 'inactive';
-  fuelType: 'gasoline' | 'diesel' | 'electric' | 'hybrid';
-  currentKm: number; // ✅ Kilometre bilgisi
+  plateNumber?: string;
+  type?: 'car' | 'van' | 'truck' | 'motorcycle';
+  brand?: string;
+  model?: string;
+  year?: number;
+  capacity?: number;
+  status?: 'active' | 'maintenance' | 'inactive';
+  fuelType?: 'gasoline' | 'diesel' | 'electric' | 'hybrid';
+  currentKm?: number; // ✅ Kilometre bilgisi
 }
 
 export interface UpdateVehicleStatusDto {
@@ -210,14 +210,14 @@ class VehicleService {
       const values = lines[i].split(',');
       if (values.length >= 8) {
         vehicles.push({
-          plateNumber: values[1].trim(),
-          type: (values[2].trim() as any) || 'car',
-          brand: values[3].trim(),
-          model: values[4].trim(),
+          plateNumber: values[1]?.trim(),
+          type: (values[2]?.trim() as any) || 'car',
+          brand: values[3]?.trim(),
+          model: values[4]?.trim(),
           year: parseInt(values[5]) || new Date().getFullYear(),
           capacity: parseInt(values[6]) || 1000,
-          status: (values[7].trim() as any) || 'active',
-          fuelType: (values[8].trim() as any) || 'diesel'
+          status: (values[7]?.trim() as any) || 'active',
+          fuelType: (values[8]?.trim() as any) || 'diesel'
         });
       }
     }

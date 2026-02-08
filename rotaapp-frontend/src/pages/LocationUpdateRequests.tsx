@@ -56,15 +56,15 @@ export interface HistoryLocationUpdateRequestDto {
   requestedByName: string;
   createdAt: UtcISO;
   status: RequestStatus;
-  approvedByName: string | null;
-  rejectionReason: string | null;
-  processedAt: UtcISO | null;
+  approvedByName?: string | null;
+  rejectionReason?: string | null;
+  processedAt?: UtcISO | null;
 }
 
 type HistoryStatusTab = 'Approved' | 'Rejected';
 type ApprovePayload = {
   applyToNextRoutes: boolean;
-  note: string | null;
+  note?: string | null;
 };
 type RejectPayload = {
   rejectionReason: string;
@@ -84,7 +84,7 @@ function parseISOAsUTC(input: string): Date {
   return new Date(iso);
 }
 
-function formatTR(input: string | null): string {
+function formatTR(input?: string | null): string {
   if (!input) return '-';
   const d = parseISOAsUTC(input);
   if (isNaN(d.getTime())) return '-';
@@ -100,7 +100,7 @@ function formatCoordRaw(v: number | string | null | undefined): string {
 function gmapsLink(lat: number | string, lng: number | string): string {
   const la = formatCoordRaw(lat);
   const lo = formatCoordRaw(lng);
-  return `https://www.google.com/mapsq=${la},${lo}`;
+  return `https://www.google.com/maps?q=${la},${lo}`;
 }
 
 function classNames(...xs: Array<string | false | null | undefined>): string {
@@ -175,14 +175,14 @@ const LocationUpdateRequests: React.FC = () => {
     if (!q) return list;
 
     const textOf = (it: any) => [
-      it.journeyName, it.customerName, it.requestedByName,
-      it.reason, it.currentAddress, it.requestedAddress,
-      formatCoordRaw(it.currentLatitude),
-      formatCoordRaw(it.currentLongitude),
-      formatCoordRaw(it.requestedLatitude),
-      formatCoordRaw(it.requestedLongitude),
-      formatTR(it.createdAt),
-      formatTR((it as any).processedAt)
+      it?.journeyName, it?.customerName, it?.requestedByName,
+      it?.reason, it?.currentAddress, it?.requestedAddress,
+      formatCoordRaw(it?.currentLatitude),
+      formatCoordRaw(it?.currentLongitude),
+      formatCoordRaw(it?.requestedLatitude),
+      formatCoordRaw(it?.requestedLongitude),
+      formatTR(it?.createdAt),
+      formatTR((it as any)?.processedAt)
     ].filter(Boolean).join(' ').toLowerCase();
 
     return list.filter(x => textOf(x).includes(q));
@@ -415,7 +415,7 @@ const LocationUpdateRequests: React.FC = () => {
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
               disabled={loading}
             >
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
               Yenile
             </button>
           </div>
@@ -432,8 +432,8 @@ const LocationUpdateRequests: React.FC = () => {
                   onClick={() => setTab(t)}
                   className={classNames(
                     'whitespace-nowrap border-b-2 pb-4 px-1 text-sm font-medium transition-colors',
-                      tab === t ?
-                         'border-blue-600 text-blue-600'
+                    tab === t
+                      ? 'border-blue-600 text-blue-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   )}
                 >
@@ -441,9 +441,9 @@ const LocationUpdateRequests: React.FC = () => {
                     {t === 'Pending' && <Clock className="w-4 h-4" />}
                     {t === 'Approved' && <CheckCircle2 className="w-4 h-4" />}
                     {t === 'Rejected' && <XCircle className="w-4 h-4" />}
-                      <span>{t === 'Pending' ? 'Bekleyen' : t === 'Approved' ? 'Onaylanan' : 'Reddedilen'}</span>
+                    <span>{t === 'Pending' ? 'Bekleyen' : t === 'Approved' ? 'Onaylanan' : 'Reddedilen'}</span>
                     <span className="ml-2 px-2 py-0.5 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">
-                        {tab === 'Pending' ? pending.length : tab === 'Approved' ? approved.length : rejected.length}
+                      {tab === 'Pending' ? pending.length : tab === 'Approved' ? approved.length : rejected.length}
                     </span>
                   </div>
                 </button>

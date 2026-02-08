@@ -34,15 +34,15 @@ import { UpgradePlan } from '@/components/payment/UpgradePlan';
 
 interface MainLayoutProps {
   children: React.ReactNode;
-  onLogout: () => void;
+  onLogout?: () => void;
 }
 
 interface MenuItem {
   icon: any;
   label: string;
   path: string;
-  badge: string | null;
-  roles: string[]; // Hangi roller erişebilir
+  badge?: string | null;
+  roles?: string[]; // Hangi roller erişebilir
 }
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children, onLogout }) => {
@@ -242,14 +242,14 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, onLogout }) => {
       icon: Route, 
       label: 'Rotalar', 
       path: '/routes', 
-        badge: routeCount > 0 ? routeCount.toString() : null,
+      badge: routeCount > 0 ? routeCount.toString() : null,
       roles: ['dispatcher', 'admin', 'superadmin'] // Driver erişemez
     },
     { 
       icon: MapPin, 
       label: 'Müşteriler', 
       path: '/customers', 
-        badge: customerCount > 0 ? customerCount.toString() : null,
+      badge: customerCount > 0 ? customerCount.toString() : null,
       roles: ['dispatcher', 'admin', 'superadmin'] // Driver erişemez
     },
     { 
@@ -277,14 +277,14 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, onLogout }) => {
       icon: Package, 
       label: 'Seferler', 
       path: '/journeys', 
-        badge: journeyCount > 0 ? journeyCount.toString() : null,
+      badge: journeyCount > 0 ? journeyCount.toString() : null,
       roles: ['driver', 'dispatcher', 'admin', 'superadmin'] // Herkes erişebilir
     },
     { 
       icon: MapPinOff, 
       label: 'Konum Talepleri', 
       path: '/location-requests', 
-        badge: pendingLocationRequests > 0 ? pendingLocationRequests.toString() : null,
+      badge: pendingLocationRequests > 0 ? pendingLocationRequests.toString() : null,
       roles: ['dispatcher', 'admin', 'superadmin'] // Sadece yöneticiler
     },
     // { 
@@ -332,7 +332,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, onLogout }) => {
   ];
 
   // Kullanıcının rolüne göre menüleri filtrele
-  const menuItems = allMenuItems.filter(item =>
+  const menuItems = allMenuItems.filter(item => 
     item.roles ? item.roles.includes(currentRole) : true
   );
 
@@ -464,15 +464,15 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, onLogout }) => {
       {/* Sidebar */}
       <aside className={`
         fixed top-0 left-0 z-50 h-full bg-white shadow-xl transition-all duration-300
-          ${sidebarOpen ? 'w-64' : 'w-20'} 
-          ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        ${sidebarOpen ? 'w-64' : 'w-20'} 
+        ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="flex flex-col h-full">
           {/* Logo Section */}
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <Link 
-                to="/" 
-                className={`flex items-center ${!sidebarOpen ? 'justify-center w-full' : 'flex-1'}`}
+            <Link 
+              to="/" 
+              className={`flex items-center ${!sidebarOpen ? 'justify-center w-full' : 'flex-1'}`}
               onClick={() => setMobileMenuOpen(false)}
             >
               {sidebarOpen ? (
@@ -519,12 +519,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, onLogout }) => {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`
                     flex items-center justify-between px-4 py-3 mx-2 rounded-lg transition-colors group
-                      ${isActive
-                        ? 'bg-primary-50 text-primary-600'
-                        : 'hover:bg-gray-50 text-gray-700 hover:text-primary-600'
-                      }
+                    ${isActive 
+                      ? 'bg-primary-50 text-primary-600' 
+                      : 'hover:bg-gray-50 text-gray-700 hover:text-primary-600'
+                    }
                   `}
-                    title={!sidebarOpen ? item.label : ''}
+                  title={!sidebarOpen ? item.label : ''}
                 >
                   <div className="flex items-center">
                     <item.icon className={`${sidebarOpen ? 'w-5 h-5' : 'w-6 h-6'} flex-shrink-0`} />
@@ -797,7 +797,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, onLogout }) => {
           <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <UpgradePlan 
               onClose={() => setShowUpgradePlanModal(false)}
-              currentPlan={usageData.planType as any}
+              currentPlan={usageData?.planType as any}
             />
           </div>
         </div>

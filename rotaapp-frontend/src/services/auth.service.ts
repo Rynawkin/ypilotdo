@@ -5,22 +5,22 @@ import { api } from './api';
 interface MeUserModel {
   id: string;
   email: string;
-  fullName: string;
-  phoneNumber: string;
+  fullName?: string;
+  phoneNumber?: string;
   workspaceId: number;
-  workspaceName: string;
+  workspaceName?: string;
   isAdmin: boolean;
   isDispatcher: boolean;
   isDriver: boolean;
   isSuperAdmin: boolean;
   isOnboarded: boolean;
-  depotId: number;
+  depotId?: number;
 }
 
 interface TokenResponse {
   bearerToken: string;
-  refreshToken: string;
-  expiresIn: string;
+  refreshToken?: string;
+  expiresIn?: string;
   me: MeUserModel;
 }
 
@@ -68,7 +68,7 @@ export const authService = {
       
       if (error.response) {
         console.error('Server error:', error.response.data);
-        const message = error.response.data.message || 'Giriş başarısız';
+        const message = error.response.data?.message || 'Giriş başarısız';
         throw new Error(message);
       } else if (error.request) {
         console.error('No response:', error.request);
@@ -80,7 +80,7 @@ export const authService = {
     }
   },
 
-  async register(email: string, password: string, fullName: string, companyName: string, companyEmail: string, companyPhone: string): Promise<TokenResponse> {
+  async register(email: string, password: string, fullName: string, companyName?: string, companyEmail?: string, companyPhone?: string): Promise<TokenResponse> {
     try {
       console.log('Register request:', { email, fullName, companyName });
       
@@ -126,7 +126,7 @@ export const authService = {
       
       if (error.response) {
         console.error('Server error:', error.response.data);
-        const message = error.response.data.message || 'Kayıt başarısız';
+        const message = error.response.data?.message || 'Kayıt başarısız';
         throw new Error(message);
       } else if (error.request) {
         console.error('No response:', error.request);
@@ -151,7 +151,7 @@ export const authService = {
       console.error('Forgot password error:', error);
       
       if (error.response) {
-          const message = error.response.data.message || 'Şifre sıfırlama bağlantısı gönderilemedi';
+          const message = error.response.data?.message || 'Şifre sıfırlama bağlantısı gönderilemedi';
           throw new Error(message);
       } else if (error.request) {
           throw new Error('Sunucuya bağlanılamıyor. Lütfen internet bağlantınızı kontrol edin.');
@@ -176,7 +176,7 @@ export const authService = {
       console.error('Reset password error:', error);
       
       if (error.response) {
-        const message = error.response.data.message || 'Şifre sıfırlama başarısız';
+        const message = error.response.data?.message || 'Şifre sıfırlama başarısız';
         throw new Error(message);
       } else if (error.request) {
         throw new Error('Sunucuya bağlanılamıyor. Lütfen internet bağlantınızı kontrol edin.');
@@ -241,22 +241,22 @@ export const authService = {
 
   isSuperAdmin(): boolean {
     const user = this.getUser();
-    return user.isSuperAdmin === true;
+    return user?.isSuperAdmin === true;
   },
 
   isAdmin(): boolean {
     const user = this.getUser();
-    return user.isAdmin === true || user.isSuperAdmin === true;
+    return user?.isAdmin === true || user?.isSuperAdmin === true;
   },
 
   isDispatcher(): boolean {
     const user = this.getUser();
-    return user.isDispatcher === true || user.isAdmin === true || user.isSuperAdmin === true;
+    return user?.isDispatcher === true || user?.isAdmin === true || user?.isSuperAdmin === true;
   },
 
   isDriver(): boolean {
     const user = this.getUser();
-    return user.isDriver === true;
+    return user?.isDriver === true;
   },
 
   // BUGFIX S5.5: Refresh token mechanism

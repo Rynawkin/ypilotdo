@@ -5,7 +5,7 @@ import { FileText, Download, Calendar, CreditCard, Loader2, RefreshCw } from 'lu
 import { paymentService, type InvoiceResponse } from '../../services/payment.service';
 
 interface PaymentHistoryProps {
-  className: string;
+  className?: string;
 }
 
 export const PaymentHistory: React.FC<PaymentHistoryProps> = ({ className = '' }) => {

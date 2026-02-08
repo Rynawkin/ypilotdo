@@ -3,7 +3,7 @@ import { api } from './api';
 // SignalR için
 declare global {
   interface Window {
-    signalRService: {
+    signalRService?: {
       onNotificationReceived: (callback: (notification: Notification) => void) => void;
       offNotificationReceived: (callback: (notification: Notification) => void) => void;
     };
@@ -17,8 +17,8 @@ export interface Notification {
   type: string; // Backend uses enum string like "JOURNEY_ASSIGNED"
   isRead: boolean;
   createdAt: string;
-  readAt: string;
-  data: any;
+  readAt?: string;
+  data?: any;
 }
 
 export interface NotificationStats {

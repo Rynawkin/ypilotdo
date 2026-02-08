@@ -7,15 +7,15 @@ interface User {
   id: string;
   email: string;
   fullName: string;
-  phoneNumber: string;
+  phoneNumber?: string;
   workspaceId: number;
-  workspaceName: string;
+  workspaceName?: string;
   isAdmin: boolean;
   isDispatcher: boolean;
   isDriver: boolean;
   isSuperAdmin: boolean;
   isOnboarded: boolean;
-  depotId: number;
+  depotId?: number;
 }
 
 interface AuthContextType {
@@ -85,7 +85,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             console.log('Token is still valid');
           } catch (tokenError: any) {
             console.error('Token validation failed on app init:', tokenError);
-            if (tokenError.response.status === 401) {
+            if (tokenError.response?.status === 401) {
               console.log('Token expired, clearing auth data...');
               // Token geçersizse tüm auth verisini temizle
               localStorage.removeItem('token');
@@ -101,7 +101,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         }
       } catch (error: any) {
         console.error('Auth initialization error:', error);
-        const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Kimlik doğrulama başlatılırken hata oluştu';
+        const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Kimlik doğrulama başlatılırken hata oluştu';
         console.error('User-friendly error:', errorMessage);
       } finally {
         setIsLoading(false);
@@ -138,7 +138,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           fullName: response.me.fullName || response.me.email,
           phoneNumber: response.me.phoneNumber,
           workspaceId: response.me.workspaceId,
-          workspaceName: response.me.workspace.name,
+          workspaceName: response.me.workspace?.name,
           isAdmin: response.me.isAdmin || false,
           isDispatcher: response.me.isDispatcher || false,
           isDriver: response.me.isDriver || false,
@@ -173,7 +173,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error('Login error:', error);
       
       // Hata mesajını düzgün göster
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || error.message || 'Giriş başarısız';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || error.message || 'Giriş başarısız';
       
       throw new Error(errorMessage);
     } finally {
@@ -220,7 +220,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             fullName: response.fullName || response.email,
             phoneNumber: response.phoneNumber,
             workspaceId: response.workspaceId,
-            workspaceName: response.workspace.name,
+            workspaceName: response.workspace?.name,
             isAdmin: response.isAdmin || false,
             isDispatcher: response.isDispatcher || false,
             isDriver: response.isDriver || false,
@@ -243,7 +243,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.error('Token validation failed:', error);
       
       // Token geçersizse logout yap
-      if (error.response.status === 401) {
+      if (error.response?.status === 401) {
         console.log('Token expired or invalid, logging out...');
         handleLogout();
       }
@@ -274,19 +274,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const canAccessSuperAdminFeatures = (): boolean => {
-    return user.isSuperAdmin === true;
+    return user?.isSuperAdmin === true;
   };
 
   const canAccessAdminFeatures = (): boolean => {
-    return user.isAdmin === true || user.isSuperAdmin === true;
+    return user?.isAdmin === true || user?.isSuperAdmin === true;
   };
 
   const canAccessDispatcherFeatures = (): boolean => {
-    return user.isDispatcher === true || user.isAdmin === true || user.isSuperAdmin === true;
+    return user?.isDispatcher === true || user?.isAdmin === true || user?.isSuperAdmin === true;
   };
 
   const canAccessDriverFeatures = (): boolean => {
-    return user.isDriver === true || user.isDispatcher === true || user.isAdmin === true || user.isSuperAdmin === true;
+    return user?.isDriver === true || user?.isDispatcher === true || user?.isAdmin === true || user?.isSuperAdmin === true;
   };
 
   const value: AuthContextType = {
@@ -311,10 +311,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 // Protected Route Component
 interface ProtectedRouteProps {
   children: ReactNode;
-  requireAdmin: boolean;
-  requireSuperAdmin: boolean;
-  requireDispatcher: boolean;
-  requireDriver: boolean;
+  requireAdmin?: boolean;
+  requireSuperAdmin?: boolean;
+  requireDispatcher?: boolean;
+  requireDriver?: boolean;
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
@@ -362,7 +362,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   // Check role-based access
-  if (requireSuperAdmin && !user.isSuperAdmin) {
+  if (requireSuperAdmin && !user?.isSuperAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
@@ -373,7 +373,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  if (requireAdmin && !user.isAdmin && !user.isSuperAdmin) {
+  if (requireAdmin && !user?.isAdmin && !user?.isSuperAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">

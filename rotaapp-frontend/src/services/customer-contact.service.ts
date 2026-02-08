@@ -6,7 +6,7 @@ export interface CreateCustomerContactDto {
   firstName: string;
   lastName: string;
   email: string;
-  phone: string; // Optional field
+  phone?: string; // Optional field
   role: string;
   isActive: boolean;
   isPrimary: boolean;

@@ -67,10 +67,10 @@ const PaymentFailed = lazy(() => import('./pages/PaymentFailed'));
 // Layout wrapper for protected routes - useAuth hook'unu kullanacak şekilde güncellendi
 const ProtectedLayout: React.FC<{
   children: React.ReactNode;
-  requireAdmin: boolean;
-  requireSuperAdmin: boolean;
-  requireDispatcher: boolean;
-  requireDriver: boolean;
+  requireAdmin?: boolean;
+  requireSuperAdmin?: boolean;
+  requireDispatcher?: boolean;
+  requireDriver?: boolean;
 }> = ({
   children,
   requireAdmin = false,

@@ -67,7 +67,7 @@ const Vehicles: React.FC = () => {
       setVehicles(data);
     } catch (error: any) {
       console.error('Error loading vehicles:', error);
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Araçlar yüklenirken bir hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Araçlar yüklenirken bir hata oluştu';
       alert(errorMessage);
     } finally {
       setLoading(false);
@@ -128,7 +128,7 @@ const Vehicles: React.FC = () => {
         break;
     }
 
-      return sortDirection === 'asc' ? comparison : -comparison;
+    return sortDirection === 'asc' ? comparison : -comparison;
   });
 
   // Sorting
@@ -172,7 +172,7 @@ const Vehicles: React.FC = () => {
   const handleBulkDelete = async () => {
     if (selectedVehicles.size === 0) return;
 
-    if (!confirm(`Seçili ${selectedVehicles.size} aracı silmek istediğinize emin misiniz`)) return;
+    if (!confirm(`Seçili ${selectedVehicles.size} aracı silmek istediğinize emin misiniz?`)) return;
 
     try {
       await Promise.all(Array.from(selectedVehicles).map(id => vehicleService.delete(id)));
@@ -186,7 +186,7 @@ const Vehicles: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (window.confirm('Bu aracı silmek istediğinizden emin misiniz')) {
+    if (window.confirm('Bu aracı silmek istediğinizden emin misiniz?')) {
       setIsDeleting(id);
       try {
         await vehicleService.delete(id);
@@ -194,7 +194,7 @@ const Vehicles: React.FC = () => {
         alert('Araç başarıyla silindi');
       } catch (error: any) {
         console.error('Error deleting vehicle:', error);
-        const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Araç silinirken bir hata oluştu';
+        const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Araç silinirken bir hata oluştu';
         alert(errorMessage);
       } finally {
         setIsDeleting(null);
@@ -210,7 +210,7 @@ const Vehicles: React.FC = () => {
       alert('Araç durumu başarıyla güncellendi');
     } catch (error: any) {
       console.error('Error updating vehicle status:', error);
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Durum güncellenirken bir hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Durum güncellenirken bir hata oluştu';
       alert(errorMessage);
     } finally {
       setIsStatusChanging(null);
@@ -262,7 +262,7 @@ const Vehicles: React.FC = () => {
 
       const reader = new FileReader();
       reader.onload = async (event) => {
-        const csv = event.target.result as string;
+        const csv = event.target?.result as string;
         const vehiclesToImport = vehicleService.parseCSV(csv);
 
         if (vehiclesToImport.length === 0) {
@@ -277,7 +277,7 @@ const Vehicles: React.FC = () => {
           alert(`${vehiclesToImport.length} araç başarıyla içe aktarıldı!`);
         } catch (error: any) {
           console.error('Error importing vehicles:', error);
-          const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Araçlar içe aktarılırken bir hata oluştu';
+          const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Araçlar içe aktarılırken bir hata oluştu';
           alert(errorMessage);
         } finally {
           setIsImporting(false);
@@ -426,7 +426,7 @@ const Vehicles: React.FC = () => {
             Bakım Kaydı Görmek İstediğiniz Aracı Seçin
           </label>
           <select
-            value={selectedVehicleForMaintenance.id || ''}
+            value={selectedVehicleForMaintenance?.id || ''}
             onChange={(e) => {
               const vehicle = vehicles.find(v => v.id === parseInt(e.target.value));
               setSelectedVehicleForMaintenance(vehicle || null);
@@ -535,9 +535,9 @@ const Vehicles: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <div
           onClick={() => setQuickFilter('all')}
-            className={`bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer ${
-              quickFilter === 'all' ? 'ring-2 ring-blue-500' : ''
-            }`}
+          className={`bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer ${
+            quickFilter === 'all' ? 'ring-2 ring-blue-500' : ''
+          }`}
         >
           <div className="flex items-center justify-between">
             <div>
@@ -552,9 +552,9 @@ const Vehicles: React.FC = () => {
 
         <div
           onClick={() => setQuickFilter('active')}
-            className={`bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer ${
-              quickFilter === 'active' ? 'ring-2 ring-green-500' : ''
-            }`}
+          className={`bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer ${
+            quickFilter === 'active' ? 'ring-2 ring-green-500' : ''
+          }`}
         >
           <div className="flex items-center justify-between">
             <div>
@@ -571,9 +571,9 @@ const Vehicles: React.FC = () => {
 
         <div
           onClick={() => setQuickFilter('maintenance')}
-            className={`bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer ${
-              quickFilter === 'maintenance' ? 'ring-2 ring-orange-500' : ''
-            }`}
+          className={`bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer ${
+            quickFilter === 'maintenance' ? 'ring-2 ring-orange-500' : ''
+          }`}
         >
           <div className="flex items-center justify-between">
             <div>
@@ -590,9 +590,9 @@ const Vehicles: React.FC = () => {
 
         <div
           onClick={() => setQuickFilter('inactive')}
-            className={`bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer ${
-              quickFilter === 'inactive' ? 'ring-2 ring-gray-500' : ''
-            }`}
+          className={`bg-white rounded-xl shadow-sm p-4 hover:shadow-md transition-all cursor-pointer ${
+            quickFilter === 'inactive' ? 'ring-2 ring-gray-500' : ''
+          }`}
         >
           <div className="flex items-center justify-between">
             <div>
@@ -893,9 +893,9 @@ const Vehicles: React.FC = () => {
                                     handleDelete(vehicle.id);
                                     setDropdownOpen(null);
                                   }}
-                                disabled={isDeleting === vehicle.id}
-                                className="flex items-center px-4 py-2 hover:bg-gray-50 text-red-600 w-full text-left disabled:opacity-50"
-                              >
+                                  disabled={isDeleting === vehicle.id}
+                                  className="flex items-center px-4 py-2 hover:bg-gray-50 text-red-600 w-full text-left disabled:opacity-50"
+                                >
                                   {isDeleting === vehicle.id ? (
                                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                                   ) : (
@@ -947,7 +947,7 @@ const Vehicles: React.FC = () => {
                   </div>
                   <div className="relative">
                     <button
-                        onClick={() => setDropdownOpen(dropdownOpen === vehicle.id.toString() ? null : vehicle.id.toString())}
+                      onClick={() => setDropdownOpen(dropdownOpen === vehicle.id.toString() ? null : vehicle.id.toString())}
                       className="p-1 hover:bg-gray-100 rounded transition-colors"
                     >
                       <MoreVertical className="w-4 h-4 text-gray-600" />
@@ -996,12 +996,12 @@ const Vehicles: React.FC = () => {
                             disabled={isDeleting === vehicle.id}
                             className="flex items-center px-3 py-1.5 hover:bg-gray-50 text-red-600 w-full text-left text-sm disabled:opacity-50"
                           >
-                              {isDeleting === vehicle.id ? (
+                            {isDeleting === vehicle.id ? (
                               <Loader2 className="w-3 h-3 mr-2 animate-spin" />
                             ) : (
                               <Trash2 className="w-3 h-3 mr-2" />
                             )}
-                              {isDeleting === vehicle.id ? 'Siliniyor...' : 'Sil'}
+                            {isDeleting === vehicle.id ? 'Siliniyor...' : 'Sil'}
                           </button>
                         </div>
                       </>
@@ -1027,7 +1027,7 @@ const Vehicles: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <span className="text-gray-600">Kilometre:</span>
                     <span className="font-medium text-gray-900">
-                        {vehicle.currentKm ? vehicle.currentKm.toLocaleString('tr-TR') : '-'}
+                      {vehicle.currentKm ? vehicle.currentKm.toLocaleString('tr-TR') : '-'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">

@@ -29,7 +29,7 @@ const Login: React.FC = () => {
       console.log('Login successful, redirecting...');
     } catch (error: any) {
       console.error('Login error:', error);
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Giriş başarısız. Lütfen bilgilerinizi kontrol edin.';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Giriş başarısız. Lütfen bilgilerinizi kontrol edin.';
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -43,11 +43,11 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     console.log('=== Login Page Mounted ===');
-      console.log('Current localStorage:', {
-        token: localStorage.getItem('token') ? 'exists' : 'empty',
-        user: localStorage.getItem('user') ? 'exists' : 'empty',
-        workspaceId: localStorage.getItem('workspaceId')
-      });
+    console.log('Current localStorage:', {
+      token: localStorage.getItem('token') ? 'exists' : 'empty',
+      user: localStorage.getItem('user') ? 'exists' : 'empty',
+      workspaceId: localStorage.getItem('workspaceId')
+    });
     console.log('========================');
   }, []);
 
@@ -116,7 +116,7 @@ const Login: React.FC = () => {
               <input
                 id="password"
                 name="password"
-                  type={showPassword ? 'text' : 'password'}
+                type={showPassword ? 'text' : 'password'}
                 autoComplete="current-password"
                 required
                 value={password}
@@ -182,7 +182,7 @@ const Login: React.FC = () => {
         {/* Kayıt Ol Linki */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
-            Hesabınız yok mu{' '}
+            Hesabınız yok mu?{' '}
             <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500">
               Hemen kayıt olun
             </Link>

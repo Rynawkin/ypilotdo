@@ -31,7 +31,7 @@ const EditDriver: React.FC = () => {
       }
     } catch (error: any) {
       console.error('Error loading driver:', error);
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Sürücü yüklenirken bir hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Sürücü yüklenirken bir hata oluştu';
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -47,7 +47,7 @@ const EditDriver: React.FC = () => {
       navigate('/drivers');
     } catch (error: any) {
       console.error('Error updating driver:', error);
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Sürücü güncellenirken bir hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Sürücü güncellenirken bir hata oluştu';
       setError(errorMessage);
     } finally {
       setSaving(false);

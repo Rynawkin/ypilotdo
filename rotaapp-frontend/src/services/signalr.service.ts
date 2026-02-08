@@ -9,9 +9,9 @@ export interface UpdateLocationDto {
   journeyId: number;
   latitude: number;
   longitude: number;
-  speed: number;
-  heading: number;
-  accuracy: number;
+  speed?: number;
+  heading?: number;
+  accuracy?: number;
 }
 
 export interface ActiveVehicleDto {
@@ -20,10 +20,10 @@ export interface ActiveVehicleDto {
   plateNumber: string;
   driverId: number;
   driverName: string;
-  location: LiveLocation;
+  location?: LiveLocation;
   currentStopIndex: number;
   totalStops: number;
-  startedAt: Date;
+  startedAt?: Date;
 }
 
 export interface EmergencyAlertDto {
@@ -31,16 +31,16 @@ export interface EmergencyAlertDto {
   vehicleId: number;
   driverId: number;
   message: string;
-  location: LiveLocation;
+  location?: LiveLocation;
 }
 
 export interface LiveLocation {
   latitude: number;
   longitude: number;
   timestamp: Date;
-  speed: number;
-  heading: number;
-  accuracy: number;
+  speed?: number;
+  heading?: number;
+  accuracy?: number;
 }
 
 class SignalRService {
@@ -95,7 +95,7 @@ class SignalRService {
   }
 
   private async connectJourneyHub(token: string): Promise<void> {
-    if (this._journeyHub.state === signalR.HubConnectionState.Connected) {
+    if (this._journeyHub?.state === signalR.HubConnectionState.Connected) {
       return;
     }
 
@@ -136,7 +136,7 @@ class SignalRService {
     this._journeyHub.onreconnected(() => {
       console.log('JourneyHub reconnected');
       this.journeyCallbacks.forEach((_, journeyId) => {
-        this._journeyHub.invoke('JoinJourneyGroup', journeyId).catch(console.error);
+        this._journeyHub?.invoke('JoinJourneyGroup', journeyId).catch(console.error);
       });
     });
 
@@ -154,7 +154,7 @@ class SignalRService {
   }
 
   private async connectTrackingHub(token: string): Promise<void> {
-    if (this._trackingHub.state === signalR.HubConnectionState.Connected) {
+    if (this._trackingHub?.state === signalR.HubConnectionState.Connected) {
       return;
     }
 
@@ -202,7 +202,7 @@ class SignalRService {
     this._trackingHub.onreconnected(() => {
       console.log('TrackingHub reconnected');
       this.vehicleCallbacks.forEach((_, vehicleId) => {
-        this._trackingHub.invoke('JoinVehicleTracking', vehicleId).catch(console.error);
+        this._trackingHub?.invoke('JoinVehicleTracking', vehicleId).catch(console.error);
       });
     });
 
@@ -245,7 +245,7 @@ class SignalRService {
     }
     
     try {
-      await this._journeyHub.invoke('JoinJourneyGroup', journeyId);
+      await this._journeyHub?.invoke('JoinJourneyGroup', journeyId);
       console.log(`Joined journey group: ${journeyId}`);
     } catch (err) {
       console.error('Error joining journey group:', err);
@@ -436,14 +436,14 @@ class SignalRService {
   }
 
   getConnectionStatus(): boolean {
-    return this._journeyHub.state === signalR.HubConnectionState.Connected &&
-           this._trackingHub.state === signalR.HubConnectionState.Connected;
+    return this._journeyHub?.state === signalR.HubConnectionState.Connected &&
+           this._trackingHub?.state === signalR.HubConnectionState.Connected;
   }
 
   isConnecting(): boolean {
     return this.connectionPromise !== null ||
-           this._journeyHub.state === signalR.HubConnectionState.Connecting ||
-           this._trackingHub.state === signalR.HubConnectionState.Connecting;
+           this._journeyHub?.state === signalR.HubConnectionState.Connecting ||
+           this._trackingHub?.state === signalR.HubConnectionState.Connecting;
   }
 
   async disconnect(): Promise<void> {

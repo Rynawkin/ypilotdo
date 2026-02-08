@@ -5,8 +5,8 @@ import { MapPin, Loader2, Check, X, Navigation } from 'lucide-react';
 import { googleMapsService } from '@/services/googleMapsService';
 
 interface MapPickerProps {
-  initialLat: number;
-  initialLng: number;
+  initialLat?: number;
+  initialLng?: number;
   onLocationSelect: (location: {
     lat: number;
     lng: number;

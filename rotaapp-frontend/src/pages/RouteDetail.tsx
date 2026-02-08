@@ -62,7 +62,7 @@ const formatDuration = (totalMinutes: number): string => {
 };
 
 // ETA formatını düzelt (HH:mm:ss veya HH:mm formatında göster)
-const formatETA = (etaString: string): string => {
+const formatETA = (etaString?: string): string => {
   if (!etaString) return '';
   // Backend'den HH:mm:ss formatında geliyor, sadece HH:mm göster
   return etaString.substring(0, 5);
@@ -237,7 +237,7 @@ const RouteDetail: React.FC = () => {
   };
 
   const handleDelete = async () => {
-    if (!id || !window.confirm('Bu rotayı silmek istediğinizden emin misiniz')) return;
+    if (!id || !window.confirm('Bu rotayı silmek istediğinizden emin misiniz?')) return;
 
     try {
       await routeService.delete(id);
@@ -278,7 +278,7 @@ const RouteDetail: React.FC = () => {
         totalDeliveries: route.totalDeliveries,
         completedDeliveries: 0,
         optimized: route.optimized,
-          notes: route.notes ? `${route.notes} (Kopya)` : '',
+        notes: route.notes ? `${route.notes} (Kopya)` : '',
         driver: route.driver,
         vehicle: route.vehicle,
         depot: depot
@@ -362,9 +362,9 @@ const RouteDetail: React.FC = () => {
       ['Sıra', 'Müşteri', 'Adres', 'Telefon', 'Durum', 'Mesafe', 'Süre', 'Tahmini Varış', 'Tahmini Ayrılış'],
       ...route.stops.map(stop => [
         stop.order,
-        stop.customer.name || '',
-        stop.customer.address || '',
-        stop.customer.phone || '',
+        stop.customer?.name || '',
+        stop.customer?.address || '',
+        stop.customer?.phone || '',
         stop.status,
         stop.distance ? `${stop.distance} km` : '',
         stop.duration ? `${stop.duration} dk` : '',
@@ -464,8 +464,8 @@ const RouteDetail: React.FC = () => {
 
     // Info cards in 2x4 grid
     const infoData = [
-      { label: 'Surucu', value: fixTurkish(route.driver.fullName || route.driver.name || '-') },
-      { label: 'Arac', value: fixTurkish(route.vehicle.plateNumber || '-') },
+      { label: 'Surucu', value: fixTurkish(route.driver?.fullName || route.driver?.name || '-') },
+      { label: 'Arac', value: fixTurkish(route.vehicle?.plateNumber || '-') },
       { label: 'Durum', value: fixTurkish(statusText) },
       { label: 'Rota Tarihi', value: fixTurkish(route.date ? new Date(route.date).toLocaleDateString('tr-TR') : '-') },
       { label: 'Toplam Mesafe', value: `${route.totalDistance ? route.totalDistance.toFixed(1) : 0} km` },
@@ -473,7 +473,7 @@ const RouteDetail: React.FC = () => {
       { label: 'Toplam Durak', value: `${route.totalDeliveries || route.stops.length}` },
       { label: 'Tamamlanan', value: `${route.completedDeliveries || 0}` },
       { label: 'Optimizasyon', value: route.optimized ? 'Evet' : 'Hayir' },
-      ...(depot.name ? [{ label: 'Depo', value: fixTurkish(depot.name) }] : []),
+      ...(depot?.name ? [{ label: 'Depo', value: fixTurkish(depot.name) }] : []),
     ];
 
     // Draw info cards
@@ -513,9 +513,9 @@ const RouteDetail: React.FC = () => {
 
     const stopsData = route.stops.map((stop: RouteStop) => {
       const stopCustomer = stop.customer || customers.find(c => c.id === stop.customerId);
-      const customerName = fixTurkish(stopCustomer.name || `Durak ${stop.order}`);
-      const customerPhone = stopCustomer.phone ? `\n${stopCustomer.phone}` : '';
-      const customerAddress = fixTurkish(stopCustomer.address || stop.customer.address || '-');
+      const customerName = fixTurkish(stopCustomer?.name || `Durak ${stop.order}`);
+      const customerPhone = stopCustomer?.phone ? `\n${stopCustomer.phone}` : '';
+      const customerAddress = fixTurkish(stopCustomer?.address || stop.customer?.address || '-');
       const statusLabel =
         stop.status === 'completed' ? 'Tamamlandi' :
         stop.status === 'failed' ? 'Basarisiz' :
@@ -705,7 +705,7 @@ const RouteDetail: React.FC = () => {
       };
     }
     // Eğer depot yoksa ve route'da depot bilgisi varsa onu kullan
-    if (route.depot) {
+    if (route?.depot) {
       return {
         lat: route.depot.latitude,
         lng: route.depot.longitude
@@ -761,7 +761,7 @@ const RouteDetail: React.FC = () => {
             height="650px"
             customers={customers}
             depot={depotLoc}
-            stops={route.stops.map((stop) => ({
+            stops={route?.stops.map((stop) => ({
               customer: stop.customer || customers.find(c => c.id === stop.customerId) || {
                 id: stop.customerId,
                 name: `Müşteri ${stop.customerId}`,
@@ -792,9 +792,9 @@ const RouteDetail: React.FC = () => {
           directions={mapDirections}
           customers={customers}
           showTraffic={false}
-            selectedCustomerId={selectedStopId ? route.stops.find(s => s.id === selectedStopId)?.customerId : undefined}
+          selectedCustomerId={selectedStopId ? route?.stops.find(s => s.id === selectedStopId)?.customerId : undefined}
           onCustomerSelect={(customerId) => {
-            const stop = route.stops.find(s => s.customerId === customerId);
+            const stop = route?.stops.find(s => s.customerId === customerId);
             if (stop) setSelectedStopId(stop.id);
           }}
         />
@@ -879,11 +879,11 @@ const RouteDetail: React.FC = () => {
                 onClick={handleStartJourney}
                 disabled={startingJourney}
                 className={`px-4 py-2 ${startingJourney
-                  ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-green-600 hover:bg-green-700'
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-green-600 hover:bg-green-700'
                   } text-white rounded-lg transition-colors flex items-center`}
               >
-                  {startingJourney ? (
+                {startingJourney ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     Sefer Başlatılıyor...
@@ -1113,7 +1113,7 @@ const RouteDetail: React.FC = () => {
                           <div className="text-xs text-blue-600 ml-6">
                             {route.depot.address}
                           </div>
-                          {route.startDetails.startTime && (
+                          {route.startDetails?.startTime && (
                             <div className="mt-2 p-2 bg-blue-100 border border-blue-300 rounded">
                               <div className="text-xs font-medium text-blue-800 mb-1">
                                 Başlangıç Saati
@@ -1146,27 +1146,27 @@ const RouteDetail: React.FC = () => {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1">
                           <h4 className="font-medium text-gray-900 truncate">
-                            {stop.customer.name || stop.name || `Müşteri ${stop.customerId}`}
+                            {stop.customer?.name || stop.name || `Müşteri ${stop.customerId}`}
                           </h4>
                           {getStopStatusBadge(stop.status)}
                         </div>
 
                         <p className="text-xs text-gray-600 truncate mb-2">
-                          {stop.customer.address || stop.address}
+                          {stop.customer?.address || stop.address}
                         </p>
 
                         <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
-                          {(stop.customer.phone || stop.contactPhone) && (
+                          {(stop.customer?.phone || stop.contactPhone) && (
                             <span className="flex items-center">
                               <Phone className="w-3 h-3 mr-0.5" />
-                              {stop.customer.phone || stop.contactPhone}
+                              {stop.customer?.phone || stop.contactPhone}
                             </span>
                           )}
 
-                          {(stop.serviceTime || stop.customer.estimatedServiceTime) && (
+                          {(stop.serviceTime || stop.customer?.estimatedServiceTime) && (
                             <span className="flex items-center">
                               <Timer className="w-3 h-3 mr-0.5" />
-                              {stop.serviceTime || stop.customer.estimatedServiceTime}dk
+                              {stop.serviceTime || stop.customer?.estimatedServiceTime}dk
                             </span>
                           )}
 
@@ -1216,18 +1216,18 @@ const RouteDetail: React.FC = () => {
                           </div>
                         )}
 
-                        {stop.customer.timeWindow && (
+                        {stop.customer?.timeWindow && (
                           <div className="mt-2 flex items-center text-xs text-gray-600">
                             <Clock className="w-3 h-3 mr-1" />
-                            {stop.overrideTimeWindow.start || stop.customer.timeWindow.start} -
-                            {stop.overrideTimeWindow.end || stop.customer.timeWindow.end}
+                            {stop.overrideTimeWindow?.start || stop.customer.timeWindow.start} -
+                            {stop.overrideTimeWindow?.end || stop.customer.timeWindow.end}
                           </div>
                         )}
 
-                        {(stop.stopNotes || stop.notes || stop.customer.notes) && (
+                        {(stop.stopNotes || stop.notes || stop.customer?.notes) && (
                           <div className="mt-2">
                             <div className="p-1.5 bg-yellow-50 rounded text-xs text-yellow-700">
-                              {stop.stopNotes || stop.notes || stop.customer.notes}
+                              {stop.stopNotes || stop.notes || stop.customer?.notes}
                             </div>
                           </div>
                         )}
@@ -1254,7 +1254,7 @@ const RouteDetail: React.FC = () => {
                         </div>
 
                         <p className="text-xs text-green-700 truncate mb-2">
-                          {route.endDetails.name || depot.name || 'Depo'}
+                          {route.endDetails.name || depot?.name || 'Depo'}
                         </p>
 
                         <div className="mt-2 p-2 bg-green-100 border border-green-300 rounded">
@@ -1302,7 +1302,7 @@ const RouteDetail: React.FC = () => {
               <User className="w-5 h-5 text-gray-400 mt-0.5" />
               <div className="flex-1">
                 <p className="text-sm text-gray-600">Sürücü</p>
-                <p className="font-medium">{route.driver.name || 'Atanmadı'}</p>
+                <p className="font-medium">{route.driver?.name || 'Atanmadı'}</p>
                 {route.driver && (
                   <div className="flex items-center space-x-2 mt-1">
                     <Phone className="w-3 h-3 text-gray-400" />
@@ -1317,7 +1317,7 @@ const RouteDetail: React.FC = () => {
               <div className="flex-1">
                 <p className="text-sm text-gray-600">Araç</p>
                 <p className="font-medium">
-                    {route.vehicle ? `${route.vehicle.plateNumber} - ${route.vehicle.brand} ${route.vehicle.model}` : 'Atanmadı'}
+                  {route.vehicle ? `${route.vehicle.plateNumber} - ${route.vehicle.brand} ${route.vehicle.model}` : 'Atanmadı'}
                 </p>
               </div>
             </div>
@@ -1326,7 +1326,7 @@ const RouteDetail: React.FC = () => {
               <Home className="w-5 h-5 text-gray-400 mt-0.5" />
               <div className="flex-1">
                 <p className="text-sm text-gray-600">Depo</p>
-                <p className="font-medium">{depot.name || route.depot.name || 'Depo bilgisi yok'}</p>
+                <p className="font-medium">{depot?.name || route.depot?.name || 'Depo bilgisi yok'}</p>
               </div>
             </div>
 
@@ -1335,10 +1335,10 @@ const RouteDetail: React.FC = () => {
               <div className="flex-1">
                 <p className="text-sm text-gray-600">Rota Başlangıç Saati</p>
                 <p className="font-medium">
-                  {route.startDetails.plannedStartTime ?
-                     formatETA(route.startDetails.plannedStartTime)
-                    : route.startDetails.startTime ?
-                     formatETA(route.startDetails.startTime)
+                  {route.startDetails?.plannedStartTime
+                    ? formatETA(route.startDetails.plannedStartTime)
+                    : route.startDetails?.startTime
+                    ? formatETA(route.startDetails.startTime)
                     : 'Belirlenmemiş'}
                 </p>
               </div>

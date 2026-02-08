@@ -5,14 +5,14 @@ const CACHE_DURATION = 12 * 60 * 60 * 1000; // 12 saat (milisaniye cinsinden)
 
 export interface WeatherData {
   location: string;
-  depotId: string | number;
+  depotId?: string | number;
   temperature: number;
   feelsLike: number;
   description: string;
   icon: string;
   humidity: number;
   windSpeed: number;
-  rainChance: number;
+  rainChance?: number;
   forecast: DailyForecast[];
 }
 
@@ -86,7 +86,7 @@ class WeatherService {
   /**
    * Koordinatlara göre hava durumu bilgisi al (12 saat cache ile)
    */
-  async getWeatherByCoordinates(lat: number, lon: number, locationName: string, depotId: string | number): Promise<WeatherData | null> {
+  async getWeatherByCoordinates(lat: number, lon: number, locationName: string, depotId?: string | number): Promise<WeatherData | null> {
     // Önce cache'e bak
     const cachedData = this.getFromCache(lat, lon);
     if (cachedData) {
@@ -103,7 +103,7 @@ class WeatherService {
 
       // Mevcut hava durumu
       const currentResponse = await fetch(
-        `${WEATHER_API_BASE}/weatherlat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric&lang=tr`
+        `${WEATHER_API_BASE}/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric&lang=tr`
       );
 
       if (!currentResponse.ok) {
@@ -115,7 +115,7 @@ class WeatherService {
 
       // 3 günlük tahmin
       const forecastResponse = await fetch(
-        `${WEATHER_API_BASE}/forecastlat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric&lang=tr`
+        `${WEATHER_API_BASE}/forecast?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric&lang=tr`
       );
 
       let forecast: DailyForecast[] = [];
@@ -154,7 +154,7 @@ class WeatherService {
   async getWeatherByCity(cityName: string): Promise<WeatherData | null> {
     try {
       const response = await fetch(
-        `${WEATHER_API_BASE}/weatherq=${cityName},TR&appid=${WEATHER_API_KEY}&units=metric&lang=tr`
+        `${WEATHER_API_BASE}/weather?q=${cityName},TR&appid=${WEATHER_API_KEY}&units=metric&lang=tr`
       );
 
       if (!response.ok) {
@@ -201,7 +201,7 @@ class WeatherService {
       const noonItem = items.reduce((prev, curr) => {
         const prevHour = new Date(prev.dt * 1000).getHours();
         const currHour = new Date(curr.dt * 1000).getHours();
-          return Math.abs(currHour - 12) < Math.abs(prevHour - 12) ? curr : prev;
+        return Math.abs(currHour - 12) < Math.abs(prevHour - 12) ? curr : prev;
       });
 
       // Yağış ihtimali hesapla (pop - probability of precipitation)

@@ -64,7 +64,7 @@ const Routes: React.FC = () => {
       const data = await routeService.getAll();
       setRoutes(data);
     } catch (error: any) {
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Rotalar yüklenirken bir hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Rotalar yüklenirken bir hata oluştu';
       console.error('Error loading routes:', error);
       alert(errorMessage);
     } finally {
@@ -141,15 +141,15 @@ const Routes: React.FC = () => {
           bValue = b.totalDeliveries > 0 ? (b.completedDeliveries / b.totalDeliveries) : 0;
           break;
         case 'stops':
-          aValue = a.stops.length || 0;
-          bValue = b.stops.length || 0;
+          aValue = a.stops?.length || 0;
+          bValue = b.stops?.length || 0;
           break;
         default:
           return 0;
       }
 
-        if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-        if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
       return 0;
     });
   };
@@ -157,8 +157,8 @@ const Routes: React.FC = () => {
   // Filter routes
   const filteredRoutes = getSortedRoutes(routes.filter(route => {
     const matchesSearch = route.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          route.driver.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          route.vehicle.plateNumber.toLowerCase().includes(searchQuery.toLowerCase());
+                          route.driver?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          route.vehicle?.plateNumber.toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesStatus = selectedStatus === 'all' || route.status === selectedStatus;
 
@@ -191,7 +191,7 @@ const Routes: React.FC = () => {
   const handleBulkDelete = async () => {
     if (selectedRoutes.size === 0) return;
 
-    if (window.confirm(`${selectedRoutes.size} rotayı silmek istediğinizden emin misiniz`)) {
+    if (window.confirm(`${selectedRoutes.size} rotayı silmek istediğinizden emin misiniz?`)) {
       try {
         await Promise.all(
           Array.from(selectedRoutes).map(id => routeService.delete(id))
@@ -199,7 +199,7 @@ const Routes: React.FC = () => {
         setSelectedRoutes(new Set());
         await loadRoutes();
       } catch (error: any) {
-        const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Rotalar silinemedi';
+        const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Rotalar silinemedi';
         alert(errorMessage);
       }
     }
@@ -216,10 +216,10 @@ const Routes: React.FC = () => {
       ...dataToExport.map(route => [
         route.name,
         new Date(route.date).toLocaleDateString('tr-TR'),
-        route.driver.name || 'Atanmadı',
-        route.vehicle.plateNumber || 'Atanmadı',
+        route.driver?.name || 'Atanmadı',
+        route.vehicle?.plateNumber || 'Atanmadı',
         getStatusText(route.status),
-        route.stops.length || 0,
+        route.stops?.length || 0,
         route.totalDistance || '-',
         route.totalDuration || '-',
         `${route.completedDeliveries}/${route.totalDeliveries}`
@@ -238,12 +238,12 @@ const Routes: React.FC = () => {
 
   // Delete route
   const handleDelete = async (id: string) => {
-    if (window.confirm('Bu rotayı silmek istediğinizden emin misiniz')) {
+    if (window.confirm('Bu rotayı silmek istediğinizden emin misiniz?')) {
       try {
         await routeService.delete(id);
         await loadRoutes();
       } catch (error: any) {
-        const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Rota silinemedi';
+        const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Rota silinemedi';
         alert(errorMessage);
       }
     }
@@ -255,7 +255,7 @@ const Routes: React.FC = () => {
       await routeService.duplicate(route);
       await loadRoutes();
     } catch (error: any) {
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Rota kopyalanamadı';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Rota kopyalanamadı';
       alert(errorMessage);
     }
   };
@@ -497,21 +497,21 @@ const Routes: React.FC = () => {
       <div className="flex flex-wrap gap-2">
         <button
           onClick={() => applyQuickFilter('all')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              selectedDate === '' && selectedStatus === 'all' && searchQuery === ''
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
-            }`}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            selectedDate === '' && selectedStatus === 'all' && searchQuery === ''
+              ? 'bg-blue-600 text-white'
+              : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+          }`}
         >
           Tümü
         </button>
         <button
           onClick={() => applyQuickFilter('today')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              selectedDate === new Date().toISOString().split('T')[0]
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
-            }`}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            selectedDate === new Date().toISOString().split('T')[0]
+              ? 'bg-blue-600 text-white'
+              : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+          }`}
         >
           Bugün
         </button>
@@ -523,21 +523,21 @@ const Routes: React.FC = () => {
         </button>
         <button
           onClick={() => applyQuickFilter('active')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              selectedStatus === 'in_progress'
-                ? 'bg-green-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
-            }`}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            selectedStatus === 'in_progress'
+              ? 'bg-green-600 text-white'
+              : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+          }`}
         >
           Aktif
         </button>
         <button
           onClick={() => applyQuickFilter('completed')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              selectedStatus === 'completed'
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
-            }`}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            selectedStatus === 'completed'
+              ? 'bg-blue-600 text-white'
+              : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
+          }`}
         >
           Tamamlananlar
         </button>
@@ -710,7 +710,7 @@ const Routes: React.FC = () => {
                           <div>
                             <p className="text-sm font-medium text-gray-900">{route.name}</p>
                             <p className="text-xs text-gray-500">
-                              {route.stops.length || 0} durak
+                              {route.stops?.length || 0} durak
                               {route.optimized && (
                                 <span className="ml-2 text-green-600">• Optimize</span>
                               )}
@@ -975,7 +975,7 @@ const Routes: React.FC = () => {
                   </div>
                   <div className="flex items-center text-sm text-gray-600">
                     <Package className="w-4 h-4 mr-2" />
-                    {route.stops.length || 0} durak
+                    {route.stops?.length || 0} durak
                     {route.optimized && <span className="ml-2 text-green-600">• Optimize</span>}
                   </div>
                   {route.driver && (

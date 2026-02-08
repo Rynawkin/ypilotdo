@@ -132,7 +132,7 @@ const VehicleDetail: React.FC = () => {
   const handleDelete = async () => {
     if (!vehicle) return;
     
-    if (window.confirm('Bu aracı silmek istediğinizden emin misiniz')) {
+    if (window.confirm('Bu aracı silmek istediğinizden emin misiniz?')) {
       try {
         await vehicleService.delete(vehicle.id);
         navigate('/vehicles');
@@ -402,7 +402,7 @@ const VehicleDetail: React.FC = () => {
                           </span>
                           <span className="flex items-center">
                             <MapPin className="w-4 h-4 mr-1" />
-                            {route.stops.length || 0} durak
+                            {route.stops?.length || 0} durak
                           </span>
                         </div>
                       </div>

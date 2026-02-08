@@ -9,7 +9,7 @@ import { vehicleService } from './vehicle.service';
 class ReportService {
   async getDeliveryTrends(days: number = 7) {
     try {
-      const response = await api.get(`/reports/delivery-trendsdays=${days}`);
+      const response = await api.get(`/reports/delivery-trends?days=${days}`);
       return response.data;
     } catch (error) {
       // Fallback to calculating from routes
@@ -55,7 +55,7 @@ class ReportService {
         const driverRoutes = routes.filter(r => r.driverId === driver.id);
         const completedDeliveries = driverRoutes.reduce((acc, r) => acc + r.completedDeliveries, 0);
         const avgTime = driverRoutes.length > 0
-           driverRoutes.reduce((acc, r) => acc + (r.totalDuration || 0), 0) / driverRoutes.length
+          ? driverRoutes.reduce((acc, r) => acc + (r.totalDuration || 0), 0) / driverRoutes.length
           : 0;
         
         return {
@@ -111,9 +111,9 @@ class ReportService {
       
       const totalDeliveries = routes.reduce((acc, r) => acc + r.completedDeliveries, 0);
       const totalPlanned = routes.reduce((acc, r) => acc + r.totalDeliveries, 0);
-      const successRate = totalPlanned > 0  Math.round((totalDeliveries / totalPlanned) * 100) : 0;
+      const successRate = totalPlanned > 0 ? Math.round((totalDeliveries / totalPlanned) * 100) : 0;
       const avgDeliveryTime = routes.length > 0
-         Math.round(routes.reduce((acc, r) => acc + (r.totalDuration || 0), 0) / routes.length)
+        ? Math.round(routes.reduce((acc, r) => acc + (r.totalDuration || 0), 0) / routes.length)
         : 0;
       const activeDrivers = drivers.filter(d => d.status === 'available' || d.status === 'busy').length;
       const activeVehicles = vehicles.filter(v => v.status === 'active').length;

@@ -18,7 +18,7 @@ const CreateDepot: React.FC = () => {
       await depotService.create(data);
       navigate('/depots');
     } catch (error: any) {
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Depo oluşturulurken bir hata oluştu.';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Depo oluşturulurken bir hata oluştu.';
       setError(errorMessage);
       console.error('Error creating depot:', error);
     } finally {

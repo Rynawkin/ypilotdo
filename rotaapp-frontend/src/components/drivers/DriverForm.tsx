@@ -21,10 +21,10 @@ import { Driver, Vehicle } from '@/types';
 import { vehicleService } from '@/services/vehicle.service';
 
 interface DriverFormProps {
-  initialData: Driver;
+  initialData?: Driver;
   onSubmit: (data: any) => void;
-  loading: boolean;
-  isEdit: boolean;
+  loading?: boolean;
+  isEdit?: boolean;
 }
 
 const DriverForm: React.FC<DriverFormProps> = ({
@@ -35,14 +35,14 @@ const DriverForm: React.FC<DriverFormProps> = ({
 }) => {
   // Form State
   const [formData, setFormData] = useState<Partial<Driver>>({
-    name: initialData.name || '',
-    phone: initialData.phone || '',
-    email: initialData.email || '',
-    licenseNumber: initialData.licenseNumber || '',
-    status: initialData.status || 'available',
-    vehicleId: initialData.vehicleId || '',
-    rating: initialData.rating || 0,
-    totalDeliveries: initialData.totalDeliveries || 0
+    name: initialData?.name || '',
+    phone: initialData?.phone || '',
+    email: initialData?.email || '',
+    licenseNumber: initialData?.licenseNumber || '',
+    status: initialData?.status || 'available',
+    vehicleId: initialData?.vehicleId || '',
+    rating: initialData?.rating || 0,
+    totalDeliveries: initialData?.totalDeliveries || 0
   });
 
   // Password state'leri
@@ -105,18 +105,18 @@ const DriverForm: React.FC<DriverFormProps> = ({
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.name.trim()) {
+    if (!formData.name?.trim()) {
       newErrors.name = 'Sürücü adı zorunludur';
     }
 
-    if (!formData.phone.trim()) {
+    if (!formData.phone?.trim()) {
       newErrors.phone = 'Telefon numarası zorunludur';
     } else if (!/^[0-9\s\-\+\(\)]+$/.test(formData.phone)) {
       newErrors.phone = 'Geçerli bir telefon numarası girin';
     }
 
     // Email artık zorunlu (edit modunda değilse)
-    if (!isEdit && !formData.email.trim()) {
+    if (!isEdit && !formData.email?.trim()) {
       newErrors.email = 'Email adresi zorunludur';
     } else if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Geçerli bir email adresi girin';
@@ -142,7 +142,7 @@ const DriverForm: React.FC<DriverFormProps> = ({
       }
     }
 
-    if (!formData.licenseNumber.trim()) {
+    if (!formData.licenseNumber?.trim()) {
       newErrors.licenseNumber = 'Ehliyet numarası zorunludur';
     }
 
@@ -165,8 +165,8 @@ const DriverForm: React.FC<DriverFormProps> = ({
     // Tüm data'yı hazırla
     const submitData: any = {
       ...formData,
-      email: formData.email.trim(),
-      vehicleId: formData.vehicleId.trim() || undefined
+      email: formData.email?.trim(),
+      vehicleId: formData.vehicleId?.trim() || undefined
     };
 
     // Create modunda password ve bilgilendirme seçeneklerini ekle
@@ -218,9 +218,9 @@ const DriverForm: React.FC<DriverFormProps> = ({
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors.name ? 'border-red-300' : 'border-gray-300'
-                  }`}
+                className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors.name ? 'border-red-300' : 'border-gray-300'
+                }`}
                 placeholder="Örn: Mehmet Öz"
               />
             </div>
@@ -243,9 +243,9 @@ const DriverForm: React.FC<DriverFormProps> = ({
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors.phone ? 'border-red-300' : 'border-gray-300'
-                  }`}
+                className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors.phone ? 'border-red-300' : 'border-gray-300'
+                }`}
                 placeholder="Örn: 0532 111 2233"
               />
             </div>
@@ -268,9 +268,9 @@ const DriverForm: React.FC<DriverFormProps> = ({
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors.email ? 'border-red-300' : 'border-gray-300'
-                  }`}
+                className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors.email ? 'border-red-300' : 'border-gray-300'
+                }`}
                 placeholder="Örn: mehmet@example.com"
                 required={!isEdit}
               />
@@ -299,9 +299,9 @@ const DriverForm: React.FC<DriverFormProps> = ({
                 type="text"
                 value={formData.licenseNumber}
                 onChange={(e) => setFormData({ ...formData, licenseNumber: e.target.value })}
-                  className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors.licenseNumber ? 'border-red-300' : 'border-gray-300'
-                  }`}
+                className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errors.licenseNumber ? 'border-red-300' : 'border-gray-300'
+                }`}
                 placeholder="Örn: B-123456"
               />
             </div>
@@ -347,13 +347,13 @@ const DriverForm: React.FC<DriverFormProps> = ({
               <div className="relative">
                 <Shield className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
-                    type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={generateRandomPassword}
-                    className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.password ? 'border-red-300' : 'border-gray-300'
-                    } ${generateRandomPassword ? 'bg-gray-50' : ''}`}
+                  className={`w-full pl-10 pr-10 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                    errors.password ? 'border-red-300' : 'border-gray-300'
+                  } ${generateRandomPassword ? 'bg-gray-50' : ''}`}
                   placeholder="En az 6 karakter"
                 />
                 <button
@@ -361,7 +361,7 @@ const DriverForm: React.FC<DriverFormProps> = ({
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
               {errors.password && (
@@ -380,7 +380,7 @@ const DriverForm: React.FC<DriverFormProps> = ({
               <div className="relative">
                 <Shield className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
-                    type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   disabled={generateRandomPassword}
@@ -522,8 +522,8 @@ const DriverForm: React.FC<DriverFormProps> = ({
                 type="button"
                 onClick={() => setFormData({ ...formData, status: 'available' })}
                 className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors flex items-center justify-center ${
-                  formData.status === 'available' ?
-                    'bg-green-100 text-green-700 border-green-300' 
+                  formData.status === 'available' 
+                    ? 'bg-green-100 text-green-700 border-green-300' 
                     : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                 }`}
               >
@@ -533,11 +533,11 @@ const DriverForm: React.FC<DriverFormProps> = ({
               <button
                 type="button"
                 onClick={() => setFormData({ ...formData, status: 'busy' })}
-                  className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors flex items-center justify-center ${
-                    formData.status === 'busy' ?
-                      'bg-orange-100 text-orange-700 border-orange-300' 
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                  }`}
+                className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors flex items-center justify-center ${
+                  formData.status === 'busy' 
+                    ? 'bg-orange-100 text-orange-700 border-orange-300' 
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
               >
                 <Car className="w-4 h-4 mr-1" />
                 Meşgul
@@ -545,11 +545,11 @@ const DriverForm: React.FC<DriverFormProps> = ({
               <button
                 type="button"
                 onClick={() => setFormData({ ...formData, status: 'offline' })}
-                  className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors flex items-center justify-center ${
-                    formData.status === 'offline' ?
-                      'bg-gray-100 text-gray-700 border-gray-300' 
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
-                  }`}
+                className={`px-3 py-2 rounded-lg border text-sm font-medium transition-colors flex items-center justify-center ${
+                  formData.status === 'offline' 
+                    ? 'bg-gray-100 text-gray-700 border-gray-300' 
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
               >
                 <UserX className="w-4 h-4 mr-1" />
                 Çevrimdışı
@@ -569,9 +569,10 @@ const DriverForm: React.FC<DriverFormProps> = ({
               value={formData.vehicleId || ''}
               onChange={(e) => setFormData({ ...formData, vehicleId: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={vehiclesLoading}
             >
               <option value="">
-                {vehiclesLoading ? 'Ara?lar y?kleniyor...' : 'Ara? se?in (Opsiyonel)'}
+                {vehiclesLoading ? 'Araçlar yükleniyor...' : 'Araç seçin (Opsiyonel)'}
               </option>
               {vehicles.map((vehicle) => (
                 <option key={vehicle.id} value={vehicle.id}>
@@ -580,9 +581,9 @@ const DriverForm: React.FC<DriverFormProps> = ({
               ))}
             </select>
             <p className="text-xs text-gray-500 mt-1">
-              {vehicles.length === 0 && !vehiclesLoading ?
-                'Hen?z ara? eklenmemi?. ?nce ara? ekleyin.'
-                : 'Bu s?r?c?ye varsay?lan olarak atanacak ara?'}
+              {vehicles.length === 0 && !vehiclesLoading 
+                ? 'Henüz araç eklenmemiş. Önce araç ekleyin.'
+                : 'Bu sürücüye varsayılan olarak atanacak araç'}
             </p>
           </div>
         </div>
@@ -628,8 +629,8 @@ const DriverForm: React.FC<DriverFormProps> = ({
                   <Star
                     key={star}
                     className={`w-4 h-4 ${
-                      star <= (formData.rating || 0) ?
-                        'text-yellow-500 fill-current' 
+                      star <= (formData.rating || 0) 
+                        ? 'text-yellow-500 fill-current' 
                         : 'text-gray-300'
                     }`}
                   />

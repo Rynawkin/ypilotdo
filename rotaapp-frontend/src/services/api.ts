@@ -237,7 +237,7 @@ api.interceptors.request.use(
     
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log('Authorization header set:', config.headers.Authorization.substring(0, 20) + '...');
+      console.log('Authorization header set:', config.headers.Authorization?.substring(0, 20) + '...');
     }
     
     // WorkspaceId'yi de kontrol et (debug için)
@@ -248,7 +248,7 @@ api.interceptors.request.use(
     
     const safeData = sanitizePayload(config.data);
     const safeHeaders = sanitizeHeaders(config.headers);
-    console.log('API Request:', config.method.toUpperCase(), config.url, safeData);
+    console.log('API Request:', config.method?.toUpperCase(), config.url, safeData);
     console.log('Request headers:', safeHeaders);
     
     return config;
@@ -266,17 +266,17 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.error('API Error:', error.response.status, error.response.data || error.message);
+    console.error('API Error:', error.response?.status, error.response?.data || error.message);
     
     // Backend'den gelen mesajı kullanıcı dostu hale getir
     let userFriendlyMessage = '';
     
-    if (error.response.data.message) {
+    if (error.response?.data?.message) {
       // Backend'den mesaj geliyorsa kullan
       userFriendlyMessage = error.response.data.message;
     } else {
       // Status code'a göre fallback mesajlar
-      switch (error.response.status) {
+      switch (error.response?.status) {
         case 400:
           userFriendlyMessage = 'Geçersiz istek. Lütfen bilgileri kontrol edin.';
           break;
@@ -304,13 +304,13 @@ api.interceptors.response.use(
     error.userFriendlyMessage = userFriendlyMessage;
     
     // Backend'den gelen "Workspace is not found" hatası kontrolü
-    if (error.response.status === 404 && 
-        error.response.data.message === 'Workspace is not found.') {
+    if (error.response?.status === 404 && 
+        error.response?.data?.message === 'Workspace is not found.') {
       console.error('Workspace not found - possible token/workspace mismatch');
       
       // Login sayfasında değilsek ve bu hata login isteğinden gelmiyorsa
       if (!window.location.pathname.includes('/login') && 
-          !error.config.url.includes('/me/login')) {
+          !error.config?.url?.includes('/me/login')) {
         
         const token = localStorage.getItem('token');
         const workspaceId = localStorage.getItem('workspaceId');
@@ -329,8 +329,8 @@ api.interceptors.response.use(
     }
     
     // Backend'den gelen HTML response'u kontrol et (Login redirect)
-    if (error.response.status === 404 && 
-        typeof error.response.data === 'string' && 
+    if (error.response?.status === 404 && 
+        typeof error.response?.data === 'string' && 
         error.response.data.includes('Login')) {
       console.error('Backend is redirecting to login page - authentication issue');
       
@@ -344,13 +344,13 @@ api.interceptors.response.use(
     }
     
     // 401 Unauthorized - token geçersiz veya süresi dolmuş
-    if (error.response.status === 401) {
+    if (error.response?.status === 401) {
       // BUGFIX S5.5: Try to refresh token before logging out
       const refreshToken = localStorage.getItem('refreshToken');
       const originalRequest = error.config;
 
       // Prevent infinite refresh loop
-      if (!originalRequest._retry && refreshToken && !originalRequest.url.includes('/refresh-token')) {
+      if (!originalRequest._retry && refreshToken && !originalRequest.url?.includes('/refresh-token')) {
         originalRequest._retry = true;
         console.log('Token expired, attempting to refresh...');
 
@@ -386,7 +386,7 @@ api.interceptors.response.use(
 // Debug helper functions
 export const debugApiAuth = () => {
   console.log('=== API Auth Debug ===');
-  console.log('Token:', localStorage.getItem('token').substring(0, 50) + '...');
+  console.log('Token:', localStorage.getItem('token')?.substring(0, 50) + '...');
   console.log('WorkspaceId:', localStorage.getItem('workspaceId'));
   console.log('User:', localStorage.getItem('user'));
   console.log('API Headers:', api.defaults.headers.common);

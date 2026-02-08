@@ -5,7 +5,7 @@ import { BarChart3, MessageCircle, MapPin, Calendar, TrendingUp, AlertCircle, Lo
 import { paymentService, type WorkspaceUsageDto } from '../../services/payment.service';
 
 interface UsageStatsProps {
-  className: string;
+  className?: string;
 }
 
 export const UsageStats: React.FC<UsageStatsProps> = ({ className = '' }) => {

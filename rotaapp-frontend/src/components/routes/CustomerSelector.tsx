@@ -21,9 +21,9 @@ import { normalizeSearchText } from '@/utils/string';
 interface CustomerSelectorProps {
   customers: Customer[];
   selectedCustomers: Customer[];
-  onSelect: (customer: Customer) => void;
-  onMultiSelect: (customers: Customer[]) => void;
-  onCreateNew: () => void;
+  onSelect?: (customer: Customer) => void;
+  onMultiSelect?: (customers: Customer[]) => void;
+  onCreateNew?: () => void;
 }
 
 const CustomerSelector: React.FC<CustomerSelectorProps> = ({
@@ -280,7 +280,7 @@ const CustomerSelector: React.FC<CustomerSelectorProps> = ({
                       key={customer.id}
                       onClick={() => !selected && handleSelectCustomer(customer)}
                       className={`p-4 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 transition-colors ${
-                          selected ? 'bg-gray-50 cursor-not-allowed' : 'cursor-pointer'
+                        selected ? 'bg-gray-50 cursor-not-allowed' : 'cursor-pointer'
                       }`}
                     >
                       <div className="flex items-start justify-between">
@@ -432,10 +432,10 @@ const CustomerSelector: React.FC<CustomerSelectorProps> = ({
                         }
                       }}
                       className={`p-4 border-b border-gray-100 transition-colors ${
-                        alreadySelected
-                          ? 'bg-gray-100 cursor-not-allowed'
-                          : inMultiSelectList
-                            ? 'bg-purple-50 hover:bg-purple-100 cursor-pointer'
+                        alreadySelected 
+                          ? 'bg-gray-100 cursor-not-allowed' 
+                          : inMultiSelectList 
+                            ? 'bg-purple-50 hover:bg-purple-100 cursor-pointer' 
                             : 'hover:bg-gray-50 cursor-pointer'
                       }`}
                     >
@@ -469,7 +469,7 @@ const CustomerSelector: React.FC<CustomerSelectorProps> = ({
                             )}
                           </div>
 
-                            <div className={`flex items-start text-sm ${alreadySelected ? 'text-gray-400' : 'text-gray-600'}`}>
+                          <div className={`flex items-start text-sm ${alreadySelected ? 'text-gray-400' : 'text-gray-600'}`}>
                             <MapPin className="w-4 h-4 mr-1 mt-0.5 flex-shrink-0" />
                             <span>{customer.address}</span>
                           </div>
@@ -477,13 +477,13 @@ const CustomerSelector: React.FC<CustomerSelectorProps> = ({
                           {(customer.phone || customer.estimatedServiceTime) && (
                             <div className="flex items-center space-x-4 text-sm mt-1">
                               {customer.phone && (
-                                  <div className={`flex items-center ${alreadySelected ? 'text-gray-400' : 'text-gray-500'}`}>
+                                <div className={`flex items-center ${alreadySelected ? 'text-gray-400' : 'text-gray-500'}`}>
                                   <Phone className="w-4 h-4 mr-1" />
                                   <span>{customer.phone}</span>
                                 </div>
                               )}
                               {customer.estimatedServiceTime && (
-                                  <div className={`flex items-center ${alreadySelected ? 'text-gray-400' : 'text-gray-500'}`}>
+                                <div className={`flex items-center ${alreadySelected ? 'text-gray-400' : 'text-gray-500'}`}>
                                   <Clock className="w-4 h-4 mr-1" />
                                   <span>{customer.estimatedServiceTime} dk</span>
                                 </div>
@@ -499,9 +499,8 @@ const CustomerSelector: React.FC<CustomerSelectorProps> = ({
                 <div className="p-12 text-center">
                   <Package className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                   <p className="text-gray-600 text-lg">
-                      {modalSearchQuery
-                        ?
-                       `"${modalSearchQuery}" için sonuç bulunamadı`
+                    {modalSearchQuery 
+                      ? `"${modalSearchQuery}" için sonuç bulunamadı`
                       : 'Henüz kayıtlı müşteri yok'}
                   </p>
                 </div>

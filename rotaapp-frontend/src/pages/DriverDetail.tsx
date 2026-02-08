@@ -67,7 +67,7 @@ const DriverDetail: React.FC = () => {
   const handleDelete = async () => {
     if (!driver) return;
     
-    if (window.confirm('Bu sürücüyü silmek istediğinizden emin misiniz')) {
+    if (window.confirm('Bu sürücüyü silmek istediğinizden emin misiniz?')) {
       await driverService.delete(driver.id);
       navigate('/drivers');
     }
@@ -295,7 +295,7 @@ const DriverDetail: React.FC = () => {
                           <Route className="w-5 h-5 text-gray-400" />
                           <h3 className="font-medium text-gray-900">{route.name}</h3>
                           <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getRouteStatusColor(route.status)}`}>
-                            {route.status === 'completed' ? 'Tamamlandı' :
+                            {route.status === 'completed' ? 'Tamamlandı' : 
                              route.status === 'in_progress' ? 'Devam Ediyor' :
                              route.status === 'planned' ? 'Planlandı' : route.status}
                           </span>

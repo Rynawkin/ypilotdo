@@ -5,9 +5,9 @@ import { Check, Loader2, X, Star, Zap, Shield, Crown } from 'lucide-react';
 import { paymentService, type PlanType, type PlanLimits, type UpgradePlanRequest } from '../../services/payment.service';
 
 interface UpgradePlanProps {
-  onClose: () => void;
-  currentPlan: PlanType;
-  className: string;
+  onClose?: () => void;
+  currentPlan?: PlanType;
+  className?: string;
 }
 
 const planFeatures = {
@@ -161,7 +161,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
       }
     } catch (error: any) {
       console.error('Upgrade error:', error);
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Bir hata oluştu. Lütfen tekrar deneyin.';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Bir hata oluştu. Lütfen tekrar deneyin.';
       alert(errorMessage);
     } finally {
       setUpgrading(false);
@@ -170,9 +170,9 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
 
   const getColorClasses = (color: string, selected: boolean) => {
     const colors = {
-    blue: selected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300',
-    green: selected ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300',
-    purple: selected ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-purple-300',
+      blue: selected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300',
+      green: selected ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300',
+      purple: selected ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-purple-300',
       yellow: selected ? 'border-yellow-500 bg-yellow-50' : 'border-gray-200 hover:border-yellow-300'
     };
     return colors[color as keyof typeof colors] || colors.blue;
@@ -232,7 +232,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
                 key={plan}
                 className={`relative p-4 border-2 rounded-lg cursor-pointer transition-all ${
                   getColorClasses(planInfo.color, isSelected)
-                 } ${isCurrent ? 'opacity-50 cursor-not-allowed' : ''}`}
+                } ${isCurrent ? 'opacity-50 cursor-not-allowed' : ''}`}
                 onClick={() => !isCurrent && setSelectedPlan(plan)}
               >
                 {isCurrent && (
@@ -460,7 +460,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {upgrading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-              {upgrading ? "Yönlendiriliyor..." : step === 1 ? "Kart Bilgilerine Geç" : "Ödemeye Geç"}
+            {upgrading ? "Yönlendiriliyor..." : step === 1 ? "Kart Bilgilerine Geç" : "Ödemeye Geç"}
           </button>
         </div>
       </div>

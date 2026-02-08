@@ -24,7 +24,7 @@ class GoogleMapsService {
     const savedSettings = localStorage.getItem('appSettings');
     if (savedSettings) {
       const settings = JSON.parse(savedSettings);
-      if (settings.delivery.prioritySettings) {
+      if (settings.delivery?.prioritySettings) {
         const ps = settings.delivery.prioritySettings;
         return {
           high: { maxDelay: ps.high.maxDelay || 30, weight: 3 },
@@ -42,7 +42,7 @@ class GoogleMapsService {
   }
 
   // Services'i initialize et
-  initializeServices(map: google.maps.Map) {
+  initializeServices(map?: google.maps.Map) {
     if (typeof window !== 'undefined' && window.google && window.google.maps) {
       this.directionsService = new google.maps.DirectionsService();
       this.distanceMatrixService = new google.maps.DistanceMatrixService();
@@ -131,8 +131,8 @@ class GoogleMapsService {
               const rowResults: DistanceMatrixResult[] = [];
               row.elements.forEach(element => {
                 rowResults.push({
-                  distance: element.distance.value || 0,
-                  duration: element.duration.value || 0,
+                  distance: element.distance?.value || 0,
+                  duration: element.duration?.value || 0,
                   status: element.status
                 });
               });
@@ -176,8 +176,8 @@ class GoogleMapsService {
     
     // Sonra normal öncelikli müşteriler
     if (priorityGroups.normal.length > 0) {
-      const lastLocation = sortedWaypoints.length > 0 ?
-         sortedWaypoints[sortedWaypoints.length - 1].location 
+      const lastLocation = sortedWaypoints.length > 0 
+        ? sortedWaypoints[sortedWaypoints.length - 1].location 
         : depot;
       
       const normalPriorityOptimized = await this.optimizeGroup(
@@ -190,8 +190,8 @@ class GoogleMapsService {
     
     // En son düşük öncelikli müşteriler
     if (priorityGroups.low.length > 0) {
-      const lastLocation = sortedWaypoints.length > 0 ? 
-         sortedWaypoints[sortedWaypoints.length - 1].location 
+      const lastLocation = sortedWaypoints.length > 0 
+        ? sortedWaypoints[sortedWaypoints.length - 1].location 
         : depot;
       
       const lowPriorityOptimized = await this.optimizeGroup(
@@ -224,8 +224,8 @@ class GoogleMapsService {
 
     if (directionResult) {
       directionResult.routes[0].legs.forEach(leg => {
-        totalDistance += leg.distance.value || 0;
-        totalDuration += leg.duration.value || 0;
+        totalDistance += leg.distance?.value || 0;
+        totalDuration += leg.duration?.value || 0;
       });
     }
 
@@ -308,8 +308,8 @@ class GoogleMapsService {
 
       for (let i = 0; i < n; i++) {
         if (!visited[i]) {
-          const value = mode === 'distance' ?
-             distanceMatrix[current][i].distance 
+          const value = mode === 'distance' 
+            ? distanceMatrix[current][i].distance 
             : distanceMatrix[current][i].duration;
 
           if (value < minValue) {
@@ -342,10 +342,10 @@ class GoogleMapsService {
       currentTime += wp.serviceTime || 10;
       
       // Öncelik bazlı max gecikme kontrolü
-        const maxDelay = wp.priority === 'high' ?
-         prioritySettings.high.maxDelay
-          : wp.priority === 'normal' ?
-         prioritySettings.normal.maxDelay
+      const maxDelay = wp.priority === 'high' 
+        ? prioritySettings.high.maxDelay
+        : wp.priority === 'normal'
+        ? prioritySettings.normal.maxDelay
         : prioritySettings.low.maxDelay;
 
       // Zaman penceresi kontrolü
@@ -426,10 +426,10 @@ class GoogleMapsService {
       const windowEnd = this.timeToMinutes(wp.timeWindow.end);
       
       // Öncelik bazlı max gecikme toleransı ekle
-        const maxDelay = wp.priority === 'high' ?
-         prioritySettings.high.maxDelay
-          : wp.priority === 'normal' ?
-         prioritySettings.normal.maxDelay
+      const maxDelay = wp.priority === 'high' 
+        ? prioritySettings.high.maxDelay
+        : wp.priority === 'normal'
+        ? prioritySettings.normal.maxDelay
         : prioritySettings.low.maxDelay;
       
       // Gecikme toleransı ile kontrol et
@@ -450,10 +450,10 @@ class GoogleMapsService {
   }
 
   // Customer'ı waypoint'e çevir
-  customerToWaypoint(customer: Customer, overrides: {
-    timeWindow: { start: string; end: string };
-    priority: 'high' | 'normal' | 'low';
-    serviceTime: number;
+  customerToWaypoint(customer: Customer, overrides?: {
+    timeWindow?: { start: string; end: string };
+    priority?: 'high' | 'normal' | 'low';
+    serviceTime?: number;
   }): OptimizationWaypoint {
     return {
       location: {
@@ -461,9 +461,9 @@ class GoogleMapsService {
         lng: customer.longitude
       },
       customerId: customer.id,
-      timeWindow: overrides.timeWindow || customer.timeWindow,
-      priority: overrides.priority || customer.priority,
-      serviceTime: overrides.serviceTime || customer.estimatedServiceTime || 10
+      timeWindow: overrides?.timeWindow || customer.timeWindow,
+      priority: overrides?.priority || customer.priority,
+      serviceTime: overrides?.serviceTime || customer.estimatedServiceTime || 10
     };
   }
 

@@ -30,7 +30,7 @@ const EditCustomer: React.FC = () => {
         setError('Müşteri bulunamadı');
       }
     } catch (error: any) {
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Müşteri yüklenirken bir hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Müşteri yüklenirken bir hata oluştu';
       setError(errorMessage);
       console.error('Error loading customer:', error);
     } finally {
@@ -38,7 +38,7 @@ const EditCustomer: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (formData: Partial<Customer>, contacts: CustomerContact[]) => {
+  const handleSubmit = async (formData: Partial<Customer>, contacts?: CustomerContact[]) => {
     if (!id) return;
     
     setSaving(true);
@@ -48,7 +48,7 @@ const EditCustomer: React.FC = () => {
       await customerService.update(id, formData);
       navigate(`/customers/${id}`);
     } catch (error: any) {
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Müşteri güncellenirken bir hata oluştu.';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Müşteri güncellenirken bir hata oluştu.';
       setError(errorMessage);
       console.error('Error updating customer:', error);
     } finally {

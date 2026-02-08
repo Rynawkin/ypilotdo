@@ -21,12 +21,12 @@ import { formatters } from '../../utils/formatters';
 interface StopCardProps {
   stop: JourneyStop;
   isActive: boolean;
-  onCheckIn: () => void;
-  onComplete: (data: FormData) => void;
-  onFail: (reason: string) => void;
-  onNavigate: () => void;
-  onCall: () => void;
-  onEmail: () => void;
+  onCheckIn?: () => void;
+  onComplete?: (data: FormData) => void;
+  onFail?: (reason: string) => void;
+  onNavigate?: () => void;
+  onCall?: () => void;
+  onEmail?: () => void;
 }
 
 export const StopCard: React.FC<StopCardProps> = ({
@@ -59,7 +59,7 @@ export const StopCard: React.FC<StopCardProps> = ({
       case 'Skipped':
         return 'bg-gray-50 border-gray-200';
       default:
-        return isActive  'bg-yellow-50 border-yellow-200' : 'bg-white border-gray-200';
+        return isActive ? 'bg-yellow-50 border-yellow-200' : 'bg-white border-gray-200';
     }
   };
 
@@ -162,7 +162,7 @@ export const StopCard: React.FC<StopCardProps> = ({
             </div>
           </div>
           
-          <ChevronRight className={`w-5 h-5 text-gray-400 transition-transform ${isExpanded  'rotate-90' : ''}`} />
+          <ChevronRight className={`w-5 h-5 text-gray-400 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
         </div>
 
         {isExpanded && (
@@ -185,7 +185,7 @@ export const StopCard: React.FC<StopCardProps> = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      onCheckIn.();
+                      onCheckIn?.();
                     }}
                     className="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
                   >
@@ -195,7 +195,7 @@ export const StopCard: React.FC<StopCardProps> = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      onNavigate.();
+                      onNavigate?.();
                     }}
                     className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
                   >
@@ -214,7 +214,7 @@ export const StopCard: React.FC<StopCardProps> = ({
                     className="flex items-center gap-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
                   >
                     <Camera className="w-4 h-4" />
-                    {photo  'Fotoğraf Değiştir' : 'Fotoğraf'}
+                    {photo ? 'Fotoğraf Değiştir' : 'Fotoğraf'}
                   </button>
                   
                   <button
@@ -225,7 +225,7 @@ export const StopCard: React.FC<StopCardProps> = ({
                     className="flex items-center gap-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm"
                   >
                     <Edit3 className="w-4 h-4" />
-                    {signature  'İmza Değiştir' : 'İmza'}
+                    {signature ? 'İmza Değiştir' : 'İmza'}
                   </button>
                   
                   <button

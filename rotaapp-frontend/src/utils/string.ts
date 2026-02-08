@@ -1,4 +1,4 @@
-export const normalizeSearchText = (value: string | null): string => {
+export const normalizeSearchText = (value?: string | null): string => {
   if (!value) return '';
 
   const lower = value.toLowerCase();

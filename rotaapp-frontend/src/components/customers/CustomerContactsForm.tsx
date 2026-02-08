@@ -19,10 +19,10 @@ import { CustomerContact } from '@/types';
 interface CustomerContactsFormProps {
   contacts: CustomerContact[];
   onChange: (contacts: CustomerContact[]) => void;
-  errors: Record<string, string>;
-  viewMode: boolean;
-  customerId: number;
-  onContactSaved: () => void;
+  errors?: Record<string, string>;
+  viewMode?: boolean;
+  customerId?: number;
+  onContactSaved?: () => void;
 }
 
 const CONTACT_ROLES = [
@@ -305,10 +305,10 @@ const CustomerContactsForm: React.FC<CustomerContactsFormProps> = ({
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                    onClick={() => setExpandedContact(expandedContact === index ? null : index)}
+                  onClick={() => setExpandedContact(expandedContact === index ? null : index)}
                   className="text-sm text-blue-600 hover:text-blue-700"
                 >
-                    {expandedContact === index ? 'Kapat' : 'Detay'}
+                  {expandedContact === index ? 'Kapat' : 'Detay'}
                 </button>
                 <button
                   type="button"
@@ -317,7 +317,7 @@ const CustomerContactsForm: React.FC<CustomerContactsFormProps> = ({
                   className="p-1 text-green-600 hover:text-green-700 mr-2"
                   title="Kaydet"
                 >
-                    {saving === index ? (
+                  {saving === index ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <Save className="w-4 h-4" />
@@ -330,7 +330,7 @@ const CustomerContactsForm: React.FC<CustomerContactsFormProps> = ({
                   className="p-1 text-red-600 hover:text-red-700"
                   title="Sil"
                 >
-                    {deleting === index ? (
+                  {deleting === index ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <Trash2 className="w-4 h-4" />

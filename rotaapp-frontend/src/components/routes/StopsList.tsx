@@ -42,20 +42,20 @@ const formatTimeWindowConflictMessage = (timeWindowConflict: string): string => 
 
 interface StopData {
   customer: Customer;
-  routeStopId: string | number; // Route stop ID for API calls
-  overrideTimeWindow: { start: string; end: string };
-  positionConstraint: 'first' | 'last' | 'none';
-  serviceTime: number;
-  signatureRequired: boolean;
-  photoRequired: boolean;
-  stopNotes: string;
-  estimatedArrivalTime: string;
-  estimatedDepartureTime: string;
+  routeStopId?: string | number; // Route stop ID for API calls
+  overrideTimeWindow?: { start: string; end: string };
+  positionConstraint?: 'first' | 'last' | 'none';
+  serviceTime?: number;
+  signatureRequired?: boolean;
+  photoRequired?: boolean;
+  stopNotes?: string;
+  estimatedArrivalTime?: string;
+  estimatedDepartureTime?: string;
 }
 
 interface StopsListProps {
   stops: StopData[];
-  excludedStops: Array<{
+  excludedStops?: Array<{
     stopData: StopData;
     reason: string;
     timeWindowConflict: string;
@@ -64,17 +64,17 @@ interface StopsListProps {
   onRemove: (customerId: string) => void;
   onReorder: (stops: StopData[]) => void;
   onUpdateStop: (index: number, updates: Partial<StopData>) => void;
-  onExcludedStopEdit: (customerId: string) => void;
-  onMoveExcludedToStops: (excluded: any) => void;
-  depotStart: {
+  onExcludedStopEdit?: (customerId: string) => void;
+  onMoveExcludedToStops?: (excluded: any) => void;
+  depotStart?: {
     name: string;
     address: string;
     startTime: string;
   };
-  depotReturn: {
+  depotReturn?: {
     name: string;
     address: string;
-    estimatedArrivalTime: string;
+    estimatedArrivalTime?: string;
   };
 }
 
@@ -116,7 +116,7 @@ const StopsList: React.FC<StopsListProps> = ({
     const match = value.match(/^(\d{1,2}):(\d{0,2})$/);
     if (match) {
       const hour = parseInt(match[1]);
-        const minute = match[2] ? parseInt(match[2]) : 0;
+      const minute = match[2] ? parseInt(match[2]) : 0;
       if (hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59) {
         return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
       }
@@ -171,11 +171,11 @@ const StopsList: React.FC<StopsListProps> = ({
     setInitialTimeWindowSet(false);
     
     // Override varsa göster, yoksa boş başlat
-    const hasOverride = !!(stop.overrideTimeWindow.start || stop.overrideTimeWindow.end);
+    const hasOverride = !!(stop.overrideTimeWindow?.start || stop.overrideTimeWindow?.end);
     setHasTimeWindowOverride(hasOverride);
     
-      setEditData({
-        overrideTimeWindow: hasOverride ? stop.overrideTimeWindow : undefined,
+    setEditData({
+      overrideTimeWindow: hasOverride ? stop.overrideTimeWindow : undefined,
       positionConstraint: stop.positionConstraint || 'none',
       serviceTime: stop.serviceTime || stop.customer.estimatedServiceTime || 10,
       signatureRequired: stop.signatureRequired || false,
@@ -252,8 +252,8 @@ const StopsList: React.FC<StopsListProps> = ({
       // Müşteri varsayılanı ile aynıysa override'ı kaldır
       const stop = stops[editingIndex];
       if (updates.overrideTimeWindow) {
-        if (updates.overrideTimeWindow.start === stop.customer.timeWindow.start &&
-            updates.overrideTimeWindow.end === stop.customer.timeWindow.end) {
+        if (updates.overrideTimeWindow.start === stop.customer.timeWindow?.start &&
+            updates.overrideTimeWindow.end === stop.customer.timeWindow?.end) {
           delete updates.overrideTimeWindow;
         }
       }
@@ -355,7 +355,7 @@ const StopsList: React.FC<StopsListProps> = ({
   };
 
   // ETA formatını düzelt (HH:mm:ss veya HH:mm formatında göster)
-  const formatETA = (etaString: string): string => {
+  const formatETA = (etaString?: string): string => {
     if (!etaString) return '';
     // Backend'den HH:mm:ss formatında geliyor, sadece HH:mm göster
     return etaString.substring(0, 5);
@@ -439,8 +439,8 @@ const StopsList: React.FC<StopsListProps> = ({
           
           // Değişiklik kontrolü
           const isTimeWindowOverridden = stop.overrideTimeWindow && 
-            (stop.overrideTimeWindow.start !== stop.customer.timeWindow.start || 
-             stop.overrideTimeWindow.end !== stop.customer.timeWindow.end);
+            (stop.overrideTimeWindow.start !== stop.customer.timeWindow?.start || 
+             stop.overrideTimeWindow.end !== stop.customer.timeWindow?.end);
           
           const isServiceTimeOverridden = stop.serviceTime && 
             stop.serviceTime !== (stop.customer.estimatedServiceTime || 10);
@@ -454,9 +454,9 @@ const StopsList: React.FC<StopsListProps> = ({
               onDragStart={(e) => handleDragStart(e, index)}
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, index)}
-                className={`bg-gray-50 rounded-lg p-4 cursor-move hover:bg-gray-100 transition-colors ${
-                  draggedIndex === index ? 'opacity-50' : ''
-                }`}
+              className={`bg-gray-50 rounded-lg p-4 cursor-move hover:bg-gray-100 transition-colors ${
+                draggedIndex === index ? 'opacity-50' : ''
+              }`}
             >
               <div className="flex items-start">
                 {/* Drag Handle */}
@@ -587,7 +587,7 @@ const StopsList: React.FC<StopsListProps> = ({
                                   </div>
                                 )}
                                 {stop.customer.notes && (
-                                    <div className={stop.stopNotes ? 'mt-1' : ''}>
+                                  <div className={stop.stopNotes ? 'mt-1' : ''}>
                                     <strong>Müşteri Notu:</strong> {stop.customer.notes}
                                   </div>
                                 )}
@@ -730,8 +730,8 @@ const StopsList: React.FC<StopsListProps> = ({
                                 setEditData({
                                   ...editData,
                                   overrideTimeWindow: {
-                                    start: stop.customer.timeWindow.start || '',
-                                    end: stop.customer.timeWindow.end || ''
+                                    start: stop.customer.timeWindow?.start || '',
+                                    end: stop.customer.timeWindow?.end || ''
                                   }
                                 });
                               }
@@ -759,7 +759,7 @@ const StopsList: React.FC<StopsListProps> = ({
                               </label>
                               <input
                                 type="time"
-                                value={editData.overrideTimeWindow.start || ''}
+                                value={editData.overrideTimeWindow?.start || ''}
                                 onChange={(e) => handleTimeWindowChange('start', e.target.value)}
                                 onBlur={(e) => {
                                   const formatted = formatTimeInput(e.target.value);
@@ -777,7 +777,7 @@ const StopsList: React.FC<StopsListProps> = ({
                               </label>
                               <input
                                 type="time"
-                                value={editData.overrideTimeWindow.end || ''}
+                                value={editData.overrideTimeWindow?.end || ''}
                                 onChange={(e) => handleTimeWindowChange('end', e.target.value)}
                                 onBlur={(e) => {
                                   const formatted = formatTimeInput(e.target.value);
@@ -793,13 +793,13 @@ const StopsList: React.FC<StopsListProps> = ({
                           {/* Time Window Validation Mesajı */}
                           {timeWindowError && (
                             <div className={`p-2 rounded border ${
-                              timeWindowError.includes('sonra olmalıdır') ? 
-                                 'bg-red-50 border-red-200' 
+                              timeWindowError.includes('sonra olmalıdır') 
+                                ? 'bg-red-50 border-red-200' 
                                 : 'bg-yellow-50 border-yellow-200'
                             }`}>
                               <p className={`text-xs flex items-center ${
-                                timeWindowError.includes('sonra olmalıdır') ?
-                                   'text-red-700'
+                                timeWindowError.includes('sonra olmalıdır')
+                                  ? 'text-red-700'
                                   : 'text-yellow-700'
                               }`}>
                                 <AlertCircle className="w-3 h-3 mr-1" />

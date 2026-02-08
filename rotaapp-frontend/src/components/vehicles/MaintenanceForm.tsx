@@ -5,7 +5,7 @@ import { maintenanceService } from '@/services/maintenance.service';
 
 interface MaintenanceFormProps {
   vehicle: Vehicle;
-  maintenance: VehicleMaintenance | null;
+  maintenance?: VehicleMaintenance | null;
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -43,7 +43,7 @@ const MaintenanceForm: React.FC<MaintenanceFormProps> = ({
         description: maintenance.description || '',
         cost: maintenance.cost,
         performedAt: new Date(maintenance.performedAt),
-         nextMaintenanceDate: maintenance.nextMaintenanceDate ? new Date(maintenance.nextMaintenanceDate) : undefined,
+        nextMaintenanceDate: maintenance.nextMaintenanceDate ? new Date(maintenance.nextMaintenanceDate) : undefined,
         nextMaintenanceKm: maintenance.nextMaintenanceKm,
         currentKm: maintenance.currentKm,
         workshop: maintenance.workshop || '',
@@ -177,7 +177,7 @@ const MaintenanceForm: React.FC<MaintenanceFormProps> = ({
               <input
                 type="date"
                 name="performedAt"
-                  value={formData.performedAt instanceof Date ? formData.performedAt.toISOString().split('T')[0] : ''}
+                value={formData.performedAt instanceof Date ? formData.performedAt.toISOString().split('T')[0] : ''}
                 onChange={handleChange}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -251,7 +251,7 @@ const MaintenanceForm: React.FC<MaintenanceFormProps> = ({
                 <input
                   type="date"
                   name="nextMaintenanceDate"
-                    value={formData.nextMaintenanceDate instanceof Date ? formData.nextMaintenanceDate.toISOString().split('T')[0] : ''}
+                  value={formData.nextMaintenanceDate instanceof Date ? formData.nextMaintenanceDate.toISOString().split('T')[0] : ''}
                   onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
                 />

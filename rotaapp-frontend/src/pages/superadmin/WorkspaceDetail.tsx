@@ -56,16 +56,16 @@ const WorkspaceDetail: React.FC = () => {
       
       // İstatistikleri yükle (Super admin olarak workspace-specific API'lere erişemiyoruz, mock data kullanıyoruz)
       let monthlyRevenue = 0;
-      if (subscriptionData.limits.monthlyPrice) {
+      if (subscriptionData?.limits?.monthlyPrice) {
         monthlyRevenue = subscriptionData.limits.monthlyPrice;
       }
 
       // Gerçek istatistikler yerine subscription verilerini kullan
       setStats({
         totalRoutes: 0, // Backend'den gelmesi gerekiyor
-        totalDrivers: subscriptionData.currentUsage.currentActiveDrivers || 0,
-        totalCustomers: subscriptionData.currentUsage.currentActiveCustomers || 0,
-        totalVehicles: subscriptionData.currentUsage.currentActiveVehicles || 0,
+        totalDrivers: subscriptionData?.currentUsage?.currentActiveDrivers || 0,
+        totalCustomers: subscriptionData?.currentUsage?.currentActiveCustomers || 0,
+        totalVehicles: subscriptionData?.currentUsage?.currentActiveVehicles || 0,
         monthlyRevenue,
         activeRoutes: 0 // Backend'den gelmesi gerekiyor
       });
@@ -80,9 +80,9 @@ const WorkspaceDetail: React.FC = () => {
     if (!workspace) return;
     
     const newStatus = !workspace.active;
-    const message = newStatus ? 
-       'Bu firmayı aktif hale getirmek istediğinize emin misiniz' 
-      : 'Bu firmayı pasif hale getirmek istediğinize emin misiniz Firma sisteme giriş yapamayacak.';
+    const message = newStatus 
+      ? 'Bu firmayı aktif hale getirmek istediğinize emin misiniz?' 
+      : 'Bu firmayı pasif hale getirmek istediğinize emin misiniz? Firma sisteme giriş yapamayacak.';
     
     if (window.confirm(message)) {
       await workspaceService.updateStatus(workspace.id, newStatus);
@@ -109,7 +109,7 @@ const WorkspaceDetail: React.FC = () => {
   const handleResetUsage = async () => {
     if (!workspace) return;
     
-    if (window.confirm('Aylık kullanımı sıfırlamak istediğinize emin misiniz')) {
+    if (window.confirm('Aylık kullanımı sıfırlamak istediğinize emin misiniz?')) {
       try {
         await adminService.resetWorkspaceUsage(workspace.id);
         await loadWorkspaceData();
@@ -153,24 +153,24 @@ const WorkspaceDetail: React.FC = () => {
               {availablePlans.map((plan) => (
                 <div
                   key={plan.planTypeValue}
-                    className={`border rounded-lg p-4 cursor-pointer ${
-                      selectedPlan == plan.planTypeValue ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
-                    }`}
+                  className={`border rounded-lg p-4 cursor-pointer ${
+                    selectedPlan == plan.planTypeValue ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+                  }`}
                   onClick={() => setSelectedPlan(plan.planTypeValue)}
                 >
                   <div className="flex justify-between items-start mb-2">
                     <h4 className="font-semibold">{plan.planType}</h4>
-                    <span className="text-lg font-bold">₺{plan.limits.monthlyPrice || 0}</span>
+                    <span className="text-lg font-bold">₺{plan.limits?.monthlyPrice || 0}</span>
                   </div>
                   
                   <div className="space-y-1 text-sm text-gray-600">
-                    <div>• {plan.limits.includedMonthlyStops || 0} durak/ay</div>
-                    <div>• Ek durak: ₺{plan.limits.additionalStopPrice || 0}</div>
-                    {plan.limits.hasTimeWindows && <div>✓ Zaman aralıklı teslimat</div>}
-                    {plan.limits.hasCustomerWhatsAppNotifications && (
-                      <div>✓ WhatsApp ({plan.limits.includedWhatsAppMessages || 0} mesaj)</div>
+                    <div>• {plan.limits?.includedMonthlyStops || 0} durak/ay</div>
+                    <div>• Ek durak: ₺{plan.limits?.additionalStopPrice || 0}</div>
+                    {plan.limits?.hasTimeWindows && <div>✓ Zaman aralıklı teslimat</div>}
+                    {plan.limits?.hasCustomerWhatsAppNotifications && (
+                      <div>✓ WhatsApp ({plan.limits?.includedWhatsAppMessages || 0} mesaj)</div>
                     )}
-                    <div>• Arşiv: {plan.limits.proofArchiveDays || 0} gün</div>
+                    <div>• Arşiv: {plan.limits?.proofArchiveDays || 0} gün</div>
                   </div>
                 </div>
               ))}
@@ -188,7 +188,7 @@ const WorkspaceDetail: React.FC = () => {
                 disabled={loadingPlanChange}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
               >
-                  {loadingPlanChange ? 'Değiştiriliyor...' : 'Planı Değiştir'}
+                {loadingPlanChange ? 'Değiştiriliyor...' : 'Planı Değiştir'}
               </button>
             </div>
           </div>
@@ -213,18 +213,18 @@ const WorkspaceDetail: React.FC = () => {
             <div>
               <h1 className="text-2xl font-bold text-gray-900">{workspace.name}</h1>
               <div className="flex items-center space-x-4 mt-1">
-                  <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                    workspace.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                  }`}>
-                    {workspace.active ? 'Aktif' : 'Pasif'}
+                <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                  workspace.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                }`}>
+                  {workspace.active ? 'Aktif' : 'Pasif'}
                 </span>
                 <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                  subscription.currentPlan === 'Business' ? 'bg-purple-100 text-purple-800' :
-                  subscription.currentPlan === 'Professional' ? 'bg-blue-100 text-blue-800' :
-                  subscription.currentPlan === 'Growth' ? 'bg-green-100 text-green-800' :
+                  subscription?.currentPlan === 'Business' ? 'bg-purple-100 text-purple-800' :
+                  subscription?.currentPlan === 'Professional' ? 'bg-blue-100 text-blue-800' :
+                  subscription?.currentPlan === 'Growth' ? 'bg-green-100 text-green-800' :
                   'bg-gray-100 text-gray-800'
                 }`}>
-                  {subscription.currentPlan}
+                  {subscription?.currentPlan}
                 </span>
               </div>
             </div>
@@ -240,14 +240,14 @@ const WorkspaceDetail: React.FC = () => {
             </button>
             <button
               onClick={handleToggleStatus}
-                className={`px-4 py-2 rounded-lg flex items-center ${
-                  workspace.active ? 
-                     'bg-red-600 text-white hover:bg-red-700' 
-                    : 'bg-green-600 text-white hover:bg-green-700'
-                }`}
+              className={`px-4 py-2 rounded-lg flex items-center ${
+                workspace.active 
+                  ? 'bg-red-600 text-white hover:bg-red-700' 
+                  : 'bg-green-600 text-white hover:bg-green-700'
+              }`}
             >
               <Power className="w-4 h-4 mr-2" />
-                {workspace.active ? 'Pasif Yap' : 'Aktif Yap'}
+              {workspace.active ? 'Pasif Yap' : 'Aktif Yap'}
             </button>
           </div>
         </div>
@@ -261,7 +261,7 @@ const WorkspaceDetail: React.FC = () => {
             <span className="text-xs text-gray-500">Sürücüler</span>
           </div>
           <p className="text-2xl font-bold text-gray-900">{stats.totalDrivers}</p>
-          <p className="text-xs text-gray-600">/ {subscription.limits.maxDrivers || '∞'}</p>
+          <p className="text-xs text-gray-600">/ {subscription?.limits?.maxDrivers || '∞'}</p>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
@@ -269,8 +269,8 @@ const WorkspaceDetail: React.FC = () => {
             <Package className="w-5 h-5 text-green-600" />
             <span className="text-xs text-gray-500">Duraklar</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">{subscription.currentUsage.currentMonthStops || 0}</p>
-          <p className="text-xs text-gray-600">/ {subscription.limits.includedMonthlyStops || '∞'}</p>
+          <p className="text-2xl font-bold text-gray-900">{subscription?.currentUsage?.currentMonthStops || 0}</p>
+          <p className="text-xs text-gray-600">/ {subscription?.limits?.includedMonthlyStops || '∞'}</p>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
@@ -279,7 +279,7 @@ const WorkspaceDetail: React.FC = () => {
             <span className="text-xs text-gray-500">Müşteriler</span>
           </div>
           <p className="text-2xl font-bold text-gray-900">{stats.totalCustomers}</p>
-          <p className="text-xs text-gray-600">/ {subscription.limits.maxCustomers || '∞'}</p>
+          <p className="text-xs text-gray-600">/ {subscription?.limits?.maxCustomers || '∞'}</p>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
@@ -288,7 +288,7 @@ const WorkspaceDetail: React.FC = () => {
             <span className="text-xs text-gray-500">Araçlar</span>
           </div>
           <p className="text-2xl font-bold text-gray-900">{stats.totalVehicles}</p>
-          <p className="text-xs text-gray-600">/ {subscription.limits.maxVehicles || '∞'}</p>
+          <p className="text-xs text-gray-600">/ {subscription?.limits?.maxVehicles || '∞'}</p>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
@@ -296,8 +296,8 @@ const WorkspaceDetail: React.FC = () => {
             <MessageSquare className="w-5 h-5 text-indigo-600" />
             <span className="text-xs text-gray-500">WhatsApp</span>
           </div>
-          <p className="text-2xl font-bold text-gray-900">{subscription.currentUsage.currentMonthWhatsAppMessages || 0}</p>
-          <p className="text-xs text-gray-600">/ {subscription.limits.includedWhatsAppMessages || 0}</p>
+          <p className="text-2xl font-bold text-gray-900">{subscription?.currentUsage?.currentMonthWhatsAppMessages || 0}</p>
+          <p className="text-xs text-gray-600">/ {subscription?.limits?.includedWhatsAppMessages || 0}</p>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
@@ -306,7 +306,7 @@ const WorkspaceDetail: React.FC = () => {
             <span className="text-xs text-gray-500">Aylık Gelir</span>
           </div>
           <p className="text-2xl font-bold text-gray-900">₺{stats.monthlyRevenue}</p>
-          {subscription.currentUsage.currentMonthAdditionalCharges > 0 && (
+          {subscription?.currentUsage?.currentMonthAdditionalCharges > 0 && (
             <p className="text-xs text-orange-600">+₺{subscription.currentUsage.currentMonthAdditionalCharges}</p>
           )}
         </div>
@@ -383,18 +383,18 @@ const WorkspaceDetail: React.FC = () => {
                 <div className="flex justify-between items-center mb-1">
                   <span className="text-sm text-gray-600">Aylık Durak Kullanımı</span>
                   <span className="text-sm font-semibold">
-                    {subscription.currentUsage.currentMonthStops} / {subscription.limits.includedMonthlyStops || '∞'}
+                    {subscription.currentUsage?.currentMonthStops} / {subscription.limits?.includedMonthlyStops || '∞'}
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div 
                     className="bg-blue-600 h-2 rounded-full" 
                     style={{
-                      width: `${Math.min(100, (subscription.currentUsage.currentMonthStops / subscription.limits.includedMonthlyStops) * 100)}%`
+                      width: `${Math.min(100, (subscription.currentUsage?.currentMonthStops / subscription.limits?.includedMonthlyStops) * 100)}%`
                     }}
                   />
                 </div>
-                {subscription.currentUsage.currentMonthAdditionalCharges > 0 && (
+                {subscription.currentUsage?.currentMonthAdditionalCharges > 0 && (
                   <p className="text-xs text-orange-600 mt-1">
                     Ek ücret: ₺{subscription.currentUsage.currentMonthAdditionalCharges}
                   </p>
@@ -402,19 +402,19 @@ const WorkspaceDetail: React.FC = () => {
               </div>
 
               {/* WhatsApp Kullanımı */}
-              {subscription.limits.hasCustomerWhatsAppNotifications && (
+              {subscription.limits?.hasCustomerWhatsAppNotifications && (
                 <div>
                   <div className="flex justify-between items-center mb-1">
                     <span className="text-sm text-gray-600">WhatsApp Mesajları</span>
                     <span className="text-sm font-semibold">
-                      {subscription.currentUsage.currentMonthWhatsAppMessages} / {subscription.limits.includedWhatsAppMessages || 0}
+                      {subscription.currentUsage?.currentMonthWhatsAppMessages} / {subscription.limits?.includedWhatsAppMessages || 0}
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div 
                       className="bg-green-600 h-2 rounded-full" 
                       style={{
-                        width: `${Math.min(100, (subscription.currentUsage.currentMonthWhatsAppMessages / subscription.limits.includedWhatsAppMessages) * 100)}%`
+                        width: `${Math.min(100, (subscription.currentUsage?.currentMonthWhatsAppMessages / subscription.limits?.includedWhatsAppMessages) * 100)}%`
                       }}
                     />
                   </div>
@@ -426,7 +426,7 @@ const WorkspaceDetail: React.FC = () => {
                 <h3 className="text-sm font-medium text-gray-700 mb-2">Plan Özellikleri</h3>
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div className="flex items-center">
-                    {subscription.limits.hasTimeWindows ? (
+                    {subscription.limits?.hasTimeWindows ? (
                       <CheckCircle className="w-4 h-4 text-green-500 mr-1" />
                     ) : (
                       <AlertCircle className="w-4 h-4 text-gray-400 mr-1" />
@@ -434,7 +434,7 @@ const WorkspaceDetail: React.FC = () => {
                     <span>Zaman Aralıklı Teslimat</span>
                   </div>
                   <div className="flex items-center">
-                    {subscription.limits.hasCustomerSatisfactionReport ? (
+                    {subscription.limits?.hasCustomerSatisfactionReport ? (
                       <CheckCircle className="w-4 h-4 text-green-500 mr-1" />
                     ) : (
                       <AlertCircle className="w-4 h-4 text-gray-400 mr-1" />
@@ -454,7 +454,7 @@ const WorkspaceDetail: React.FC = () => {
                   Aylık Kullanımı Sıfırla
                 </button>
                 <p className="text-xs text-gray-500 mt-1">
-                  Son sıfırlama: {new Date(subscription.currentUsage.lastResetDate).toLocaleDateString('tr-TR')}
+                  Son sıfırlama: {new Date(subscription.currentUsage?.lastResetDate).toLocaleDateString('tr-TR')}
                 </p>
               </div>
             </div>

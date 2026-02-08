@@ -156,7 +156,7 @@ const Dashboard: React.FC = () => {
 
     } catch (error: any) {
       console.error('Dashboard verileri yüklenirken hata:', error);
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Dashboard verileri yüklenirken hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Dashboard verileri yüklenirken hata oluştu';
       console.error('User-friendly error:', errorMessage);
     } finally {
       setLoading(false);
@@ -263,8 +263,8 @@ const Dashboard: React.FC = () => {
     // Gerçek değişim hesaplamaları
     const thisMonthDeliveries = thisMonthJourneys.reduce((total, j) => total + j.completedStops, 0);
     const previousMonthDeliveries = previousMonthJourneys.reduce((total, j) => total + j.completedStops, 0);
-    const deliveryChange = previousMonthDeliveries > 0 ?
-       ((thisMonthDeliveries - previousMonthDeliveries) / previousMonthDeliveries * 100).toFixed(0)
+    const deliveryChange = previousMonthDeliveries > 0
+      ? ((thisMonthDeliveries - previousMonthDeliveries) / previousMonthDeliveries * 100).toFixed(0)
       : '0';
 
     // Müşteri değişimi
@@ -353,7 +353,7 @@ const Dashboard: React.FC = () => {
     }
 
     // Driver için özel istatistik
-    if (user.isDriver && !canAccessDispatcherFeatures()) {
+    if (user?.isDriver && !canAccessDispatcherFeatures()) {
       const myJourneys = journeySummaries.filter(j => j.driverId === user.id);
       const myDeliveries = myJourneys.reduce((total, j) => total + j.completedStops, 0);
 
@@ -386,9 +386,9 @@ const Dashboard: React.FC = () => {
         return routeDate.getTime() === today.getTime();
       });
 
-    if (user.isDriver && !canAccessDispatcherFeatures()) {
+    if (user?.isDriver && !canAccessDispatcherFeatures()) {
       todayRoutesData = todayRoutesData.filter(route =>
-        route.driverId === user.id || route.driver.id === user.id
+        route.driverId === user.id || route.driver?.id === user.id
       );
     }
 
@@ -410,8 +410,8 @@ const Dashboard: React.FC = () => {
 
         return {
           id: route.id,
-          driver: driver.name || route.driver.name || (user.isDriver ? user.fullName : 'Atanmadı'),
-          vehicle: journey.vehiclePlateNumber || route.vehicle.plateNumber || 'Atanmadı',
+          driver: driver?.name || route.driver?.name || (user?.isDriver ? user.fullName : 'Atanmadı'),
+          vehicle: journey?.vehiclePlateNumber || route.vehicle?.plateNumber || 'Atanmadı',
           status: status,
           progress: progress,
           deliveries: journey ? `${journey.completedStops}/${journey.totalStops}` : '0/0'
@@ -428,7 +428,7 @@ const Dashboard: React.FC = () => {
     let filteredJourneys = journeySummaries;
     let filteredRoutes = routes;
 
-    if (user.isDriver && !canAccessDispatcherFeatures()) {
+    if (user?.isDriver && !canAccessDispatcherFeatures()) {
       filteredJourneys = journeySummaries.filter(j => j.driverId === user.id);
       filteredRoutes = routes.filter(r => r.driverId === user.id);
     }
@@ -476,7 +476,7 @@ const Dashboard: React.FC = () => {
     const weekData: any[] = [];
 
     let filteredJourneys = journeySummaries;
-    if (user.isDriver && !canAccessDispatcherFeatures()) {
+    if (user?.isDriver && !canAccessDispatcherFeatures()) {
       filteredJourneys = journeySummaries.filter(j => j.driverId === user.id);
     }
 
@@ -504,7 +504,7 @@ const Dashboard: React.FC = () => {
     setWeeklyData(weekData);
   };
 
-  const formatTimeAgo = (date: Date | string): string => {
+  const formatTimeAgo = (date?: Date | string): string => {
     if (!date) return 'Bilinmiyor';
 
     const now = new Date();
@@ -586,7 +586,7 @@ const Dashboard: React.FC = () => {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-gray-600 mt-1">
-            Hoş geldiniz {user.fullName}! İşte {user.isDriver && !canAccessDispatcherFeatures() ? 'size özel' : 'bugünkü'} özet bilgileriniz.
+            Hoş geldiniz {user?.fullName}! İşte {user?.isDriver && !canAccessDispatcherFeatures() ? 'size özel' : 'bugünkü'} özet bilgileriniz.
           </p>
         </div>
         <div className="mt-4 sm:mt-0 flex items-center gap-2">
@@ -725,7 +725,7 @@ const Dashboard: React.FC = () => {
         <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-lg font-semibold text-gray-900">
-              {user.isDriver && !canAccessDispatcherFeatures() ? 'Benim Haftalık Performansım' : 'Haftalık Teslimat Performansı'}
+              {user?.isDriver && !canAccessDispatcherFeatures() ? 'Benim Haftalık Performansım' : 'Haftalık Teslimat Performansı'}
             </h2>
             <BarChart3 className="w-5 h-5 text-gray-400" />
           </div>
@@ -824,7 +824,7 @@ const Dashboard: React.FC = () => {
         <div className="p-6 border-b">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900">
-              {user.isDriver && !canAccessDispatcherFeatures() ? 'Benim Bugünkü Rotalarım' : 'Bugünkü Rotalar'}
+              {user?.isDriver && !canAccessDispatcherFeatures() ? 'Benim Bugünkü Rotalarım' : 'Bugünkü Rotalar'}
             </h2>
             <Link
               to="/routes"
@@ -914,7 +914,7 @@ const Dashboard: React.FC = () => {
             <div className="p-6 text-center text-gray-500">
               <MapPin className="w-12 h-12 mx-auto text-gray-300 mb-3" />
               <p>
-                {user.isDriver && !canAccessDispatcherFeatures()
+                {user?.isDriver && !canAccessDispatcherFeatures()
                   ? 'Size atanmış rota bulunmuyor'
                   : 'Bugün için planlanmış rota bulunmuyor'}
               </p>

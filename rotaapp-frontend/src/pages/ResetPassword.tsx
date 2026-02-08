@@ -50,7 +50,7 @@ const ResetPassword: React.FC = () => {
         navigate('/login');
       }, 3000);
     } catch (error: any) {
-      const errorMessage = error.userFriendlyMessage || error.response.data.message || 'Bir hata oluştu';
+      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Bir hata oluştu';
       setError(errorMessage);
     } finally {
       setLoading(false);
