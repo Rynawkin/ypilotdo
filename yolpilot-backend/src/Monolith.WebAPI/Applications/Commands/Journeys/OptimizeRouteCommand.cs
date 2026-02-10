@@ -1362,6 +1362,8 @@ public class OptimizeRouteCommandHandler : BaseAuthenticatedCommandHandler<Optim
         
         var origin = string.Format(CultureInfo.InvariantCulture, "{0},{1}", route.Depot.Latitude, route.Depot.Longitude);
         var destination = origin;
+        var originLat = route.Depot.Latitude;
+        var originLng = route.Depot.Longitude;
 
         // Sadece excluded olmayan stops'ları optimize et
         var originalStops = route.Stops
@@ -1408,9 +1410,9 @@ public class OptimizeRouteCommandHandler : BaseAuthenticatedCommandHandler<Optim
                 if (firstStops.Any())
                 {
                     var firstStop = firstStops.First();
-                    origin = firstStop.Customer != null
-                        ? string.Format(CultureInfo.InvariantCulture, "{0},{1}", firstStop.Customer.Latitude, firstStop.Customer.Longitude)
-                        : string.Format(CultureInfo.InvariantCulture, "{0},{1}", firstStop.Latitude, firstStop.Longitude);
+                    originLat = firstStop.Customer?.Latitude ?? firstStop.Latitude;
+                    originLng = firstStop.Customer?.Longitude ?? firstStop.Longitude;
+                    origin = string.Format(CultureInfo.InvariantCulture, "{0},{1}", originLat, originLng);
                     logger.LogInformation("Changed origin to first stop: {Name} at {Origin}", firstStop.Name, origin);
                 }
             }
@@ -1607,6 +1609,12 @@ public class OptimizeRouteCommandHandler : BaseAuthenticatedCommandHandler<Optim
                             // Depot index'i - şimdilik kaydet ama son sıraya database'e eklenir
                             logger.LogInformation("Found depot in optimization order at index {Index} - will be added as final stop to database", originalIndex);
                         }
+                    }
+
+                    if (hasPositionConstraints && lastCustomerStops.Any())
+                    {
+                        var lastStop = lastCustomerStops.Last();
+                        googleOptimizedStops = ReorderStopsTowardLastStop(googleOptimizedStops, originLat, originLng, lastStop);
                     }
 
                     // Depoyu son durak olarak database'e ekle (Google optimize ettikten sonra)
@@ -1815,6 +1823,61 @@ public class OptimizeRouteCommandHandler : BaseAuthenticatedCommandHandler<Optim
         return stop.CustomerId == null &&
                Math.Abs(stop.Latitude - depot.Latitude) < tolerance &&
                Math.Abs(stop.Longitude - depot.Longitude) < tolerance;
+    }
+
+    private List<Data.Journeys.RouteStop> ReorderStopsTowardLastStop(
+        List<Data.Journeys.RouteStop> stops,
+        double originLat,
+        double originLng,
+        Data.Journeys.RouteStop lastStop)
+    {
+        if (stops.Count < 2)
+        {
+            return stops;
+        }
+
+        var lastLat = lastStop.Customer?.Latitude ?? lastStop.Latitude;
+        var lastLng = lastStop.Customer?.Longitude ?? lastStop.Longitude;
+        var vectorLat = lastLat - originLat;
+        var vectorLng = lastLng - originLng;
+        var length = Math.Sqrt(vectorLat * vectorLat + vectorLng * vectorLng);
+
+        if (length < 1e-6)
+        {
+            return stops;
+        }
+
+        var threshold = length * 0.05; // ~5% of overall direction distance
+        var projections = new List<(Data.Journeys.RouteStop Stop, double Projection)>();
+
+        foreach (var stop in stops)
+        {
+            var stopLat = stop.Customer?.Latitude ?? stop.Latitude;
+            var stopLng = stop.Customer?.Longitude ?? stop.Longitude;
+            var projection = ((stopLat - originLat) * vectorLat + (stopLng - originLng) * vectorLng) / length;
+            projections.Add((stop, projection));
+        }
+
+        var shouldReorder = false;
+        var previous = projections[0].Projection;
+        for (var i = 1; i < projections.Count; i++)
+        {
+            var current = projections[i].Projection;
+            if (previous - current > threshold)
+            {
+                shouldReorder = true;
+                break;
+            }
+            previous = current;
+        }
+
+        if (!shouldReorder)
+        {
+            return stops;
+        }
+
+        logger.LogInformation("Detected backtracking toward last stop; reordering auto stops by direction projection");
+        return projections.OrderBy(p => p.Projection).Select(p => p.Stop).ToList();
     }
 
     private List<Data.Journeys.RouteStop> Apply2OptImprovement(List<Data.Journeys.RouteStop> stops, Data.Workspace.Depot depot)
