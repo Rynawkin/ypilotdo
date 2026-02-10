@@ -1372,6 +1372,9 @@ public class OptimizeRouteCommandHandler : BaseAuthenticatedCommandHandler<Optim
         // Position constraints kontrolü
         var firstStops = originalStops.Where(s => s.OrderType == Data.Journeys.OrderType.First).ToList();
         var lastStops = originalStops.Where(s => s.OrderType == Data.Journeys.OrderType.Last).ToList();
+        var lastCustomerStops = lastStops
+            .Where(s => !IsDepotStop(s, route.Depot) && !s.IsExcluded)
+            .ToList();
         var autoStops = originalStops.Where(s => s.OrderType == Data.Journeys.OrderType.Auto).ToList();
 
         bool hasPositionConstraints = firstStops.Any() || lastStops.Any();
@@ -1425,6 +1428,15 @@ public class OptimizeRouteCommandHandler : BaseAuthenticatedCommandHandler<Optim
             shouldOptimize = !preserveOrder; // ✅ YENİ: PreserveOrder true ise optimize etme
         }
 
+        if (hasPositionConstraints && lastCustomerStops.Any())
+        {
+            var lastStop = lastCustomerStops.Last();
+            destination = lastStop.Customer != null
+                ? string.Format(CultureInfo.InvariantCulture, "{0},{1}", lastStop.Customer.Latitude, lastStop.Customer.Longitude)
+                : string.Format(CultureInfo.InvariantCulture, "{0},{1}", lastStop.Latitude, lastStop.Longitude);
+            logger.LogInformation("Changed destination to last stop: {Name} at {Destination}", lastStop.Name, destination);
+        }
+
         var waypoints = orderedStops.Select(s =>
         {
             if (s.Customer != null)
@@ -1433,7 +1445,7 @@ public class OptimizeRouteCommandHandler : BaseAuthenticatedCommandHandler<Optim
         }).ToList();
 
         // ✅ Depot'u son waypoint olarak ekle (circular route optimization için)
-        if (shouldOptimize) // Sadece optimize edilecekse depot ekle
+        if (shouldOptimize && !lastCustomerStops.Any()) // Last stop varsa depot'u waypoint'e koyma
         {
             var depotWaypoint = string.Format(CultureInfo.InvariantCulture, "{0},{1}", route.Depot.Latitude, route.Depot.Longitude);
             waypoints.Add(depotWaypoint);
@@ -1503,6 +1515,44 @@ public class OptimizeRouteCommandHandler : BaseAuthenticatedCommandHandler<Optim
                 {
                     totalDistance += leg.Distance.Value / 1000.0;
                     totalDuration += (int)(leg.Duration.Value / 60);
+                }
+            }
+
+            // ✅ Last stop varsa, last → depot dönüş mesafesini ekle
+            if (hasPositionConstraints && lastCustomerStops.Any())
+            {
+                var lastStop = lastCustomerStops.Last();
+                var lastStopCoord = lastStop.Customer != null
+                    ? $"{lastStop.Customer.Latitude},{lastStop.Customer.Longitude}"
+                    : $"{lastStop.Latitude},{lastStop.Longitude}";
+                var depotCoord = $"{route.Depot.Latitude},{route.Depot.Longitude}";
+
+                try
+                {
+                    var lastToDepotResponse = await googleApiService.GetDirections(
+                        lastStopCoord,
+                        depotCoord,
+                        new List<string>(),
+                        false,
+                        avoidTolls);
+
+                    if (lastToDepotResponse?.Routes?.FirstOrDefault()?.Legs?.FirstOrDefault() != null)
+                    {
+                        var lastToDepotLeg = lastToDepotResponse.Routes.First().Legs.First();
+                        if (lastToDepotLeg.Distance != null && lastToDepotLeg.Duration != null)
+                        {
+                            totalDistance += lastToDepotLeg.Distance.Value / 1000.0;
+                            totalDuration += (int)(lastToDepotLeg.Duration.Value / 60);
+                            logger.LogInformation("Added last stop → depot: {Distance}km, {Duration}min",
+                                lastToDepotLeg.Distance.Value / 1000.0, lastToDepotLeg.Duration.Value / 60);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    logger.LogWarning(ex, "Failed to get last stop to depot distance, using estimate");
+                    totalDistance += 5;
+                    totalDuration += 10;
                 }
             }
             
