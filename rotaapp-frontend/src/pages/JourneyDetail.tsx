@@ -38,9 +38,10 @@ import { journeyService, CompleteStopDto } from '@/services/journey.service';
 import { toast } from 'react-hot-toast';
 import signalRService from '@/services/signalr.service';
 import { useSignalR, useJourneyTracking } from '@/hooks/useSignalR';
-import { api, API_BASE_URL } from '@/services/api';
+import { api } from '@/services/api';
 import { AddStopModal } from '@/components/journey/AddStopModal';
 import { InfoTooltip, TOOLTIP_TEXTS } from '@/components/common/InfoTooltip';
+import { PageEmptyState, PageLoading } from '@/components/ui/PageChrome';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
@@ -74,7 +75,8 @@ const StopDetailsSection: React.FC<{
       return url;
     }
     
-    return `${API_BASE_URL}${url}`;
+    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5055';
+    return `${baseUrl}${url}`;
   };
   
   useEffect(() => {
@@ -306,7 +308,7 @@ const JourneyDetail: React.FC = () => {
     }
 
     // Relative URL ise base URL ekle (legacy support)
-    const baseUrl = API_BASE_URL;
+    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5055';
     return `${baseUrl}${url}`;
   };
 
@@ -1309,14 +1311,18 @@ const JourneyDetail: React.FC = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-      </div>
-    );
+    return <PageLoading label="Sefer detaylari yukleniyor..." />;
   }
 
   if (!journey) {
+    return (
+      <PageEmptyState
+        title="Sefer bulunamadi"
+        description="Istediginiz sefer bulunamadi veya artik erisilebilir degil."
+        backTo="/journeys"
+        backLabel="Seferlere Don"
+      />
+    );
     return (
       <div className="text-center py-12">
         <AlertCircle className="w-12 h-12 mx-auto text-yellow-500 mb-3" />
@@ -1502,7 +1508,7 @@ const JourneyDetail: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="app-surface flex items-center justify-between px-6 py-5 lg:px-7 lg:py-6">
         <div className="flex items-center space-x-4">
           <button
             onClick={handleGoBack}

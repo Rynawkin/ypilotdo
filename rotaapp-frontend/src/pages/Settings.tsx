@@ -35,6 +35,7 @@ import {
   Unlink,
   Loader2
 } from 'lucide-react';
+import { PageHeader, PageLoading } from '@/components/ui/PageChrome';
 import { TemplateEditor } from '@/components/templates/TemplateEditor';
 import NotificationRoleSettings from '@/components/settings/NotificationRoleSettings';
 import { settingsService } from '@/services/settings.service';
@@ -681,17 +682,34 @@ const Settings: React.FC = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
+    return <PageLoading label="Ayarlar yukleniyor..." />;
   }
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <PageHeader
+        eyebrow="Yonetim"
+        title="Ayarlar"
+        description={
+          canAccessDispatcherFeatures() && !canAccessAdminFeatures()
+            ? 'Operasyonel ayarlariniz'
+            : 'Sistem ve sirket ayarlarini yonetin'
+        }
+        actions={
+          hasChanges ? (
+            <button
+              onClick={saveSettings}
+              disabled={saving}
+              className="app-button-primary disabled:opacity-50"
+            >
+              {saving ? <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-white"></div> : <Save className="h-4 w-4" />}
+              {saving ? 'Kaydediliyor...' : 'Degisiklikleri Kaydet'}
+            </button>
+          ) : undefined
+        }
+      />
+        {false && (<>
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Ayarlar</h1>
           <p className="text-gray-600 mt-1">
@@ -720,7 +738,7 @@ const Settings: React.FC = () => {
             )}
           </button>
         )}
-      </div>
+        </>)}
 
       {/* Messages */}
       {showSuccessMessage && (
@@ -1807,13 +1825,7 @@ const Settings: React.FC = () => {
                   </div>
                   
                   <div className="flex gap-3">
-                    <button
-                      onClick={() => {
-                        setActiveTab('payment');
-                        setShowUpgradePlan(true);
-                      }}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    >
+                    <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                       Planı Yükselt
                     </button>
                     <button className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
@@ -1868,7 +1880,7 @@ const Settings: React.FC = () => {
                     <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-y-auto">
                       <UpgradePlan 
                         onClose={() => setShowUpgradePlan(false)}
-                        currentPlan={(billingData?.plan?.name || subscriptionData?.currentPlan || (trialStatus?.isActive ? 'Trial' : 'Starter')) as any}
+                        currentPlan={trialStatus?.isActive ? 'Trial' : 'Starter'}
                       />
                     </div>
                   </div>
