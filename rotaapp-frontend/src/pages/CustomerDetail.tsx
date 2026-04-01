@@ -542,7 +542,7 @@ const CustomerDetail: React.FC = () => {
           <div className="flex items-center space-x-4">
             <Link
               to="/customers"
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="app-icon-button"
             >
               <ArrowLeft className="w-5 h-5 text-gray-600" />
             </Link>
@@ -567,7 +567,7 @@ const CustomerDetail: React.FC = () => {
           <div className="flex items-center space-x-3">
             <Link
               to={`/customers/${customer.id}/edit`}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+              className="app-button-primary"
             >
               <Edit className="w-4 h-4 mr-2" />
               Düzenle
@@ -575,7 +575,7 @@ const CustomerDetail: React.FC = () => {
             <button
               onClick={handleDelete}
               disabled={deleting}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:bg-gray-300 transition-colors flex items-center"
+              className="app-button-danger disabled:bg-slate-300"
             >
               {deleting ? (
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -589,7 +589,7 @@ const CustomerDetail: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+      <div className="app-tab-shell mb-6">
         <div className="border-b border-gray-200">
           <nav className="flex space-x-8 px-6">
             <button
@@ -647,7 +647,7 @@ const CustomerDetail: React.FC = () => {
         <div className="lg:col-span-2 space-y-6">
           {/* Stats Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+            <div className="app-kpi">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Toplam Teslimat</p>
@@ -662,7 +662,7 @@ const CustomerDetail: React.FC = () => {
                 <Package className="w-8 h-8 text-blue-600 opacity-20" />
               </div>
             </div>
-            <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+            <div className="app-kpi">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Aktif Rota</p>
@@ -673,7 +673,7 @@ const CustomerDetail: React.FC = () => {
                 <Navigation className="w-8 h-8 text-green-600 opacity-20" />
               </div>
             </div>
-            <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+            <div className="app-kpi">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Planlı Rota</p>
@@ -684,7 +684,7 @@ const CustomerDetail: React.FC = () => {
                 <Calendar className="w-8 h-8 text-purple-600 opacity-20" />
               </div>
             </div>
-            <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+            <div className="app-kpi">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Başarı Oranı</p>
@@ -696,7 +696,7 @@ const CustomerDetail: React.FC = () => {
           </div>
 
           {/* Contact & Address Information */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="app-card">
             <div className="p-4 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-900 flex items-center">
                 <User className="w-5 h-5 mr-2" />
@@ -773,7 +773,7 @@ const CustomerDetail: React.FC = () => {
           </div>
 
           {/* Interactive Map */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="app-card">
             <div className="p-4 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-gray-900 flex items-center">
@@ -822,7 +822,7 @@ const CustomerDetail: React.FC = () => {
           </div>
 
           {/* Recent Routes */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="app-card">
             <div className="p-4 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-900 flex items-center">
                 <Navigation className="w-5 h-5 mr-2" />
@@ -877,7 +877,7 @@ const CustomerDetail: React.FC = () => {
         <div className="space-y-6">
           {/* Tags */}
           {customer.tags && customer.tags.length > 0 && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <div className="app-card p-4">
               <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
                 <Tag className="w-5 h-5 mr-2" />
                 Etiketler
@@ -898,7 +898,7 @@ const CustomerDetail: React.FC = () => {
 
           {/* Notes */}
           {customer.notes && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <div className="app-card p-4">
               <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
                 <FileText className="w-5 h-5 mr-2" />
                 Notlar
@@ -908,7 +908,7 @@ const CustomerDetail: React.FC = () => {
           )}
 
           {/* Metadata */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <div className="app-card p-4">
             <h3 className="text-lg font-semibold text-gray-900 mb-3">Sistem Bilgileri</h3>
             <div className="space-y-2 text-sm">
               <div>
@@ -927,7 +927,7 @@ const CustomerDetail: React.FC = () => {
           </div>
 
           {/* Quick Actions */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <div className="app-card p-4">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Hızlı İşlemler</h3>
             <div className="space-y-2">
               <Link
@@ -950,7 +950,7 @@ const CustomerDetail: React.FC = () => {
           </div>
 
           {/* Quick Actions */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+          <div className="app-card p-4">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Hızlı İşlemler</h3>
             <div className="space-y-2">
               <Link
@@ -978,7 +978,7 @@ const CustomerDetail: React.FC = () => {
       {/* Contacts Tab */}
       {activeTab === 'contacts' && (
         <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="app-card p-6">
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-lg font-semibold text-gray-900 flex items-center">
@@ -1012,7 +1012,7 @@ const CustomerDetail: React.FC = () => {
       {/* Routes Tab */}
       {activeTab === 'routes' && (
         <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="app-card">
             <div className="p-4 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-900 flex items-center">
                 <Navigation className="w-5 h-5 mr-2" />
@@ -1067,7 +1067,7 @@ const CustomerDetail: React.FC = () => {
       {/* Delivery Proofs Tab */}
       {activeTab === 'proofs' && (
         <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="app-card">
             <div className="p-4 border-b border-gray-200">
               <h2 className="text-lg font-semibold text-gray-900 flex items-center">
                 <Camera className="w-5 h-5 mr-2" />

@@ -1482,7 +1482,7 @@ const JourneyDetail: React.FC = () => {
         <div className="flex items-center space-x-4">
           <button
             onClick={handleGoBack}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="app-icon-button"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -1526,9 +1526,9 @@ const JourneyDetail: React.FC = () => {
 
         <div className="flex items-center space-x-3">
           {/* SignalR Connection Status */}
-          <div className={`flex items-center px-3 py-1 rounded-lg text-xs ${isConnected
-              ? 'bg-green-50 border border-green-200 text-green-700'
-              : 'bg-yellow-50 border border-yellow-200 text-yellow-700'
+          <div className={`flex items-center rounded-full px-3 py-1 text-xs font-semibold ${isConnected
+              ? 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200'
+              : 'bg-amber-50 text-amber-700 ring-1 ring-amber-200'
             }`}>
             {isConnected ? (
               <>
@@ -1545,7 +1545,7 @@ const JourneyDetail: React.FC = () => {
 
           {/* Mobile App Bilgilendirmesi */}
           {isJourneyStarted && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg px-3 py-1 text-xs text-blue-700">
+            <div className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 ring-1 ring-blue-200">
               📱 Teslimat işlemleri mobil uygulama üzerinden yapılır
             </div>
           )}
@@ -1554,7 +1554,7 @@ const JourneyDetail: React.FC = () => {
           {(isJourneyStarted || isJourneyPlanned) && (
             <button
               onClick={() => setShowAddStopModal(true)}
-              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2"
+              className="app-button-secondary"
               title="Yeni durak ekle"
             >
               <Plus className="w-4 h-4" />
@@ -1566,7 +1566,7 @@ const JourneyDetail: React.FC = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={handleExportPDF}
-              className="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2 text-sm"
+              className="app-button-danger text-sm"
               title="PDF olarak indir"
             >
               <FileText className="w-4 h-4" />
@@ -1574,7 +1574,7 @@ const JourneyDetail: React.FC = () => {
             </button>
             <button
               onClick={handleExportExcel}
-              className="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 text-sm"
+              className="app-button-primary text-sm"
               title="Excel olarak indir"
             >
               <FileSpreadsheet className="w-4 h-4" />
@@ -1586,7 +1586,7 @@ const JourneyDetail: React.FC = () => {
           {isJourneyPlanned && (
             <button
               onClick={handleStartJourney}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center"
+              className="app-button-primary"
             >
               <Navigation className="w-4 h-4 mr-2" />
               Seferi Başlat
@@ -1597,7 +1597,7 @@ const JourneyDetail: React.FC = () => {
           {canCompleteJourney && (
             <button
               onClick={handleCompleteJourney}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+              className="app-button-primary"
             >
               <CheckCircle className="w-4 h-4 mr-2" />
               Seferi Tamamla
@@ -1608,7 +1608,7 @@ const JourneyDetail: React.FC = () => {
 
       {/* ✅ YENİ: Reoptimization Banner */}
       {journey.needsReoptimization && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-center justify-between">
+        <div className="app-card flex items-center justify-between border-amber-200 bg-amber-50 p-4">
           <div className="flex items-center space-x-3">
             <AlertTriangle className="w-6 h-6 text-yellow-600 flex-shrink-0" />
             <div>
@@ -1778,7 +1778,7 @@ const JourneyDetail: React.FC = () => {
       </div>
 
       {/* Progress Bar - DÜZELTİLDİ: İki renkli */}
-      <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
+      <div className="app-card p-6">
         <div className="flex items-center justify-between mb-3">
           <h3 className="font-semibold text-gray-900">İlerleme Durumu</h3>
           <span className="text-sm text-gray-600">
@@ -1840,7 +1840,7 @@ const JourneyDetail: React.FC = () => {
         {(journey.startKm !== undefined || journey.endKm !== undefined || journey.startFuel || journey.endFuel || journey.vehicleCondition) && (
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-4 pt-4 border-t border-gray-200">
             {journey.startKm !== undefined && (
-              <div className="text-center bg-blue-50 rounded-lg p-3">
+          <div className="app-subcard text-center p-3">
                 <p className="text-xl font-bold text-blue-900">
                   {journey.startKm.toLocaleString('tr-TR')}
                 </p>
@@ -1848,7 +1848,7 @@ const JourneyDetail: React.FC = () => {
               </div>
             )}
             {journey.endKm !== undefined && (
-              <div className="text-center bg-green-50 rounded-lg p-3">
+              <div className="app-subcard text-center p-3">
                 <p className="text-xl font-bold text-green-900">
                   {journey.endKm.toLocaleString('tr-TR')}
                 </p>
@@ -1856,7 +1856,7 @@ const JourneyDetail: React.FC = () => {
               </div>
             )}
             {journey.startKm !== undefined && journey.endKm !== undefined && (
-              <div className="text-center bg-purple-50 rounded-lg p-3">
+              <div className="app-subcard text-center p-3">
                 <p className="text-xl font-bold text-purple-900">
                   {(journey.endKm - journey.startKm).toLocaleString('tr-TR')}
                 </p>
@@ -1864,7 +1864,7 @@ const JourneyDetail: React.FC = () => {
               </div>
             )}
             {journey.startFuel && journey.endFuel && (
-              <div className="text-center bg-yellow-50 rounded-lg p-3">
+              <div className="app-subcard text-center p-3">
                 <p className="text-xs text-yellow-600 mb-1">Yakıt Seviyesi</p>
                 <p className="text-sm font-bold text-yellow-900">
                   {getFuelLabel(journey.startFuel)} → {getFuelLabel(journey.endFuel)}
@@ -1885,7 +1885,7 @@ const JourneyDetail: React.FC = () => {
 
       {/* ✅ YENİ: Excluded Stops Section */}
       {excludedStops.length > 0 && (
-        <div className="bg-red-50 rounded-lg shadow-sm border border-red-200">
+        <div className="app-card border-rose-200 bg-rose-50/80">
           <div className="p-6 border-b border-red-200">
             <div className="flex items-center">
               <AlertTriangle className="w-5 h-5 text-red-600 mr-2" />
@@ -1934,7 +1934,7 @@ const JourneyDetail: React.FC = () => {
 
       {/* ✅ YENİ: Detaylı Rapor Tablosu */}
       {normalStops.some((s: JourneyStop) => s.originalEstimatedArrivalTime) && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+        <div className="app-card overflow-hidden">
           <div className="p-6 border-b bg-gray-50">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-gray-900 flex items-center gap-2">

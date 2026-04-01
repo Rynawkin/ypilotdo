@@ -851,7 +851,7 @@ const RouteDetail: React.FC = () => {
           <div className="flex items-center space-x-4">
             <Link
               to="/routes"
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="app-icon-button"
             >
               <ArrowLeft className="w-5 h-5 text-gray-600" />
             </Link>
@@ -885,8 +885,8 @@ const RouteDetail: React.FC = () => {
                 disabled={startingJourney}
                 className={`px-4 py-2 ${startingJourney
                     ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-green-600 hover:bg-green-700'
-                  } text-white rounded-lg transition-colors flex items-center`}
+                    : 'app-button-primary'
+                  } text-white rounded-xl transition-colors flex items-center`}
               >
                 {startingJourney ? (
                   <>
@@ -911,7 +911,7 @@ const RouteDetail: React.FC = () => {
                     navigate(`/journeys/${journey.id}`);
                   }
                 }}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+                className="app-button-primary"
               >
                 <Navigation className="w-4 h-4 mr-2" />
                 Sefere Git
@@ -920,7 +920,7 @@ const RouteDetail: React.FC = () => {
 
             <button
               onClick={handleExportPDF}
-              className="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2 text-sm"
+              className="app-button-danger text-sm"
               title="PDF olarak indir"
             >
               <FileText className="w-4 h-4" />
@@ -929,7 +929,7 @@ const RouteDetail: React.FC = () => {
 
             <button
               onClick={handleExport}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="app-icon-button"
               title="CSV Olarak İndir"
             >
               <Download className="w-5 h-5 text-gray-600" />
@@ -937,7 +937,7 @@ const RouteDetail: React.FC = () => {
 
             <button
               onClick={handleCopyRouteLink}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="app-icon-button"
               title="Rota Linkini Kopyala"
             >
               <Share2 className="w-5 h-5 text-gray-600" />
@@ -945,7 +945,7 @@ const RouteDetail: React.FC = () => {
 
             <button
               onClick={handleDuplicate}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="app-icon-button"
               title="Rotayı Kopyala"
             >
               <Copy className="w-5 h-5 text-gray-600" />
@@ -953,7 +953,7 @@ const RouteDetail: React.FC = () => {
 
             <Link
               to={`/routes/${route.id}/edit`}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="app-icon-button"
               title="Düzenle"
             >
               <Edit className="w-5 h-5 text-gray-600" />
@@ -961,7 +961,7 @@ const RouteDetail: React.FC = () => {
 
             <button
               onClick={handleDelete}
-              className="p-2 hover:bg-red-100 rounded-lg transition-colors"
+              className="inline-flex items-center justify-center rounded-xl border border-rose-200 bg-rose-50 p-2.5 text-rose-600 shadow-sm transition hover:bg-rose-100"
               title="Sil"
             >
               <Trash2 className="w-5 h-5 text-red-600" />
@@ -989,32 +989,32 @@ const RouteDetail: React.FC = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
+      <div className="app-data-grid md:grid-cols-5">
+        <div className="app-kpi">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Toplam Durak</p>
-              <p className="text-2xl font-bold text-gray-900">{route.totalDeliveries || route.stops.length}</p>
+              <p className="app-kpi-label">Toplam Durak</p>
+              <p className="app-kpi-value">{route.totalDeliveries || route.stops.length}</p>
             </div>
             <MapPin className="w-8 h-8 text-blue-600 opacity-20" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
+        <div className="app-kpi">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Tamamlanan</p>
-              <p className="text-2xl font-bold text-gray-900">{route.completedDeliveries || 0}</p>
+              <p className="app-kpi-label">Tamamlanan</p>
+              <p className="app-kpi-value">{route.completedDeliveries || 0}</p>
             </div>
             <CheckCircle className="w-8 h-8 text-green-600 opacity-20" />
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
+        <div className="app-kpi">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Mesafe</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="app-kpi-label">Mesafe</p>
+              <p className="app-kpi-value">
                 {route.totalDistance ? `${route.totalDistance.toFixed(1)}` : '0'} <span className="text-sm">km</span>
               </p>
             </div>
@@ -1022,7 +1022,7 @@ const RouteDetail: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
+        <div className="app-kpi">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Süre</p>
@@ -1034,7 +1034,7 @@ const RouteDetail: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
+        <div className="app-kpi">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Başarı Oranı</p>
@@ -1050,7 +1050,7 @@ const RouteDetail: React.FC = () => {
       {/* Main Content - Harita ve Duraklar YAN YANA */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Sol Taraf - Harita (2/3 genişlik) */}
-        <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="app-card lg:col-span-2 p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-gray-900 flex items-center">
               <Map className="w-5 h-5 mr-2" />
@@ -1078,7 +1078,7 @@ const RouteDetail: React.FC = () => {
         </div>
 
         {/* Sağ Taraf - Duraklar Listesi (1/3 genişlik) */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+        <div className="app-card">
           <div className="p-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900 flex items-center">
               <MapPin className="w-5 h-5 mr-2" />
@@ -1300,7 +1300,7 @@ const RouteDetail: React.FC = () => {
 
       {/* Bottom Row - Details */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="app-card p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Detaylar</h2>
           <div className="space-y-4">
             <div className="flex items-start space-x-3">

@@ -225,7 +225,7 @@ const DepotDetail: React.FC = () => {
             <div className="flex items-center mb-4">
               <button
                 onClick={() => navigate('/depots')}
-                className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="app-icon-button mr-4"
               >
                 <ArrowLeft className="w-5 h-5 text-gray-600" />
               </button>
@@ -259,7 +259,7 @@ const DepotDetail: React.FC = () => {
             {!depot.isDefault && (
               <button
                 onClick={handleSetDefault}
-                className="px-4 py-2 bg-yellow-50 text-yellow-700 rounded-lg hover:bg-yellow-100 transition-colors flex items-center"
+                className="app-button-secondary text-amber-700"
                 title="Ana depo yap"
               >
                 <Star className="w-5 h-5" />
@@ -269,13 +269,13 @@ const DepotDetail: React.FC = () => {
               href={`https://www.google.com/maps?q=${depot.latitude},${depot.longitude}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 py-2 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors flex items-center"
+              className="app-button-secondary text-emerald-700"
             >
               <Navigation className="w-5 h-5" />
             </a>
             <Link
               to={`/depots/${depot.id}/edit`}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+              className="app-button-primary"
             >
               <Edit2 className="w-5 h-5 mr-2" />
               Düzenle
@@ -283,7 +283,7 @@ const DepotDetail: React.FC = () => {
             <button
               onClick={() => setDeleteModal(true)}
               disabled={depot.isDefault}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+              className="app-button-danger disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Trash2 className="w-5 h-5 mr-2" />
               Sil
@@ -293,7 +293,7 @@ const DepotDetail: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-lg shadow-sm border">
+      <div className="app-tab-shell">
         <div className="border-b">
           <nav className="flex space-x-8 px-6" aria-label="Tabs">
             <button

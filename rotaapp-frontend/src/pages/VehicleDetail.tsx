@@ -277,7 +277,7 @@ const VehicleDetail: React.FC = () => {
         <div className="flex items-center space-x-3">
           <Link
             to="/vehicles"
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="app-icon-button"
           >
             <ArrowLeft className="w-5 h-5" />
           </Link>
@@ -291,14 +291,14 @@ const VehicleDetail: React.FC = () => {
         <div className="flex items-center space-x-2">
           <Link
             to={`/vehicles/${vehicle.id}/edit`}
-            className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center"
+            className="app-button-secondary"
           >
             <Edit className="w-4 h-4 mr-2" />
             Düzenle
           </Link>
           <button 
             onClick={handleDelete}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center"
+            className="app-button-danger"
           >
             <Trash2 className="w-4 h-4 mr-2" />
             Sil
@@ -310,7 +310,7 @@ const VehicleDetail: React.FC = () => {
         {/* Main Info */}
         <div className="lg:col-span-2 space-y-6">
           {/* Basic Information */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="app-card p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Temel Bilgiler</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -353,27 +353,27 @@ const VehicleDetail: React.FC = () => {
           </div>
 
           {/* Technical Specifications */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="app-card p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Teknik Özellikler</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="app-metric-tile text-center">
                 <Package className="w-8 h-8 text-purple-500 mx-auto mb-2" />
                 <p className="text-2xl font-bold text-gray-900">{vehicle.capacity}</p>
                 <p className="text-xs text-gray-600">Kapasite (kg)</p>
               </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="app-metric-tile text-center">
                 <Fuel className="w-8 h-8 text-blue-500 mx-auto mb-2" />
                 <p className="text-lg font-bold text-gray-900">{getFuelTypeLabel(vehicle.fuelType)}</p>
                 <p className="text-xs text-gray-600">Yakıt Tipi</p>
               </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="app-metric-tile text-center">
                 <Gauge className="w-8 h-8 text-red-500 mx-auto mb-2" />
                 <p className="text-2xl font-bold text-gray-900">
                   {vehicle.currentKm ? vehicle.currentKm.toLocaleString('tr-TR') : '-'}
                 </p>
                 <p className="text-xs text-gray-600">Güncel Kilometre</p>
               </div>
-              <div className="text-center p-4 bg-gray-50 rounded-lg">
+              <div className="app-metric-tile text-center">
                 <Route className="w-8 h-8 text-green-500 mx-auto mb-2" />
                 <p className="text-2xl font-bold text-gray-900">{routes.length}</p>
                 <p className="text-xs text-gray-600">Toplam Rota</p>
@@ -382,7 +382,7 @@ const VehicleDetail: React.FC = () => {
           </div>
 
           {/* Recent Routes */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="app-card p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Son Rotalar</h2>
             {routes.length === 0 ? (
               <p className="text-gray-500 text-center py-8">Bu araç henüz hiçbir rotada kullanılmamış</p>
@@ -422,7 +422,7 @@ const VehicleDetail: React.FC = () => {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Quick Actions */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="app-card p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Hızlı İşlemler</h2>
             <div className="space-y-2">
               <button 
@@ -451,7 +451,7 @@ const VehicleDetail: React.FC = () => {
           </div>
 
           {/* Maintenance Schedule */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="app-card p-6">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-900">Bakım Takvimi</h2>
               <button 
@@ -496,7 +496,7 @@ const VehicleDetail: React.FC = () => {
           </div>
 
           {/* Usage Statistics */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="app-card p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
               <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
               Kilometre İstatistikleri
@@ -536,7 +536,7 @@ const VehicleDetail: React.FC = () => {
 
           {/* ✅ YENİ: Son Sefer Bilgileri */}
           {lastJourney && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <div className="app-card p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <Activity className="w-5 h-5 mr-2 text-purple-600" />
                 Son Sefer Bilgileri
