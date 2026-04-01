@@ -1466,6 +1466,49 @@ const JourneyDetail: React.FC = () => {
     ? (failedStops / normalStops.length) * 100
     : 0;
 
+  const driverName = journey.driver?.fullName || journey.driver?.name || journey.route?.driver?.name || 'Atanmadi';
+  const driverPhone = journey.driver?.phoneNumber || journey.driver?.phone || journey.route?.driver?.phone;
+  const vehiclePlate = journey.route?.vehicle?.plateNumber || journey.vehicle?.plateNumber || 'Atanmadi';
+  const vehicleBrand = journey.route?.vehicle?.brand || journey.vehicle?.brand || '';
+  const vehicleModel = journey.route?.vehicle?.model || journey.vehicle?.model || '';
+  const vehicleMeta = [vehicleBrand, vehicleModel].filter(Boolean).join(' ');
+  const journeyStatusLabel =
+    journey.status === 'preparing' ? 'Hazirlaniyor' :
+    journey.status === 'planned' ? 'Planlandi' :
+    journey.status === 'started' ? 'Basladi' :
+    journey.status === 'in_progress' ? 'Devam Ediyor' :
+    journey.status === 'completed' ? 'Tamamlandi' :
+    journey.status === 'cancelled' ? 'Iptal Edildi' :
+    'Bilinmiyor';
+  const plannedDistanceKm = journey.totalDistance ?? 0;
+  const actualDistanceKm =
+    journey.startKm !== undefined && journey.endKm !== undefined
+      ? journey.endKm - journey.startKm
+      : null;
+  const distanceVarianceKm =
+    actualDistanceKm !== null
+      ? actualDistanceKm - plannedDistanceKm
+      : null;
+  const plannedDurationMinutes = journey.totalDuration ?? 0;
+  const actualDurationMinutes =
+    journey.completedAt && journey.startedAt
+      ? Math.round((new Date(journey.completedAt).getTime() - new Date(journey.startedAt).getTime()) / (1000 * 60))
+      : journey.status === 'completed' && journey.startedAt
+        ? Math.round((new Date().getTime() - new Date(journey.startedAt).getTime()) / (1000 * 60))
+        : null;
+  const durationVarianceMinutes =
+    actualDurationMinutes !== null
+      ? actualDurationMinutes - plannedDurationMinutes
+      : null;
+  const journeyDateLabel = journey.startedAt
+    ? new Date(journey.startedAt).toLocaleString('tr-TR', {
+        day: '2-digit',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    : new Date().toLocaleDateString('tr-TR');
+
   // Journey durumlarını kontrol et
   const isJourneyStarted = journey.status === 'in_progress' || journey.status === 'started';
   const isJourneyPlanned = journey.status === 'planned' || journey.status === 'preparing';
@@ -1512,7 +1555,7 @@ const JourneyDetail: React.FC = () => {
         <div className="flex items-center space-x-4">
           <button
             onClick={handleGoBack}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="app-icon-button"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -1545,8 +1588,8 @@ const JourneyDetail: React.FC = () => {
 
           {/* Mobile App Bilgilendirmesi */}
           {isJourneyStarted && (
-            <div className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 ring-1 ring-blue-200">
-              📱 Teslimat işlemleri mobil uygulama üzerinden yapılır
+            <div className="app-status-info">
+              Mobil uygulama uzerinden teslimat islemi
             </div>
           )}
 
@@ -1621,13 +1664,13 @@ const JourneyDetail: React.FC = () => {
             </div>
           </div>
           {isJourneyStarted ? (
-            <div className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-lg text-sm font-medium">
-              📱 Mobil Uygulama
+            <div className="app-status-warning">
+              Mobil uygulama
             </div>
           ) : (
             <button
               onClick={handleOptimizeJourney}
-              className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors flex items-center gap-2"
+              className="app-button-accent"
             >
               <Navigation className="w-4 h-4" />
               Optimize Et
@@ -1638,45 +1681,51 @@ const JourneyDetail: React.FC = () => {
 
       {/* ✅ YENİ: Gecikme Analizi Özet Kartı */}
       {normalStops.some((s: JourneyStop) => s.originalEstimatedArrivalTime) && (
-        <div className="bg-gradient-to-br from-blue-600 to-purple-700 rounded-lg shadow-lg p-6 text-white">
-          <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-            <Activity className="w-5 h-5" />
+        <div className="app-card p-6">
+          <h3 className="mb-4 flex items-center gap-2 text-lg font-bold text-slate-950">
+            <Activity className="h-5 w-5 text-slate-500" />
             Sefer Performans Özeti
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Mesafe Karşılaştırması */}
-            <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
-              <div className="text-sm opacity-90 mb-2">Mesafe</div>
+            <div className="app-subcard p-4">
+              <div className="mb-2 text-sm font-semibold text-slate-600">Mesafe</div>
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-xs opacity-75">Planlanan</div>
-                  <div className="text-2xl font-bold">
-                    {journey.totalDistance?.toFixed(1) || 0} km
+                  <div className="text-xs uppercase tracking-[0.16em] text-slate-400">Planlanan</div>
+                  <div className="text-2xl font-bold text-slate-950">
+                    {plannedDistanceKm.toFixed(1)} km
                   </div>
                 </div>
-                {journey.startKm !== undefined && journey.endKm !== undefined && (
+                {actualDistanceKm !== null && (
                   <>
-                    <div className="text-2xl opacity-50 mx-4">→</div>
+                    <div className="mx-4 text-xl text-slate-300">→</div>
                     <div>
-                      <div className="text-xs opacity-75">Gerçekleşen</div>
-                      <div className="text-2xl font-bold">
-                        {(journey.endKm - journey.startKm).toFixed(1)} km
+                      <div className="text-xs uppercase tracking-[0.16em] text-slate-400">Gerceklesen</div>
+                      <div className="text-2xl font-bold text-slate-950">
+                        {actualDistanceKm.toFixed(1)} km
                       </div>
                     </div>
                   </>
                 )}
               </div>
+              <p className="mt-4 text-sm font-medium text-slate-500">
+                Sapma:{' '}
+                <span className={distanceVarianceKm !== null && distanceVarianceKm > 0 ? 'text-amber-600' : 'text-emerald-600'}>
+                  {distanceVarianceKm !== null ? `${distanceVarianceKm > 0 ? '+' : ''}${distanceVarianceKm.toFixed(1)} km` : 'Hesaplanamadi'}
+                </span>
+              </p>
             </div>
 
             {/* Süre Karşılaştırması */}
-            <div className="bg-white/10 rounded-lg p-4 backdrop-blur-sm">
-              <div className="text-sm opacity-90 mb-2">Süre</div>
+            <div className="app-subcard p-4">
+              <div className="mb-2 text-sm font-semibold text-slate-600">Sure</div>
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-xs opacity-75">Planlanan</div>
-                  <div className="text-2xl font-bold">
-                    {journey.totalDuration
-                      ? `${Math.floor(journey.totalDuration / 60)}sa ${Math.round(journey.totalDuration % 60)}dk`
+                  <div className="text-xs uppercase tracking-[0.16em] text-slate-400">Planlanan</div>
+                  <div className="text-2xl font-bold text-slate-950">
+                    {plannedDurationMinutes
+                      ? `${Math.floor(plannedDurationMinutes / 60)}sa ${Math.round(plannedDurationMinutes % 60)}dk`
                       : '0sa 0dk'}
                   </div>
                 </div>
@@ -1701,10 +1750,10 @@ const JourneyDetail: React.FC = () => {
 
                   return actualDuration ? (
                     <>
-                      <div className="text-2xl opacity-50 mx-4">→</div>
+                      <div className="mx-4 text-xl text-slate-300">→</div>
                       <div>
-                        <div className="text-xs opacity-75">Gerçekleşen</div>
-                        <div className="text-2xl font-bold">
+                        <div className="text-xs uppercase tracking-[0.16em] text-slate-400">Gerceklesen</div>
+                        <div className="text-2xl font-bold text-slate-950">
                           {actualDuration}
                         </div>
                       </div>
@@ -1718,60 +1767,77 @@ const JourneyDetail: React.FC = () => {
       )}
 
       {/* Journey Info Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+      <div className="app-data-grid">
+        <div className="app-kpi">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-600">Sürücü</span>
-            <User className="w-4 h-4 text-gray-400" />
+            <span className="app-kpi-label">Surucu</span>
+            <User className="h-4 w-4 text-slate-400" />
           </div>
-          <p className="font-semibold text-gray-900">
-            {journey.driver?.fullName || journey.driver?.name || journey.route?.driver?.name || 'Atanmadı'}
+          <p className="mt-3 text-lg font-semibold text-slate-950">
+            {driverName}
           </p>
-          {(journey.driver?.phoneNumber || journey.driver?.phone || journey.route?.driver?.phone) && (
+          {driverPhone && (
             <a
-              href={`tel:${journey.driver?.phoneNumber || journey.driver?.phone || journey.route?.driver?.phone}`}
-              className="text-sm text-blue-600 hover:text-blue-700 flex items-center mt-1"
+              href={`tel:${driverPhone}`}
+              className="mt-2 inline-flex items-center gap-2 text-sm font-medium text-blue-700 hover:text-blue-800"
             >
-              <Phone className="w-3 h-3 mr-1" />
-              {journey.driver?.phoneNumber || journey.driver?.phone || journey.route?.driver?.phone}
+              <Phone className="h-3.5 w-3.5" />
+              {driverPhone}
             </a>
           )}
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+        <div className="app-kpi">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-600">Araç</span>
-            <Truck className="w-4 h-4 text-gray-400" />
+            <span className="app-kpi-label">Arac</span>
+            <Truck className="h-4 w-4 text-slate-400" />
           </div>
-          <p className="font-semibold text-gray-900">
-            {journey.route?.vehicle?.plateNumber || journey.vehicle?.plateNumber || 'Atanmadı'}
+          <p className="mt-3 text-lg font-semibold text-slate-950">
+            {vehiclePlate}
           </p>
-          <p className="text-sm text-gray-500">
-            {journey.route?.vehicle?.brand || journey.vehicle?.brand} {journey.route?.vehicle?.model || journey.vehicle?.model}
+          <p className="mt-2 text-sm text-slate-500">
+            {vehicleMeta || 'Arac detayi tanimli degil'}
           </p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-100">
+        <div className="app-kpi">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-600">Durum</span>
-            <Navigation className="w-4 h-4 text-gray-400" />
+            <span className="app-kpi-label">Durum</span>
+            <Navigation className="h-4 w-4 text-slate-400" />
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="mt-3 flex items-center space-x-2">
             {isJourneyStarted && (
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
             )}
-            <p className="font-semibold text-gray-900">
-              {journey.status === 'preparing' && 'Hazırlanıyor'}
-              {journey.status === 'planned' && 'Planlandı'}
-              {journey.status === 'started' && 'Başladı'}
-              {journey.status === 'in_progress' && 'Devam Ediyor'}
-              {journey.status === 'completed' && 'Tamamlandı'}
-              {journey.status === 'cancelled' && 'İptal Edildi'}
-            </p>
+            <p className="text-lg font-semibold text-slate-950">{journeyStatusLabel}</p>
           </div>
           {journey.liveLocation && (
-            <p className="text-sm text-gray-500 mt-1">
-              Hız: {journey.liveLocation.speed?.toFixed(0)} km/h
+            <p className="mt-2 text-sm text-slate-500">
+              Anlik hiz: {journey.liveLocation.speed?.toFixed(0)} km/h
+            </p>
+          )}
+        </div>
+
+        <div className="app-kpi">
+          <div className="flex items-center justify-between mb-2">
+            <span className="app-kpi-label">Sure / Mesafe</span>
+            <Clock className="h-4 w-4 text-slate-400" />
+          </div>
+          <p className="mt-3 text-lg font-semibold text-slate-950">{journeyDateLabel}</p>
+          <p className="mt-2 text-sm text-slate-500">
+            {plannedDurationMinutes ? `${Math.round(plannedDurationMinutes / 60)} sa` : '0 sa'} · {plannedDistanceKm.toFixed(1)} km
+          </p>
+          {actualDurationMinutes !== null && (
+            <p className="mt-2 text-sm text-slate-500">
+              Gerceklesen sure:{' '}
+              <span className="font-semibold text-slate-700">
+                {`${Math.floor(actualDurationMinutes / 60)}sa ${actualDurationMinutes % 60}dk`}
+              </span>
+              {durationVarianceMinutes !== null && (
+                <span className={durationVarianceMinutes > 0 ? 'text-amber-600' : 'text-emerald-600'}>
+                  {` (${durationVarianceMinutes > 0 ? '+' : ''}${durationVarianceMinutes} dk)`}
+                </span>
+              )}
             </p>
           )}
         </div>
@@ -1779,12 +1845,15 @@ const JourneyDetail: React.FC = () => {
 
       {/* Progress Bar - DÜZELTİLDİ: İki renkli */}
       <div className="app-card p-6">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-gray-900">İlerleme Durumu</h3>
-          <span className="text-sm text-gray-600">
-            {completedStops} başarılı, {failedStops} başarısız / {normalStops.length} aktif durak
-            {excludedStops.length > 0 && ` (${excludedStops.length} kaldırıldı)`}
-          </span>
+        <div className="mb-3 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h3 className="font-semibold text-gray-900">Ilerleme Durumu</h3>
+            <p className="mt-1 text-sm text-slate-500">
+              {completedStops} basarili, {failedStops} basarisiz / {normalStops.length} aktif durak
+              {excludedStops.length > 0 && ` (${excludedStops.length} kaldirildi)`}
+            </p>
+          </div>
+          <span className="text-sm font-semibold text-slate-500">%{Math.round(overallProgress)} tamamlandi</span>
         </div>
 
         {/* ✅ YENİ: İki renkli progress bar */}
@@ -1813,38 +1882,38 @@ const JourneyDetail: React.FC = () => {
         </div>
 
         {/* İstatistikler */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-          <div className="text-center">
-            <p className="text-2xl font-bold text-gray-900">
+        <div className="mt-4 app-data-grid xl:grid-cols-4">
+          <div className="app-metric-tile text-center">
+            <p className="text-2xl font-bold text-slate-950">
               {journey.totalDistance ? journey.totalDistance.toFixed(1) : '0.0'}
             </p>
-            <p className="text-sm text-gray-600">Toplam Mesafe (km)</p>
+            <p className="mt-1 text-sm text-slate-500">Toplam Mesafe (km)</p>
           </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-gray-900">
+          <div className="app-metric-tile text-center">
+            <p className="text-2xl font-bold text-slate-950">
               {journey.totalDuration ? Math.round(journey.totalDuration / 60) : 0}
             </p>
-            <p className="text-sm text-gray-600">Süre (saat)</p>
+            <p className="mt-1 text-sm text-slate-500">Sure (saat)</p>
           </div>
-          <div className="text-center">
+          <div className="app-metric-tile text-center">
             <p className="text-2xl font-bold text-green-600">{completedStops}</p>
-            <p className="text-sm text-gray-600">Başarılı</p>
+            <p className="mt-1 text-sm text-slate-500">Basarili</p>
           </div>
-          <div className="text-center">
+          <div className="app-metric-tile text-center">
             <p className="text-2xl font-bold text-red-600">{failedStops}</p>
-            <p className="text-sm text-gray-600">Başarısız</p>
+            <p className="mt-1 text-sm text-slate-500">Basarisiz</p>
           </div>
         </div>
 
         {/* ✅ YENİ: Kilometre Bilgileri */}
         {(journey.startKm !== undefined || journey.endKm !== undefined || journey.startFuel || journey.endFuel || journey.vehicleCondition) && (
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-4 pt-4 border-t border-gray-200">
+          <div className="mt-4 grid grid-cols-2 gap-4 border-t border-slate-200 pt-4 md:grid-cols-5">
             {journey.startKm !== undefined && (
-          <div className="app-subcard text-center p-3">
+              <div className="app-subcard p-3 text-center">
                 <p className="text-xl font-bold text-blue-900">
                   {journey.startKm.toLocaleString('tr-TR')}
                 </p>
-                <p className="text-xs text-blue-600">Başlangıç Km</p>
+                <p className="text-xs text-blue-600">Baslangic Km</p>
               </div>
             )}
             {journey.endKm !== undefined && (
@@ -1852,28 +1921,28 @@ const JourneyDetail: React.FC = () => {
                 <p className="text-xl font-bold text-green-900">
                   {journey.endKm.toLocaleString('tr-TR')}
                 </p>
-                <p className="text-xs text-green-600">Bitiş Km</p>
+                <p className="text-xs text-green-600">Bitis Km</p>
               </div>
             )}
             {journey.startKm !== undefined && journey.endKm !== undefined && (
               <div className="app-subcard text-center p-3">
-                <p className="text-xl font-bold text-purple-900">
+                <p className="text-xl font-bold text-violet-900">
                   {(journey.endKm - journey.startKm).toLocaleString('tr-TR')}
                 </p>
-                <p className="text-xs text-purple-600">Kat Edilen Km</p>
+                <p className="text-xs text-violet-600">Kat Edilen Km</p>
               </div>
             )}
             {journey.startFuel && journey.endFuel && (
               <div className="app-subcard text-center p-3">
-                <p className="text-xs text-yellow-600 mb-1">Yakıt Seviyesi</p>
+                <p className="mb-1 text-xs text-yellow-600">Yakit Seviyesi</p>
                 <p className="text-sm font-bold text-yellow-900">
                   {getFuelLabel(journey.startFuel)} → {getFuelLabel(journey.endFuel)}
                 </p>
               </div>
             )}
             {journey.vehicleCondition && (
-              <div className={`text-center rounded-lg p-3 ${getVehicleConditionColor(journey.vehicleCondition)}`}>
-                <p className="text-xs mb-1 opacity-75">Araç Durumu</p>
+              <div className={`rounded-2xl p-3 text-center ${getVehicleConditionColor(journey.vehicleCondition)}`}>
+                <p className="mb-1 text-xs opacity-75">Arac Durumu</p>
                 <p className="text-sm font-bold">
                   {getVehicleConditionLabel(journey.vehicleCondition)}
                 </p>
