@@ -1,10 +1,16 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
 
 namespace Monolith.WebAPI.Services.Optimization;
 
 public class OsrmRouteMatrixProvider
 {
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<OsrmRouteMatrixProvider> _logger;
     private readonly RoutingSettings _settings;
@@ -53,7 +59,7 @@ public class OsrmRouteMatrixProvider
         response.EnsureSuccessStatusCode();
 
         await using var responseStream = await response.Content.ReadAsStreamAsync();
-        var payload = await JsonSerializer.DeserializeAsync<OsrmTableResponse>(responseStream)
+        var payload = await JsonSerializer.DeserializeAsync<OsrmTableResponse>(responseStream, JsonOptions)
             ?? throw new InvalidOperationException("OSRM returned an empty payload.");
 
         if (!string.Equals(payload.Code, "Ok", StringComparison.OrdinalIgnoreCase))
@@ -110,9 +116,16 @@ public class OsrmRouteMatrixProvider
 
     private sealed class OsrmTableResponse
     {
+        [JsonPropertyName("code")]
         public string? Code { get; set; }
+
+        [JsonPropertyName("durations")]
         public List<List<double?>>? Durations { get; set; }
+
+        [JsonPropertyName("distances")]
         public List<List<double?>>? Distances { get; set; }
+
+        [JsonPropertyName("fallback_speed_cells")]
         public List<List<int>>? FallbackSpeedCells { get; set; }
     }
 }
