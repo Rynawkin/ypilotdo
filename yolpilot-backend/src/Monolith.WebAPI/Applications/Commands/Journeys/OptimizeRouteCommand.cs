@@ -165,11 +165,28 @@ public class OptimizeRouteCommandHandler : BaseAuthenticatedCommandHandler<Optim
             logger.LogInformation($"Stop {stop.Name}: ArriveBetweenStart={stop.ArriveBetweenStart}, ArriveBetweenEnd={stop.ArriveBetweenEnd}");
         }
 
-        // Excluded olmayan stops'ları al
+        // Excluded olmayan müşteri duraklarını al.
+        // Depoya dönüş, optimizer için bir müşteri stop'u değildir; sabit route end olarak ele alınır.
         var originalStops = route.Stops
-            .Where(s => !s.IsExcluded)
+            .Where(s => !s.IsExcluded && !IsDepotStop(s, route.Depot))
             .OrderBy(s => s.Order)
             .ToList();
+
+        var depotReturnStops = route.Stops
+            .Where(s => !s.IsExcluded && IsDepotStop(s, route.Depot))
+            .OrderBy(s => s.Order)
+            .ToList();
+
+        if (depotReturnStops.Count > 1)
+        {
+            logger.LogWarning(
+                "Route {RouteId} has {Count} depot return stops. The first one will be treated as the fixed route end.",
+                route.Id,
+                depotReturnStops.Count);
+        }
+
+        if (originalStops.Count == 0)
+            throw new ApiException("Route customer stops not found", 404);
 
         var invalidStops = originalStops
             .Select(stop => new
@@ -209,7 +226,11 @@ public class OptimizeRouteCommandHandler : BaseAuthenticatedCommandHandler<Optim
             Success = true
         };
 
-        logger.LogInformation($"BEFORE OPTIMIZE - Stop count: {originalStops.Count} (excluding {route.Stops.Count(s => s.IsExcluded)} excluded stops)");
+        logger.LogInformation(
+            "BEFORE OPTIMIZE - Customer stop count: {CustomerStopCount}, Excluded stop count: {ExcludedCount}, Depot return stop count: {DepotReturnStopCount}",
+            originalStops.Count,
+            route.Stops.Count(s => s.IsExcluded),
+            depotReturnStops.Count);
         
         // Time window kontrolü
         var hasTimeWindows = CheckForTimeWindows(originalStops);
@@ -503,6 +524,37 @@ public class OptimizeRouteCommandHandler : BaseAuthenticatedCommandHandler<Optim
                 OrderType = s.OrderType
             };
         }).ToList();
+
+        var firstStopConstraints = stops.Count(s => s.OrderType == OrderType.First);
+        var lastStopConstraints = stops.Count(s => s.OrderType == OrderType.Last);
+
+        if (firstStopConstraints > 1)
+        {
+            var constrainedStops = string.Join(", ", stops
+                .Where(s => s.OrderType == OrderType.First)
+                .Select(s => s.Name)
+                .Take(3));
+
+            return new OptimizationResultWithExclusions
+            {
+                Success = false,
+                Message = $"Birden fazla ilk durak kisiti var ({firstStopConstraints}). Ornek: {constrainedStops}. Depo cikisi sabit baslangictir; musterilerde en fazla bir ilk durak kullanin."
+            };
+        }
+
+        if (lastStopConstraints > 1)
+        {
+            var constrainedStops = string.Join(", ", stops
+                .Where(s => s.OrderType == OrderType.Last)
+                .Select(s => s.Name)
+                .Take(3));
+
+            return new OptimizationResultWithExclusions
+            {
+                Success = false,
+                Message = $"Birden fazla son durak kisiti var ({lastStopConstraints}). Ornek: {constrainedStops}. Depoya donus zaten sabit route end olarak islenir; musterilerde en fazla bir son durak kullanin."
+            };
+        }
         
         var routeStartTime = route.StartDetails?.StartTime ?? new TimeSpan(9, 0, 0);
         var result = await optimizationService.OptimizeWithExclusions(

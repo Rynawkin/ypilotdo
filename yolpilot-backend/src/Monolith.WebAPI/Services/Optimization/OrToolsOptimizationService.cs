@@ -616,6 +616,18 @@ namespace Monolith.WebAPI.Services.Optimization
         
         private static string BuildNoSolutionMessage(List<OptimizationStop> stops, TimeSpan routeStartTime)
         {
+            var firstStopConstraints = stops.Count(s => s.OrderType == Monolith.WebAPI.Data.Journeys.OrderType.First);
+            if (firstStopConstraints > 1)
+            {
+                return $"Birden fazla ilk durak kisiti var ({firstStopConstraints}). Depo cikisi sabit baslangictir; musterilerde en fazla bir ilk durak kullanin.";
+            }
+
+            var lastStopConstraints = stops.Count(s => s.OrderType == Monolith.WebAPI.Data.Journeys.OrderType.Last);
+            if (lastStopConstraints > 1)
+            {
+                return $"Birden fazla son durak kisiti var ({lastStopConstraints}). Depoya donus zaten sabit route end olarak islenir; musterilerde en fazla bir son durak kullanin.";
+            }
+
             var windowStops = stops
                 .Where(s => s.TimeWindowStart.HasValue || s.TimeWindowEnd.HasValue)
                 .ToList();
