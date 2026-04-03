@@ -8,13 +8,16 @@ namespace Monolith.WebAPI.Services.Optimization
     {
         private const int GoogleDirectionsMaxWaypoints = 25;
         private readonly ILogger<OrToolsOptimizationService> _logger;
+        private readonly IRouteMatrixProvider _routeMatrixProvider;
         private readonly GoogleApiService _googleApiService;
         
         public OrToolsOptimizationService(
             ILogger<OrToolsOptimizationService> logger,
+            IRouteMatrixProvider routeMatrixProvider,
             GoogleApiService googleApiService)
         {
             _logger = logger;
+            _routeMatrixProvider = routeMatrixProvider;
             _googleApiService = googleApiService;
         }
         
@@ -297,23 +300,24 @@ namespace Monolith.WebAPI.Services.Optimization
                         stops.Count, depotLatitude, depotLongitude, routeStartTime);
                 }
 
-                // 1) Google Directions API ile gerçek süreleri al (waypoints ile) - veya cache kullan
-                External.Google.Models.DirectionsResponse directionsResponse;
+                // Solver'a sahte matrix vermemek için gerçek bir all-pairs matrix sağlayıcısı kullan.
+                var matrixResult = await _routeMatrixProvider.BuildMatrixAsync(
+                    depotLatitude,
+                    depotLongitude,
+                    stops);
 
-                if (cachedDirectionsResponse != null)
+                foreach (var warning in matrixResult.Warnings)
                 {
-                    _logger.LogInformation("✅ Using CACHED Google Directions data (performance optimization - no redundant API call)");
-                    directionsResponse = cachedDirectionsResponse;
-                }
-                else
-                {
-                    _logger.LogInformation("Fetching real travel times from Google Directions API...");
-                    directionsResponse = await GetDirectionsForAllStops(depotLatitude, depotLongitude, stops);
+                    _logger.LogWarning("Route matrix warning ({Provider}): {Warning}", matrixResult.ProviderName, warning);
                 }
 
-                // 2) Mesafe ve süre matrisleri (Directions API'den alınan gerçek verilerle)
-                var distanceMatrix = BuildDistanceMatrixFromDirections(directionsResponse, depotLatitude, depotLongitude, stops);
-                var timeMatrix = BuildTimeMatrixFromDirections(directionsResponse, depotLatitude, depotLongitude, stops);
+                var distanceMatrix = matrixResult.DistanceMatrix;
+                var timeMatrix = matrixResult.TimeMatrix;
+
+                _logger.LogInformation(
+                    "Route matrix ready from {Provider} for {Count} stops",
+                    matrixResult.ProviderName,
+                    stops.Count);
 
                 // 3) Model
                 int vehicleNumber = 1;

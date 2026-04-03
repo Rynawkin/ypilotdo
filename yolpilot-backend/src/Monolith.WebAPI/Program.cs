@@ -39,6 +39,7 @@ using Monolith.WebAPI.Services.BackgroundJobs;
 using Monolith.WebAPI.Services.Cache;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.Configure<RoutingSettings>(builder.Configuration.GetSection(RoutingSettings.SectionName));
 
 // AZURE APP SERVICE Ã„Â°Ãƒâ€¡Ã„Â°N SADECE BU KADAR YETERLÃ„Â°
 if (!builder.Environment.IsDevelopment())
@@ -667,6 +668,10 @@ void AddDependencies()
     
     builder.Services.AddSingleton<GoogleApiService>();
     builder.Services.AddScoped<RouteXlService>();
+    builder.Services.AddScoped<GoogleDistanceMatrixProvider>();
+    builder.Services.AddScoped<OsrmRouteMatrixProvider>();
+    builder.Services.AddScoped<IRouteMatrixProvider, ConfigurableRouteMatrixProvider>();
+    builder.Services.AddScoped<IOrderedRouteDetailsProvider, OrderedRouteDetailsProvider>();
     builder.Services.AddScoped<OptimizeJourneyForDeviationCommandHandler>();
     builder.Services.AddScoped<OptimizeRouteCommandHandler>();
     builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
@@ -675,7 +680,7 @@ void AddDependencies()
     // WhatsApp Rate Limiting & Queue Services
     builder.Services.AddScoped<IWhatsAppRateLimiter, WhatsAppRateLimiter>();
     
-    // OR-Tools Optimization Service
+    // Route matrix + OR-Tools optimization
     builder.Services.AddScoped<IOptimizationService, OrToolsOptimizationService>();
     
     // ============= TEMPLATE & FEEDBACK SERVICES - YENÃ„Â° EKLENEN =============

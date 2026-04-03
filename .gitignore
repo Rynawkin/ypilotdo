@@ -1,5 +1,6 @@
 # Monorepo root ignores
 .git-backups/
+_codex_backups/
 **/node_modules/
 **/dist/
 **/build/

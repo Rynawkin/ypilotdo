@@ -220,6 +220,84 @@ public partial class Journey : BaseEntity
 
 public partial class Journey
 {
+    public void CreateStopsFromRoutePlan()
+    {
+        InitStops();
+
+        if (Route?.Stops == null || !Route.Stops.Any())
+        {
+            return;
+        }
+
+        var orderedRouteStops = Route.Stops
+            .Where(stop => !stop.IsExcluded)
+            .OrderBy(stop => stop.Order)
+            .ToList();
+
+        if (!orderedRouteStops.Any())
+        {
+            return;
+        }
+
+        var previousAddress = StartDetails.Address;
+        var previousLatitude = StartDetails.Latitude;
+        var previousLongitude = StartDetails.Longitude;
+
+        for (var index = 0; index < orderedRouteStops.Count; index++)
+        {
+            var routeStop = orderedRouteStops[index];
+            var arrivalTime = routeStop.EstimatedArrivalTime ?? StartDetails.StartTime;
+            var departureTime = routeStop.EstimatedDepartureTime;
+
+            Stops.Add(new JourneyStop
+            {
+                JourneyId = Id,
+                StopId = routeStop.Id,
+                RouteStopId = routeStop.Id,
+                Order = index + 1,
+                Distance = CalculateDistanceKm(previousLatitude, previousLongitude, routeStop.Latitude, routeStop.Longitude),
+                StartAddress = previousAddress,
+                StartLatitude = previousLatitude,
+                StartLongitude = previousLongitude,
+                EndAddress = routeStop.Address,
+                EndLatitude = routeStop.Latitude,
+                EndLongitude = routeStop.Longitude,
+                EstimatedArrivalTime = arrivalTime,
+                EstimatedDepartureTime = departureTime,
+                ArriveBetweenStart = routeStop.ArriveBetweenStart,
+                ArriveBetweenEnd = routeStop.ArriveBetweenEnd,
+                Status = JourneyStopStatus.Pending
+            });
+
+            previousAddress = routeStop.Address;
+            previousLatitude = routeStop.Latitude;
+            previousLongitude = routeStop.Longitude;
+        }
+
+        if (Stops.Count > 0)
+        {
+            Stops.Last().EstimatedDepartureTime = null;
+        }
+
+        Polyline = Route.Polyline;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    private static double CalculateDistanceKm(double lat1, double lon1, double lat2, double lon2)
+    {
+        const double earthRadiusKm = 6371d;
+        var dLat = DegreesToRadians(lat2 - lat1);
+        var dLon = DegreesToRadians(lon2 - lon1);
+        var a =
+            Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+            Math.Cos(DegreesToRadians(lat1)) * Math.Cos(DegreesToRadians(lat2)) *
+            Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+        var c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+        return earthRadiusKm * c;
+    }
+
+    private static double DegreesToRadians(double degrees) => degrees * (Math.PI / 180d);
+
     private void InitStops()
     {
         if (StartedAt.HasValue || FinishedAt.HasValue)
