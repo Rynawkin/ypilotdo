@@ -73,6 +73,11 @@ namespace Monolith.WebAPI.Controllers
                 _context.MarketingLeads.Add(lead);
                 await _context.SaveChangesAsync();
 
+                var geoContext = MarketingTrackingHelpers.GetGeoContext(
+                    Request,
+                    HttpContext.Connection.RemoteIpAddress?.ToString()
+                );
+
                 var analyticsEvent = new MarketingAnalyticsEvent
                 {
                     VisitorId = lead.VisitorId ?? $"lead-{lead.Id}",
@@ -90,7 +95,12 @@ namespace Monolith.WebAPI.Controllers
                     Browser = request.Browser?.Trim(),
                     Os = request.Os?.Trim(),
                     UserAgent = Request.Headers.UserAgent.ToString(),
-                    IpHash = MarketingTrackingHelpers.HashIp(HttpContext.Connection.RemoteIpAddress?.ToString()),
+                    IpHash = MarketingTrackingHelpers.HashIp(geoContext.IpAddress),
+                    IpAddress = geoContext.IpAddress,
+                    CountryCode = geoContext.CountryCode,
+                    CountryName = geoContext.CountryName,
+                    Region = geoContext.Region,
+                    City = geoContext.City,
                     LeadId = lead.Id,
                     OccurredAt = DateTime.UtcNow
                 };

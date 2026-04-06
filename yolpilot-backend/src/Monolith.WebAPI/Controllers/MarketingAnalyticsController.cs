@@ -36,6 +36,11 @@ public class MarketingAnalyticsController : ControllerBase
             return BadRequest("eventType zorunludur.");
         }
 
+        var geoContext = MarketingTrackingHelpers.GetGeoContext(
+            Request,
+            HttpContext.Connection.RemoteIpAddress?.ToString()
+        );
+
         var item = new MarketingAnalyticsEvent
         {
             VisitorId = request.VisitorId.Trim(),
@@ -55,7 +60,12 @@ public class MarketingAnalyticsController : ControllerBase
             Os = request.Os?.Trim(),
             MetadataJson = request.MetadataJson?.Trim(),
             UserAgent = Request.Headers.UserAgent.ToString(),
-            IpHash = MarketingTrackingHelpers.HashIp(HttpContext.Connection.RemoteIpAddress?.ToString()),
+            IpHash = MarketingTrackingHelpers.HashIp(geoContext.IpAddress),
+            IpAddress = geoContext.IpAddress,
+            CountryCode = geoContext.CountryCode,
+            CountryName = geoContext.CountryName,
+            Region = geoContext.Region,
+            City = geoContext.City,
             OccurredAt = request.OccurredAt ?? DateTime.UtcNow
         };
 
@@ -129,6 +139,28 @@ public class MarketingAnalyticsController : ControllerBase
             .Take(10)
             .ToListAsync();
 
+        var topLocations = await eventsQuery
+            .Where(x => x.EventType == "page_view" && (x.City != null || x.Region != null || x.CountryName != null))
+            .GroupBy(x => new
+            {
+                city = x.City ?? "Bilinmiyor",
+                region = x.Region ?? "Bilinmiyor",
+                country = x.CountryName ?? x.CountryCode ?? "Bilinmiyor"
+            })
+            .Select(group => new
+            {
+                city = group.Key.city,
+                region = group.Key.region,
+                country = group.Key.country,
+                sessions = group.Select(x => x.SessionId).Distinct().Count(),
+                visitors = group.Select(x => x.VisitorId).Distinct().Count(),
+                pageViews = group.Count()
+            })
+            .OrderByDescending(x => x.visitors)
+            .ThenByDescending(x => x.pageViews)
+            .Take(10)
+            .ToListAsync();
+
         var trend = await eventsQuery
             .GroupBy(x => x.OccurredAt.Date)
             .Select(group => new
@@ -173,6 +205,15 @@ public class MarketingAnalyticsController : ControllerBase
                     source = ordered.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.UtmSource))?.UtmSource ?? "direct",
                     medium = ordered.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.UtmMedium))?.UtmMedium ?? "none",
                     campaign = ordered.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.UtmCampaign))?.UtmCampaign ?? "organic",
+                    ipAddress = ordered.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.IpAddress))?.IpAddress,
+                    city = ordered.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.City))?.City,
+                    region = ordered.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Region))?.Region,
+                    country = ordered.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.CountryName))?.CountryName
+                              ?? ordered.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.CountryCode))?.CountryCode,
+                    referrer = ordered.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Referrer))?.Referrer,
+                    browser = ordered.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Browser))?.Browser,
+                    os = ordered.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Os))?.Os,
+                    deviceType = ordered.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.DeviceType))?.DeviceType,
                     pageViews = ordered.Count(x => x.EventType == "page_view"),
                     ctaClicks = ordered.Count(x => x.EventType == "cta_click"),
                     formSubmits = ordered.Count(x => x.EventType == "form_submit")
@@ -201,6 +242,7 @@ public class MarketingAnalyticsController : ControllerBase
             },
             topPages,
             topCampaigns,
+            topLocations,
             trend,
             leadTrend,
             recentSessions

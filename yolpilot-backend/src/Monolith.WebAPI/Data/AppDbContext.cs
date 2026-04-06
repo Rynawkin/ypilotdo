@@ -465,6 +465,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options, IPublisher pub
             entity.Property(e => e.Browser).HasMaxLength(120);
             entity.Property(e => e.Os).HasMaxLength(120);
             entity.Property(e => e.IpHash).HasMaxLength(128);
+            entity.Property(e => e.IpAddress).HasMaxLength(64);
+            entity.Property(e => e.CountryCode).HasMaxLength(8);
+            entity.Property(e => e.CountryName).HasMaxLength(120);
+            entity.Property(e => e.Region).HasMaxLength(120);
+            entity.Property(e => e.City).HasMaxLength(120);
             entity.Property(e => e.UserAgent).HasMaxLength(500);
             entity.Property(e => e.MetadataJson).HasMaxLength(4000);
 
@@ -472,6 +477,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options, IPublisher pub
             entity.HasIndex(e => new { e.SessionId, e.OccurredAt });
             entity.HasIndex(e => new { e.EventType, e.OccurredAt });
             entity.HasIndex(e => new { e.PagePath, e.OccurredAt });
+            entity.HasIndex(e => new { e.City, e.OccurredAt });
+            entity.HasIndex(e => new { e.IpAddress, e.OccurredAt });
 
             entity.HasOne(e => e.Lead)
                 .WithMany()

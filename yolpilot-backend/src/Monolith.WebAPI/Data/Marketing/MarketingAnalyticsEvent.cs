@@ -55,6 +55,21 @@ public class MarketingAnalyticsEvent : BaseEntity
     [MaxLength(128)]
     public string? IpHash { get; set; }
 
+    [MaxLength(64)]
+    public string? IpAddress { get; set; }
+
+    [MaxLength(8)]
+    public string? CountryCode { get; set; }
+
+    [MaxLength(120)]
+    public string? CountryName { get; set; }
+
+    [MaxLength(120)]
+    public string? Region { get; set; }
+
+    [MaxLength(120)]
+    public string? City { get; set; }
+
     [MaxLength(500)]
     public string? UserAgent { get; set; }
 

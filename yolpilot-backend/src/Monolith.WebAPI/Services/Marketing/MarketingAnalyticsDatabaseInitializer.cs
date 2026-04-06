@@ -26,6 +26,11 @@ CREATE TABLE IF NOT EXISTS dbo.marketinganalyticsevents (
     browser varchar(120) NULL,
     os varchar(120) NULL,
     iphash varchar(128) NULL,
+    ipaddress varchar(64) NULL,
+    countrycode varchar(8) NULL,
+    countryname varchar(120) NULL,
+    region varchar(120) NULL,
+    city varchar(120) NULL,
     useragent varchar(500) NULL,
     leadid integer NULL,
     metadatajson varchar(4000) NULL,
@@ -50,6 +55,15 @@ CREATE TABLE IF NOT EXISTS dbo.marketinganalyticsevents (
             "ALTER TABLE IF EXISTS dbo.marketingleads ADD COLUMN IF NOT EXISTS sessionid varchar(64) NULL;"
         };
 
+        var alterAnalyticsColumnsSql = new[]
+        {
+            "ALTER TABLE IF EXISTS dbo.marketinganalyticsevents ADD COLUMN IF NOT EXISTS ipaddress varchar(64) NULL;",
+            "ALTER TABLE IF EXISTS dbo.marketinganalyticsevents ADD COLUMN IF NOT EXISTS countrycode varchar(8) NULL;",
+            "ALTER TABLE IF EXISTS dbo.marketinganalyticsevents ADD COLUMN IF NOT EXISTS countryname varchar(120) NULL;",
+            "ALTER TABLE IF EXISTS dbo.marketinganalyticsevents ADD COLUMN IF NOT EXISTS region varchar(120) NULL;",
+            "ALTER TABLE IF EXISTS dbo.marketinganalyticsevents ADD COLUMN IF NOT EXISTS city varchar(120) NULL;"
+        };
+
         var indexSql = new[]
         {
             "CREATE INDEX IF NOT EXISTS ix_marketinganalyticsevents_visitorid_occurredat ON dbo.marketinganalyticsevents (visitorid, occurredat DESC);",
@@ -57,6 +71,8 @@ CREATE TABLE IF NOT EXISTS dbo.marketinganalyticsevents (
             "CREATE INDEX IF NOT EXISTS ix_marketinganalyticsevents_eventtype_occurredat ON dbo.marketinganalyticsevents (eventtype, occurredat DESC);",
             "CREATE INDEX IF NOT EXISTS ix_marketinganalyticsevents_pagepath_occurredat ON dbo.marketinganalyticsevents (pagepath, occurredat DESC);",
             "CREATE INDEX IF NOT EXISTS ix_marketinganalyticsevents_utmsource_utmcampaign ON dbo.marketinganalyticsevents (utmsource, utmcampaign);",
+            "CREATE INDEX IF NOT EXISTS ix_marketinganalyticsevents_city_occurredat ON dbo.marketinganalyticsevents (city, occurredat DESC);",
+            "CREATE INDEX IF NOT EXISTS ix_marketinganalyticsevents_ipaddress_occurredat ON dbo.marketinganalyticsevents (ipaddress, occurredat DESC);",
             "CREATE INDEX IF NOT EXISTS ix_marketingleads_utmsource_utmcampaign ON dbo.marketingleads (utmsource, utmcampaign);",
             "CREATE INDEX IF NOT EXISTS ix_marketingleads_visitorid ON dbo.marketingleads (visitorid);"
         };
@@ -66,6 +82,11 @@ CREATE TABLE IF NOT EXISTS dbo.marketinganalyticsevents (
             await context.Database.ExecuteSqlRawAsync(createAnalyticsTableSql);
 
             foreach (var sql in alterLeadColumnsSql)
+            {
+                await context.Database.ExecuteSqlRawAsync(sql);
+            }
+
+            foreach (var sql in alterAnalyticsColumnsSql)
             {
                 await context.Database.ExecuteSqlRawAsync(sql);
             }

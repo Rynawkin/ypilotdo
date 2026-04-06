@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   BarChart3,
-  ExternalLink,
   Eye,
   LayoutTemplate,
+  MapPinned,
   MousePointerClick,
   Send,
   TrendingUp,
@@ -25,6 +25,7 @@ interface OverviewResponse {
   };
   topPages: Array<{ page: string; views: number; visitors: number }>;
   topCampaigns: Array<{ source: string; medium: string; campaign: string; sessions: number; visitors: number }>;
+  topLocations: Array<{ city: string; region: string; country: string; sessions: number; visitors: number; pageViews: number }>;
   trend: Array<{ date: string; pageViews: number; ctaClicks: number; formSubmits: number; visitors: number }>;
   leadTrend: Array<{ date: string; leads: number }>;
   recentSessions: Array<{
@@ -36,6 +37,14 @@ interface OverviewResponse {
     source: string;
     medium: string;
     campaign: string;
+    ipAddress?: string | null;
+    city?: string | null;
+    region?: string | null;
+    country?: string | null;
+    referrer?: string | null;
+    browser?: string | null;
+    os?: string | null;
+    deviceType?: string | null;
     pageViews: number;
     ctaClicks: number;
     formSubmits: number;
@@ -152,7 +161,7 @@ const MarketingAnalyticsDashboard: React.FC = () => {
           <div className="app-eyebrow">Marketing Analytics</div>
           <h1 className="mt-2 text-3xl font-semibold text-slate-950">Reklam trafiği ve landing performansı</h1>
           <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600">
-            Ziyaretçi, oturum, CTA tıklaması, form gönderimi, kampanya kaynağı ve landing sayfa performansını tek yerden izleyin.
+            Ziyaretçi, oturum, CTA tıklaması, form gönderimi, kampanya kaynağı, IP ve şehir bazlı ziyaretleri tek yerden izleyin.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -267,29 +276,70 @@ const MarketingAnalyticsDashboard: React.FC = () => {
         </div>
 
         <div className="app-card p-6">
-          <h2 className="text-lg font-semibold text-slate-950">Son gelen lead’ler</h2>
+          <div className="flex items-center gap-3">
+            <div className="rounded-2xl bg-sky-50 p-3 text-sky-700">
+              <MapPinned className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-slate-950">En çok trafik gelen şehirler</h2>
+              <p className="text-sm text-slate-500">IP başlıklarından çözümlenen lokasyon dağılımı</p>
+            </div>
+          </div>
           <div className="mt-5 space-y-3">
-            {recentLeads.map((lead) => (
-              <div key={lead.id} className="rounded-2xl border border-slate-100 bg-white px-4 py-4">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="min-w-0">
-                    <div className="truncate text-sm font-semibold text-slate-900">{lead.name} · {lead.company}</div>
-                    <div className="truncate text-xs text-slate-500">
-                      {lead.utmSource || 'direct'} / {lead.utmMedium || 'none'} / {lead.utmCampaign || 'organic'}
+            {overview.topLocations.length > 0 ? (
+              overview.topLocations.map((item) => (
+                <div
+                  key={`${item.city}-${item.region}-${item.country}`}
+                  className="rounded-2xl border border-slate-100 bg-white px-4 py-4"
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="min-w-0">
+                      <div className="truncate text-sm font-semibold text-slate-900">
+                        {item.city !== 'Bilinmiyor' ? item.city : item.region}
+                      </div>
+                      <div className="truncate text-xs text-slate-500">
+                        {[item.region, item.country].filter((value) => value && value !== 'Bilinmiyor').join(' · ') || 'Konum yok'}
+                      </div>
+                    </div>
+                    <div className="text-right text-xs text-slate-500">
+                      <div>{item.visitors} ziyaretçi</div>
+                      <div>{item.sessions} oturum</div>
                     </div>
                   </div>
-                  <div className="text-xs text-slate-500">
-                    {new Date(lead.createdAt).toLocaleDateString('tr-TR')}
+                </div>
+              ))
+            ) : (
+              <div className="rounded-2xl border border-dashed border-slate-200 px-4 py-6 text-sm text-slate-500">
+                Henüz şehir verisi yok. Yeni ziyaretler geldikçe burada görünecek.
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="app-card p-6">
+        <h2 className="text-lg font-semibold text-slate-950">Son gelen lead&apos;ler</h2>
+        <div className="mt-5 space-y-3">
+          {recentLeads.map((lead) => (
+            <div key={lead.id} className="rounded-2xl border border-slate-100 bg-white px-4 py-4">
+              <div className="flex items-center justify-between gap-4">
+                <div className="min-w-0">
+                  <div className="truncate text-sm font-semibold text-slate-900">{lead.name} · {lead.company}</div>
+                  <div className="truncate text-xs text-slate-500">
+                    {lead.utmSource || 'direct'} / {lead.utmMedium || 'none'} / {lead.utmCampaign || 'organic'}
                   </div>
                 </div>
-                <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-500">
-                  {lead.landingPage && <span className="rounded-full bg-slate-100 px-3 py-1">{lead.landingPage}</span>}
-                  {lead.selectedPlan && <span className="rounded-full bg-blue-50 px-3 py-1 text-blue-700">{lead.selectedPlan}</span>}
-                  <span className="rounded-full bg-slate-100 px-3 py-1">{lead.source}</span>
+                <div className="text-xs text-slate-500">
+                  {new Date(lead.createdAt).toLocaleDateString('tr-TR')}
                 </div>
               </div>
-            ))}
-          </div>
+              <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-500">
+                {lead.landingPage && <span className="rounded-full bg-slate-100 px-3 py-1">{lead.landingPage}</span>}
+                {lead.selectedPlan && <span className="rounded-full bg-blue-50 px-3 py-1 text-blue-700">{lead.selectedPlan}</span>}
+                <span className="rounded-full bg-slate-100 px-3 py-1">{lead.source}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -301,6 +351,8 @@ const MarketingAnalyticsDashboard: React.FC = () => {
               <tr className="text-left text-xs uppercase tracking-[0.18em] text-slate-500">
                 <th className="pb-3 pr-4">Landing</th>
                 <th className="pb-3 pr-4">Kaynak</th>
+                <th className="pb-3 pr-4">Şehir</th>
+                <th className="pb-3 pr-4">IP / Cihaz</th>
                 <th className="pb-3 pr-4">Sayfa</th>
                 <th className="pb-3 pr-4">CTA</th>
                 <th className="pb-3 pr-4">Form</th>
@@ -311,12 +363,22 @@ const MarketingAnalyticsDashboard: React.FC = () => {
               {overview.recentSessions.map((session) => (
                 <tr key={session.sessionId}>
                   <td className="py-4 pr-4">
-                    <div className="max-w-[280px] truncate font-medium text-slate-900">{session.landingPage || '/'}</div>
-                    <div className="text-xs text-slate-500">{session.visitorId.slice(0, 8)}…</div>
+                    <div className="max-w-[260px] truncate font-medium text-slate-900">{session.landingPage || '/'}</div>
+                    <div className="text-xs text-slate-500">{session.visitorId.slice(0, 8)}...</div>
                   </td>
                   <td className="py-4 pr-4">
                     <div className="font-medium text-slate-700">{session.source}</div>
                     <div className="text-xs text-slate-500">{session.medium} · {session.campaign}</div>
+                  </td>
+                  <td className="py-4 pr-4">
+                    <div className="font-medium text-slate-700">{session.city || session.region || '-'}</div>
+                    <div className="text-xs text-slate-500">{session.country || '-'}</div>
+                  </td>
+                  <td className="py-4 pr-4">
+                    <div className="font-medium text-slate-700">{session.ipAddress || '-'}</div>
+                    <div className="text-xs text-slate-500">
+                      {[session.deviceType, session.browser, session.os].filter(Boolean).join(' · ') || '-'}
+                    </div>
                   </td>
                   <td className="py-4 pr-4">{session.pageViews}</td>
                   <td className="py-4 pr-4">{session.ctaClicks}</td>
