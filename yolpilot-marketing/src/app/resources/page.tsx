@@ -1,71 +1,72 @@
-import Link from 'next/link';
+import ResourcePageLayout from '@/components/landing/ResourcePageLayout';
+import { createPageMetadata } from '@/lib/seo';
 
-const resources = [
-  {
-    title: 'Dokumantasyon',
-    description: 'Kurulum ve kullanim adimlarini iceren temel dokumanlar.'
-  },
-  {
-    title: 'Rehberler',
-    description: 'Saha ekibi, rota planlama ve bildirim akislari icin pratik anlatimlar.'
-  },
-  {
-    title: 'SSS',
-    description: 'Sik sorulan sorular ve kisa yanitlar.'
-  },
-  {
-    title: 'Yasal Metinler',
-    description: 'KVKK, gizlilik ve kullanim kosullari bilgileri.'
-  }
-];
+export const metadata = createPageMetadata({
+  title: 'Kaynaklar',
+  description:
+    'YolPilot kaynak merkezi: dokümantasyon, rehberler, yardım başlıkları ve yasal metinlere tek noktadan erişin.',
+  path: '/resources',
+  keywords: ['YolPilot kaynaklar', 'lojistik yazılım dokümanları', 'operasyon rehberleri']
+});
 
 export default function ResourcesPage() {
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Kaynaklar</h1>
-          <p className="text-blue-100 max-w-3xl mx-auto">
-            YolPilot hakkinda dokumanlar, rehberler ve yardim basliklari.
-          </p>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-6">
-            {resources.map((item) => (
-              <div key={item.title} className="bg-gray-50 rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h2>
-                <p className="text-sm text-gray-600">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Dogru kaynaklara ulasalim</h2>
-          <p className="text-gray-600 mb-8">
-            Ihtiyac duydugunuz icerigi birlikte belirleyip paylasabiliriz.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/guides"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg"
-            >
-              Rehberler
-            </Link>
-            <Link
-              href="/docs"
-              className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-xl font-semibold transition-all duration-200"
-            >
-              Dokumanlar
-            </Link>
-          </div>
-        </div>
-      </section>
-    </div>
+    <ResourcePageLayout
+      eyebrow="Kaynak merkezi"
+      title="Teknik ve operasyonel kaynakları tek noktada toplayın"
+      description="YolPilot kaynak merkezi; satış öncesi değerlendirme, kurulum planı ve günlük kullanım süreci için ihtiyaç duyulan içerikleri daha düzenli bir yapıda toplamak üzere kurgulandı."
+      highlights={[
+        {
+          title: 'Dokümantasyon',
+          description:
+            'API, KVKK, gizlilik ve kullanım şartları gibi temel belgeleri tek çatı altında toplar.'
+        },
+        {
+          title: 'Kullanım rehberleri',
+          description:
+            'Operasyon ekibinin ürünü daha hızlı benimsemesi için pratik anlatımlar ve kısa senaryolar sunar.'
+        },
+        {
+          title: 'Destek yönlendirmesi',
+          description:
+            'Sorununuzu doğru kanala taşımak için yardım merkezi ve destek akışlarıyla birlikte çalışır.'
+        }
+      ]}
+      sections={[
+        {
+          title: 'Satış öncesi kaynaklar',
+          description:
+            'Karar vericilerin ürün kapsamını, güven yaklaşımını ve entegrasyon mantığını daha rahat değerlendirmesine yardımcı olur.'
+        },
+        {
+          title: 'Kurulum dönemi kaynakları',
+          description:
+            'İlk kurulum, kullanıcı eğitimi ve saha operasyonu devri için ihtiyaç duyulan içerikleri aynı akışta sunar.'
+        },
+        {
+          title: 'Sürekli kullanım kaynakları',
+          description:
+            'Raporlama, destek ve yeni ekip üyelerinin onboard edilmesi için tekrar başvurulabilecek bir kaynak katmanı oluşturur.'
+        }
+      ]}
+      bulletSection={{
+        title: 'Bu merkezde hangi içerikler olmalı?',
+        description:
+          'Kaynak merkezi sadece bir link listesi değil, satış ve kullanım sürecini kısaltan içerik kümesi olarak düşünülmeli.',
+        items: [
+          'Ürün ve entegrasyon özetleri',
+          'Kurulum ve eğitim rehberleri',
+          'Sık sorulan sorular ve yardım içerikleri',
+          'Yasal ve güvenlik başlıkları',
+          'Operasyon ekipleri için örnek akışlar'
+        ]
+      }}
+      footerTitle="İhtiyacınıza göre doğru kaynakları birlikte seçelim"
+      footerDescription="Teknik ekip, operasyon yöneticisi veya karar verici olarak hangi başlıklara ihtiyacınız olduğunu paylaşın. Sizi doğru içerik akışına yönlendirelim."
+      primaryTrackingName="resources-primary-cta"
+      secondaryCtaLabel="Dokümantasyon merkezi"
+      secondaryCtaHref="/docs"
+      secondaryTrackingName="resources-secondary-cta"
+    />
   );
 }

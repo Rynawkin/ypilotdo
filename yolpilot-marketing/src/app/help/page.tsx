@@ -1,63 +1,72 @@
-import Link from 'next/link';
+import ResourcePageLayout from '@/components/landing/ResourcePageLayout';
+import { createPageMetadata } from '@/lib/seo';
 
-const topics = [
-  'Hesap ve yetki yonetimi',
-  'Rota planlama ve seferler',
-  'Saha uygulamasi kullanimi',
-  'Bildirim ve iletisim ayarlari',
-  'Raporlama ve teslimat kaniti'
-];
+export const metadata = createPageMetadata({
+  title: 'Yardım Merkezi',
+  description:
+    'YolPilot yardım merkezi: hesap, rota planlama, saha uygulaması ve raporlama başlıkları için hızlı yönlendirme.',
+  path: '/help',
+  keywords: ['YolPilot yardım', 'lojistik yazılım destek', 'rota planlama yardım']
+});
 
 export default function HelpPage() {
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Yardim Merkezi</h1>
-          <p className="text-blue-100 max-w-3xl mx-auto">
-            YolPilot kullanimina dair kisa yanitlar ve temel konular.
-          </p>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-900 mb-3">Yardim Basliklari</h2>
-            <ul className="grid sm:grid-cols-2 gap-3 text-sm text-gray-700">
-              {topics.map((item) => (
-                <li key={item} className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-blue-600"></span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Sorunuz mu var?</h2>
-          <p className="text-gray-600 mb-8">
-            Ekibimiz destek taleplerinizi toparlayip en kisa surede yanitlar.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/support"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg"
-            >
-              Destek Kanallari
-            </Link>
-            <Link
-              href="/contact"
-              className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-xl font-semibold transition-all duration-200"
-            >
-              Iletisim
-            </Link>
-          </div>
-        </div>
-      </section>
-    </div>
+    <ResourcePageLayout
+      eyebrow="Yardım merkezi"
+      title="Doğru soruyu doğru kanala daha hızlı taşıyın"
+      description="YolPilot yardım merkezi, operasyon ekibinin en sık takıldığı başlıkları toparlar ve sizi destek, dokümantasyon veya demo akışına doğru şekilde yönlendirir."
+      highlights={[
+        {
+          title: 'Hesap ve yetkiler',
+          description:
+            'Rol yapısı, kullanıcı erişimleri ve ekip kurulumu ile ilgili temel başlıklarda hızlı yönlendirme sağlar.'
+        },
+        {
+          title: 'Rota ve sefer akışları',
+          description:
+            'Planlama, atama, saha ilerleyişi ve teslimat sonucu gibi ana operasyon akışlarını gruplayarak gösterir.'
+        },
+        {
+          title: 'Saha ve raporlama',
+          description:
+            'Mobil kullanım, bildirimler, teslimat kanıtı ve rapor ekranlarıyla ilgili sık sorulan soruları öne çıkarır.'
+        }
+      ]}
+      sections={[
+        {
+          title: 'Kurulum ve onboarding',
+          description:
+            'İlk ekip kurulumu, kullanıcı hesapları, depo ve araç yapısı gibi başlangıç adımlarını hızla netleştirir.'
+        },
+        {
+          title: 'Operasyon kullanımı',
+          description:
+            'Rota planlama, sefer oluşturma, saha takibi ve teslimat sonrası süreçlerin temel mantığını açıklar.'
+        },
+        {
+          title: 'Bildirim ve kanıt akışı',
+          description:
+            'Müşteri bilgilendirme, takip linki ve teslimat kanıtı gibi görünürlük sağlayan modüller için yönlendirme sunar.'
+        }
+      ]}
+      bulletSection={{
+        title: 'En çok aranan başlıklar',
+        description:
+          'Yardım merkezi özellikle aşağıdaki sorular için hızlı giriş noktası gibi çalışmalıdır.',
+        items: [
+          'Yeni kullanıcı veya sürücü nasıl eklenir?',
+          'Rota ve sefer akışı hangi sırayla ilerler?',
+          'Teslimat kanıtı ve fotoğraf zorunluluğu nasıl yönetilir?',
+          'Müşteri bilgilendirme akışları nasıl yapılandırılır?',
+          'Rapor ekranlarında hangi çıktılar takip edilmelidir?'
+        ]
+      }}
+      footerTitle="Doğrudan destek ekibiyle ilerlemek isterseniz"
+      footerDescription="Sorununuzu kısa bir notla paylaşın. Ekibimiz sizi doğru başlığa ve doğru sonraki adıma yönlendirsin."
+      primaryTrackingName="help-primary-cta"
+      secondaryCtaLabel="Destek kanalları"
+      secondaryCtaHref="/support"
+      secondaryTrackingName="help-secondary-cta"
+    />
   );
 }

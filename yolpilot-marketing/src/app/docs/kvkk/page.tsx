@@ -1,45 +1,61 @@
-import Link from 'next/link';
+import TrackedLink from '@/components/ui/TrackedLink';
+import { createPageMetadata } from '@/lib/seo';
 
-const sections = [
+export const metadata = createPageMetadata({
+  title: 'KVKK Aydınlatma Metni',
+  description:
+    'YolPilot kapsamında kişisel verilerin işlenmesine dair temel prensipler ve başlıca haklar hakkında bilgi alın.',
+  path: '/docs/kvkk',
+  keywords: ['YolPilot KVKK', 'aydınlatma metni', 'kişisel veri işleme']
+});
+
+type KvkkSection =
+  | {
+      title: string;
+      content: string;
+      items?: never;
+    }
+  | {
+      title: string;
+      items: string[];
+      content?: never;
+    };
+
+const sections: KvkkSection[] = [
   {
-    title: 'Veri Sorumlusu',
+    title: 'Veri sorumlusu',
     content:
-      'Bu aydinlatma metni, Bakircilar Grup tarafindan sunulan YolPilot hizmeti kapsaminda islenen kisiler veriler icindir.'
+      'Bu aydınlatma metni, Bakıcılar Grup tarafından sunulan YolPilot hizmeti kapsamında işlenen kişisel veriler için hazırlanmıştır.'
   },
   {
-    title: 'Islenen Veri Kategorileri',
+    title: 'İşlenen veri kategorileri',
+    items: ['Kimlik ve iletişim bilgileri', 'Müşteri ve operasyon verileri', 'Cihaz ve konum bilgileri', 'İşlem ve log kayıtları']
+  },
+  {
+    title: 'İşleme amaçları',
     items: [
-      'Kimlik ve iletisim bilgileri',
-      'Musteri ve operasyon verileri',
-      'Cihaz ve konum bilgileri',
-      'Islem ve log kayitlari'
+      'Hizmeti sunmak ve geliştirmek',
+      'Müşteri desteği sağlamak',
+      'Güvenlik ve yetkilendirme süreçlerini yürütmek',
+      'Yasal yükümlülükleri yerine getirmek'
     ]
   },
   {
-    title: 'Isleme Amaclari',
-    items: [
-      'Hizmeti sunmak ve gelistirmek',
-      'Musteri destegi saglamak',
-      'Guvenlik ve yetkilendirme sureclerini yurutmek',
-      'Yasal yukumlulukleri yerine getirmek'
-    ]
-  },
-  {
-    title: 'Veri Aktarimi',
+    title: 'Veri aktarımı',
     content:
-      'Veriler, hizmetin sunulmasi icin gerekli olan tedarikcilerle ve yasal gerekliliklerde yetkili kurumlarla paylasilabilir.'
+      'Veriler, hizmetin sunulması için gerekli olan tedarikçilerle ve yasal zorunluluklarda yetkili kurumlarla paylaşılabilir.'
   },
   {
-    title: 'Saklama ve Guvenlik',
+    title: 'Saklama ve güvenlik',
     content:
-      'Veriler amaca uygun sure boyunca saklanir ve yetkisiz erisimi onlemek icin guvenlik tedbirleri uygulanir.'
+      'Veriler amaca uygun süre boyunca saklanır ve yetkisiz erişimi önlemek için teknik ve idari güvenlik tedbirleri uygulanır.'
   },
   {
-    title: 'Haklariniz',
+    title: 'Haklarınız',
     items: [
-      'Veri isleme bilgisi talep etme',
-      'Verilerin duzeltilmesini isteme',
-      'Isleme faaliyetlerine itiraz etme',
+      'Veri işleme bilgisi talep etme',
+      'Verilerin düzeltilmesini isteme',
+      'İşleme faaliyetlerine itiraz etme',
       'Silme ve imha taleplerini iletme'
     ]
   }
@@ -48,49 +64,57 @@ const sections = [
 export default function KvkkPage() {
   return (
     <div className="min-h-screen bg-gray-50 pt-24">
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">KVKK Aydinlatma Metni</h1>
-          <p className="text-blue-100 max-w-3xl mx-auto">
-            Kisisel verilerin islenmesine iliskin temel prensipler ve haklariniz burada ozetlenir.
+      <section className="bg-gradient-to-br from-blue-700 via-blue-800 to-slate-900 py-20 text-white">
+        <div className="mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
+          <div className="inline-flex rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-blue-50">
+            Yasal bilgi
+          </div>
+          <h1 className="mt-6 text-4xl font-bold lg:text-5xl">KVKK Aydınlatma Metni</h1>
+          <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-blue-100">
+            YolPilot kapsamında kişisel verilerin hangi amaçlarla işlendiği, saklandığı ve hangi
+            haklara sahip olduğunuzun özetini burada bulabilirsiniz.
           </p>
         </div>
       </section>
 
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <section className="bg-white py-16">
+        <div className="mx-auto max-w-4xl space-y-6 px-4 sm:px-6 lg:px-8">
           {sections.map((section) => (
-            <div key={section.title} className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">{section.title}</h2>
+            <div key={section.title} className="rounded-3xl border border-gray-200 bg-gray-50 p-6 shadow-sm">
+              <h2 className="text-lg font-semibold text-gray-900">{section.title}</h2>
               {section.items ? (
-                <ul className="space-y-2 text-sm text-gray-600">
+                <ul className="mt-4 space-y-2 text-sm leading-6 text-gray-600">
                   {section.items.map((item) => (
-                    <li key={item} className="flex items-start gap-2">
-                      <span className="mt-1 h-2 w-2 rounded-full bg-blue-600"></span>
+                    <li key={item} className="flex gap-3">
+                      <span className="mt-2 h-2.5 w-2.5 rounded-full bg-blue-600" />
                       <span>{item}</span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-gray-600">{section.content}</p>
+                <p className="mt-4 text-sm leading-6 text-gray-600">{section.content}</p>
               )}
             </div>
           ))}
         </div>
       </section>
 
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Iletisim</h2>
-          <p className="text-gray-600 mb-6">
-            KVKK kapsamindaki talepleriniz icin info@yolpilot.com adresinden veya 0850 756 62 67 numarasindan bize ulasabilirsiniz.
+      <section className="bg-slate-950 py-20 text-white">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold lg:text-4xl">KVKK kapsamındaki talepleriniz için</h2>
+          <p className="mt-5 text-base leading-7 text-slate-300">
+            Veri işleme ve hak talepleriniz için bizimle iletişime geçebilirsiniz. Size doğru yasal
+            yönlendirmeyi sağlayalım.
           </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg"
-          >
-            Iletisim
-          </Link>
+          <div className="mt-8">
+            <TrackedLink
+              href="/contact?intent=demo"
+              trackingName="docs-kvkk-primary-cta"
+              className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-semibold text-slate-900 transition hover:bg-slate-100"
+            >
+              İletişim formu
+            </TrackedLink>
+          </div>
         </div>
       </section>
     </div>

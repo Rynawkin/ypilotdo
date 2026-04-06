@@ -1,163 +1,123 @@
-import Link from 'next/link';
+import TrackedLink from '@/components/ui/TrackedLink';
+import { PRIMARY_CTA_HREF } from '@/lib/marketing';
+import { createPageMetadata } from '@/lib/seo';
+
+export const metadata = createPageMetadata({
+  title: 'Müşteri Deneyimleri',
+  description: 'Farklı operasyon tiplerinden ekiplerin YolPilot ile daha görünür, düzenli ve denetlenebilir operasyon kurduğu örnek kullanım alanları.',
+  path: '/customers',
+  keywords: ['müşteri deneyimleri', 'lojistik vaka örnekleri', 'teslimat yönetimi kullanım örnekleri']
+});
 
 const stories = [
   {
-    title: 'E-ticaret Dagitim Ekibi',
-    sector: 'E-ticaret',
-    challenge: 'Manuel planlama ve daginik musteri bilgilendirme.',
-    outcome: [
-      'Rota planlama merkezi bir akisa tasindi',
-      'Musteri bilgilendirmeleri otomatiklestirildi',
-      'Teslimat kaniti tek panelde toplandi'
-    ],
-    quote:
-      'Operasyon ekibi tek panelden tum teslimatlari goruyor ve musteri iletisimini yonetiyor.'
+    sector: 'E-ticaret dağıtımı',
+    title: 'Yoğun günlerde bile rota, müşteri bilgisi ve teslimat kanıtı aynı akışta toplandı',
+    summary: 'Sipariş hacmi arttıkça ekipte mesaj, telefon ve manuel planlama trafiği büyüyordu. YolPilot ile planlama ekranı, sürücü uygulaması ve müşteri bilgilendirme tek operasyon akışına alındı.',
+    outcomes: ['Rota planlama tek panele taşındı', 'Takip bağlantıları ve teslimat bilgisi düzenlendi', 'Kanıt ve istisna kayıtları arşivlenebilir hale geldi']
   },
   {
-    title: 'Saha Servis Operasyonu',
-    sector: 'Teknik Servis',
-    challenge: 'Gorev atama ve saha raporlari icin ortak bir sistem yoktu.',
-    outcome: [
-      'Gorevler suruculere net bir akista iletildi',
-      'Saha notlari ve teslimat kaniti arsivlendi',
-      'Raporlama sureci standarda oturdu'
-    ],
-    quote:
-      'Saha ekibi artik gorevleri mobil uygulamadan takip ediyor, raporlar hazir geliyor.'
+    sector: 'Saha servis',
+    title: 'Görev planlama ve saha çıktıları tek sistemde standardize edildi',
+    summary: 'Görev atamaları ve servis notları ekipten ekibe değişiyordu. Mobil görev akışı ile hangi saha personelinin neyi, ne zaman ve hangi notla tamamladığı daha görünür hale geldi.',
+    outcomes: ['Görev akışı mobil uygulamaya taşındı', 'Fotoğraf, not ve iş tamamlama kaydı toplandı', 'Merkez ekip için günlük görünürlük arttı']
   },
   {
-    title: 'Perakende Dagitim Agi',
-    sector: 'Perakende',
-    challenge: 'Depo cikislarinda takip eksigi ve sefer planlamasi karmasasi.',
-    outcome: [
-      'Depo ve sefer takibi gorunur hale geldi',
-      'Planlama kurallari operasyon icin standartlasti',
-      'Iade ve iptal akislari netlesti'
-    ],
-    quote:
-      'Depolar arasi koordinasyon artik tek panelden yurutuluyor.'
-  },
-  {
-    title: 'Soguk Zincir Dagitim',
-    sector: 'Gida',
-    challenge: 'Zaman penceresi ve teslimat kaniti kritik hale geldi.',
-    outcome: [
-      'Zaman pencereleri net kurallarla yonetildi',
-      'Teslimat kaniti her durakta kaydedildi',
-      'Raporlama ile surec izlenebilir oldu'
-    ],
-    quote:
-      'Teslimat kanitlari tek yerde toplaninca ekip icinde guven artti.'
+    sector: 'Perakende sevkiyatı',
+    title: 'Mağaza ve bayi sevkiyatlarında istisna yönetimi daha net hale geldi',
+    summary: 'Şube ve bayi teslimatlarında iade, eksik teslimat ve not yönetimi operasyon sonunda toparlanıyordu. YolPilot ile bu kayıtlar süreç içinde daha düzenli izlendi.',
+    outcomes: ['Depo çıkışı ve teslimat sonucu daha görünür oldu', 'İade ve istisna akışları netleşti', 'Teslimat geçmişi raporlanabilir hale geldi']
   }
 ];
 
-const outcomes = [
+const benefits = [
   {
-    title: 'Daha duzenli planlama',
-    description: 'Rota ve sefer kurallari tutarli hale gelir.'
+    title: 'Tek panelde görünürlük',
+    description: 'Merkez ekip operasyonu rota, sürücü, araç ve teslimat düzeyinde daha rahat izler.'
   },
   {
-    title: 'Musteri gorunurlugu',
-    description: 'Bildirim ve takip linkleri ile surec netlesir.'
+    title: 'Sahada daha net iş akışı',
+    description: 'Sürücü ve saha ekipleri görev sırasını, müşteri bilgisini ve notları tek uygulamada görür.'
   },
   {
-    title: 'Saha uyumu',
-    description: 'Mobil uygulama ile gorevler dogru sirada ilerler.'
+    title: 'Daha düzenli kayıt yapısı',
+    description: 'Teslimat kanıtı, durum ve istisna bilgisi sonradan toplanmak yerine operasyon sırasında kayda alınır.'
   },
   {
-    title: 'Dokumantasyon',
-    description: 'Foto, imza ve notlar tek arsivde saklanir.'
+    title: 'Daha güçlü müşteri iletişimi',
+    description: 'Takip ve bildirim yapısı sayesinde müşteriye giden bilgi daha tutarlı hale gelir.'
   }
 ];
 
 export default function CustomersPage() {
   return (
     <div className="min-h-screen bg-gray-50 pt-24">
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Musteri Deneyimleri</h1>
-          <p className="text-blue-100 max-w-3xl mx-auto">
-            Farkli operasyon tiplerinden ekiplerin YolPilot ile olusturdugu ortak faydalar.
-          </p>
-          <div className="mt-8">
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 bg-white text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg"
-            >
-              Demo Talep Edin
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8">
-            {stories.map((story) => (
-              <div
-                key={story.title}
-                className="bg-gray-50 rounded-2xl p-8 border border-gray-200 shadow-sm"
-              >
-                <div className="text-xs uppercase tracking-wide text-blue-600 mb-2">
-                  {story.sector}
-                </div>
-                <h2 className="text-2xl font-semibold text-gray-900 mb-3">{story.title}</h2>
-                <p className="text-sm text-gray-600 mb-4">{story.challenge}</p>
-                <ul className="space-y-2 text-sm text-gray-700 mb-4">
-                  {story.outcome.map((item) => (
-                    <li key={item} className="flex items-start gap-2">
-                      <span className="mt-1 h-2 w-2 rounded-full bg-green-500"></span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-                <p className="text-sm italic text-gray-600">&quot;{story.quote}&quot;</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Ortak Ciktilar</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Farkli ekipler, ortak bir operasyon standardi etrafinda bulusuyor.
+      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 py-20 text-white">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl">
+            <div className="inline-flex rounded-full bg-white/15 px-4 py-2 text-sm font-semibold text-blue-50">
+              Operasyondan gerçek örnekler
+            </div>
+            <h1 className="mt-6 text-4xl font-bold leading-tight lg:text-5xl">
+              YolPilot, farklı ekiplerde aynı problemi çözer: görünürlük eksikliği
+            </h1>
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-blue-100">
+              Buradaki örnekler belirli bir sektörün tek ihtiyacını değil, planlama, saha ve teslimat tarafında farklı ekiplerin tekrar tekrar yaşadığı operasyon problemlerini anlatır.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {outcomes.map((item) => (
-              <div key={item.title} className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-600">{item.description}</p>
+        </div>
+      </section>
+
+      <section className="bg-white py-16">
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:px-8">
+          {stories.map((story) => (
+            <div key={story.title} className="rounded-3xl border border-gray-200 bg-gray-50 p-8 shadow-sm">
+              <div className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">{story.sector}</div>
+              <h2 className="mt-3 text-2xl font-semibold text-gray-900">{story.title}</h2>
+              <p className="mt-4 max-w-3xl text-sm leading-7 text-gray-600">{story.summary}</p>
+              <div className="mt-6 grid gap-3 md:grid-cols-3">
+                {story.outcomes.map((item) => (
+                  <div key={item} className="rounded-2xl bg-white px-4 py-4 text-sm text-gray-700">
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <div className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">En sık görülen etkiler</div>
+            <h2 className="mt-3 text-3xl font-bold text-gray-900">Sektör değişse de operasyon kazanımları benzerleşir</h2>
+          </div>
+          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {benefits.map((item) => (
+              <div key={item.title} className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-900">{item.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-gray-600">{item.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            Kendi operasyonunuza uygun akisi birlikte kuralim
-          </h2>
-          <p className="text-gray-600 mb-8">
-            Planlama, saha ve musteri tarafini tek deneyimde birlestirmek icin ekibimizle gorusun.
+      <section className="bg-slate-950 py-20 text-white">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold lg:text-4xl">Kendi operasyon yapınızı birlikte değerlendirelim</h2>
+          <p className="mt-5 text-base leading-7 text-slate-300">
+            Günlük hacminizi, saha ekibinizi ve müşteri bilgilendirme ihtiyaçlarınızı konuşalım. Hangi modüllerle başlamanız gerektiğini birlikte çıkaralım.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contact"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg"
+          <div className="mt-8">
+            <TrackedLink
+              href={PRIMARY_CTA_HREF}
+              trackingName="customers-footer-cta"
+              className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-semibold text-slate-900 transition hover:bg-slate-100"
             >
-              Iletisim
-            </Link>
-            <Link
-              href="/use-cases"
-              className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-xl font-semibold transition-all duration-200"
-            >
-              Kullanim Senaryolari
-            </Link>
+              Demo Talep Edin
+            </TrackedLink>
           </div>
         </div>
       </section>

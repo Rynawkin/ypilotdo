@@ -1,63 +1,72 @@
-import Link from 'next/link';
+import ResourcePageLayout from '@/components/landing/ResourcePageLayout';
+import { createPageMetadata } from '@/lib/seo';
 
-const guides = [
-  {
-    title: 'Rota Planlama Rehberi',
-    description: 'Durak siralama, zaman penceresi ve oncelik kurallari.'
-  },
-  {
-    title: 'Saha Uygulamasi Baslangic',
-    description: 'Surucu akisi, teslimat kaniti ve not yonetimi.'
-  },
-  {
-    title: 'Musteri Bildirimleri',
-    description: 'Takip linki ve bildirim senaryolari ayarlari.'
-  },
-  {
-    title: 'Raporlama Panolari',
-    description: 'Sefer ozeti ve performans gorunumleri.'
-  }
-];
+export const metadata = createPageMetadata({
+  title: 'Rehberler',
+  description:
+    'Rota planlama, saha uygulaması, müşteri bilgilendirme ve raporlama akışları için YolPilot rehberleri.',
+  path: '/guides',
+  keywords: ['YolPilot rehber', 'rota planlama rehberi', 'saha ekipleri kullanım']
+});
 
 export default function GuidesPage() {
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Rehberler</h1>
-          <p className="text-blue-100 max-w-3xl mx-auto">
-            YolPilot kullanimini hizlandiran pratik anlatimlar ve adim adim kilavuzlar.
-          </p>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-6">
-            {guides.map((item) => (
-              <div key={item.title} className="bg-gray-50 rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h2>
-                <p className="text-sm text-gray-600">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Rehber talebiniz var mi?</h2>
-          <p className="text-gray-600 mb-8">
-            Ihtiyac duydugunuz konuyu paylasin, birlikte planlayalim.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg"
-          >
-            Iletisim
-          </Link>
-        </div>
-      </section>
-    </div>
+    <ResourcePageLayout
+      eyebrow="Rehberler"
+      title="Kurulum ve kullanım sürecini hızlandıran kısa rehberler"
+      description="YolPilot rehber alanı; operasyon yöneticileri, saha ekipleri ve destek ekipleri için ürün kullanımını hızlandıran kısa ve uygulanabilir içeriklere odaklanır."
+      highlights={[
+        {
+          title: 'Rota planlama',
+          description:
+            'Durak yapısı, zaman penceresi ve operasyon kuralları gibi konuları başlangıç seviyesinde netleştirir.'
+        },
+        {
+          title: 'Saha uygulaması',
+          description:
+            'Sürücü akışı, teslimat kanıtı, not yönetimi ve istisna durumlarını sade bir akışta anlatır.'
+        },
+        {
+          title: 'Raporlama ve görünürlük',
+          description:
+            'Sefer özeti, performans görünümü ve müşteri iletişimi çıktılarının nasıl yorumlanacağını açıklar.'
+        }
+      ]}
+      sections={[
+        {
+          title: 'Operasyon yöneticisi başlangıç rehberi',
+          description:
+            'İlk kurulumdan sonra hangi ekranların hangi sırayla devreye alınacağını ve ekibin nasıl organize edileceğini gösterir.'
+        },
+        {
+          title: 'Sürücü onboarding akışı',
+          description:
+            'Mobil uygulama kullanımı, teslimat kanıtı, not ve durum güncelleme mantığını hızlıca öğretir.'
+        },
+        {
+          title: 'Müşteri iletişimi akışı',
+          description:
+            'Takip linki, bildirim senaryosu ve operasyon ile destek ekipleri arasındaki sorumluluk dağılımını netleştirir.'
+        }
+      ]}
+      bulletSection={{
+        title: 'En çok talep edilen rehber başlıkları',
+        description:
+          'Kurulum öncesinde veya ilk kullanım döneminde genelde aşağıdaki başlıklar daha fazla ihtiyaç yaratıyor.',
+        items: [
+          'İlk rota ve araç yapısı nasıl kurulmalı?',
+          'Sürücü ekibi için minimum eğitim akışı ne olmalı?',
+          'Teslimat kanıtı süreci nasıl standardize edilmeli?',
+          'Operasyon yöneticisi günlük olarak hangi ekranları izlemeli?',
+          'Destek ve operasyon ekipleri arasındaki iletişim nasıl sadeleştirilmeli?'
+        ]
+      }}
+      footerTitle="Ekibinize uygun rehber akışını birlikte çıkaralım"
+      footerDescription="Hazır rehberler dışında ekibinizin en çok zorlandığı kullanım senaryolarını konuşup size uygun demo akışını planlayabiliriz."
+      primaryTrackingName="guides-primary-cta"
+      secondaryCtaLabel="Özellikleri inceleyin"
+      secondaryCtaHref="/features"
+      secondaryTrackingName="guides-secondary-cta"
+    />
   );
 }

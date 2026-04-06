@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Monolith.WebAPI.Data;
 using Monolith.WebAPI.Data.Marketing;
+using Monolith.WebAPI.Services.Marketing;
 
 namespace Monolith.WebAPI.Controllers
 {
@@ -57,10 +58,44 @@ namespace Monolith.WebAPI.Controllers
                     Message = request.Message?.Trim(),
                     Source = request.Source ?? "website",
                     SelectedPlan = request.SelectedPlan?.Trim(),
+                    LandingPage = request.LandingPage?.Trim(),
+                    Referrer = request.Referrer?.Trim(),
+                    UtmSource = request.UtmSource?.Trim(),
+                    UtmMedium = request.UtmMedium?.Trim(),
+                    UtmCampaign = request.UtmCampaign?.Trim(),
+                    UtmContent = request.UtmContent?.Trim(),
+                    UtmTerm = request.UtmTerm?.Trim(),
+                    VisitorId = request.VisitorId?.Trim(),
+                    SessionId = request.SessionId?.Trim(),
                     Status = LeadStatus.New
                 };
 
                 _context.MarketingLeads.Add(lead);
+                await _context.SaveChangesAsync();
+
+                var analyticsEvent = new MarketingAnalyticsEvent
+                {
+                    VisitorId = lead.VisitorId ?? $"lead-{lead.Id}",
+                    SessionId = lead.SessionId ?? $"lead-session-{lead.Id}",
+                    EventType = "form_submit",
+                    EventName = request.Source ?? "website_form",
+                    PagePath = lead.LandingPage,
+                    Referrer = lead.Referrer,
+                    UtmSource = lead.UtmSource,
+                    UtmMedium = lead.UtmMedium,
+                    UtmCampaign = lead.UtmCampaign,
+                    UtmContent = lead.UtmContent,
+                    UtmTerm = lead.UtmTerm,
+                    DeviceType = request.DeviceType?.Trim(),
+                    Browser = request.Browser?.Trim(),
+                    Os = request.Os?.Trim(),
+                    UserAgent = Request.Headers.UserAgent.ToString(),
+                    IpHash = MarketingTrackingHelpers.HashIp(HttpContext.Connection.RemoteIpAddress?.ToString()),
+                    LeadId = lead.Id,
+                    OccurredAt = DateTime.UtcNow
+                };
+
+                _context.MarketingAnalyticsEvents.Add(analyticsEvent);
                 await _context.SaveChangesAsync();
 
                 _logger.LogInformation("New marketing lead created: {Email} from {Company}",
@@ -228,6 +263,18 @@ namespace Monolith.WebAPI.Controllers
         public string? Message { get; set; }
         public string? Source { get; set; }
         public string? SelectedPlan { get; set; }
+        public string? LandingPage { get; set; }
+        public string? Referrer { get; set; }
+        public string? UtmSource { get; set; }
+        public string? UtmMedium { get; set; }
+        public string? UtmCampaign { get; set; }
+        public string? UtmContent { get; set; }
+        public string? UtmTerm { get; set; }
+        public string? VisitorId { get; set; }
+        public string? SessionId { get; set; }
+        public string? DeviceType { get; set; }
+        public string? Browser { get; set; }
+        public string? Os { get; set; }
     }
 
     public class UpdateMarketingLeadRequest
@@ -236,4 +283,5 @@ namespace Monolith.WebAPI.Controllers
         public string? AdminNotes { get; set; }
         public string? AssignedTo { get; set; }
     }
+
 }

@@ -1,85 +1,72 @@
-import Link from 'next/link';
+import IndustryLandingPage from '@/components/landing/IndustryLandingPage';
+import { createPageMetadata } from '@/lib/seo';
 
-const focus = [
-  'Randevu ve görev planlaması',
-  'Saha ekipleri için net akış',
-  'Müşteri bildirimleri',
-  'İşlem ve servis kanıtı'
-];
-
-const approach = [
-  {
-    title: 'Planlama',
-    description: 'Randevu ve görevler tek panelden planlanır.'
-  },
-  {
-    title: 'Saha',
-    description: 'Teknisyenler görev listesini mobil uygulamada takip eder.'
-  },
-  {
-    title: 'Raporlama',
-    description: 'Saha işlemleri ve notlar tek arşivde toplanır.'
-  }
-];
+export const metadata = createPageMetadata({
+  title: 'Saha Servis ve Hizmet Operasyonları',
+  description: 'Teknik servis ve saha ekipleri için görev planlama, mobil iş akışı ve işlem kanıtını tek sistemde yönetin.',
+  path: '/industries/services',
+  keywords: ['saha servis yazılımı', 'teknik servis rota planlama', 'mobil görev yönetimi']
+});
 
 export default function ServicesIndustryPage() {
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Hizmet Operasyonları</h1>
-          <p className="text-blue-100 max-w-3xl mx-auto">
-            Teknik servis ve saha ekiplerinde planlama, takip ve dokümantasyonu tek akışta birleştirin.
-          </p>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktaları</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Hizmet operasyonlarında standardı ve görünürlüğü artırmaya odaklanırız.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-4">
-            {focus.map((item) => (
-              <div key={item} className="bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 shadow-sm flex items-center gap-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-blue-600"></span>
-                <span className="text-sm text-gray-700">{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-6">
-            {approach.map((item) => (
-              <div key={item.title} className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-600">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Saha ekibiniz için demo planlayın</h2>
-          <p className="text-gray-600 mb-8">
-            Hizmet operasyonunuza uygun kurguyu birlikte oluşturalım.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg"
-          >
-            Demo Talep Edin
-          </Link>
-        </div>
-      </section>
-    </div>
+    <IndustryLandingPage
+      eyebrow="Hizmet Operasyonları"
+      title="Saha ekipleri için görev planlama ve işlem takibini tek akışta toplayın"
+      description="YolPilot, teknik servis ve saha ekiplerinin görev planlama, adres notu, işlem kanıtı ve müşteri bilgilendirme akışını tek platformda yönetmesine yardımcı olur."
+      proof={[
+        { label: 'Odak alanı', value: 'Saha ekipleri' },
+        { label: 'Operasyon tipi', value: 'Görev ve randevu akışı' },
+        { label: 'Çıktı', value: 'Mobil iş emri + rapor' }
+      ]}
+      problems={[
+        'Randevular, görev notları ve saha ekiplerinin günlük planı farklı araçlarda tutulduğunda sahaya net iş akışı verilemiyor.',
+        'Adreste yapılan işlem, kullanılan malzeme veya servis notu düzenli kayda geçmediğinde ekip içi görünürlük düşüyor.',
+        'Müşteriye verilen bilgi ile saha ekibinin gerçek durumu aynı olmadığında memnuniyet etkileniyor.',
+        'Teknik servis ekiplerinde fotoğraf, imza ve iş tamamlama kaydı operasyonun doğal parçası haline gelemiyor.'
+      ]}
+      outcomes={[
+        {
+          title: 'Görev akışı standartlaşır',
+          description: 'Saha ekibi hangi işin ne zaman ve hangi notlarla yapılacağını aynı mobil akıştan görür.'
+        },
+        {
+          title: 'İşlem kanıtı kayda girer',
+          description: 'Fotoğraf, imza, not ve işlem tamamlanma bilgisi operasyon sırasında toplanır.'
+        },
+        {
+          title: 'Merkez ekip daha net yönetir',
+          description: 'Hangi görev tamamlandı, hangisi bekliyor, hangi ekip hangi adreste bunu tek ekrandan izleyebilirsiniz.'
+        }
+      ]}
+      workflow={[
+        {
+          title: 'Görev tiplerini ve ekipleri kurun',
+          description: 'Servis, saha ziyaretleri ve randevu tiplerini operasyonunuza uygun şekilde tanımlarız.'
+        },
+        {
+          title: 'Mobil iş akışını sadeleştirin',
+          description: 'Saha uygulamasında adres, görev notu, müşteri bilgisi ve kanıt toplama adımlarını netleştiririz.'
+        },
+        {
+          title: 'Tamamlanan işleri raporlayın',
+          description: 'Günlük görev sonucu, ekip performansı ve işlem arşivi aynı panelde görünür hale gelir.'
+        }
+      ]}
+      faqs={[
+        {
+          question: 'Teknik servis ve teslimat benzeri saha operasyonları birlikte yönetilebilir mi?',
+          answer: 'Evet. Farklı görev tiplerini aynı platform içinde farklı akışlarla yönetebilirsiniz.'
+        },
+        {
+          question: 'Sahada yapılan işlemler için fotoğraf ve imza tutulabiliyor mu?',
+          answer: 'Evet. Saha ekibi mobil uygulama üzerinden işlem kanıtını anında ekleyebilir.'
+        },
+        {
+          question: 'Randevu bazlı planlama destekleniyor mu?',
+          answer: 'Operasyon yapınıza göre zaman penceresi ve görev önceliği kurguları oluşturulabilir.'
+        }
+      ]}
+    />
   );
 }

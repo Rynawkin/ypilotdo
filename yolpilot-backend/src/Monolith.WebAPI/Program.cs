@@ -37,6 +37,7 @@ using Monolith.WebAPI.Services.Templates;
 using Monolith.WebAPI.Services.Feedback;
 using Monolith.WebAPI.Services.BackgroundJobs;
 using Monolith.WebAPI.Services.Cache;
+using Monolith.WebAPI.Services.Marketing;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<RoutingSettings>(builder.Configuration.GetSection(RoutingSettings.SectionName));
@@ -184,6 +185,7 @@ using (var scope = app.Services.CreateScope())
     {
         migrationLogger.LogInformation("Starting database migration...");
         var context = services.GetRequiredService<AppDbContext>();
+        await MarketingAnalyticsDatabaseInitializer.EnsureTablesAsync(context, migrationLogger);
         var seedDemoData = app.Environment.IsDevelopment() || app.Configuration.GetValue<bool>("StartupTasks:SeedDemoData");
         var migrateDriversOnStartup = app.Environment.IsDevelopment() || app.Configuration.GetValue<bool>("StartupTasks:MigrateDriversOnStartup");
         var resetDemoData = args.Contains("--reset-demo");

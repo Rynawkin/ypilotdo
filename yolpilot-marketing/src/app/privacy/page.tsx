@@ -1,79 +1,71 @@
 import Link from 'next/link';
+import { createPageMetadata } from '@/lib/seo';
+
+export const metadata = createPageMetadata({
+  title: 'Gizlilik Politikası',
+  description: 'YolPilot gizlilik politikası; veri işleme, saklama ve kullanıcı hakları hakkında özet bilgiler içerir.',
+  path: '/privacy',
+  keywords: ['gizlilik politikası', 'KVKK', 'veri işleme']
+});
 
 const sections = [
   {
-    title: 'Veri Sorumlusu',
-    content:
-      'YolPilot hizmetinin veri sorumlusu Bakircilar Grup olup, gizlilik prensipleri bu sayfada ozetlenmektedir.'
+    title: 'Veri sorumlusu',
+    content: 'YolPilot hizmeti kapsamında veri işleme süreçleri Bakırcılar Grup tarafından yürütülür. Güncel ve detaylı süreç bilgileri talep halinde paylaşılır.'
   },
   {
-    title: 'Toplanan Veriler',
-    content:
-      'Iletisim bilgileri, hesap verileri, operasyon kayitlari, cihaz ve konum bilgileri hizmetin sunulmasi icin islenebilir.'
+    title: 'Toplanan veriler',
+    content: 'İletişim bilgileri, hesap verileri, operasyon kayıtları, cihaz verileri ve teslimat sürecine ilişkin alanlar hizmetin sunulması için işlenebilir.'
   },
   {
-    title: 'Kullanim Amaclari',
-    content:
-      'Hizmeti sunmak, destek saglamak, guvenligi iyilestirmek ve yasal yukumlulukleri yerine getirmek icin kullanilir.'
+    title: 'İşleme amaçları',
+    content: 'Veriler; hizmetin sunulması, destek sağlanması, güvenliğin iyileştirilmesi, raporlama ve yasal yükümlülüklerin yerine getirilmesi amacıyla kullanılabilir.'
   },
   {
-    title: 'Veri Paylasimi',
-    content:
-      'Veriler, hizmetin devami icin gerekli olan tedarikcilerle ve yasal zorunluluklarda yetkili kurumlarla paylasilabilir.'
+    title: 'Saklama ve güvenlik',
+    content: 'Veriler iş amacıyla gerekli olan süre boyunca saklanır ve yetkisiz erişime karşı teknik ve operasyonel önlemlerle korunur.'
   },
   {
-    title: 'Saklama ve Guvenlik',
-    content:
-      'Veriler is amacina uygun sure boyunca saklanir ve yetkisiz erisime karsi korunur.'
-  },
-  {
-    title: 'Haklariniz',
-    content:
-      'Veri isleme ile ilgili taleplerinizi iletisim kanallarindan bize iletebilirsiniz.'
+    title: 'Haklarınız',
+    content: 'Veri işleme ile ilgili taleplerinizi iletişim kanallarımız üzerinden iletebilirsiniz. İlgili süreçler KVKK çerçevesinde değerlendirilir.'
   }
 ];
 
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-gray-50 pt-24">
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Gizlilik Politikasi</h1>
-          <p className="text-blue-100 max-w-3xl mx-auto">
-            YolPilot kullanicilarinin verileri gizlilik odakli bir yaklasimla islenir.
+      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 py-20 text-white">
+        <div className="mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
+          <h1 className="text-4xl font-bold lg:text-5xl">Gizlilik Politikası</h1>
+          <p className="mx-auto mt-6 max-w-3xl text-blue-100">
+            YolPilot kullanıcı verilerini hizmet sunumu, güvenlik ve operasyon sürekliliği odağında işler.
           </p>
         </div>
       </section>
 
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      <section className="bg-white py-16">
+        <div className="mx-auto max-w-4xl space-y-6 px-4 sm:px-6 lg:px-8">
           {sections.map((item) => (
-            <div key={item.title} className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h2>
-              <p className="text-sm text-gray-600">{item.content}</p>
+            <div key={item.title} className="rounded-2xl border border-gray-200 bg-gray-50 p-6">
+              <h2 className="text-lg font-semibold text-gray-900">{item.title}</h2>
+              <p className="mt-3 text-sm leading-6 text-gray-600">{item.content}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">KVKK Bilgilendirme</h2>
+      <section className="py-16">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">KVKK ve detay süreçler</h2>
           <p className="text-gray-600 mb-8">
-            KVKK kapsamindaki bilgilendirme metnini dokumanlar alaninda bulabilirsiniz.
+            KVKK aydınlatma metni ve özel talepleriniz için ilgili dokümanları inceleyebilir veya bizimle iletişime geçebilirsiniz.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/docs/kvkk"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg"
-            >
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <Link href="/docs/kvkk" className="rounded-xl bg-blue-600 px-8 py-4 font-semibold text-white shadow-lg transition hover:bg-blue-700">
               KVKK Metni
             </Link>
-            <Link
-              href="/contact"
-              className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-xl font-semibold transition-all duration-200"
-            >
-              Iletisim
+            <Link href="/contact?intent=demo" className="rounded-xl border-2 border-blue-600 px-8 py-4 font-semibold text-blue-600 transition hover:bg-blue-50">
+              İletişim
             </Link>
           </div>
         </div>

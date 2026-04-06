@@ -1,205 +1,114 @@
 # YolPilot Marketing Site Structure
 
-## 🎯 Site Architecture (Circuit.com inspired)
+## Birincil hedef
 
-### Primary Navigation
-- **Ana Sayfa** (/)
-- **Özellikler** (/features)
-- **Fiyatlandırma** (/pricing)
-- **Müşteriler** (/customers)
-- **Kaynaklar** (/resources)
-- **Hakkımızda** (/about)
-- **İletişim** (/contact)
+Instagram reklamları, organik arama ve doğrudan ziyaretçiler için YolPilot'u güven veren, ürün odaklı ve dönüşüm odaklı bir yapıda anlatmak.
 
-### Core Pages
+## Ana CTA sistemi
 
-#### 1. Ana Sayfa (/)
-**Hero Section:**
-- Headline: "Rota planlamanızı 80% hızlandırın, yakıt maliyetlerini 25% azaltın"
-- Subheadline: "YolPilot ile teslimat operasyonlarınızı optimize edin, gerçek zamanlı takip yapın"
-- CTA: "14 Gün Ücretsiz Deneyin" + "Demo İzle"
-- Hero Image: Interactive route map animation
+- Primary CTA: `Demo Talep Edin`
+- Primary hedef: `/contact?intent=demo`
+- Secondary CTA: `Platformu İnceleyin`
+- Secondary hedef: `/features`
 
-**Value Propositions (3 cards):**
-- ⚡ Zaman Tasarrufu: "Rota planlamayı 80% hızlandır"
-- 💰 Maliyet Azaltma: "Yakıt maliyetlerini 25% düşür" 
-- 📊 Görünürlük: "Gerçek zamanlı araç takibi"
+Bu yapı özellikle reklam trafiğinde tek ana dönüşüm hattı oluşturmak için kullanılır.
 
-**Features Preview (4 columns):**
-- Akıllı Rota Planlama
-- Mobil Sürücü Uygulaması  
-- Gerçek Zamanlı Takip
-- Performans Analitiği
+## Temel sayfalar
 
-**Social Proof:**
-- Müşteri logoları (Turkish companies)
-- Testimonials/Reviews
-- Usage statistics
+### Ana sayfa `/`
 
-**ROI Calculator Section:**
-- Interactive fuel cost calculator
-- "Kaç para tasarruf edersiniz?" widget
+- Hero
+- Sosyal kanıt / güven katmanları
+- Ürün değer önerileri
+- Özellik önizlemesi
+- Güven göstergeleri
+- Aralıklı ROI hesaplayıcısı
 
-#### 2. Özellikler (/features)
-**Feature Categories:**
-- Rota Optimizasyonu
-- Araç Takibi
-- Sürücü Mobil App
-- Müşteri Bildirimleri
-- Raporlama & Analytics
-- API & Entegrasyonlar
+### Ürün sayfaları
 
-**Each Feature Includes:**
-- Screenshot/Demo
-- Benefit explanation
-- ROI impact
-- Use cases
+- `/features`
+- `/comparison`
+- `/integrations`
+- `/security`
+- `/customers`
 
-#### 3. Fiyatlandırma (/pricing)
-**3-Tier Structure:**
-- **Starter**: Küçük işletmeler (₺299/ay)
-- **Professional**: Orta ölçekli (₺599/ay)
-- **Enterprise**: Büyük firmalar (Custom)
+Bu sayfalar genel bilgi sayfası değil, satışa destek olan landing page kalitesinde içerik taşır.
 
-**Pricing Features:**
-- Feature comparison table
-- 14-day free trial
-- Monthly/Annual toggle
-- ROI calculator integration
+### Senaryo ve sektör sayfaları
 
-#### 4. Müşteriler (/customers)
-**Customer Success Stories:**
-- Case studies
-- Industry-specific examples
-- ROI achievements
-- Video testimonials
+- `/use-cases`
+- `/industries/ecommerce`
+- `/industries/logistics`
+- `/industries/retail`
+- `/industries/services`
+- `/industries/food-delivery`
+- `/industries/cold-chain`
 
-#### 5. Kaynaklar (/resources)
-**Resource Types:**
-- Blog articles
-- White papers
-- Integration guides
-- API documentation
-- Help center
+Bu sayfalar reklam veya içerik trafiğini doğrudan karşılayacak şekilde tasarlanır:
 
-#### 6. Hakkımızda (/about)
-**Company Story:**
-- Mission & vision
-- Team information  
-- Company values
-- Turkish market focus
+- problem tanımı
+- YolPilot yaklaşımı
+- operasyon akışı
+- CTA
 
-#### 7. İletişim (/contact)
-**Contact Options:**
-- Contact form
-- Phone/Email
-- Office address
-- Support hours
-- Demo request form
+### Dönüşüm sayfaları
 
-### Additional Pages
+- `/contact`
+- `/start-trial`
+- `/demo`
 
-#### /demo
-- Interactive product demo
-- Self-guided tour
-- Feature walkthrough
-- Sign-up conversion
+## Ölçümleme yapısı
 
-#### /integrations
-- Integration marketplace
-- API documentation
-- Developer resources
-- Webhook guides
+Marketing site şu eventleri toplar:
 
-#### /security
-- Security certifications
-- KVKV compliance
-- Data protection
-- Trust & safety
+- `page_view`
+- `cta_click`
+- `form_submit`
 
-#### /industries
-**Industry-Specific Landing Pages:**
-- E-ticaret (/industries/ecommerce)
-- Lojistik & Kargo (/industries/logistics) 
-- Perakende (/industries/retail)
-- Hizmet Firmaları (/industries/services)
+Toplanan alanlar:
 
-### Technical Features
+- `visitorId`
+- `sessionId`
+- `landingPage`
+- `referrer`
+- `utmSource`
+- `utmMedium`
+- `utmCampaign`
+- `utmContent`
+- `utmTerm`
+- `deviceType`
+- `browser`
+- `os`
 
-#### Performance Optimizations
-- Next.js SSG for static pages
-- Image optimization
-- Lazy loading
-- Core Web Vitals optimization
+## Super Admin görünürlüğü
 
-#### SEO Strategy
-- Turkish keyword optimization
-- Schema markup
-- OpenGraph tags
-- Sitemap.xml
-- robots.txt
+`app.yolpilot.com` içinde super admin için ayrı analytics paneli bulunur:
 
-#### Analytics & Tracking
-- Google Analytics 4
-- Conversion tracking
-- Heatmap analysis
-- A/B testing setup
+- ziyaretçi sayısı
+- oturum sayısı
+- sayfa görüntüleme
+- CTA tıklamaları
+- form gönderimleri
+- lead oranı
+- top landing pages
+- top campaigns
+- recent sessions
+- recent leads
 
-#### Conversion Optimization
-- Multiple CTAs per page
-- Exit-intent popups
-- Lead magnets
-- Form optimization
-- Social proof placement
+## SEO yapısı
 
-## 🎨 Design System
+- Global site metadata
+- Per-page metadata helper
+- Canonical
+- OpenGraph
+- Twitter cards
+- `robots.ts`
+- `sitemap.ts`
 
-### Colors (Circuit-inspired)
-- Primary: Blue (#0066CC)
-- Secondary: Green (#00AA44)
-- Accent: Orange (#FF6B35)
-- Neutrals: Grays (#F8F9FA to #212529)
+## İçerik prensipleri
 
-### Typography
-- Headings: Inter/Poppins Bold
-- Body: Inter Regular
-- Mono: JetBrains Mono
-
-### Components
-- Navigation Header
-- Hero Section
-- Feature Cards
-- Pricing Tables
-- Testimonial Cards
-- Footer
-- CTA Buttons
-- Form Elements
-
-### Animations (Framer Motion)
-- Scroll-triggered animations
-- Route transitions  
-- Hover effects
-- Loading states
-- Interactive demos
-
-## 🚀 Implementation Priority
-
-### Phase 1: Foundation
-1. Navigation + Footer
-2. Homepage Hero
-3. Basic responsive design
-
-### Phase 2: Core Content  
-1. Features section
-2. Pricing page
-3. Social proof
-
-### Phase 3: Conversion Optimization
-1. ROI calculator
-2. Demo page
-3. Lead capture forms
-
-### Phase 4: Enhanced Features
-1. Animations
-2. Industry pages
-3. Blog/Resources
+- Türkçe karakterler düzgün kullanılmalı
+- Genel pazarlama jargonu yerine operasyon odaklı net dil kullanılmalı
+- Gerçekçi, ölçülü vaatler tercih edilmeli
+- ROI alanı kesin sonuç değil, aralık ve varsayım mantığıyla anlatılmalı
+- Görsel estetik kadar güven, açıklık ve dönüşüm mimarisi önemsenmeli

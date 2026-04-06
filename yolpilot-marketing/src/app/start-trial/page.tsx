@@ -1,5 +1,14 @@
 import React, { Suspense } from 'react';
 import TrialPageContent from './TrialPageContent';
+import { createPageMetadata } from '@/lib/seo';
+
+export const metadata = createPageMetadata({
+  title: 'Demo veya Hızlı Başlangıç',
+  description:
+    'YolPilot için demo planlayın veya uygulama hesabınızı açarak kurulum sürecine başlayın.',
+  path: '/start-trial',
+  keywords: ['YolPilot demo', 'lojistik yazılım deneme', 'rota planlama başlangıç']
+});
 
 function LoadingFallback() {
   return (

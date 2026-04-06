@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, Calculator, Clock3, Fuel, Route } from 'lucide-react';
+import TrackedLink from '@/components/ui/TrackedLink';
+import { PRIMARY_CTA_HREF, SECONDARY_CTA_HREF } from '@/lib/marketing';
 
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat('tr-TR', {
@@ -59,8 +60,7 @@ const ROICalculator: React.FC = () => {
           </div>
           <h2 className="text-3xl font-bold tracking-tight lg:text-5xl">Net vaat yerine makul bir aralıkla konuşmayı tercih ediyoruz.</h2>
           <p className="mt-5 text-lg leading-8 text-slate-300">
-            Aşağıdaki alan, operasyon büyüklüğüne göre oluşabilecek etkiyi yaklaşık bir aralıkta gösterir. Gerçek sonuç;
-            şehir dağılımı, zaman pencereleri, araç tipi ve saha disiplinine göre değişir.
+            Aşağıdaki alan, operasyon büyüklüğüne göre oluşabilecek etkiyi yaklaşık bir aralıkta gösterir. Gerçek sonuç; şehir dağılımı, zaman pencereleri, araç tipi ve saha disiplini gibi değişkenlere göre farklılaşır.
           </p>
         </motion.div>
 
@@ -175,8 +175,7 @@ const ROICalculator: React.FC = () => {
               </div>
 
               <div className="mt-6 rounded-2xl border border-white/10 bg-black/10 p-4 text-sm leading-7 text-slate-300">
-                Bu hesaplama; genel dağıtım operasyonları için hazırlanmış yaklaşık bir aralıktır. Gerçek tabloyu demo
-                sırasında kendi rota yapınız, teslimat pencereleriniz ve şehir dağılımınız ile birlikte değerlendiririz.
+                Bu hesaplama genel dağıtım operasyonları için hazırlanmış yaklaşık bir aralıktır. Gerçek tabloyu demo sırasında kendi rota yapınız, teslimat pencereleriniz ve şehir dağılımınız ile birlikte değerlendiririz.
               </div>
 
               <div className="mt-6 grid gap-3 text-sm text-slate-300 sm:grid-cols-3">
@@ -204,19 +203,21 @@ const ROICalculator: React.FC = () => {
               </div>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  href="/contact"
+                <TrackedLink
+                  href={PRIMARY_CTA_HREF}
+                  trackingName="roi-primary-cta"
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold !text-slate-900 transition-colors hover:bg-slate-100"
                 >
                   Demo Talep Edin
                   <ArrowRight className="h-4 w-4" />
-                </Link>
-                <Link
-                  href="/features"
+                </TrackedLink>
+                <TrackedLink
+                  href={SECONDARY_CTA_HREF}
+                  trackingName="roi-secondary-cta"
                   className="inline-flex items-center justify-center rounded-full border border-white/10 px-6 py-3 text-sm font-semibold !text-white transition-colors hover:bg-white/6"
                 >
                   Özellikleri İnceleyin
-                </Link>
+                </TrackedLink>
               </div>
             </div>
           </motion.div>

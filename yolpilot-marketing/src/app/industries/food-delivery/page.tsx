@@ -1,85 +1,72 @@
-import Link from 'next/link';
+import IndustryLandingPage from '@/components/landing/IndustryLandingPage';
+import { createPageMetadata } from '@/lib/seo';
 
-const focus = [
-  'Zaman hassas teslimat planlama',
-  'Sıcak yemek ve ürün takibi',
-  'Müşteri bilgilendirme',
-  'Sürücü koordinasyonu'
-];
-
-const approach = [
-  {
-    title: 'Planlama',
-    description: 'Siparişleri zaman pencerelerine göre rotalara dağıtırız.'
-  },
-  {
-    title: 'Saha',
-    description: 'Sürücüler teslimat sıralarını mobil uygulamada görür.'
-  },
-  {
-    title: 'Müşteri',
-    description: 'Takip linki ve durum bildirimleri ile iletişim sağlanır.'
-  }
-];
+export const metadata = createPageMetadata({
+  title: 'Yemek ve Hızlı Teslimat Operasyonları',
+  description: 'Yemek ve hızlı dağıtım ekipleri için rota görünürlüğü, teslimat akışı ve müşteri bilgilendirme yapısını güçlendirin.',
+  path: '/industries/food-delivery',
+  keywords: ['yemek teslimatı yazılımı', 'hızlı teslimat operasyonu', 'kurye yönetimi']
+});
 
 export default function FoodDeliveryIndustryPage() {
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Yemek Teslimatı</h1>
-          <p className="text-blue-100 max-w-3xl mx-auto">
-            Yemek teslimatında hızlı planlama ve net iletişim için YolPilot kullanın.
-          </p>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktaları</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Teslimat süreci, saha ekibi ve müşteri bilgilendirmesini tek akışta birleştiririz.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-4">
-            {focus.map((item) => (
-              <div key={item} className="bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 shadow-sm flex items-center gap-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-blue-600"></span>
-                <span className="text-sm text-gray-700">{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-6">
-            {approach.map((item) => (
-              <div key={item.title} className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-600">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Yemek teslimatı için demo planlayın</h2>
-          <p className="text-gray-600 mb-8">
-            Sipariş akışınıza uygun kurgu için ekibimizle görüşün.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg"
-          >
-            Demo Talep Edin
-          </Link>
-        </div>
-      </section>
-    </div>
+    <IndustryLandingPage
+      eyebrow="Yemek Teslimatı"
+      title="Zaman hassas teslimatlarda saha hızını kaybetmeden görünürlüğü artırın"
+      description="YolPilot, hızlı teslimat ve yemek operasyonlarında kurye akışını, teslimat durumunu ve müşteri bilgilendirme yapısını merkezden yönetmenize yardımcı olur."
+      proof={[
+        { label: 'Odak alanı', value: 'Hızlı teslimat' },
+        { label: 'Operasyon tipi', value: 'Kurye koordinasyonu' },
+        { label: 'Çıktı', value: 'Durum + hız + görünürlük' }
+      ]}
+      problems={[
+        'Kısa teslimat sürelerinde operasyon büyüdükçe hangi kurye ne durumda sorusu görünmez hale geliyor.',
+        'Sipariş ve saha bilgisi farklı sistemlerde kaldığında müşteri tarafında tutarlı iletişim zorlaşıyor.',
+        'Gecikme, başarısız teslimat veya rota sapması ancak operasyon sonrasında fark ediliyor.',
+        'Yüksek hacimde teslimat sonucu ve iş kanıtı arşivi düzenli tutulmadığında kalite kontrol zorlaşıyor.'
+      ]}
+      outcomes={[
+        {
+          title: 'Kurye akışı daha net görünür',
+          description: 'Aktif görev, teslimat sonucu ve saha notları merkezi panelde daha net izlenir.'
+        },
+        {
+          title: 'Müşteri tarafı daha tutarlı olur',
+          description: 'Teslimat durumuna göre bilgilendirme kurgusu ve son kayıtlar daha güvenilir hale gelir.'
+        },
+        {
+          title: 'Yoğun saatlerde kontrol kaybı azalır',
+          description: 'Hızlı teslimat temposunda operasyonu yalnızca mesajlarla değil, görünür veriyle yönetebilirsiniz.'
+        }
+      ]}
+      workflow={[
+        {
+          title: 'Teslimat tiplerini ve akışlarını kurun',
+          description: 'Hızlı teslimat yapınıza göre görev tipi, öncelik ve bilgilendirme kurgusunu belirleriz.'
+        },
+        {
+          title: 'Kurye uygulamasını netleştirin',
+          description: 'Kuryelerin teslimat sırası, notlar ve durum güncellemeleri tek mobil akışta toplanır.'
+        },
+        {
+          title: 'Yoğunluğu merkezden izleyin',
+          description: 'Gecikme, saha sapması ve teslimat sonucu günlük operasyonda daha hızlı görünür hale gelir.'
+        }
+      ]}
+      faqs={[
+        {
+          question: 'Canlı yemek teslimatı kadar hızlı operasyonlarda da kullanılabilir mi?',
+          answer: 'Evet. Yoğun ve zaman baskısı olan teslimat akışlarında görünürlük ve saha koordinasyonu için kullanılabilir.'
+        },
+        {
+          question: 'Kurye tarafı mobil uygulamadan mı yürür?',
+          answer: 'Evet. Görev listesi, teslimat durumu ve not akışı mobil uygulama üzerinden yönetilebilir.'
+        },
+        {
+          question: 'Müşteri iletişimi destekleniyor mu?',
+          answer: 'Bildirim ve takip yapısı, operasyonunuza göre kurgulanabilir.'
+        }
+      ]}
+    />
   );
 }

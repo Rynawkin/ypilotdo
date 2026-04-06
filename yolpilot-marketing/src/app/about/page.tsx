@@ -1,99 +1,109 @@
-import Link from 'next/link';
+import TrackedLink from '@/components/ui/TrackedLink';
+import { PRIMARY_CTA_HREF } from '@/lib/marketing';
+import { createPageMetadata } from '@/lib/seo';
+
+export const metadata = createPageMetadata({
+  title: 'Hakkımızda',
+  description: 'YolPilot’un neden geliştirildiğini, hangi operasyon problemlerine odaklandığını ve ekibimizin yaklaşımını keşfedin.',
+  path: '/about',
+  keywords: ['YolPilot hakkında', 'rota optimizasyon platformu', 'lojistik yazılım ekibi']
+});
 
 const values = [
   {
-    title: 'Operasyon netligi',
-    description: 'Planlama, saha ve raporlama tek akista birlesir.'
+    title: 'Operasyon netliği',
+    description: 'Planlama, saha ve raporlama aynı veri akışına bağlandığında ekipler daha hızlı karar verir.'
   },
   {
-    title: 'Saha uyumu',
-    description: 'Mobil uygulama ile ekipler ayni veriye bakar.'
+    title: 'Sahaya uygun tasarım',
+    description: 'Ofis paneli kadar sürücü ve saha uygulamasının da gerçekten kullanılabilir olması gerekir.'
   },
   {
-    title: 'Musteri guveni',
-    description: 'Teslimat kaniti ve bilgilendirme standart hale gelir.'
+    title: 'Gerçekçi vaat',
+    description: 'Hızlı satış yerine sürdürülebilir, raporlanabilir ve operasyon içinde karşılığı olan faydaya odaklanırız.'
   }
 ];
 
 const approach = [
   {
-    title: 'Dinleme ve analiz',
-    description: 'Operasyonunuzu ve ihtiyaclarinizi birlikte netlestiririz.'
+    title: 'Operasyonu dinleriz',
+    description: 'Önce saha, depo, sürücü ve müşteri akışınızı anlamaya çalışırız.'
   },
   {
-    title: 'Uyarlama ve kurulum',
-    description: 'Sistem ayarlari ve veri aktarimini planlariz.'
+    title: 'Doğru yapıyı kurarız',
+    description: 'Tek tip çözüm yerine, ekip yapınıza uygun modül ve kuralları birlikte belirleriz.'
   },
   {
-    title: 'Surekli gelisim',
-    description: 'Geri bildirimleri toplayip sureci iyilestiririz.'
+    title: 'Canlıya geçişi destekleriz',
+    description: 'Kurulum, onboarding ve ilk operasyonların kontrolünü birlikte yürütürüz.'
   }
 ];
 
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-gray-50 pt-24">
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Hakkimizda</h1>
-          <p className="text-blue-100 max-w-3xl mx-auto">
-            YolPilot, Bakircilar Grup tarafindan saha ve dagitim operasyonlarini
-            kolaylastirmak icin gelistirilen bir platformdur.
-          </p>
+      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 py-20 text-white">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl">
+            <div className="inline-flex rounded-full bg-white/15 px-4 py-2 text-sm font-semibold text-blue-50">
+              YolPilot hakkında
+            </div>
+            <h1 className="mt-6 text-4xl font-bold leading-tight lg:text-5xl">
+              YolPilot, saha ve dağıtım operasyonlarını daha görünür hale getirmek için geliştirildi
+            </h1>
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-blue-100">
+              Operasyon ekipleri büyüdükçe problem yalnızca rota planlama değil; iletişim, kanıt, görünürlük ve koordinasyon oluyor. YolPilot bu yüzden tek ekrandan çok, tek operasyon yapısına odaklanır.
+            </p>
+          </div>
         </div>
       </section>
 
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktamiz</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Ekiplerin planlama, saha ve musteri iletisimi arasinda kaybolmasini
-              engelleyip operasyonu netlestirmek.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
+      <section className="bg-white py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-6 md:grid-cols-3">
             {values.map((item) => (
-              <div key={item.title} className="bg-gray-50 rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-600">{item.description}</p>
+              <div key={item.title} className="rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm">
+                <h2 className="text-xl font-semibold text-gray-900">{item.title}</h2>
+                <p className="mt-3 text-sm leading-6 text-gray-600">{item.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Nasil Calisiyoruz</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Kurulumdan operasyon takibine kadar ekiplerinizle birlikte ilerleriz.
-            </p>
+      <section className="py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <div className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">Nasıl çalışıyoruz?</div>
+            <h2 className="mt-3 text-3xl font-bold text-gray-900">Kurulumdan önce sistem değil, iş akışı konuşuruz</h2>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {approach.map((item) => (
-              <div key={item.title} className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-600">{item.description}</p>
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {approach.map((item, index) => (
+              <div key={item.title} className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                <div className="text-sm font-semibold text-blue-600">Adım {index + 1}</div>
+                <h3 className="mt-3 text-lg font-semibold text-gray-900">{item.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-gray-600">{item.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">YolPilot ile tanisin</h2>
-          <p className="text-gray-600 mb-8">
-            Operasyonunuz icin dogru akisi birlikte belirleyelim.
+      <section className="bg-slate-950 py-20 text-white">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold lg:text-4xl">Operasyonunuzu birlikte dinleyelim</h2>
+          <p className="mt-5 text-base leading-7 text-slate-300">
+            Günlük dağıtım yapınızı, saha ekibinizi ve görmek istediğiniz modülleri birlikte konuşalım.
           </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg"
-          >
-            Iletisim
-          </Link>
+          <div className="mt-8">
+            <TrackedLink
+              href={PRIMARY_CTA_HREF}
+              trackingName="about-footer-cta"
+              className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-semibold text-slate-900 transition hover:bg-slate-100"
+            >
+              Demo Talep Edin
+            </TrackedLink>
+          </div>
         </div>
       </section>
     </div>

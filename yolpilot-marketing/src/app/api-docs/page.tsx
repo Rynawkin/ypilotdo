@@ -1,67 +1,72 @@
-import Link from 'next/link';
+import ResourcePageLayout from '@/components/landing/ResourcePageLayout';
+import { createPageMetadata } from '@/lib/seo';
 
-const sections = [
-  {
-    title: 'API Kapsami',
-    description: 'Siparis, musteri ve rota verisini sistemler arasinda akitmak icin tasarlanmistir.'
-  },
-  {
-    title: 'Guvenlik',
-    description: 'Yetki anahtari, rol bazli erisim ve loglama ile korumali bir yapi sunar.'
-  },
-  {
-    title: 'Entegrasyon Destegi',
-    description: 'Kurulumda teknik ekip ve dokumantasyon destegi ile birlikte ilerlenir.'
-  }
-];
+export const metadata = createPageMetadata({
+  title: 'API ve Entegrasyon Desteği',
+  description:
+    'YolPilot API kapsamı, entegrasyon yaklaşımı ve teknik ekip desteği hakkında özet bilgi alın.',
+  path: '/api-docs',
+  keywords: ['YolPilot API', 'lojistik yazılım entegrasyonu', 'rota planlama API']
+});
 
 export default function ApiDocsPage() {
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">API Dokumantasyonu</h1>
-          <p className="text-blue-100 max-w-3xl mx-auto">
-            YolPilot API, mevcut sistemlerinize baglanip teslimat akisini tek noktadan yonetmenizi saglar.
-          </p>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-6">
-            {sections.map((item) => (
-              <div key={item.title} className="bg-gray-50 rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h2>
-                <p className="text-sm text-gray-600">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Dokumantasyona erisim</h2>
-          <p className="text-gray-600 mb-8">
-            API dokumanlarini paylasmamiz icin teknik ekibimizle iletisime gecin.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/docs/api"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg"
-            >
-              API Dokumani
-            </Link>
-            <Link
-              href="/contact"
-              className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-xl font-semibold transition-all duration-200"
-            >
-              Iletisim
-            </Link>
-          </div>
-        </div>
-      </section>
-    </div>
+    <ResourcePageLayout
+      eyebrow="API ve entegrasyon"
+      title="YolPilot’u mevcut sistemlerinize kontrollü şekilde bağlayın"
+      description="Sipariş, müşteri, rota ve teslimat verisini mevcut ERP, e-ticaret veya operasyon altyapınızla uyumlu şekilde akıtmak için teknik ekiplerle birlikte ilerliyoruz."
+      highlights={[
+        {
+          title: 'Güvenli erişim modeli',
+          description:
+            'Rol bazlı erişim, yetki kontrolleri ve loglama ile entegrasyon trafiği daha kontrollü yürütülür.'
+        },
+        {
+          title: 'Gerçek operasyon verisi',
+          description:
+            'Müşteri, durak, sefer ve teslimat durumu gibi ana nesneler aynı operasyon akışında birlikte taşınır.'
+        },
+        {
+          title: 'Kurulum desteği',
+          description:
+            'Teknik ekipler arası devri hızlandırmak için örnek akışlar, erişim kapsamı ve kurulum adımları birlikte netleştirilir.'
+        }
+      ]}
+      sections={[
+        {
+          title: 'Entegrasyon kapsamı',
+          description:
+            'Sipariş oluşturma, müşteri güncelleme, rota atama, teslimat durumu ve operasyon raporları gibi başlıkları birlikte planlıyoruz.'
+        },
+        {
+          title: 'Teknik yaklaşım',
+          description:
+            'API erişimi, webhook senaryoları ve veri eşleme mantığı; mevcut operasyon sisteminize göre sadeleştirilmiş bir kurulum planı ile ilerler.'
+        },
+        {
+          title: 'Onboarding akışı',
+          description:
+            'İlk entegrasyon görüşmesinde veri modeli, güvenlik gereksinimleri ve canlıya geçiş sırası netleştirilir.'
+        }
+      ]}
+      bulletSection={{
+        title: 'Teknik ekipler en çok neleri soruyor?',
+        description:
+          'Dokümantasyon paylaşımı öncesinde genelde aşağıdaki başlıkları birlikte netleştiriyoruz.',
+        items: [
+          'API erişim modeli ve yetkilendirme yaklaşımı',
+          'Sipariş ve müşteri verisinin hangi sıklıkta senkronlanacağı',
+          'Teslimat sonucu ve durum değişimlerinin hangi sistemlere döneceği',
+          'Webhook veya batch veri akışının daha uygun olduğu senaryolar',
+          'Canlıya geçişten önce hangi test akışlarının çalıştırılacağı'
+        ]
+      }}
+      footerTitle="Teknik kurulum senaryonuzu birlikte netleştirelim"
+      footerDescription="Ekibinizin kullandığı sistemleri ve veri akışını paylaşın. YolPilot’un hangi entegrasyon modeliyle daha hızlı devreye alınabileceğini birlikte planlayalım."
+      primaryTrackingName="api-docs-primary-cta"
+      secondaryCtaLabel="Teknik doküman özeti"
+      secondaryCtaHref="/docs/api"
+      secondaryTrackingName="api-docs-secondary-cta"
+    />
   );
 }

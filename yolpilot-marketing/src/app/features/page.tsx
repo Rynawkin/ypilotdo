@@ -1,237 +1,188 @@
-import Link from 'next/link';
+import TrackedLink from '@/components/ui/TrackedLink';
+import { PRIMARY_CTA_HREF } from '@/lib/marketing';
+import { createPageMetadata } from '@/lib/seo';
+
+export const metadata = createPageMetadata({
+  title: 'Özellikler',
+  description: 'Rota optimizasyonu, saha uygulaması, teslimat kanıtı, müşteri bildirimleri ve raporlama modüllerini tek platformda keşfedin.',
+  path: '/features',
+  keywords: ['rota optimizasyon özellikleri', 'teslimat yönetimi özellikleri', 'saha uygulaması', 'teslimat kanıtı']
+});
 
 const featureGroups = [
   {
-    title: 'Rota Planlama ve Optimizasyon',
-    description: 'Seferleri tek ekranda planlayin, onceliklere gore hizla guncelleyin.',
-    items: [
-      'Durak siralama ve rota akisi',
-      'Zaman penceresi kurallari',
-      'Depo cikis ve varis akisi',
-      'Kisit ve oncelik yonetimi',
-      'Dinamik guncelleme senaryolari'
-    ]
+    title: 'Planlama ve rota optimizasyonu',
+    summary: 'Durak sıralama, zaman kısıtı, depo çıkışı ve operasyon kurallarını tek plan yapısında yönetin.',
+    bullets: ['Durak sıralama ve rota akışı', 'Depo çıkış ve dönüş kurgusu', 'Öncelik, kısıt ve görev ataması', 'Time window destekli planlama']
   },
   {
-    title: 'Saha Uygulamasi',
-    description: 'Suruculerin tum gorevlerini tek uygulamadan yurutmesini saglayin.',
-    items: [
-      'Mobil gorev listesi',
-      'Navigasyon baglantilari',
-      'Offline calisma modu',
-      'Teslimat notlari ve talimatlar',
-      'Imza ve fotograf ile kanit'
-    ]
+    title: 'Sürücü ve saha uygulaması',
+    summary: 'Sürücülerin günlük operasyonu tek uygulamadan takip etmesini sağlayın.',
+    bullets: ['Mobil görev listesi', 'Navigasyon yönlendirmesi', 'Durak notları ve müşteri bilgisi', 'Canlı durum güncellemesi']
   },
   {
-    title: 'Musteri Iletisimi',
-    description: 'Musterilere zamaninda ve tutarli bilgilendirme gonderin.',
-    items: [
-      'Takip linki ve durum paylasimi',
-      'WhatsApp ve e-posta bildirimleri',
-      'Tahmini varis bilgilendirmesi',
-      'Geri bildirim formlari',
-      'Iptal ve iade akislari'
-    ]
+    title: 'Teslimat kanıtı ve istisna yönetimi',
+    summary: 'Tamamlanan, başarısız veya iade edilen teslimatları standart kayıt yapısına alın.',
+    bullets: ['Fotoğraf ve imza ile kanıt', 'Başarısız teslimat nedeni', 'Not ve açıklama alanları', 'Arşivlenebilir teslimat geçmişi']
   },
   {
-    title: 'Raporlama ve Analiz',
-    description: 'Operasyonu gorunur kilan raporlarla karar surecini hizlandirin.',
-    items: [
-      'Sefer ozeti ve teslimat arsivi',
-      'Basarisiz teslimat yonetimi',
-      'Performans panosu',
-      'Rota ve maliyet analizi',
-      'Kisi ve ekip bazli gorunumler'
-    ]
+    title: 'Müşteri iletişimi',
+    summary: 'Müşteriye giden bilgi ile operasyon panelinde görülen durumu aynı akışta tutun.',
+    bullets: ['Takip bağlantısı', 'Durum bildirimleri', 'Teslimat özeti', 'Süreç bazlı bilgilendirme']
   },
   {
-    title: 'Entegrasyonlar',
-    description: 'Mevcut sistemlere baglanarak akisi tek yerde yonetin.',
-    items: [
-      'REST API ve webhook destegi',
-      'ERP ve CRM baglantilari',
-      'Dosya aktarim senaryolari',
-      'Harita servisleri ile uyum',
-      'Veri disa aktarim'
-    ]
+    title: 'Operasyon görünürlüğü',
+    summary: 'Aktif rota, sefer, sürücü ve araç durumunu tek panelde izleyin.',
+    bullets: ['Dashboard ve özet kartlar', 'Liste, detay ve form ekranları', 'Depo, araç ve sürücü görünürlüğü', 'Operasyon notları ve geçmiş']
   },
   {
-    title: 'Guvenlik ve Yonetim',
-    description: 'Yetki ve kayitlarla operasyonu denetlenebilir kilin.',
-    items: [
-      'Rol bazli yetkilendirme',
-      'Islem kayitlari ve loglama',
-      'Veri yedekleme politikasi',
-      'KVKK odakli veri yonetimi',
-      'Erisim kontrolu'
-    ]
+    title: 'Raporlama ve entegrasyon',
+    summary: 'Veriyi operasyon kararına çevirecek raporlar ve sistem bağlantıları kurun.',
+    bullets: ['Teslimat performansı raporları', 'Sürücü ve araç özetleri', 'REST API ve webhook desteği', 'CSV ve dışa aktarım akışları']
   }
 ];
 
-const modules = [
+const journey = [
   {
-    title: 'Yonetim Paneli',
-    description: 'Planlama, takip ve raporlamayi tek panelde birlestirin.',
-    items: ['Sefer planlama', 'Durum takibi', 'Raporlama ekranlari']
+    title: 'Merkez planlar',
+    description: 'Operasyon ekibi rotaları, seferleri, araçları ve sürücüleri panelden planlar.'
   },
   {
-    title: 'Saha Uygulamasi',
-    description: 'Suruculer icin sade ve hizli bir is akisi olusturun.',
-    items: ['Gorev listesi', 'Teslimat kaniti', 'Not ve talimatlar']
+    title: 'Saha uygular',
+    description: 'Sürücü uygulaması sayesinde durak sırası, notlar ve teslimat kanıtı tek mobil akışta yürür.'
   },
   {
-    title: 'Musteri Takip Deneyimi',
-    description: 'Musterilerin teslimatini guvenle takip etmesini saglayin.',
-    items: ['Takip linki', 'Durum bildirimleri', 'Teslimat ozeti']
+    title: 'Müşteri izler',
+    description: 'Takip linki ve bildirimler sayesinde müşteri daha görünür bir teslimat deneyimi yaşar.'
+  },
+  {
+    title: 'Yönetim raporlar',
+    description: 'Teslimat sonucu, istisna ve performans çıktıları rapor ekranlarında toplanır.'
   }
 ];
 
-const highlights = [
-  'Coklu depo ve filoya uygun planlama',
-  'Surucu ve arac yonetimi',
-  'Etiketleme ve notlar',
-  'Takvim ve vardiya planlamasi',
-  'Bildirim senaryolari',
-  'Teslimat kaniti arsivi',
-  'Iade ve iptal akislari',
-  'Esnek raporlama filtreleri'
+const audience = [
+  'E-ticaret dağıtım ekipleri',
+  'Lojistik ve filo operasyonları',
+  'Perakende, bayi ve mağaza sevkiyatları',
+  'Saha servis ve görev yönetimi ekipleri',
+  'Soğuk zincir ve zaman hassas dağıtım operasyonları'
 ];
 
 export default function FeaturesPage() {
   return (
     <div className="min-h-screen bg-gray-50 pt-24">
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="inline-flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full mb-6">
-            <span className="text-sm font-semibold">YolPilot Platformu</span>
+      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 py-20 text-white">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl">
+            <div className="inline-flex rounded-full bg-white/15 px-4 py-2 text-sm font-semibold text-blue-50">
+              YolPilot ürün modülleri
+            </div>
+            <h1 className="mt-6 text-4xl font-bold leading-tight lg:text-5xl">
+              Planlama, saha ve müşteri deneyimini tek operasyon platformunda toplayın
+            </h1>
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-blue-100">
+              YolPilot, rota planlama ekranından sürücü mobil uygulamasına; teslimat kanıtından müşteri bilgilendirmesine kadar operasyonun tüm kritik parçalarını tek yapıda birleştirir.
+            </p>
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+              <TrackedLink
+                href={PRIMARY_CTA_HREF}
+                trackingName="features-primary-cta"
+                className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-semibold text-blue-700 transition hover:bg-blue-50"
+              >
+                Demo Talep Edin
+              </TrackedLink>
+              <TrackedLink
+                href="/use-cases"
+                trackingName="features-secondary-cta"
+                className="inline-flex items-center justify-center rounded-xl border border-white/30 px-8 py-4 text-base font-semibold text-white transition hover:bg-white/10"
+              >
+                Kullanım senaryolarını görün
+              </TrackedLink>
+            </div>
           </div>
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-            Operasyonunuzu tek ekranda yonetin
-          </h1>
-          <p className="text-lg text-blue-100 max-w-3xl mx-auto mb-10">
-            Planlama, saha, teslimat kaniti ve musteri iletisimini tek akista birlestiren
-            sade ve guvenilir bir platform.
+        </div>
+      </section>
+
+      <section className="bg-white py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <div className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">Temel modüller</div>
+            <h2 className="mt-3 text-3xl font-bold text-gray-900">Her ekip için aynı panel, rolüne göre doğru görünürlük</h2>
+          </div>
+          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {featureGroups.map((group) => (
+              <div key={group.title} className="rounded-2xl border border-gray-200 bg-gray-50 p-6 shadow-sm">
+                <h3 className="text-xl font-semibold text-gray-900">{group.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-gray-600">{group.summary}</p>
+                <ul className="mt-5 space-y-3">
+                  {group.bullets.map((item) => (
+                    <li key={item} className="flex items-start gap-3 text-sm text-gray-700">
+                      <span className="mt-2 h-2 w-2 rounded-full bg-blue-600" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <div className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">Operasyon akışı</div>
+            <h2 className="mt-3 text-3xl font-bold text-gray-900">YolPilot içinde tipik bir gün nasıl ilerler?</h2>
+          </div>
+          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {journey.map((item, index) => (
+              <div key={item.title} className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+                <div className="text-sm font-semibold text-blue-600">Adım {index + 1}</div>
+                <h3 className="mt-3 text-lg font-semibold text-gray-900">{item.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-gray-600">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+            <div>
+              <div className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-600">Kimler için uygun?</div>
+              <h2 className="mt-3 text-3xl font-bold text-gray-900">Büyüme aşamasındaki ekipten çok araçlı operasyona kadar</h2>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-gray-600">
+                YolPilot; operasyon yoğunluğu arttıkça mesaj, Excel ve telefon trafiğiyle büyümek istemeyen ekipler için tasarlanır. Ekip büyüdüğünde görünürlüğü koruyan yapı sunar.
+              </p>
+            </div>
+            <div className="grid gap-4">
+              {audience.map((item) => (
+                <div key={item} className="rounded-2xl border border-gray-200 bg-gray-50 px-5 py-4 text-sm font-medium text-gray-700">
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-slate-950 py-20 text-white">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold lg:text-4xl">Operasyonunuzu canlı bir demo üzerinden birlikte değerlendirelim</h2>
+          <p className="mt-5 text-base leading-7 text-slate-300">
+            Ekip yapınızı, günlük durak hacminizi ve görmek istediğiniz modülleri konuşalım. Size uygun kurulum akışını birlikte çıkaralım.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contact"
-              className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg"
+          <div className="mt-8">
+            <TrackedLink
+              href={PRIMARY_CTA_HREF}
+              trackingName="features-footer-cta"
+              className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-semibold text-slate-900 transition hover:bg-slate-100"
             >
               Demo Talep Edin
-            </Link>
-            <Link
-              href="/contact"
-              className="border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200"
-            >
-              Iletisim
-            </Link>
+            </TrackedLink>
           </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Temel Ozellik Alanlari
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Her ekip icin anlasilir, esnek ve buyumeye uygun bir kurgu.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featureGroups.map((group) => (
-              <div
-                key={group.title}
-                className="bg-gray-50 rounded-2xl p-6 border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200"
-              >
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{group.title}</h3>
-                <p className="text-sm text-gray-600 mb-4">{group.description}</p>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  {group.items.map((item) => (
-                    <li key={item} className="flex items-start gap-2">
-                      <span className="mt-1 h-2 w-2 rounded-full bg-blue-600"></span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Platform Modulleri
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Operasyonun her adimini baglayan moduller ile tam gorunurluk.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {modules.map((module) => (
-              <div
-                key={module.title}
-                className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm"
-              >
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">{module.title}</h3>
-                <p className="text-sm text-gray-600 mb-4">{module.description}</p>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  {module.items.map((item) => (
-                    <li key={item} className="flex items-start gap-2">
-                      <span className="mt-1 h-2 w-2 rounded-full bg-green-500"></span>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              Ek Yetkinlikler
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Operasyonunuzu destekleyen, ayarlanabilir ve guvenli ek yetenekler.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-4">
-            {highlights.map((item) => (
-              <div
-                key={item}
-                className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3 border border-gray-200"
-              >
-                <span className="h-2.5 w-2.5 rounded-full bg-indigo-600"></span>
-                <span className="text-sm text-gray-700">{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-6">
-            Operasyonunuzu YolPilot ile netlestirin
-          </h2>
-          <p className="text-blue-100 mb-8">
-            Ihtiyaciniza uygun kurgu ve kurulum icin ekibimizle gorusun.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-white text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg"
-          >
-            Demo Planlayin
-          </Link>
         </div>
       </section>
     </div>

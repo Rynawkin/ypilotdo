@@ -1,85 +1,72 @@
-import Link from 'next/link';
+import IndustryLandingPage from '@/components/landing/IndustryLandingPage';
+import { createPageMetadata } from '@/lib/seo';
 
-const focus = [
-  'Çok duraklı dağıtım planlama',
-  'Müşteri bilgilendirme senaryoları',
-  'Teslimat kanıtı ve iade akışı',
-  'Saha ekibi koordinasyonu'
-];
-
-const approach = [
-  {
-    title: 'Planlama',
-    description: 'Siparişleri rota kurallarına göre hızla sıralarız.'
-  },
-  {
-    title: 'Saha',
-    description: 'Sürücüler mobil uygulamadan görev listesini takip eder.'
-  },
-  {
-    title: 'Müşteri',
-    description: 'Takip linki ve bildirimlerle müşteriye net bilgi verilir.'
-  }
-];
+export const metadata = createPageMetadata({
+  title: 'E-ticaret Dağıtım Operasyonları',
+  description: 'E-ticaret dağıtım ekipleri için rota planlama, müşteri bilgilendirme ve teslimat kanıtını tek akışta yönetin.',
+  path: '/industries/ecommerce',
+  keywords: ['e-ticaret dağıtım yazılımı', 'son kilometre teslimat', 'rota optimizasyonu e-ticaret']
+});
 
 export default function EcommerceIndustryPage() {
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">E-ticaret</h1>
-          <p className="text-blue-100 max-w-3xl mx-auto">
-            Yoğun sipariş akışını planlı ve görünür hale getirmek için YolPilot ile tek akışa geçin.
-          </p>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktaları</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              E-ticaret operasyonları için kritik olan süreçleri netleştiriyoruz.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-4">
-            {focus.map((item) => (
-              <div key={item} className="bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 shadow-sm flex items-center gap-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-blue-600"></span>
-                <span className="text-sm text-gray-700">{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-6">
-            {approach.map((item) => (
-              <div key={item.title} className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-600">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">E-ticaret ekibiniz için demo planlayın</h2>
-          <p className="text-gray-600 mb-8">
-            Sipariş akışına uygun bir kurgu için ekibimizle görüşün.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg"
-          >
-            Demo Talep Edin
-          </Link>
-        </div>
-      </section>
-    </div>
+    <IndustryLandingPage
+      eyebrow="E-ticaret"
+      title="Yoğun sipariş akışını planlı, görünür ve yönetilebilir hale getirin"
+      description="YolPilot, e-ticaret ekiplerinin çok duraklı dağıtımı tek merkezden planlamasını; saha operasyonunu, müşteri bilgilendirmesini ve teslimat kanıtını aynı akışta yönetmesini sağlar."
+      proof={[
+        { label: 'Odak alanı', value: 'Çok duraklı teslimat' },
+        { label: 'Operasyon tipi', value: 'Son kilometre dağıtım' },
+        { label: 'Takip çıktısı', value: 'Link + kanıt + rapor' }
+      ]}
+      problems={[
+        'Siparişler farklı ekranlardan planlandığı için rota sıralaması ve sürücü ataması gecikiyor.',
+        'Müşteriye giden bilgi ile saha ekibinin gördüğü durum aynı olmadığı için destek yükü artıyor.',
+        'Teslimat kanıtı, iade ve başarısız teslimat kayıtları sonradan toparlanmak zorunda kalıyor.',
+        'Gün içinde adres değişikliği, öncelik değişimi veya yoğunluk dalgalanması olduğunda ekip tekrar manuel müdahaleye dönüyor.'
+      ]}
+      outcomes={[
+        {
+          title: 'Planlama tek ekranda netleşir',
+          description: 'Rota, sürücü ve araç atamalarını tek panelde görüp operasyon önceliklerine göre hızlıca güncelleyebilirsiniz.'
+        },
+        {
+          title: 'Müşteri iletişimi tutarlı olur',
+          description: 'Takip bağlantısı, bildirim akışları ve teslimat durumları merkezden yönetildiği için ekipler aynı bilgiyle çalışır.'
+        },
+        {
+          title: 'Teslimat kanıtı operasyonun parçası olur',
+          description: 'Fotoğraf, imza, not ve başarısız teslimat nedeni aynı akışta kayda geçtiği için sonradan arşiv toplama ihtiyacı azalır.'
+        }
+      ]}
+      workflow={[
+        {
+          title: 'Siparişleri ve kuralları sisteme alın',
+          description: 'Dağıtım yapınıza uygun depo, rota, zaman ve bilgilendirme kurallarını birlikte tanımlarız.'
+        },
+        {
+          title: 'Saha akışını mobil uygulamaya indirin',
+          description: 'Sürücü uygulamasında durak sırası, teslimat notu, navigasyon ve kanıt toplama adımlarını netleştiririz.'
+        },
+        {
+          title: 'Operasyonu canlı izleyin ve raporlayın',
+          description: 'Gün içindeki sapmaları, teslimat sonuçlarını ve kanıt arşivini panelden takip edip kararları hızlandırırsınız.'
+        }
+      ]}
+      faqs={[
+        {
+          question: 'Yoğun kampanya günlerinde de kullanılabilir mi?',
+          answer: 'Evet. Operasyon hacmine göre rota planı, sürücü ataması ve müşteri bilgilendirme akışları aynı panelden yönetilir.'
+        },
+        {
+          question: 'Teslimat başarısız olursa nasıl kayıt altına alınır?',
+          answer: 'Sürücü uygulaması üzerinden neden, not ve teslimat kanıtı girilebilir; bu kayıtlar panelde raporlanır.'
+        },
+        {
+          question: 'Müşteriye takip bilgisi verebilir miyiz?',
+          answer: 'Evet. Takip bağlantısı ve durum bildirimleriyle teslimat sürecini müşteriye daha görünür hale getirebilirsiniz.'
+        }
+      ]}
+    />
   );
 }

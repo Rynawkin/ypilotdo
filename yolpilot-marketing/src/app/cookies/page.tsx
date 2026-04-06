@@ -1,81 +1,71 @@
-import Link from 'next/link';
+import ResourcePageLayout from '@/components/landing/ResourcePageLayout';
+import { createPageMetadata } from '@/lib/seo';
 
-const cookieTypes = [
-  {
-    title: 'Zorunlu Cerezler',
-    description: 'Oturum yonetimi ve temel guvenlik icin kullanilir.'
-  },
-  {
-    title: 'Tercih Cerezleri',
-    description: 'Dil ve gorunum tercihlerinizin hatirlanmasini saglar.'
-  },
-  {
-    title: 'Analitik Cerezler',
-    description: 'Kullanim trendlerini anlamamiza yardimci olur.'
-  }
-];
-
-const controls = [
-  'Tarayici ayarlarinizdan cerezleri silebilir veya engelleyebilirsiniz.',
-  'Cerezleri engellemek bazi islevleri sinirlayabilir.',
-  'Guncel ayarlariniz icin tarayici yardim dokumanlarini kontrol edin.'
-];
+export const metadata = createPageMetadata({
+  title: 'Çerez Politikası',
+  description:
+    'YolPilot web sitesinde kullanılan çerez türleri, amaçları ve kullanıcı kontrol seçenekleri hakkında bilgi alın.',
+  path: '/cookies',
+  keywords: ['YolPilot çerez politikası', 'çerez ayarları', 'site analitik çerezleri']
+});
 
 export default function CookiesPage() {
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Cerez Politikasi</h1>
-          <p className="text-blue-100 max-w-3xl mx-auto">
-            Bu sayfa, YolPilot web sitesinde kullanilan cerezleri ve amaclarini aciklar.
-          </p>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-6">
-            {cookieTypes.map((item) => (
-              <div key={item.title} className="bg-gray-50 rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h2>
-                <p className="text-sm text-gray-600">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-            <h2 className="text-lg font-semibold text-gray-900 mb-3">Cerezleri Yonetme</h2>
-            <ul className="space-y-2 text-sm text-gray-700">
-              {controls.map((item) => (
-                <li key={item} className="flex items-start gap-2">
-                  <span className="mt-1 h-2 w-2 rounded-full bg-blue-600"></span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Daha fazla bilgi</h2>
-          <p className="text-gray-600 mb-8">
-            Gizlilik veya cerezlerle ilgili sorulariniz icin bize ulasabilirsiniz.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg"
-          >
-            Iletisim
-          </Link>
-        </div>
-      </section>
-    </div>
+    <ResourcePageLayout
+      eyebrow="Çerez politikası"
+      title="Web deneyimini ölçmek ve iyileştirmek için kullandığımız çerezler"
+      description="YolPilot marketing sitesinde; temel site işlevleri, kullanıcı tercihleri ve pazarlama performansını anlamak için sınırlı ve amaç odaklı çerez kullanımı benimsiyoruz."
+      highlights={[
+        {
+          title: 'Zorunlu çerezler',
+          description:
+            'Temel oturum, güvenlik ve sayfa işlevlerinin sağlıklı çalışması için kullanılan çekirdek çerezlerdir.'
+        },
+        {
+          title: 'Analitik amaçlı kullanım',
+          description:
+            'Site ziyaretlerini, CTA performansını ve kampanya etkisini anlamak için ölçümleme amaçlı sinyaller kullanılır.'
+        },
+        {
+          title: 'Kullanıcı kontrolü',
+          description:
+            'Tarayıcı ayarları ve çerez tercihleri üzerinden belirli kullanım türlerini yönetebilirsiniz.'
+        }
+      ]}
+      sections={[
+        {
+          title: 'Neden kullanıyoruz?',
+          description:
+            'Sayfa performansını, kampanya kaynaklarını ve form dönüşüm akışını anlamak için gerektiği kadar veri toplamayı hedefliyoruz.'
+        },
+        {
+          title: 'Ne toplamıyoruz?',
+          description:
+            'Gereksiz kişisel veri toplamak yerine trafik kaynağı, ziyaret akışı ve dönüşüm davranışına odaklanıyoruz.'
+        },
+        {
+          title: 'Nasıl yönetebilirsiniz?',
+          description:
+            'Tarayıcı ayarlarınız üzerinden çerezleri silebilir, kısıtlayabilir veya tamamen kapatabilirsiniz. Bu durumda bazı deneyimler sınırlanabilir.'
+        }
+      ]}
+      bulletSection={{
+        title: 'Kullanıcı kontrol seçenekleri',
+        description:
+          'Çerez kullanımı üzerinde doğrudan kontrol sağlamak için aşağıdaki yolları kullanabilirsiniz.',
+        items: [
+          'Tarayıcı ayarlarınızdan çerezleri silebilir veya engelleyebilirsiniz.',
+          'Çerezleri kapatmak bazı form veya gezinme deneyimlerini sınırlayabilir.',
+          'Yeni cihaz veya tarayıcıda tercihlerinizi tekrar ayarlamanız gerekebilir.',
+          'Ek veri işleme bilgileri için gizlilik ve KVKK metinlerini inceleyebilirsiniz.'
+        ]
+      }}
+      footerTitle="Veri işleme ve ölçümleme yaklaşımını birlikte netleştirelim"
+      footerDescription="Gizlilik, ölçümleme veya kampanya takibiyle ilgili özel gereksinimleriniz varsa ekibimizle iletişime geçebilirsiniz."
+      primaryTrackingName="cookies-primary-cta"
+      secondaryCtaLabel="Gizlilik politikası"
+      secondaryCtaHref="/privacy"
+      secondaryTrackingName="cookies-secondary-cta"
+    />
   );
 }

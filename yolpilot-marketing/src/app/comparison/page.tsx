@@ -1,120 +1,105 @@
-'use client';
+import TrackedLink from '@/components/ui/TrackedLink';
+import { PRIMARY_CTA_HREF } from '@/lib/marketing';
+import { createPageMetadata } from '@/lib/seo';
 
-import React from 'react';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
+export const metadata = createPageMetadata({
+  title: 'Manuel Planlama ile Karşılaştırma',
+  description: 'Excel, telefon ve dağınık araçlardan tek operasyon paneline geçişte YolPilot farkını görün.',
+  path: '/comparison',
+  keywords: ['excel yerine rota planlama', 'manuel planlama karşılaştırma', 'teslimat operasyonu dijital dönüşüm']
+});
 
-const ComparisonPage: React.FC = () => {
-  const comparisonRows = [
-    {
-      title: 'Rota Planlama',
-      manual: 'Elle planlama, çoklu dosya ve tekrarlı iş adımları',
-      yolpilot: 'Tek panelden planlama ve otomatik rota önerileri',
-      benefit: 'Planlama sürecinde daha net akış'
-    },
-    {
-      title: 'Görünürlük',
-      manual: 'Sahadan geri bildirim geç gelir',
-      yolpilot: 'Anlık durum güncellemeleri ve teslimat takibi',
-      benefit: 'Operasyonel netlik ve izlenebilirlik'
-    },
-    {
-      title: 'Teslimat Kaniti',
-      manual: 'Fiziksel evrak veya dağınık kanıtlar',
-      yolpilot: 'Dijital imza ve fotoğraf akışı',
-      benefit: 'Daha düzenli kanıt arşivi'
-    },
-    {
-      title: 'Müşteri Bilgilendirme',
-      manual: 'Telefon veya manuel bildirim',
-      yolpilot: 'Otomatik bilgilendirme akışları',
-      benefit: 'Daha tutarlı iletişim'
-    },
-    {
-      title: 'Raporlama',
-      manual: 'Manuel rapor ve Excel işlemleri',
-      yolpilot: 'Dashboard ve rapor çıktıları',
-      benefit: 'Hızlı karar desteği'
-    }
-  ];
+const comparisonRows = [
+  {
+    title: 'Planlama',
+    manual: 'Excel, mesajlaşma ve telefon üzerinden tekrar eden koordinasyon gerekir.',
+    yolpilot: 'Rota, araç ve sürücü planı tek panelden oluşturulur ve güncellenir.'
+  },
+  {
+    title: 'Saha görünürlüğü',
+    manual: 'Gün içindeki gerçek durum çoğu zaman sonradan öğrenilir.',
+    yolpilot: 'Durum güncellemesi, teslimat sonucu ve saha notları operasyon sırasında görünür hale gelir.'
+  },
+  {
+    title: 'Teslimat kanıtı',
+    manual: 'Fotoğraf, imza ve notlar dağınık şekilde toplanır veya hiç saklanmaz.',
+    yolpilot: 'Kanıt akışı mobil uygulama üzerinden standart hale gelir.'
+  },
+  {
+    title: 'Müşteri iletişimi',
+    manual: 'Destek ekibi teslimat bilgisini sahadan tek tek toplamak zorunda kalır.',
+    yolpilot: 'Takip bağlantısı ve bildirim yapısı merkezi olarak yönetilir.'
+  },
+  {
+    title: 'Raporlama',
+    manual: 'Operasyon sonrası rapor hazırlığı ek iş yükü yaratır.',
+    yolpilot: 'Sefer, teslimat ve performans çıktıları panelde hazır tutulur.'
+  }
+];
 
-  const highlights = [
-    {
-      title: 'Tek Platform',
-      description: 'Planlama, takip ve teslimat kanıtı tek ekranda.'
-    },
-    {
-      title: 'Saha ve Ofis Senkronu',
-      description: 'Sahadan gelen bilgiler panelde toplanır.'
-    },
-    {
-      title: 'Operasyonel Kontrol',
-      description: 'Rota, sürücü ve teslimat süreci net bir şekilde izlenir.'
-    }
-  ];
+const outcomes = [
+  'Daha hızlı planlama ve yeniden düzenleme',
+  'Sahada daha net görev akışı',
+  'Destek yükünde azalma',
+  'Teslimat kanıtı ve istisna kayıtlarının düzenli arşivi'
+];
 
+export default function ComparisonPage() {
   return (
     <div className="min-h-screen bg-gray-50 pt-24">
-      <section className="py-16 text-center bg-gradient-to-br from-blue-600 to-blue-700 text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-              Manuel Planlama vs. YolPilot
-            </h1>
-            <p className="text-xl text-blue-100">
-              Rota planlama ve teslimat takibini tek bir panelde topladığınızda süreçler daha net hale gelir.
-            </p>
-          </motion.div>
+      <section className="bg-gradient-to-br from-blue-600 to-blue-700 py-16 text-white">
+        <div className="mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
+          <h1 className="text-4xl font-bold lg:text-5xl">Excel, telefon ve mesaj trafiğinden tek operasyon paneline geçin</h1>
+          <p className="mt-6 text-xl text-blue-100">
+            YolPilot, manuel planlamayı sadece hızlandırmaz; görünürlüğü, kanıt yapısını ve ekipler arası koordinasyonu da düzene sokar.
+          </p>
         </div>
       </section>
 
       <section className="py-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {highlights.map((item) => (
-              <div key={item.title} className="bg-white rounded-xl shadow-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-gray-600">{item.description}</p>
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {outcomes.map((item) => (
+              <div key={item} className="rounded-2xl border border-gray-200 bg-white px-5 py-4 text-sm font-medium text-gray-700 shadow-sm">
+                {item}
               </div>
             ))}
           </div>
 
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <div className="grid grid-cols-4 gap-0 border-b border-gray-200 text-sm font-semibold text-gray-700 bg-gray-50">
-              <div className="px-6 py-4">Başlık</div>
-              <div className="px-6 py-4">Manuel</div>
-              <div className="px-6 py-4">YolPilot</div>
-              <div className="px-6 py-4">Kazanım</div>
+          <div className="mt-10 overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xl">
+            <div className="grid grid-cols-3 border-b border-gray-200 bg-gray-50 text-sm font-semibold text-gray-700">
+              <div className="px-6 py-4">Konu</div>
+              <div className="px-6 py-4">Manuel yapı</div>
+              <div className="px-6 py-4">YolPilot ile</div>
             </div>
             {comparisonRows.map((row) => (
-              <div key={row.title} className="grid grid-cols-4 gap-0 border-b border-gray-100 text-sm">
-                <div className="px-6 py-4 font-medium text-gray-900">{row.title}</div>
-                <div className="px-6 py-4 text-gray-600">{row.manual}</div>
-                <div className="px-6 py-4 text-gray-600">{row.yolpilot}</div>
-                <div className="px-6 py-4 text-blue-600 font-medium">{row.benefit}</div>
+              <div key={row.title} className="grid grid-cols-3 border-b border-gray-100 text-sm">
+                <div className="px-6 py-5 font-medium text-gray-900">{row.title}</div>
+                <div className="px-6 py-5 text-gray-600">{row.manual}</div>
+                <div className="px-6 py-5 text-gray-700">{row.yolpilot}</div>
               </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="mt-12 text-center">
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl"
+      <section className="bg-slate-950 py-20 text-white">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold lg:text-4xl">Mevcut operasyon yapınızı birlikte değerlendirelim</h2>
+          <p className="mt-5 text-base leading-7 text-slate-300">
+            Hangi işleri hâlâ manuel yürüttüğünüzü konuşalım. Bunları YolPilot içinde nasıl tek akışa taşıyabileceğinizi size özel demo üzerinden gösterelim.
+          </p>
+          <div className="mt-8">
+            <TrackedLink
+              href={PRIMARY_CTA_HREF}
+              trackingName="comparison-footer-cta"
+              className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-4 text-base font-semibold text-slate-900 transition hover:bg-slate-100"
             >
               Demo Talep Edin
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </Link>
+            </TrackedLink>
           </div>
         </div>
       </section>
     </div>
   );
-};
-
-export default ComparisonPage;
+}

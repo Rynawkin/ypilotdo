@@ -81,5 +81,15 @@ export const adminService = {
   async getMarketingLeadStats() {
     const response = await api.get('/marketinglead/stats');
     return response.data;
+  },
+
+  async getMarketingAnalyticsOverview(days = 30) {
+    const response = await api.get('/marketing-analytics/overview', { params: { days } });
+    return response.data;
+  },
+
+  async getRecentMarketingAnalyticsLeads(take = 20) {
+    const response = await api.get('/marketing-analytics/recent-leads', { params: { take } });
+    return response.data;
   }
 };

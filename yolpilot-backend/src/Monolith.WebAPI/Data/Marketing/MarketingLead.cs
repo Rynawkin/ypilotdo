@@ -32,6 +32,33 @@ public class MarketingLead : BaseEntity
     [MaxLength(50)]
     public string? SelectedPlan { get; set; } // pilot, kaptan, amiral, filo
 
+    [MaxLength(255)]
+    public string? LandingPage { get; set; }
+
+    [MaxLength(500)]
+    public string? Referrer { get; set; }
+
+    [MaxLength(100)]
+    public string? UtmSource { get; set; }
+
+    [MaxLength(100)]
+    public string? UtmMedium { get; set; }
+
+    [MaxLength(100)]
+    public string? UtmCampaign { get; set; }
+
+    [MaxLength(100)]
+    public string? UtmContent { get; set; }
+
+    [MaxLength(100)]
+    public string? UtmTerm { get; set; }
+
+    [MaxLength(64)]
+    public string? VisitorId { get; set; }
+
+    [MaxLength(64)]
+    public string? SessionId { get; set; }
+
     public LeadStatus Status { get; set; } = LeadStatus.New;
 
     [MaxLength(1000)]

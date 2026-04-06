@@ -71,6 +71,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options, IPublisher pub
 
     // Marketing entities - YENİ EKLENEN
     public DbSet<MarketingLead> MarketingLeads { get; set; }
+    public DbSet<MarketingAnalyticsEvent> MarketingAnalyticsEvents { get; set; }
 
     // Vehicle Maintenance entities - YENİ EKLENEN
     public DbSet<VehicleMaintenance> VehicleMaintenances { get; set; }
@@ -444,6 +445,39 @@ public class AppDbContext(DbContextOptions<AppDbContext> options, IPublisher pub
         });
 
         // ============= 🆕 JOURNEY STOP PHOTOS CONFIGURATION - ÇOKLU FOTOĞRAF DESTEĞİ =============
+        modelBuilder.Entity<MarketingAnalyticsEvent>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.EventType).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.EventName).HasMaxLength(100);
+            entity.Property(e => e.VisitorId).IsRequired().HasMaxLength(64);
+            entity.Property(e => e.SessionId).IsRequired().HasMaxLength(64);
+            entity.Property(e => e.PagePath).HasMaxLength(255);
+            entity.Property(e => e.PageTitle).HasMaxLength(200);
+            entity.Property(e => e.Referrer).HasMaxLength(500);
+            entity.Property(e => e.UtmSource).HasMaxLength(100);
+            entity.Property(e => e.UtmMedium).HasMaxLength(100);
+            entity.Property(e => e.UtmCampaign).HasMaxLength(100);
+            entity.Property(e => e.UtmContent).HasMaxLength(100);
+            entity.Property(e => e.UtmTerm).HasMaxLength(100);
+            entity.Property(e => e.DeviceType).HasMaxLength(50);
+            entity.Property(e => e.Browser).HasMaxLength(120);
+            entity.Property(e => e.Os).HasMaxLength(120);
+            entity.Property(e => e.IpHash).HasMaxLength(128);
+            entity.Property(e => e.UserAgent).HasMaxLength(500);
+            entity.Property(e => e.MetadataJson).HasMaxLength(4000);
+
+            entity.HasIndex(e => new { e.VisitorId, e.OccurredAt });
+            entity.HasIndex(e => new { e.SessionId, e.OccurredAt });
+            entity.HasIndex(e => new { e.EventType, e.OccurredAt });
+            entity.HasIndex(e => new { e.PagePath, e.OccurredAt });
+
+            entity.HasOne(e => e.Lead)
+                .WithMany()
+                .HasForeignKey(e => e.LeadId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
         modelBuilder.Entity<JourneyStopPhoto>(entity =>
         {
             entity.HasKey(e => e.Id);

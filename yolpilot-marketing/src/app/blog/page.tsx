@@ -1,78 +1,72 @@
-import Link from 'next/link';
+import ResourcePageLayout from '@/components/landing/ResourcePageLayout';
+import { createPageMetadata } from '@/lib/seo';
 
-const topics = [
-  'Rota planlama ipuclari',
-  'Saha ekipleri icin operasyon standardi',
-  'Teslimat kaniti ve musteri guveni',
-  'Bildirim senaryolari ve iletisim',
-  'Entegrasyon ve veri akisi'
-];
-
-const highlights = [
-  {
-    title: 'Operasyon Notlari',
-    description: 'Saha ve planlama ekipleri icin pratik yaklasimlar.'
-  },
-  {
-    title: 'Urun Guncellemeleri',
-    description: 'YolPilot uzerindeki yeni ozellik ve iyilestirmeler.'
-  },
-  {
-    title: 'Rehberler',
-    description: 'Kurulum ve kullanimi hizlandiran kisa rehberler.'
-  }
-];
+export const metadata = createPageMetadata({
+  title: 'Operasyon İçerikleri ve Notlar',
+  description:
+    'Teslimat operasyonu, rota planlama, müşteri bilgilendirme ve saha süreçleri üzerine YolPilot içerik merkezi.',
+  path: '/blog',
+  keywords: ['rota planlama içerikleri', 'teslimat operasyonu blog', 'saha ekipleri rehber']
+});
 
 export default function BlogPage() {
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Blog</h1>
-          <p className="text-blue-100 max-w-3xl mx-auto">
-            Operasyon, saha uygulamalari ve musteri deneyimi uzerine pratik notlar.
-          </p>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {highlights.map((item) => (
-              <div key={item.title} className="bg-gray-50 rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h2>
-                <p className="text-sm text-gray-600">{item.description}</p>
-              </div>
-            ))}
-          </div>
-          <div className="bg-blue-50 rounded-2xl p-6 border border-blue-100">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">Gundemdeki Basliklar</h3>
-            <ul className="grid sm:grid-cols-2 gap-3 text-sm text-gray-700">
-              {topics.map((topic) => (
-                <li key={topic} className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-blue-600"></span>
-                  <span>{topic}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Bize konu onerisi iletin</h2>
-          <p className="text-gray-600 mb-8">
-            Merak ettiginiz basliklari paylasin, icerigi birlikte sekillendirelim.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg"
-          >
-            Iletisim
-          </Link>
-        </div>
-      </section>
-    </div>
+    <ResourcePageLayout
+      eyebrow="İçerik merkezi"
+      title="Operasyon ekipleri için daha faydalı içerikler hazırlıyoruz"
+      description="YolPilot blog tarafı; rota planlama, saha koordinasyonu, teslimat kanıtı, müşteri iletişimi ve entegrasyon süreçleri üzerine daha uygulanabilir içerikler için hazırlanıyor."
+      highlights={[
+        {
+          title: 'Operasyon odaklı',
+          description:
+            'İçerik planı genel pazarlama dili yerine gerçek teslimat ve saha operasyonu sorunlarına odaklanır.'
+        },
+        {
+          title: 'Kısa ve uygulanabilir',
+          description:
+            'Ekiplerin hızlıca kullanabileceği kısa rehberler, kontrol listeleri ve örnek akışlar hazırlanır.'
+        },
+        {
+          title: 'Ürünle bağlantılı',
+          description:
+            'Her içerik başlığı, YolPilot içinde karşılığı olan ekranlar ve operasyon çıktılarıyla ilişkilendirilir.'
+        }
+      ]}
+      sections={[
+        {
+          title: 'Rota planlama notları',
+          description:
+            'Durak yoğunluğu, zaman penceresi, depo çıkışı ve saha kapasitesi gibi başlıklarda uygulamaya dönük içerikler.'
+        },
+        {
+          title: 'Saha uygulaması akışları',
+          description:
+            'Sürücü deneyimi, teslimat kanıtı, istisna yönetimi ve müşteri bilgilendirme süreçlerini anlatan kısa formatlar.'
+        },
+        {
+          title: 'Entegrasyon ve raporlama',
+          description:
+            'Veri akışı, raporlama görünürlüğü ve operasyon çıktılarının ölçülmesiyle ilgili teknik ve operasyonel içerikler.'
+        }
+      ]}
+      bulletSection={{
+        title: 'Yakında yayınlamayı planladığımız başlıklar',
+        description:
+          'Reklam ve satış trafiği için boş bir blog görüntüsü bırakmak yerine önce gerçekten işe yarayan içerik kümelerini hazırlıyoruz.',
+        items: [
+          'Teslimat ekibinde rota değişikliği nasıl daha kontrollü yönetilir?',
+          'Saha ekiplerinde teslimat kanıtı standardı nasıl kurulur?',
+          'Müşteri bilgilendirme yükü operasyon ekibinden nasıl alınır?',
+          'Depo çıkıştan sefer kapanışına kadar görünürlük nasıl artar?',
+          'Dağınık Excel akışlarından operasyon paneline geçiş nasıl planlanır?'
+        ]
+      }}
+      footerTitle="Önce operasyonunuzu birlikte görelim"
+      footerDescription="Hazır içerik beklemek yerine mevcut operasyonunuza göre örnek akış ve ekranları doğrudan demo üzerinden gösterebiliriz."
+      primaryTrackingName="blog-primary-cta"
+      secondaryCtaLabel="Özellikleri inceleyin"
+      secondaryCtaHref="/features"
+      secondaryTrackingName="blog-secondary-cta"
+    />
   );
 }

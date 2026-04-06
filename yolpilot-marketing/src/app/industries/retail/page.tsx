@@ -1,85 +1,72 @@
-import Link from 'next/link';
+import IndustryLandingPage from '@/components/landing/IndustryLandingPage';
+import { createPageMetadata } from '@/lib/seo';
 
-const focus = [
-  'Depo çıkış ve mağaza sevkiyatı',
-  'Bayi ve şube planlaması',
-  'Sefer durum takibi',
-  'İade ve yeniden dağıtım akışı'
-];
-
-const approach = [
-  {
-    title: 'Planlama',
-    description: 'Mağaza ve bayi çıkışlarını kurallara göre planlarız.'
-  },
-  {
-    title: 'Saha',
-    description: 'Sürücü ekipleri teslimat adımlarını mobil uygulamada izler.'
-  },
-  {
-    title: 'Raporlama',
-    description: 'Sefer özetleri ve teslimat kanıtı tek arşivde toplanır.'
-  }
-];
+export const metadata = createPageMetadata({
+  title: 'Perakende ve Şube Sevkiyatı',
+  description: 'Mağaza, bayi ve şube sevkiyatlarında rota planlama, teslimat takibi ve saha koordinasyonu için YolPilot.',
+  path: '/industries/retail',
+  keywords: ['perakende sevkiyat', 'mağaza dağıtımı', 'bayi sevkiyat yönetimi']
+});
 
 export default function RetailIndustryPage() {
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Perakende</h1>
-          <p className="text-blue-100 max-w-3xl mx-auto">
-            Mağaza ve bayi sevkiyatlarını tek panelde planlayıp görünür hale getirin.
-          </p>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktaları</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Perakende sevkiyatında süreç ve görünürlük kritik olduğunda yanınızdayız.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-4">
-            {focus.map((item) => (
-              <div key={item} className="bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 shadow-sm flex items-center gap-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-blue-600"></span>
-                <span className="text-sm text-gray-700">{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-6">
-            {approach.map((item) => (
-              <div key={item.title} className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-600">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Perakende ekibiniz için demo planlayın</h2>
-          <p className="text-gray-600 mb-8">
-            Mağaza ve bayi operasyonunuza uygun akışı birlikte kuralım.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg"
-          >
-            Demo Talep Edin
-          </Link>
-        </div>
-      </section>
-    </div>
+    <IndustryLandingPage
+      eyebrow="Perakende"
+      title="Mağaza ve bayi sevkiyatlarını planlı, izlenebilir ve standart hale getirin"
+      description="YolPilot, perakende ekiplerinin şube, bayi ve mağaza teslimatlarını tek operasyon akışında planlamasını; teslimat sonucunu, iadeyi ve istisnaları daha düzenli takip etmesini sağlar."
+      proof={[
+        { label: 'Odak alanı', value: 'Şube ve bayi sevkiyatı' },
+        { label: 'Operasyon tipi', value: 'Düzenli dağıtım' },
+        { label: 'Çıktı', value: 'Teslimat özeti + kanıt' }
+      ]}
+      problems={[
+        'Mağaza ve bayi teslimatları gün içinde farklı önceliklerle değiştiğinde planlama tekrar manuel hale geliyor.',
+        'Depodan çıkış, teslimat sonucu ve iade akışı aynı görünümde takip edilmediği için saha ile merkez kopuyor.',
+        'Sevkiyat sonucu ve teslimat kanıtı arşivi standart tutulmadığında sonradan kontrol zorlaşıyor.',
+        'Perakende operasyonlarında düzenli rota akışı ile istisna yönetimi aynı sistemde toplanmadığında ekipler yavaşlıyor.'
+      ]}
+      outcomes={[
+        {
+          title: 'Düzenli dağıtım akışı kurulur',
+          description: 'Şube, bayi ve mağaza teslimatlarını tekrarlanabilir bir plan yapısına oturtabilirsiniz.'
+        },
+        {
+          title: 'İade ve sapmalar daha görünür olur',
+          description: 'Teslimat istisnası, mağaza notu ve iade bilgisi operasyon sırasında kayıt altına alınır.'
+        },
+        {
+          title: 'Merkez ekip daha hızlı karar verir',
+          description: 'Teslimat sonucu, araç kullanımı ve mağaza bazlı dağıtım görünürlüğü tek panelde toplanır.'
+        }
+      ]}
+      workflow={[
+        {
+          title: 'Dağıtım yapınızı tanımlayın',
+          description: 'Mağaza, bayi ve dağıtım önceliklerinizi depo ve rota kurallarıyla birlikte kurarız.'
+        },
+        {
+          title: 'Saha ekiplerini akışa bağlayın',
+          description: 'Sürücü uygulamasında durak sırası, mağaza notları ve teslimat kanıtı akışı sadeleştirilir.'
+        },
+        {
+          title: 'Sonuçları raporlayın',
+          description: 'Hangi mağazaya ne zaman gidildiğini, hangi teslimatların tamamlandığını ve hangi istisnaların oluştuğunu raporlayabilirsiniz.'
+        }
+      ]}
+      faqs={[
+        {
+          question: 'Bayi ve mağaza teslimatları aynı yapıdan yönetilebilir mi?',
+          answer: 'Evet. Farklı teslimat tiplerini aynı operasyon panelinde kurguya göre ayırıp yönetebilirsiniz.'
+        },
+        {
+          question: 'İade ve başarısız teslimat kaydı tutulabiliyor mu?',
+          answer: 'Evet. İade, eksik teslimat veya başarısız ziyaret durumları not ve kanıt ile birlikte kayda alınabilir.'
+        },
+        {
+          question: 'Perakende ekipleri için tekrar eden rota kurgusu yapılabilir mi?',
+          answer: 'Evet. Operasyon tipinize göre tekrar eden dağıtım akışları ve planlama yapısı oluşturulabilir.'
+        }
+      ]}
+    />
   );
 }

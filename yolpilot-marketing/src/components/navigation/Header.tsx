@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import TrackedLink from '@/components/ui/TrackedLink';
+import { PRIMARY_CTA_HREF, SECONDARY_CTA_HREF } from '@/lib/marketing';
 
 const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -82,18 +84,20 @@ const Header: React.FC = () => {
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
-          <Link
-            href="/features"
+          <TrackedLink
+            href={SECONDARY_CTA_HREF}
+            trackingName="header-platformu-inceleyin"
             className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition-colors duration-200 hover:border-slate-300 hover:bg-slate-50"
           >
             Platformu İnceleyin
-          </Link>
-          <Link
-            href="/contact"
+          </TrackedLink>
+          <TrackedLink
+            href={PRIMARY_CTA_HREF}
+            trackingName="header-demo-talep-edin"
             className="rounded-full bg-[color:var(--brand)] px-5 py-2.5 text-sm font-semibold !text-white shadow-lg shadow-blue-900/15 transition-all duration-200 hover:bg-blue-700"
           >
             Demo Talep Edin
-          </Link>
+          </TrackedLink>
         </div>
 
         <button
@@ -165,20 +169,22 @@ const Header: React.FC = () => {
               )
             )}
             <div className="space-y-3 border-t border-[color:var(--line)] pt-4">
-              <Link
-                href="/features"
+              <TrackedLink
+                href={SECONDARY_CTA_HREF}
+                trackingName="mobile-header-platformu-inceleyin"
                 className="block rounded-full border border-slate-200 px-6 py-3 text-center text-sm font-semibold text-slate-700 transition-colors duration-200 hover:bg-slate-50"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Platformu İnceleyin
-              </Link>
-              <Link
-                href="/contact"
+              </TrackedLink>
+              <TrackedLink
+                href={PRIMARY_CTA_HREF}
+                trackingName="mobile-header-demo-talep-edin"
                 className="block rounded-full bg-[color:var(--brand)] px-6 py-3 text-center text-sm font-semibold !text-white transition-all duration-200 hover:bg-blue-700"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Demo Talep Edin
-              </Link>
+              </TrackedLink>
             </div>
           </nav>
         </motion.div>

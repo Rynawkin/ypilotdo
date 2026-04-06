@@ -1,85 +1,72 @@
-import Link from 'next/link';
+import IndustryLandingPage from '@/components/landing/IndustryLandingPage';
+import { createPageMetadata } from '@/lib/seo';
 
-const focus = [
-  'Filo ve depo görünürlüğü',
-  'Rota kuralları ve operasyon planlama',
-  'Sefer durumu takibi',
-  'Teslimat kanıtı arşivi'
-];
-
-const approach = [
-  {
-    title: 'Merkezden Planlama',
-    description: 'Depolar ve filolar için ortak rota kuralları belirlenir.'
-  },
-  {
-    title: 'Canlı Takip',
-    description: 'Seferlerin durumu tek panelden izlenir.'
-  },
-  {
-    title: 'Raporlama',
-    description: 'Sefer özetleri ve operasyon notları tek yerde toplanır.'
-  }
-];
+export const metadata = createPageMetadata({
+  title: 'Lojistik ve Filo Operasyonları',
+  description: 'Depo, filo, sürücü ve sefer takibini tek panelde yöneten lojistik ekipleri için YolPilot çözümleri.',
+  path: '/industries/logistics',
+  keywords: ['lojistik yazılımı', 'filo yönetimi', 'depo operasyonu', 'sefer planlama']
+});
 
 export default function LogisticsIndustryPage() {
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
-      <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Lojistik</h1>
-          <p className="text-blue-100 max-w-3xl mx-auto">
-            Depo ve filo operasyonlarını tek merkezden yönetmek için YolPilot ile planlı bir akışa geçin.
-          </p>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktaları</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Lojistik süreçlerinde görünürlük ve kontrolü artırırız.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-4">
-            {focus.map((item) => (
-              <div key={item} className="bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 shadow-sm flex items-center gap-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-blue-600"></span>
-                <span className="text-sm text-gray-700">{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-6">
-            {approach.map((item) => (
-              <div key={item.title} className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-600">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Lojistik operasyonu için demo planlayın</h2>
-          <p className="text-gray-600 mb-8">
-            Filo ve depo yapınıza uygun senaryoyu birlikte oluşturalım.
-          </p>
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg"
-          >
-            Demo Talep Edin
-          </Link>
-        </div>
-      </section>
-    </div>
+    <IndustryLandingPage
+      eyebrow="Lojistik"
+      title="Depo, filo ve sefer operasyonlarını tek merkezden görünür hale getirin"
+      description="YolPilot, dağıtım ve lojistik ekiplerinin depo çıkışlarını, aktif seferleri, araç ve sürücü kullanımını aynı operasyon panelinde takip etmesini sağlar."
+      proof={[
+        { label: 'Odak alanı', value: 'Filo + depo görünürlüğü' },
+        { label: 'Operasyon tipi', value: 'Sefer planlama ve takip' },
+        { label: 'Çıktı', value: 'Canlı durum + rapor' }
+      ]}
+      problems={[
+        'Depo çıkış planı, araç ataması ve sefer durumu farklı ekipler arasında parçalı kaldığında koordinasyon zorlaşıyor.',
+        'Hangi aracın hangi rotada olduğu, hangi sürücünün aktif seferde bulunduğu gün içinde net görülemiyor.',
+        'Teslimat sonucu, istisna durumu ve sahadan gelen notlar raporlamak için sonradan toplanıyor.',
+        'Filo büyüdükçe planlama ve performans izleme tek bir görünüm yerine birden fazla araca bölünüyor.'
+      ]}
+      outcomes={[
+        {
+          title: 'Sefer yönetimi netleşir',
+          description: 'Sefer, rota, sürücü ve araç ilişkilerini tek panelde takip ederek operasyonu daha hızlı koordine edersiniz.'
+        },
+        {
+          title: 'Depo çıkışı ve dönüşü görünür olur',
+          description: 'Depodan çıkış, aktif durak akışı ve dönüş bilgileri operasyon sırasında kayda geçer.'
+        },
+        {
+          title: 'Raporlama karar almaya yaklaşır',
+          description: 'Aktif operasyon, teslimat sonucu ve saha notları tek veri akışında toplandığı için raporlar daha anlamlı hale gelir.'
+        }
+      ]}
+      workflow={[
+        {
+          title: 'Depo ve filo yapısını kurun',
+          description: 'Depolar, araçlar, sürücüler ve operasyon kuralları sisteme tanımlanır.'
+        },
+        {
+          title: 'Sefer ve rota akışını yönetin',
+          description: 'Panel üzerinden planlama yapın, saha tarafına net görev akışı iletin ve değişiklikleri tek merkezden yönetin.'
+        },
+        {
+          title: 'Operasyon sonucunu raporlayın',
+          description: 'Teslimat sonucu, sefer özeti, sapmalar ve performans çıktıları tek raporlama katmanına taşınır.'
+        }
+      ]}
+      faqs={[
+        {
+          question: 'Birden fazla depoyu aynı panelden yönetebilir miyiz?',
+          answer: 'Evet. Depo bazlı yapı kurup rotaları, araçları ve seferleri ayrı görünürlüklerle yönetebilirsiniz.'
+        },
+        {
+          question: 'Araç ve sürücü performansı izlenebilir mi?',
+          answer: 'Evet. Araç, sürücü ve sefer bazlı görünüm ile günlük operasyonu ve tarihsel kayıtları takip edebilirsiniz.'
+        },
+        {
+          question: 'Teslimat kanıtı lojistik operasyonunda da tutuluyor mu?',
+          answer: 'Evet. Teslimat sonucu, fotoğraf, not ve istisna kayıtları operasyon akışının parçası olarak saklanabilir.'
+        }
+      ]}
+    />
   );
 }

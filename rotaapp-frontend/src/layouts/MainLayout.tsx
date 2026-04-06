@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   AlertTriangle,
+  BarChart3,
   Bell,
   Bug,
   Car,
@@ -205,7 +206,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, onLogout }) => {
     { icon: Settings, label: 'Ayarlar', path: '/settings', roles: ['dispatcher', 'admin', 'superadmin'] },
     { icon: Shield, label: 'Super Admin', path: '/super-admin', badge: 'SUPER', roles: ['superadmin'] },
     { icon: Bug, label: 'Sorun Bildirimleri', path: '/superadmin/issues', roles: ['superadmin'] },
-    { icon: Users, label: "Marketing Lead'leri", path: '/superadmin/marketing-leads', roles: ['superadmin'] }
+    { icon: Users, label: "Marketing Lead'leri", path: '/superadmin/marketing-leads', roles: ['superadmin'] },
+    { icon: BarChart3, label: 'Marketing Analytics', path: '/superadmin/marketing-analytics', roles: ['superadmin'] }
   ];
 
   const menuItems = allMenuItems.filter((item) => (item.roles ? item.roles.includes(currentRole) : true));
@@ -540,6 +542,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, onLogout }) => {
                           <Link to="/superadmin/marketing-leads" className="flex items-center gap-3 px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50" onClick={() => setUserMenuOpen(false)}>
                             <Users className="h-4 w-4 text-slate-500" />
                             Marketing Lead'leri
+                          </Link>
+                          <Link to="/superadmin/marketing-analytics" className="flex items-center gap-3 px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50" onClick={() => setUserMenuOpen(false)}>
+                            <BarChart3 className="h-4 w-4 text-slate-500" />
+                            Marketing Analytics
                           </Link>
                         </>
                       )}
