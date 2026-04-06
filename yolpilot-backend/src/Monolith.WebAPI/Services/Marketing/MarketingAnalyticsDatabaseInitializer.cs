@@ -8,7 +8,7 @@ public static class MarketingAnalyticsDatabaseInitializer
     public static async Task EnsureTablesAsync(AppDbContext context, ILogger logger)
     {
         const string createAnalyticsTableSql = @"
-CREATE TABLE IF NOT EXISTS dbo.marketinganalyticsevent (
+CREATE TABLE IF NOT EXISTS dbo.marketinganalyticsevents (
     id serial PRIMARY KEY,
     visitorid varchar(64) NOT NULL,
     sessionid varchar(64) NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS dbo.marketinganalyticsevent (
     createdat timestamp without time zone NOT NULL DEFAULT now(),
     updatedat timestamp without time zone NULL,
     isdeleted boolean NOT NULL DEFAULT false,
-    CONSTRAINT fk_marketinganalyticsevent_marketingleads_leadid
+    CONSTRAINT fk_marketinganalyticsevents_marketingleads_leadid
         FOREIGN KEY (leadid) REFERENCES dbo.marketingleads (id) ON DELETE SET NULL
 );";
 
@@ -52,11 +52,11 @@ CREATE TABLE IF NOT EXISTS dbo.marketinganalyticsevent (
 
         var indexSql = new[]
         {
-            "CREATE INDEX IF NOT EXISTS ix_marketinganalyticsevent_visitorid_occurredat ON dbo.marketinganalyticsevent (visitorid, occurredat DESC);",
-            "CREATE INDEX IF NOT EXISTS ix_marketinganalyticsevent_sessionid_occurredat ON dbo.marketinganalyticsevent (sessionid, occurredat DESC);",
-            "CREATE INDEX IF NOT EXISTS ix_marketinganalyticsevent_eventtype_occurredat ON dbo.marketinganalyticsevent (eventtype, occurredat DESC);",
-            "CREATE INDEX IF NOT EXISTS ix_marketinganalyticsevent_pagepath_occurredat ON dbo.marketinganalyticsevent (pagepath, occurredat DESC);",
-            "CREATE INDEX IF NOT EXISTS ix_marketinganalyticsevent_utmsource_utmcampaign ON dbo.marketinganalyticsevent (utmsource, utmcampaign);",
+            "CREATE INDEX IF NOT EXISTS ix_marketinganalyticsevents_visitorid_occurredat ON dbo.marketinganalyticsevents (visitorid, occurredat DESC);",
+            "CREATE INDEX IF NOT EXISTS ix_marketinganalyticsevents_sessionid_occurredat ON dbo.marketinganalyticsevents (sessionid, occurredat DESC);",
+            "CREATE INDEX IF NOT EXISTS ix_marketinganalyticsevents_eventtype_occurredat ON dbo.marketinganalyticsevents (eventtype, occurredat DESC);",
+            "CREATE INDEX IF NOT EXISTS ix_marketinganalyticsevents_pagepath_occurredat ON dbo.marketinganalyticsevents (pagepath, occurredat DESC);",
+            "CREATE INDEX IF NOT EXISTS ix_marketinganalyticsevents_utmsource_utmcampaign ON dbo.marketinganalyticsevents (utmsource, utmcampaign);",
             "CREATE INDEX IF NOT EXISTS ix_marketingleads_utmsource_utmcampaign ON dbo.marketingleads (utmsource, utmcampaign);",
             "CREATE INDEX IF NOT EXISTS ix_marketingleads_visitorid ON dbo.marketingleads (visitorid);"
         };

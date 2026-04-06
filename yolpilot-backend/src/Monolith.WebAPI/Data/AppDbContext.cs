@@ -447,6 +447,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options, IPublisher pub
         // ============= 🆕 JOURNEY STOP PHOTOS CONFIGURATION - ÇOKLU FOTOĞRAF DESTEĞİ =============
         modelBuilder.Entity<MarketingAnalyticsEvent>(entity =>
         {
+            entity.ToTable("marketinganalyticsevents");
             entity.HasKey(e => e.Id);
             entity.Property(e => e.EventType).IsRequired().HasMaxLength(50);
             entity.Property(e => e.EventName).HasMaxLength(100);
