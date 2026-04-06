@@ -78,10 +78,13 @@ public class ReoptimizeActiveJourneyCommandHandler : BaseAuthenticatedCommandHan
             .Include(j => j.EndDetails)
             .FirstOrDefaultAsync(x => x.Id == request.JourneyId && x.WorkspaceId == User.WorkspaceId, cancellationToken);
 
+
         if (journey is null)
             throw new ApiException("Sefer bulunamadı", 404);
 
         // Sadece aktif seferlere optimizasyon yapılabilir
+        EnsureDriverCanOnlyAccessOwnJourney(journey);
+
         if (!journey.IsActive)
             throw new ApiException("Sadece aktif seferlere optimizasyon yapılabilir", 400);
 
@@ -362,7 +365,7 @@ public class ReoptimizeActiveJourneyCommandHandler : BaseAuthenticatedCommandHan
             // SignalR ile şoföre güncellemeyi bildir
             try
             {
-                await _journeyHub.Clients.Group($"journey_{journey.Id}").SendAsync(
+                await _journeyHub.Clients.Group($"journey-{journey.Id}").SendAsync(
                     "JourneyReoptimized",
                     new
                     {
@@ -415,6 +418,19 @@ public class ReoptimizeActiveJourneyCommandHandler : BaseAuthenticatedCommandHan
     /// <summary>
     /// Haversine formülü ile iki nokta arası mesafe hesapla (metre)
     /// </summary>
+    private void EnsureDriverCanOnlyAccessOwnJourney(Data.Journeys.Journey journey)
+    {
+        if (!User.IsDriver)
+        {
+            return;
+        }
+
+        if (journey.Driver?.UserId != User.Id)
+        {
+            throw new ApiException("You can only reoptimize your assigned journey.", 403);
+        }
+    }
+
     private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
     {
         const double R = 6371000; // Dünya yarıçapı metre

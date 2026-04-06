@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Options;
 using Monolith.WebAPI.External.Google;
 
@@ -6,6 +7,11 @@ namespace Monolith.WebAPI.Services.Optimization;
 
 public class OrderedRouteDetailsProvider : IOrderedRouteDetailsProvider
 {
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
+
     private readonly GoogleApiService _googleApiService;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly RoutingSettings _settings;
@@ -67,7 +73,7 @@ public class OrderedRouteDetailsProvider : IOrderedRouteDetailsProvider
         response.EnsureSuccessStatusCode();
 
         await using var stream = await response.Content.ReadAsStreamAsync();
-        var payload = await JsonSerializer.DeserializeAsync<OsrmRouteResponse>(stream)
+        var payload = await JsonSerializer.DeserializeAsync<OsrmRouteResponse>(stream, JsonOptions)
             ?? throw new InvalidOperationException("OSRM route returned an empty payload.");
 
         if (!string.Equals(payload.Code, "Ok", StringComparison.OrdinalIgnoreCase))
@@ -187,21 +193,29 @@ public class OrderedRouteDetailsProvider : IOrderedRouteDetailsProvider
 
     private sealed class OsrmRouteResponse
     {
+        [JsonPropertyName("code")]
         public string? Code { get; set; }
+        [JsonPropertyName("routes")]
         public List<OsrmRoute>? Routes { get; set; }
     }
 
     private sealed class OsrmRoute
     {
+        [JsonPropertyName("distance")]
         public double Distance { get; set; }
+        [JsonPropertyName("duration")]
         public double Duration { get; set; }
+        [JsonPropertyName("geometry")]
         public string? Geometry { get; set; }
+        [JsonPropertyName("legs")]
         public List<OsrmRouteLeg>? Legs { get; set; }
     }
 
     private sealed class OsrmRouteLeg
     {
+        [JsonPropertyName("distance")]
         public double Distance { get; set; }
+        [JsonPropertyName("duration")]
         public double Duration { get; set; }
     }
 }

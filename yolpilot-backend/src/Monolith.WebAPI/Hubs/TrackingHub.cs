@@ -52,6 +52,16 @@ namespace Monolith.WebAPI.Hubs
         // Driver/Vehicle tracking group
         public async Task JoinVehicleTracking(int vehicleId)
         {
+            var workspaceId = GetWorkspaceIdOrThrow();
+            var vehicleExists = await _context.Vehicles
+                .AsNoTracking()
+                .AnyAsync(v => v.Id == vehicleId && v.WorkspaceId == workspaceId);
+
+            if (!vehicleExists)
+            {
+                throw new HubException("Vehicle not found.");
+            }
+
             await Groups.AddToGroupAsync(Context.ConnectionId, $"tracking-vehicle-{vehicleId}");
             _logger.LogInformation("Connection {ConnectionId} joined vehicle-{VehicleId} tracking", 
                 Context.ConnectionId, vehicleId);
@@ -59,6 +69,16 @@ namespace Monolith.WebAPI.Hubs
 
         public async Task LeaveVehicleTracking(int vehicleId)
         {
+            var workspaceId = GetWorkspaceIdOrThrow();
+            var vehicleExists = await _context.Vehicles
+                .AsNoTracking()
+                .AnyAsync(v => v.Id == vehicleId && v.WorkspaceId == workspaceId);
+
+            if (!vehicleExists)
+            {
+                throw new HubException("Vehicle not found.");
+            }
+
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"tracking-vehicle-{vehicleId}");
             _logger.LogInformation("Connection {ConnectionId} left vehicle-{VehicleId} tracking", 
                 Context.ConnectionId, vehicleId);
@@ -67,6 +87,12 @@ namespace Monolith.WebAPI.Hubs
         // Join all active journeys tracking for a workspace
         public async Task JoinWorkspaceTracking(int workspaceId)
         {
+            var currentWorkspaceId = GetWorkspaceIdOrThrow();
+            if (workspaceId != currentWorkspaceId)
+            {
+                throw new HubException("You can only subscribe to your own workspace.");
+            }
+
             await Groups.AddToGroupAsync(Context.ConnectionId, $"tracking-workspace-{workspaceId}");
             _logger.LogInformation("Connection {ConnectionId} joined workspace-{WorkspaceId} tracking", 
                 Context.ConnectionId, workspaceId);
@@ -75,6 +101,12 @@ namespace Monolith.WebAPI.Hubs
         // ✅ DÜZELTME: LeaveWorkspaceTracking metodu eklendi
         public async Task LeaveWorkspaceTracking(int workspaceId)
         {
+            var currentWorkspaceId = GetWorkspaceIdOrThrow();
+            if (workspaceId != currentWorkspaceId)
+            {
+                throw new HubException("You can only leave your own workspace tracking group.");
+            }
+
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"tracking-workspace-{workspaceId}");
             _logger.LogInformation("Connection {ConnectionId} left workspace-{WorkspaceId} tracking", 
                 Context.ConnectionId, workspaceId);
@@ -85,19 +117,15 @@ namespace Monolith.WebAPI.Hubs
         {
             try
             {
-                var workspaceId = Context.User?.FindFirst("WorkspaceId")?.Value;
-                if (string.IsNullOrEmpty(workspaceId))
-                {
-                    _logger.LogWarning("No workspace ID found for user");
-                    return;
-                }
+                var workspaceId = GetWorkspaceIdOrThrow();
 
                 // Validate journey exists and is active
                 var journey = await _context.Journeys
                     .Include(j => j.Vehicle)
+                    .Include(j => j.Driver)
                     .FirstOrDefaultAsync(j => 
                         j.Id == locationUpdate.JourneyId && 
-                        j.WorkspaceId == int.Parse(workspaceId) &&
+                        j.WorkspaceId == workspaceId &&
                         j.Status == JourneyStatusEnum.InProgress);
 
                 if (journey == null)
@@ -105,6 +133,8 @@ namespace Monolith.WebAPI.Hubs
                     _logger.LogWarning("Journey {JourneyId} not found or not active", locationUpdate.JourneyId);
                     return;
                 }
+
+                await EnsureDriverOwnsJourneyIfDriverAsync(journey);
 
                 // Update journey's live location
                 journey.LiveLocation = new LiveLocation
@@ -212,11 +242,18 @@ namespace Monolith.WebAPI.Hubs
         {
             try
             {
-                var workspaceId = Context.User?.FindFirst("WorkspaceId")?.Value;
-                if (string.IsNullOrEmpty(workspaceId))
+                var workspaceId = GetWorkspaceIdOrThrow();
+
+                var journey = await _context.Journeys
+                    .Include(j => j.Driver)
+                    .FirstOrDefaultAsync(j => j.Id == alert.JourneyId && j.WorkspaceId == workspaceId);
+
+                if (journey == null)
                 {
-                    return;
+                    throw new HubException("Journey not found.");
                 }
+
+                await EnsureDriverOwnsJourneyIfDriverAsync(journey);
 
                 // Log emergency alert
                 _logger.LogWarning("EMERGENCY ALERT from journey {JourneyId}: {Message}", 
@@ -242,7 +279,6 @@ namespace Monolith.WebAPI.Hubs
                     alert.JourneyId);
             }
         }
-    }
 
     // DTOs for TrackingHub
     public class UpdateLocationDto
@@ -276,4 +312,35 @@ namespace Monolith.WebAPI.Hubs
         public string Message { get; set; } = string.Empty;
         public LiveLocation? Location { get; set; }
     }
+
+    private int GetWorkspaceIdOrThrow()
+    {
+        var workspaceId = Context.User?.FindFirst("WorkspaceId")?.Value;
+        if (string.IsNullOrWhiteSpace(workspaceId) || !int.TryParse(workspaceId, out var parsedWorkspaceId))
+        {
+            throw new HubException("Workspace claim is missing.");
+        }
+
+        return parsedWorkspaceId;
+    }
+
+    private async Task EnsureDriverOwnsJourneyIfDriverAsync(Data.Journeys.Journey journey)
+    {
+        var userId = Context.UserIdentifier;
+        if (string.IsNullOrWhiteSpace(userId) || !Guid.TryParse(userId, out var parsedUserId))
+        {
+            return;
+        }
+
+        var driver = await _context.Drivers
+            .AsNoTracking()
+            .FirstOrDefaultAsync(d => d.WorkspaceId == journey.WorkspaceId && d.UserId == parsedUserId);
+
+        if (driver != null && journey.DriverId != driver.Id)
+        {
+            throw new HubException("You can only update your assigned journey.");
+        }
+
+}
+}
 }

@@ -184,6 +184,10 @@ using (var scope = app.Services.CreateScope())
     {
         migrationLogger.LogInformation("Starting database migration...");
         var context = services.GetRequiredService<AppDbContext>();
+        var seedDemoData = app.Environment.IsDevelopment() || app.Configuration.GetValue<bool>("StartupTasks:SeedDemoData");
+        var migrateDriversOnStartup = app.Environment.IsDevelopment() || app.Configuration.GetValue<bool>("StartupTasks:MigrateDriversOnStartup");
+        var resetDemoData = args.Contains("--reset-demo");
+        var forceMigrateDrivers = args.Contains("--migrate-drivers");
         // Azure'da migration otomatik çalışsın
         //await context.Database.MigrateAsync();
         migrationLogger.LogInformation("Database migration skipped - manual SQL required.");
@@ -191,21 +195,34 @@ using (var scope = app.Services.CreateScope())
         await DatabaseSeeder.SeedRolesAsync(services);
         migrationLogger.LogInformation("Roles seeded successfully.");
         
-        await DatabaseSeeder.SeedDemoUsersAsync(services);
-        migrationLogger.LogInformation("Demo users and workspace seeded successfully.");
+        if (seedDemoData)
+        {
+            await DatabaseSeeder.SeedDemoUsersAsync(services);
+            migrationLogger.LogInformation("Demo users and workspace seeded successfully.");
+        }
+        else
+        {
+            migrationLogger.LogInformation("Demo user seeding skipped for non-development startup.");
+        }
+
+        if (migrateDriversOnStartup || forceMigrateDrivers)
+        {
+            if (forceMigrateDrivers)
+            {
+                migrationLogger.LogInformation("Force migrating existing drivers to users...");
+            }
+
+            await MigrateExistingDriversToUsers(services, migrationLogger, forceUpdate: forceMigrateDrivers);
+        }
+        else
+        {
+            migrationLogger.LogInformation("Driver migration skipped for this startup.");
+        }
         
-        await MigrateExistingDriversToUsers(services, migrationLogger);
-        
-        if (args.Contains("--reset-demo"))
+        if (resetDemoData)
         {
             await DatabaseSeeder.ResetDemoDataAsync(services);
             migrationLogger.LogInformation("Demo data reset successfully.");
-        }
-        
-        if (args.Contains("--migrate-drivers"))
-        {
-            migrationLogger.LogInformation("Force migrating existing drivers to users...");
-            await MigrateExistingDriversToUsers(services, migrationLogger, forceUpdate: true);
         }
     }
     catch (Exception ex)

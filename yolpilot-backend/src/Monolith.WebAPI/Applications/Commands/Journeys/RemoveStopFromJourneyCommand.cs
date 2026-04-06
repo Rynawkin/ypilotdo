@@ -110,7 +110,7 @@ public class RemoveStopFromJourneyCommandHandler : BaseAuthenticatedCommandHandl
         // SignalR ile bildirim gönder
         try
         {
-            await _journeyHub.Clients.Group($"journey_{journey.Id}").SendAsync(
+            await _journeyHub.Clients.Group($"journey-{journey.Id}").SendAsync(
                 "StopRemoved",
                 new
                 {

@@ -408,12 +408,12 @@ const StopsList: React.FC<StopsListProps> = ({
       {stops.length > 0 && (
         <div className={`flex items-center justify-between p-3 rounded-lg ${
           optimizationStatus === 'success' ? 'bg-green-50 border border-green-200' :
-          optimizationStatus === 'partial' ? 'bg-green-50 border border-green-200' :
+          optimizationStatus === 'partial' ? 'bg-amber-50 border border-amber-200' :
           'bg-gray-50 border border-gray-200'
         }`}>
           <h3 className={`font-medium flex items-center ${
             optimizationStatus === 'success' ? 'text-green-700' :
-            optimizationStatus === 'partial' ? 'text-green-700' :
+            optimizationStatus === 'partial' ? 'text-amber-700' :
             'text-gray-700'
           }`}>
             {optimizationStatus !== 'none' && (
@@ -422,7 +422,18 @@ const StopsList: React.FC<StopsListProps> = ({
             {optimizationStatus === 'none' ? 'Duraklar' : 'Optimize Edilmiş Duraklar'}
           </h3>
           {optimizationStatus !== 'none' && (
-            <span className="text-xs text-green-600 font-medium">
+            <span className={`text-xs font-medium ${
+              optimizationStatus === 'partial' ? 'text-amber-700' : 'text-green-600'
+            }`}>
+              {optimizationStatus === 'partial'
+                ? `${stops.length} durak optimize edildi, bazı duraklar hariç tutuldu`
+                : `${stops.length} durak başarıyla optimize edildi`}
+            </span>
+          )}
+          {false && optimizationStatus !== 'none' && (
+            <span className={`text-xs font-medium ${
+              optimizationStatus === 'partial' ? 'text-amber-700' : 'text-green-600'
+            }`}>
               {stops.length} durak başarıyla optimize edildi
             </span>
           )}

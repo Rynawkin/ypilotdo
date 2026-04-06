@@ -109,6 +109,310 @@ public class UpdateJourneyStopCommandHandler : BaseAuthenticatedCommandHandler<U
 
     protected override async Task<bool> HandleCommand(UpdateJourneyStopCommand request, CancellationToken cancellationToken)
     {
+        // Legacy pre-check-in notification block intentionally disabled.
+        #if false
+        if (success)
+        {
+            var workspace = await _context.Workspaces
+                .AsNoTracking()
+                .FirstOrDefaultAsync(w => w.Id == User.WorkspaceId, cancellationToken);
+
+            if (workspace != null)
+            {
+                var allStops = await _context.JourneyStops
+                    .Include(s => s.RouteStop)
+                        .ThenInclude(rs => rs.Customer)
+                    .Where(s => s.JourneyId == request.JourneyId)
+                    .OrderBy(s => s.Order)
+                    .ToListAsync(cancellationToken);
+
+                var nextStop = allStops.FirstOrDefault(s => s.Order == currentStop.Order + 1);
+
+                if (nextStop?.RouteStop?.Customer != null)
+                {
+                    var customer = nextStop.RouteStop.Customer;
+                    var driver = currentStop.Journey.Driver;
+
+                    string minTimeStr, maxTimeStr;
+                    var currentServiceTime = currentStop.RouteStop?.ServiceTime ?? TimeSpan.FromMinutes(10);
+                    var currentServiceMinutes = (int)currentServiceTime.TotalMinutes;
+
+                    var travelMinutes = 0;
+                    if (nextStop.EstimatedArrivalTime != TimeSpan.Zero && currentStop.EstimatedDepartureTime.HasValue)
+                    {
+                        var travelTime = nextStop.EstimatedArrivalTime - currentStop.EstimatedDepartureTime.Value;
+                        travelMinutes = (int)travelTime.TotalMinutes;
+                    }
+                    else
+                    {
+                        var distanceKm = nextStop.Distance;
+                        travelMinutes = (int)(distanceKm / 40.0 * 60);
+                    }
+
+                    var totalMinutes = currentServiceMinutes + travelMinutes;
+                    var roundedMinutes = (int)(Math.Ceiling(totalMinutes / 5.0) * 5);
+
+                    var minTime = roundedMinutes;
+                    var maxTime = roundedMinutes + 30;
+
+                    if (minTime < 60)
+                        minTimeStr = $"{minTime} dakika";
+                    else
+                    {
+                        var hours = minTime / 60;
+                        var minutes = minTime % 60;
+                        minTimeStr = minutes == 0 ? $"{hours} saat" : $"{hours} saat {minutes} dakika";
+                    }
+
+                    if (maxTime < 60)
+                        maxTimeStr = $"{maxTime} dakika";
+                    else
+                    {
+                        var hours = maxTime / 60;
+                        var minutes = maxTime % 60;
+                        maxTimeStr = minutes == 0 ? $"{hours} saat" : $"{hours} saat {minutes} dakika";
+                    }
+
+                    var templateData = new Dictionary<string, object>
+                    {
+                        ["customer"] = new
+                        {
+                            name = customer.Name,
+                            address = customer.Address
+                        },
+                        ["stop"] = new
+                        {
+                            estimatedArrivalTime = $"{minTimeStr} - {maxTimeStr}"
+                        },
+                        ["driver"] = new
+                        {
+                            name = driver?.Name ?? "Teslimat GÃ¶revlisi",
+                            phone = driver?.Phone ?? workspace.PhoneNumber
+                        },
+                        ["trackingUrl"] = "https://app.yolpilot.com/tracking",
+                        ["workspace"] = new
+                        {
+                            name = workspace.Name,
+                            email = workspace.Email,
+                            phoneNumber = workspace.PhoneNumber
+                        }
+                    };
+
+                    if (!string.IsNullOrEmpty(customer.Email))
+                    {
+                        try
+                        {
+                            var (subject, body) = await _templateService.GetProcessedEmailContentAsync(
+                                workspace.Id,
+                                TemplateType.CheckIn,
+                                templateData);
+
+                            await _emailService.SendNearbyNotificationToCustomerContactsAsync(
+                                customer.Id,
+                                customer.Name,
+                                minTimeStr,
+                                maxTimeStr);
+
+                            _logger.LogInformation(
+                                "Delivery approaching email sent to {Email} with ETA: {MinTime} - {MaxTime} (TemplateResolved: {TemplateResolved})",
+                                customer.Email,
+                                minTimeStr,
+                                maxTimeStr,
+                                !string.IsNullOrEmpty(subject) && !string.IsNullOrEmpty(body));
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "Failed to send delivery approaching email");
+                        }
+                    }
+
+                    var sendWhatsApp = workspace.WhatsAppMode != WhatsAppMode.Disabled &&
+                                       workspace.WhatsAppNotifyCheckIn;
+
+                    if (sendWhatsApp)
+                    {
+                        var canSendWhatsApp = await _subscriptionService.CanSendWhatsApp(User.WorkspaceId);
+                        sendWhatsApp = canSendWhatsApp;
+                    }
+
+                    if (sendWhatsApp && customer.WhatsAppOptIn && !string.IsNullOrEmpty(customer.WhatsApp))
+                    {
+                        try
+                        {
+                            var whatsAppSuccess = await _whatsAppService.SendApproachingMessage(
+                                workspace,
+                                customer.WhatsApp,
+                                customer.Name,
+                                minTimeStr,
+                                maxTimeStr,
+                                driver?.Name,
+                                driver?.Phone);
+
+                            if (whatsAppSuccess)
+                            {
+                                _logger.LogInformation($"Approaching WhatsApp sent to {customer.Name} ({customer.WhatsApp})");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, $"Failed to send WhatsApp to {customer.WhatsApp}");
+                        }
+                    }
+                }
+            }
+        }
+
+        if (success)
+        {
+            var workspace = await _context.Workspaces
+                .AsNoTracking()
+                .FirstOrDefaultAsync(w => w.Id == User.WorkspaceId, cancellationToken);
+
+            if (workspace != null)
+            {
+                var allStops = await _context.JourneyStops
+                    .Include(s => s.RouteStop)
+                        .ThenInclude(rs => rs.Customer)
+                    .Where(s => s.JourneyId == request.JourneyId)
+                    .OrderBy(s => s.Order)
+                    .ToListAsync(cancellationToken);
+
+                var nextStop = allStops.FirstOrDefault(s => s.Order == currentStop.Order + 1);
+
+                if (nextStop?.RouteStop?.Customer != null)
+                {
+                    var customer = nextStop.RouteStop.Customer;
+                    var driver = currentStop.Journey.Driver;
+                    string minTimeStr, maxTimeStr;
+
+                    var currentServiceTime = currentStop.RouteStop?.ServiceTime ?? TimeSpan.FromMinutes(10);
+                    var currentServiceMinutes = (int)currentServiceTime.TotalMinutes;
+                    var travelMinutes = 0;
+
+                    if (nextStop.EstimatedArrivalTime != TimeSpan.Zero && currentStop.EstimatedDepartureTime.HasValue)
+                    {
+                        var travelTime = nextStop.EstimatedArrivalTime - currentStop.EstimatedDepartureTime.Value;
+                        travelMinutes = (int)travelTime.TotalMinutes;
+                    }
+                    else
+                    {
+                        var distanceKm = nextStop.Distance;
+                        travelMinutes = (int)(distanceKm / 40.0 * 60);
+                    }
+
+                    var totalMinutes = currentServiceMinutes + travelMinutes;
+                    var roundedMinutes = (int)(Math.Ceiling(totalMinutes / 5.0) * 5);
+                    var minTime = roundedMinutes;
+                    var maxTime = roundedMinutes + 30;
+
+                    if (minTime < 60)
+                        minTimeStr = $"{minTime} dakika";
+                    else
+                    {
+                        var hours = minTime / 60;
+                        var minutes = minTime % 60;
+                        minTimeStr = minutes == 0 ? $"{hours} saat" : $"{hours} saat {minutes} dakika";
+                    }
+
+                    if (maxTime < 60)
+                        maxTimeStr = $"{maxTime} dakika";
+                    else
+                    {
+                        var hours = maxTime / 60;
+                        var minutes = maxTime % 60;
+                        maxTimeStr = minutes == 0 ? $"{hours} saat" : $"{hours} saat {minutes} dakika";
+                    }
+
+                    var templateData = new Dictionary<string, object>
+                    {
+                        ["customer"] = new
+                        {
+                            name = customer.Name,
+                            address = customer.Address
+                        },
+                        ["stop"] = new
+                        {
+                            estimatedArrivalTime = $"{minTimeStr} - {maxTimeStr}"
+                        },
+                        ["driver"] = new
+                        {
+                            name = driver?.Name ?? "Teslimat GÃ¶revlisi",
+                            phone = driver?.Phone ?? workspace.PhoneNumber
+                        },
+                        ["trackingUrl"] = "https://app.yolpilot.com/tracking",
+                        ["workspace"] = new
+                        {
+                            name = workspace.Name,
+                            email = workspace.Email,
+                            phoneNumber = workspace.PhoneNumber
+                        }
+                    };
+
+                    if (!string.IsNullOrEmpty(customer.Email))
+                    {
+                        try
+                        {
+                            var (subject, body) = await _templateService.GetProcessedEmailContentAsync(
+                                workspace.Id,
+                                TemplateType.CheckIn,
+                                templateData);
+
+                            await _emailService.SendNearbyNotificationToCustomerContactsAsync(
+                                customer.Id,
+                                customer.Name,
+                                minTimeStr,
+                                maxTimeStr);
+
+                            _logger.LogInformation(
+                                "Delivery approaching email sent to {Email} with ETA: {MinTime} - {MaxTime} (TemplateResolved: {TemplateResolved})",
+                                customer.Email,
+                                minTimeStr,
+                                maxTimeStr,
+                                !string.IsNullOrEmpty(subject) && !string.IsNullOrEmpty(body));
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "Failed to send delivery approaching email");
+                        }
+                    }
+
+                    var sendWhatsApp = workspace.WhatsAppMode != WhatsAppMode.Disabled &&
+                                       workspace.WhatsAppNotifyCheckIn;
+
+                    if (sendWhatsApp)
+                    {
+                        var canSendWhatsApp = await _subscriptionService.CanSendWhatsApp(User.WorkspaceId);
+                        sendWhatsApp = canSendWhatsApp;
+                    }
+
+                    if (sendWhatsApp && customer.WhatsAppOptIn && !string.IsNullOrEmpty(customer.WhatsApp))
+                    {
+                        try
+                        {
+                            var whatsAppSuccess = await _whatsAppService.SendApproachingMessage(
+                                workspace,
+                                customer.WhatsApp,
+                                customer.Name,
+                                minTimeStr,
+                                maxTimeStr,
+                                driver?.Name,
+                                driver?.Phone);
+
+                            if (whatsAppSuccess)
+                            {
+                                _logger.LogInformation($"Approaching WhatsApp sent to {customer.Name} ({customer.WhatsApp})");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, $"Failed to send WhatsApp to {customer.WhatsApp}");
+                        }
+                    }
+                }
+            }
+        }
+
+        #endif
         var stop = await _context.JourneyStops
             .Include(s => s.Journey)
                 .ThenInclude(j => j.Driver)
@@ -126,6 +430,8 @@ public class UpdateJourneyStopCommandHandler : BaseAuthenticatedCommandHandler<U
         {
             throw new ApiException($"Stop {request.StopId} not found in journey {request.JourneyId}", 404);
         }
+
+        EnsureDriverCanOnlyAccessOwnJourney(stop.Journey);
 
         if (stop.Journey.Status != JourneyStatusEnum.InProgress)
         {
@@ -886,12 +1192,28 @@ public class UpdateJourneyStopCommandHandler : BaseAuthenticatedCommandHandler<U
 
     private string GenerateTrackingToken(int journeyId, int stopId)
     {
-        var secret = _configuration["Tracking:Secret"] ?? "YolPilot2024Secret!";
+        var secret = ResolveTrackingSecret();
         var workspaceId = User.WorkspaceId;
         var input = $"{journeyId}-{stopId}-{workspaceId}-{secret}";
-        using var md5 = System.Security.Cryptography.MD5.Create();
-        var hash = md5.ComputeHash(System.Text.Encoding.UTF8.GetBytes(input));
-        return Convert.ToBase64String(hash).Replace("+", "-").Replace("/", "_").Replace("=", "");
+        using var hmac = new System.Security.Cryptography.HMACSHA256(System.Text.Encoding.UTF8.GetBytes(secret));
+        var hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(input));
+        return Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(hash);
+    }
+
+    private string ResolveTrackingSecret()
+    {
+        var secret = _configuration["Tracking:Secret"];
+        if (string.IsNullOrWhiteSpace(secret) || secret == "__SET_IN_ENV__")
+        {
+            secret = _configuration["Jwt:Key"];
+        }
+
+        if (string.IsNullOrWhiteSpace(secret) || secret == "__SET_IN_ENV__")
+        {
+            throw new InvalidOperationException("Tracking secret is not configured.");
+        }
+
+        return secret;
     }
 
     private string TranslateFuelLevel(string fuelLevel)
@@ -917,6 +1239,19 @@ public class UpdateJourneyStopCommandHandler : BaseAuthenticatedCommandHandler<U
             "damaged" => "Hasarlı",
             _ => condition
         };
+    }
+
+    private void EnsureDriverCanOnlyAccessOwnJourney(Data.Journeys.Journey journey)
+    {
+        if (!User.IsDriver)
+        {
+            return;
+        }
+
+        if (journey.Driver?.UserId != User.Id)
+        {
+            throw new ApiException("You can only update stops in your assigned journey.", 403);
+        }
     }
 
     // BUGFIX S3.3: Validate status transitions
@@ -1126,10 +1461,22 @@ public class CheckInJourneyStopCommandHandler : BaseAuthenticatedCommandHandler<
                 .ThenInclude(j => j.Stops)
             .FirstOrDefaultAsync(s => 
                 s.Id == request.StopId && 
-                s.JourneyId == request.JourneyId,
+                s.JourneyId == request.JourneyId &&
+                s.Journey.WorkspaceId == User.WorkspaceId,
                 cancellationToken);
 
-        if (currentStop != null)
+        if (currentStop == null)
+        {
+            throw new ApiException("Stop not found in journey.", 404);
+        }
+
+        if (User.IsDriver && currentStop.Journey.Driver?.UserId != User.Id)
+        {
+            throw new ApiException("You can only check in to your assigned journey.", 403);
+        }
+
+        // Legacy pre-check-in notification block intentionally disabled.
+        if (false)
         {
             var workspace = await _context.Workspaces
                 .AsNoTracking()
@@ -1300,6 +1647,157 @@ public class CheckInJourneyStopCommandHandler : BaseAuthenticatedCommandHandler<
         };
 
         var success = await _mediator.Send(updateCommand, cancellationToken);
+
+        if (success)
+        {
+            var workspace = await _context.Workspaces
+                .AsNoTracking()
+                .FirstOrDefaultAsync(w => w.Id == User.WorkspaceId, cancellationToken);
+
+            if (workspace != null)
+            {
+                var allStops = await _context.JourneyStops
+                    .Include(s => s.RouteStop)
+                        .ThenInclude(rs => rs.Customer)
+                    .Where(s => s.JourneyId == request.JourneyId)
+                    .OrderBy(s => s.Order)
+                    .ToListAsync(cancellationToken);
+
+                var nextStop = allStops.FirstOrDefault(s => s.Order == currentStop.Order + 1);
+
+                if (nextStop?.RouteStop?.Customer != null)
+                {
+                    var customer = nextStop.RouteStop.Customer;
+                    var driver = currentStop.Journey.Driver;
+
+                    string minTimeStr;
+                    string maxTimeStr;
+                    var currentServiceTime = currentStop.RouteStop?.ServiceTime ?? TimeSpan.FromMinutes(10);
+                    var currentServiceMinutes = (int)currentServiceTime.TotalMinutes;
+                    var travelMinutes = 0;
+
+                    if (nextStop.EstimatedArrivalTime != TimeSpan.Zero && currentStop.EstimatedDepartureTime.HasValue)
+                    {
+                        var travelTime = nextStop.EstimatedArrivalTime - currentStop.EstimatedDepartureTime.Value;
+                        travelMinutes = (int)travelTime.TotalMinutes;
+                    }
+                    else
+                    {
+                        var distanceKm = nextStop.Distance;
+                        travelMinutes = (int)(distanceKm / 40.0 * 60);
+                    }
+
+                    var totalMinutes = currentServiceMinutes + travelMinutes;
+                    var roundedMinutes = (int)(Math.Ceiling(totalMinutes / 5.0) * 5);
+                    var minTime = roundedMinutes;
+                    var maxTime = roundedMinutes + 30;
+
+                    if (minTime < 60)
+                        minTimeStr = $"{minTime} dakika";
+                    else
+                    {
+                        var hours = minTime / 60;
+                        var minutes = minTime % 60;
+                        minTimeStr = minutes == 0 ? $"{hours} saat" : $"{hours} saat {minutes} dakika";
+                    }
+
+                    if (maxTime < 60)
+                        maxTimeStr = $"{maxTime} dakika";
+                    else
+                    {
+                        var hours = maxTime / 60;
+                        var minutes = maxTime % 60;
+                        maxTimeStr = minutes == 0 ? $"{hours} saat" : $"{hours} saat {minutes} dakika";
+                    }
+
+                    var templateData = new Dictionary<string, object>
+                    {
+                        ["customer"] = new
+                        {
+                            name = customer.Name,
+                            address = customer.Address
+                        },
+                        ["stop"] = new
+                        {
+                            estimatedArrivalTime = $"{minTimeStr} - {maxTimeStr}"
+                        },
+                        ["driver"] = new
+                        {
+                            name = driver?.Name ?? "Teslimat GÃ¶revlisi",
+                            phone = driver?.Phone ?? workspace.PhoneNumber
+                        },
+                        ["trackingUrl"] = "https://app.yolpilot.com/tracking",
+                        ["workspace"] = new
+                        {
+                            name = workspace.Name,
+                            email = workspace.Email,
+                            phoneNumber = workspace.PhoneNumber
+                        }
+                    };
+
+                    if (!string.IsNullOrEmpty(customer.Email))
+                    {
+                        try
+                        {
+                            var (subject, body) = await _templateService.GetProcessedEmailContentAsync(
+                                workspace.Id,
+                                TemplateType.CheckIn,
+                                templateData);
+
+                            await _emailService.SendNearbyNotificationToCustomerContactsAsync(
+                                customer.Id,
+                                customer.Name,
+                                minTimeStr,
+                                maxTimeStr);
+
+                            _logger.LogInformation(
+                                "Delivery approaching email sent to {Email} with ETA: {MinTime} - {MaxTime} (TemplateResolved: {TemplateResolved})",
+                                customer.Email,
+                                minTimeStr,
+                                maxTimeStr,
+                                !string.IsNullOrEmpty(subject) && !string.IsNullOrEmpty(body));
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "Failed to send delivery approaching email");
+                        }
+                    }
+
+                    var sendWhatsApp = workspace.WhatsAppMode != WhatsAppMode.Disabled &&
+                                       workspace.WhatsAppNotifyCheckIn;
+
+                    if (sendWhatsApp)
+                    {
+                        var canSendWhatsApp = await _subscriptionService.CanSendWhatsApp(User.WorkspaceId);
+                        sendWhatsApp = canSendWhatsApp;
+                    }
+
+                    if (sendWhatsApp && customer.WhatsAppOptIn && !string.IsNullOrEmpty(customer.WhatsApp))
+                    {
+                        try
+                        {
+                            var whatsAppSuccess = await _whatsAppService.SendApproachingMessage(
+                                workspace,
+                                customer.WhatsApp,
+                                customer.Name,
+                                minTimeStr,
+                                maxTimeStr,
+                                driver?.Name,
+                                driver?.Phone);
+
+                            if (whatsAppSuccess)
+                            {
+                                _logger.LogInformation($"Approaching WhatsApp sent to {customer.Name} ({customer.WhatsApp})");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, $"Failed to send WhatsApp to {customer.WhatsApp}");
+                        }
+                    }
+                }
+            }
+        }
 
         // ✅ Gecikme bilgilerini al
         var stop = await _context.JourneyStops
@@ -1661,12 +2159,27 @@ public class FailJourneyStopCommandHandler : BaseAuthenticatedCommandHandler<Fai
 
     private string GenerateTrackingToken(int journeyId, int stopId)
     {
-        var secret = _configuration["Tracking:Secret"] ?? "YolPilot2024Secret!";
+        var secret = ResolveTrackingSecret();
         var workspaceId = User.WorkspaceId;
         var input = $"{journeyId}-{stopId}-{workspaceId}-{secret}";
-        using var md5 = System.Security.Cryptography.MD5.Create();
-        var hash = md5.ComputeHash(System.Text.Encoding.UTF8.GetBytes(input));
-        return Convert.ToBase64String(hash).Replace("+", "-").Replace("/", "_").Replace("=", "");
+        using var hmac = new System.Security.Cryptography.HMACSHA256(System.Text.Encoding.UTF8.GetBytes(secret));
+        var hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(input));
+        return Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(hash);
+    }
+
+    private string ResolveTrackingSecret()
+    {
+        var secret = _configuration["Tracking:Secret"];
+        if (string.IsNullOrWhiteSpace(secret) || secret == "__SET_IN_ENV__")
+        {
+            secret = _configuration["Jwt:Key"];
+        }
+        if (string.IsNullOrWhiteSpace(secret) || secret == "__SET_IN_ENV__")
+        {
+            throw new InvalidOperationException("Tracking secret is not configured.");
+        }
+
+        return secret;
     }
 
     private string TranslateFailureReason(string failureReason)

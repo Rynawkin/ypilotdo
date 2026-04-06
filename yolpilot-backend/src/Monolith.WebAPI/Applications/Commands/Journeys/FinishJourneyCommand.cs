@@ -33,6 +33,7 @@ public class FinishJourneyCommandHandler(AppDbContext context, IUserService user
         var journey = await context.Journeys
             .Include(x => x.Route)
             .Include(x => x.Driver)
+                .ThenInclude(d => d.User)
             .Include(x => x.Stops) // ✅ Stops'ları include et
                 .ThenInclude(s => s.RouteStop) // ✅ RouteStop'u include et
                     .ThenInclude(rs => rs.Customer) // ✅ Customer'ı include et (LastDeliveryDate güncellemesi için)
@@ -40,6 +41,8 @@ public class FinishJourneyCommandHandler(AppDbContext context, IUserService user
 
         if (journey == null)
             throw new ApiException("Journey not found.", 404);
+
+        EnsureDriverCanOnlyAccessOwnJourney(journey);
 
         if (journey.FinishedAt.HasValue)
             throw new ApiException("Journey is already finished.", 400);
@@ -198,6 +201,19 @@ public class FinishJourneyCommandHandler(AppDbContext context, IUserService user
             // Sadece log'la
             Console.WriteLine($"[DELAY_ALERT] Error checking/sending delay report for Journey #{journey.Id}: {ex.Message}");
             Console.WriteLine($"[DELAY_ALERT] Stack trace: {ex.StackTrace}");
+        }
+    }
+
+    private void EnsureDriverCanOnlyAccessOwnJourney(Journey journey)
+    {
+        if (!User.IsDriver)
+        {
+            return;
+        }
+
+        if (journey.Driver?.UserId != User.Id)
+        {
+            throw new ApiException("You can only finish your assigned journey.", 403);
         }
     }
 }

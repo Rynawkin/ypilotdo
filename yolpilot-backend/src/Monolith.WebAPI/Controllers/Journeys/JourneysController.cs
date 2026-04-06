@@ -334,6 +334,7 @@ public class JourneysController : ControllerBase
     /// </summary>
     [HttpPost("{journeyId:int}/reoptimize")]
     [SwaggerOperation(Summary = "Reoptimize remaining stops based on driver's current location")]
+    [Authorize(Roles = "Driver,Dispatcher,Admin,SuperAdmin")]
     public async Task<JourneyResponse> ReoptimizeActiveJourney(int journeyId, [FromBody] ReoptimizeActiveJourneyRequest request)
     {
         var command = new ReoptimizeActiveJourneyCommand

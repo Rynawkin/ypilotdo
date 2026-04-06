@@ -73,6 +73,8 @@ public class StartJourneyCommandHandler : BaseAuthenticatedCommandHandler<StartJ
         if (journey == null)
             throw new ApiException("Journey not found.", 404);
 
+        EnsureDriverCanOnlyAccessOwnJourney(journey);
+
         if (journey.StartedAt.HasValue)
             throw new ApiException("Journey is already started.", 400);
 
@@ -254,5 +256,18 @@ public class StartJourneyCommandHandler : BaseAuthenticatedCommandHandler<StartJ
         }
 
         return new JourneyResponse(journey);
+    }
+
+    private void EnsureDriverCanOnlyAccessOwnJourney(Data.Journeys.Journey journey)
+    {
+        if (!User.IsDriver)
+        {
+            return;
+        }
+
+        if (journey.Driver?.UserId != User.Id)
+        {
+            throw new ApiException("You can only start your assigned journey.", 403);
+        }
     }
 }

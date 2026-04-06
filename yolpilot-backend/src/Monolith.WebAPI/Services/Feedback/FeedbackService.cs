@@ -29,15 +29,15 @@ namespace Monolith.WebAPI.Services.Feedback
                 throw new ArgumentException($"Journey {journeyId} not found");
 
             var workspaceId = journey.WorkspaceId;
-            var secret = _configuration["Tracking:Secret"] ?? "YolPilot2024Secret!";
+            var secret = ResolveTrackingSecret();
             
             // Token'a workspaceId'yi de ekle
             var tokenData = $"{workspaceId}|{journeyId}|{stopId}|{customerId}|{DateTime.UtcNow.Ticks}";
             var input = $"feedback-{tokenData}-{secret}";
             
-            using var md5 = MD5.Create();
-            var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
-            var token = Convert.ToBase64String(hash).Replace("+", "-").Replace("/", "_").Replace("=", "");
+            using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(secret));
+            var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(input));
+            var token = Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(hash);
             
             // Token'ın sonuna encode edilmiş data'yı ekle
             var encodedData = Convert.ToBase64String(Encoding.UTF8.GetBytes(tokenData))
@@ -58,6 +58,7 @@ namespace Monolith.WebAPI.Services.Feedback
                 if (parts.Length != 2)
                     return null;
 
+                var providedSignature = parts[0];
                 var encodedData = parts[1];
                 
                 // Base64 padding'i düzelt
@@ -73,6 +74,11 @@ namespace Monolith.WebAPI.Services.Feedback
                 
                 var dataParts = tokenData.Split('|');
                 if (dataParts.Length < 5)
+                    return null;
+
+                var secret = ResolveTrackingSecret();
+                var expectedSignature = ComputeFeedbackSignature(tokenData, secret);
+                if (!TokensMatch(providedSignature, expectedSignature))
                     return null;
 
                 // Token'ın geçerlilik süresini kontrol et (24 saat)
@@ -95,6 +101,37 @@ namespace Monolith.WebAPI.Services.Feedback
             {
                 return null;
             }
+        }
+
+        private string ResolveTrackingSecret()
+        {
+            var secret = _configuration["Tracking:Secret"];
+            if (string.IsNullOrWhiteSpace(secret) || secret == "__SET_IN_ENV__")
+            {
+                secret = _configuration["Jwt:Key"];
+            }
+
+            if (string.IsNullOrWhiteSpace(secret) || secret == "__SET_IN_ENV__")
+            {
+                throw new InvalidOperationException("Tracking secret is not configured.");
+            }
+
+            return secret;
+        }
+
+        private static string ComputeFeedbackSignature(string tokenData, string secret)
+        {
+            var input = $"feedback-{tokenData}-{secret}";
+            using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(secret));
+            var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(input));
+            return Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(hash);
+        }
+
+        private static bool TokensMatch(string providedToken, string expectedToken)
+        {
+            var providedBytes = Encoding.UTF8.GetBytes(providedToken);
+            var expectedBytes = Encoding.UTF8.GetBytes(expectedToken);
+            return CryptographicOperations.FixedTimeEquals(providedBytes, expectedBytes);
         }
 
         public async Task<CustomerFeedback> SubmitFeedbackAsync(

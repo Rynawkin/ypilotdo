@@ -203,7 +203,7 @@ public class AddStopToActiveJourneyCommandHandler : BaseAuthenticatedCommandHand
         // SignalR ile şoföre bildirim gönder
         try
         {
-            await _journeyHub.Clients.Group($"journey_{journey.Id}").SendAsync(
+            await _journeyHub.Clients.Group($"journey-{journey.Id}").SendAsync(
                 "NewStopAdded",
                 new
                 {

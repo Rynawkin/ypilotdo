@@ -74,6 +74,7 @@ public class RoutesController(ISender sender, AppDbContext context) : Controller
 
     [HttpPost("{routeId:int}/optimize")]
     [SwaggerOperation(Summary = "Optimize a route using Google Maps API")]
+    [Authorize(Roles = "Dispatcher,Admin,SuperAdmin")]
     public async Task<IActionResult> OptimizeRoute(int routeId, [FromBody] OptimizeRouteCommand command = null)
     {
         if (command == null)

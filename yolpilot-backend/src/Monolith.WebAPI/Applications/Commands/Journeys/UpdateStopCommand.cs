@@ -143,11 +143,15 @@ public class UpdateStopCommandHandler : BaseAuthenticatedCommandHandler<UpdateSt
     {
         var stop = await _context.JourneyStops
             .Include(s => s.Journey)
+                .ThenInclude(j => j.Driver)
+                    .ThenInclude(d => d.User)
             .Include(s => s.RouteStop)
             .FirstOrDefaultAsync(s => s.Id == request.StopId, cancellationToken);
 
         if (stop == null)
             throw new ApiException($"Journey stop with ID {request.StopId} not found", 404);
+
+        EnsureDriverCanOnlyAccessOwnJourney(stop.Journey);
 
         if (request.Status == JourneyStopStatus.Completed)
         {
@@ -229,7 +233,12 @@ public class UpdateStopCommandHandler : BaseAuthenticatedCommandHandler<UpdateSt
         Console.WriteLine($"Request ServiceTime: {request.ServiceTime}");
 
         var routeStop = await _context.RouteStops
-            .FirstOrDefaultAsync(s => s.Id == request.StopId, cancellationToken);
+            .Include(s => s.Route)
+            .FirstOrDefaultAsync(s =>
+                s.Id == request.StopId &&
+                (!request.RouteId.HasValue || s.RouteId == request.RouteId.Value) &&
+                s.Route.WorkspaceId == User.WorkspaceId,
+                cancellationToken);
 
         if (routeStop == null)
             throw new ApiException($"Route stop with ID {request.StopId} not found", 404);
@@ -260,5 +269,18 @@ public class UpdateStopCommandHandler : BaseAuthenticatedCommandHandler<UpdateSt
         Console.WriteLine("=== END DEBUG ===");
 
         return true;
+    }
+
+    private void EnsureDriverCanOnlyAccessOwnJourney(Data.Journeys.Journey journey)
+    {
+        if (!User.IsDriver)
+        {
+            return;
+        }
+
+        if (journey.Driver?.UserId != User.Id)
+        {
+            throw new ApiException("You can only update stops in your assigned journey.", 403);
+        }
     }
 }

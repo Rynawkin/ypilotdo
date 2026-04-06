@@ -121,7 +121,7 @@ public class OptimizeRouteCommandHandler : BaseAuthenticatedCommandHandler<Optim
         logger.LogInformation($"AvoidTolls parameter: {request.AvoidTolls}");
 
         // PERFORMANCE: Will be modified in memory, so tracking is needed
-        var route = await context.Routes
+        var routeQuery = context.Routes
             .Include(x => x.Depot)
             .Include(x => x.Stops).ThenInclude(x => x.Customer)
             .Include(x => x.StartDetails)
@@ -129,7 +129,14 @@ public class OptimizeRouteCommandHandler : BaseAuthenticatedCommandHandler<Optim
             .Include(x => x.Driver)
             .Include(x => x.Vehicle)
             .Include(x => x.Workspace)
-            .FirstOrDefaultAsync(x => x.Id == request.RouteId, cancellationToken);
+            .AsQueryable();
+
+        if (!User.IsSuperAdmin)
+        {
+            routeQuery = routeQuery.Where(x => x.WorkspaceId == User.WorkspaceId);
+        }
+
+        var route = await routeQuery.FirstOrDefaultAsync(x => x.Id == request.RouteId, cancellationToken);
 
         if (route is null)
             throw new ApiException("Route not found", 404);

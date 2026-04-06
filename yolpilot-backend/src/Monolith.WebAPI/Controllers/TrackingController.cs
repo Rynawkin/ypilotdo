@@ -40,7 +40,7 @@ public class TrackingController : ControllerBase
         {
             // Token doğrulama
             var expectedToken = GenerateToken(journeyId, stopId);
-            if (string.IsNullOrEmpty(token) || token != expectedToken)
+            if (string.IsNullOrEmpty(token) || !TokensMatch(token, expectedToken))
             {
                 _logger.LogWarning($"Invalid token attempt for journey {journeyId}, stop {stopId}");
                 return Content(GenerateErrorPage("Geçersiz veya süresi dolmuş link"), "text/html; charset=utf-8");
@@ -613,12 +613,36 @@ public class TrackingController : ControllerBase
         // Journey'nin workspace ID'sini al
         var journey = _context.Journeys.FirstOrDefault(j => j.Id == journeyId);
         var workspaceId = journey?.WorkspaceId ?? 0;
-        
-        var secret = _configuration["Tracking:Secret"] ?? "YolPilot2024Secret!";
+
+        var secret = ResolveTrackingSecret();
         var input = $"{journeyId}-{stopId}-{workspaceId}-{secret}";
-        using var md5 = System.Security.Cryptography.MD5.Create();
-        var hash = md5.ComputeHash(System.Text.Encoding.UTF8.GetBytes(input));
-        return Convert.ToBase64String(hash).Replace("+", "-").Replace("/", "_").Replace("=", "");
+        using var hmac = new System.Security.Cryptography.HMACSHA256(System.Text.Encoding.UTF8.GetBytes(secret));
+        var hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(input));
+        return Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(hash);
+    }
+
+    private string ResolveTrackingSecret()
+    {
+        var secret = _configuration["Tracking:Secret"];
+        if (string.IsNullOrWhiteSpace(secret) || secret == "__SET_IN_ENV__")
+        {
+            secret = _configuration["Jwt:Key"];
+        }
+
+        if (string.IsNullOrWhiteSpace(secret) || secret == "__SET_IN_ENV__")
+        {
+            throw new InvalidOperationException("Tracking secret is not configured.");
+        }
+
+        return secret;
+    }
+
+    private static bool TokensMatch(string providedToken, string expectedToken)
+    {
+        var providedBytes = System.Text.Encoding.UTF8.GetBytes(providedToken);
+        var expectedBytes = System.Text.Encoding.UTF8.GetBytes(expectedToken);
+
+        return System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(providedBytes, expectedBytes);
     }
 
     private string GetOptimizedUrl(string url, string type)

@@ -597,6 +597,7 @@ const RouteForm: React.FC<RouteFormProps> = ({
       return;
     }
 
+    const previousStops = [...stopsData];
     const newStops = [...stopsData];
     const currentStop = newStops[index];
 
@@ -636,8 +637,8 @@ const RouteForm: React.FC<RouteFormProps> = ({
 
       } catch (error) {
         console.error('Failed to update stop via API:', error);
-        // For now, continue with local state update
-        // In production, you might want to revert local state or show error message
+        setStopsData(previousStops);
+        alert('Durak güncellenemedi. Değişiklikler geri alındı.');
       }
     }
   };
@@ -839,8 +840,12 @@ const RouteForm: React.FC<RouteFormProps> = ({
         return;
       }
 
+      let finalOptimizationStatus: OptimizationStatus = 'success';
+      let finalExcludedCount = 0;
+
       if (optimizedRoute.hasExclusions && optimizedRoute.excludedStops && optimizedRoute.excludedStops.length > 0) {
         setOptimizationStatus('partial');
+        finalOptimizationStatus = 'partial';
 
         const excluded: ExcludedStop[] = optimizedRoute.excludedStops.map((ex: any) => {
           const stopData = stopsData.find(s =>
@@ -883,6 +888,7 @@ const RouteForm: React.FC<RouteFormProps> = ({
         }).filter(ex => ex.stopData?.customer); // customer'ı olmayan excluded stop'ları filtrele
 
         setExcludedStops(excluded);
+        finalExcludedCount = excluded.length;
 
         const optimizedStopsData = optimizedRoute.optimizedStops?.map((stop: any) => {
           const existingStopData = stopsData.find(s =>
@@ -1008,11 +1014,13 @@ const RouteForm: React.FC<RouteFormProps> = ({
 
       await updateMapRoute();
 
-      const message = optimizationStatus === 'partial'
-        ? `Rota optimize edildi!\n${excludedStops.length} durak zaman uyumsuzluğu nedeniyle dahil edilemedi.`
-        : `Rota optimize edildi!\n\nToplam Mesafe: ${optimizedRoute.totalDistance.toFixed(1)} km\nTahmini Süre: ${formatDuration(optimizedRoute.totalDuration)}`;
+      const message = `Rota optimize edildi!\n\nToplam Mesafe: ${optimizedRoute.totalDistance.toFixed(1)} km\nTahmini Süre: ${formatDuration(optimizedRoute.totalDuration)}`;
 
-      alert(message);
+      alert(
+        finalOptimizationStatus === 'partial'
+          ? `Rota kısmi olarak optimize edildi.\n${finalExcludedCount} durak zaman uyumsuzluğu nedeniyle dahil edilemedi.`
+          : message
+      );
 
     } catch (error: any) {
       console.error('Optimization error:', error);

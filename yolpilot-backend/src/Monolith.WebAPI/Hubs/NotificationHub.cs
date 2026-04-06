@@ -8,7 +8,6 @@ namespace Monolith.WebAPI.Hubs;
 public class NotificationHub : Hub
 {
     private readonly ILogger<NotificationHub> _logger;
-
     public NotificationHub(ILogger<NotificationHub> logger)
     {
         _logger = logger;
@@ -42,12 +41,24 @@ public class NotificationHub : Hub
     // Client can call this method to join workspace notifications group
     public async Task JoinWorkspaceGroup(int workspaceId)
     {
+        var currentWorkspaceId = GetWorkspaceIdOrThrow();
+        if (workspaceId != currentWorkspaceId)
+        {
+            throw new HubException("You can only subscribe to your own workspace.");
+        }
+
         await Groups.AddToGroupAsync(Context.ConnectionId, $"Workspace_{workspaceId}");
         _logger.LogInformation("Connection {ConnectionId} joined workspace group {WorkspaceId}", Context.ConnectionId, workspaceId);
     }
 
     public async Task LeaveWorkspaceGroup(int workspaceId)
     {
+        var currentWorkspaceId = GetWorkspaceIdOrThrow();
+        if (workspaceId != currentWorkspaceId)
+        {
+            throw new HubException("You can only leave your own workspace group.");
+        }
+
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"Workspace_{workspaceId}");
         _logger.LogInformation("Connection {ConnectionId} left workspace group {WorkspaceId}", Context.ConnectionId, workspaceId);
     }
@@ -60,5 +71,16 @@ public class NotificationHub : Hub
         
         // Here you could update delivery status if needed
         await Clients.Caller.SendAsync("NotificationConfirmed", notificationId);
+    }
+
+    private int GetWorkspaceIdOrThrow()
+    {
+        var workspaceId = Context.User?.FindFirst("WorkspaceId")?.Value;
+        if (string.IsNullOrWhiteSpace(workspaceId) || !int.TryParse(workspaceId, out var parsedWorkspaceId))
+        {
+            throw new HubException("Workspace claim is missing.");
+        }
+
+        return parsedWorkspaceId;
     }
 }
