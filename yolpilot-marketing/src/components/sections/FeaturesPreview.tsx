@@ -10,26 +10,26 @@ const FeaturesPreview: React.FC = () => {
     {
       icon: Map,
       title: 'Rota planlama',
-      description: 'Durak sirasini, depoya donus kurgusunu ve planlama kurallarini ayni ekranda yonetin.',
-      bullets: ['Durak ve rota kurgusu', 'Manuel ve otomatik duzenleme', 'Depoya donus takibi']
+      description: 'Durak sırasını, depoya dönüş kurgusunu ve planlama kurallarını aynı ekranda yönetin.',
+      bullets: ['Durak ve rota kurgusu', 'Manuel ve otomatik düzenleme', 'Depoya dönüş takibi']
     },
     {
       icon: Smartphone,
-      title: 'Mobil saha uygulamasi',
-      description: 'Suruculer gorev listesini, notlarini ve teslimat sonucunu mobil uygulamadan yonetsin.',
-      bullets: ['Gorev listesi', 'Durum guncelleme', 'Offline kullanim destegi']
+      title: 'Mobil saha uygulaması',
+      description: 'Sürücüler görev listesini, notlarını ve teslimat sonucunu mobil uygulamadan yönetsin.',
+      bullets: ['Görev listesi', 'Durum güncelleme', 'Offline kullanım desteği']
     },
     {
       icon: Camera,
-      title: 'Teslimat kaniti',
-      description: 'Imza, fotograf ve aciklama kayitlari siparis akisina bagli kalsin.',
-      bullets: ['Foto ve imza', 'Durak notlari', 'Arsivlenebilir kayit']
+      title: 'Teslimat kanıtı',
+      description: 'İmza, fotoğraf ve açıklama kayıtları sipariş akışına bağlı kalsın.',
+      bullets: ['Foto ve imza', 'Durak notları', 'Arşivlenebilir kayıt']
     },
     {
       icon: ChartNoAxesCombined,
       title: 'Rapor ve izleme',
-      description: 'Sefer performansi, gecikme alanlari ve operasyon ozetleri ayni panelden gorunsun.',
-      bullets: ['Sefer raporlari', 'Canli operasyon gorunurlugu', 'Gecikme analizi']
+      description: 'Sefer performansı, gecikme alanları ve operasyon özetleri aynı panelden görünsün.',
+      bullets: ['Sefer raporları', 'Canlı operasyon görünürlüğü', 'Gecikme analizi']
     }
   ];
 
@@ -45,19 +45,19 @@ const FeaturesPreview: React.FC = () => {
         >
           <div className="max-w-3xl">
             <div className="mb-5 inline-flex rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-[color:var(--brand-deep)] shadow-sm">
-              Urun kapsami
+              Ürün kapsamı
             </div>
-            <h2 className="text-3xl font-bold tracking-tight text-slate-950 lg:text-5xl">Platformun ana parcalari ayni is akisi icin tasarlandi.</h2>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-950 lg:text-5xl">Platformun ana parçaları aynı iş akışı için tasarlandı.</h2>
             <p className="mt-5 text-lg leading-8 text-slate-600">
-              YolPilot sadece rota sirasini degil, sahadaki teslimat sonucunu ve operasyon kayitlarini da ayni zincire
-              baglar.
+              YolPilot sadece rota sırasını değil, sahadaki teslimat sonucunu ve operasyon kayıtlarını da aynı zincire
+              bağlar.
             </p>
           </div>
           <Link
             href="/features"
             className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--brand)] transition-colors hover:text-blue-700"
           >
-            Tum ozellikleri gorun
+            Tüm özellikleri görün
             <ArrowRight className="h-4 w-4" />
           </Link>
         </motion.div>
@@ -80,7 +80,7 @@ const FeaturesPreview: React.FC = () => {
                     <Icon className="h-6 w-6" />
                   </div>
                   <div className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">
-                    Modul
+                    Modül
                   </div>
                 </div>
 
@@ -108,12 +108,12 @@ const FeaturesPreview: React.FC = () => {
         >
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="max-w-3xl">
-              <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-blue-100">YolPilot akisi</div>
-              <h3 className="text-2xl font-semibold lg:text-3xl">Planlama, saha ve teslimat sonucu ayni veri yapisi uzerinden ilerler.</h3>
+              <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-blue-100">YolPilot akışı</div>
+              <h3 className="text-2xl font-semibold lg:text-3xl">Planlama, saha ve teslimat sonucu aynı veri yapısı üzerinden ilerler.</h3>
             </div>
             <div className="inline-flex items-center gap-3 rounded-full bg-white/10 px-5 py-3 text-sm font-medium text-blue-50">
               <Truck className="h-4 w-4" />
-              Web panel ile mobil uygulama birlikte calisir
+              Web panel ile mobil uygulama birlikte çalışır
             </div>
           </div>
         </motion.div>

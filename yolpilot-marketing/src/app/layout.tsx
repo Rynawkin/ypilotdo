@@ -12,12 +12,12 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "YolPilot - Teslimat ve Rota Optimizasyon Platformu",
-  description: "Rota optimizasyonu, teslimat takibi ve teslimat kaniti ile operasyonlarinizi tek yerden yonetin.",
-  keywords: "rota optimizasyon, teslimat yonetimi, arac takibi, lojistik yazilim, Turkiye",
+  description: "Rota optimizasyonu, teslimat takibi ve teslimat kanıtı ile operasyonlarınızı tek yerden yönetin.",
+  keywords: "rota optimizasyon, teslimat yönetimi, araç takibi, lojistik yazılım, Türkiye",
   authors: [{ name: "YolPilot" }],
   openGraph: {
     title: "YolPilot - Teslimat ve Rota Optimizasyon Platformu",
-    description: "Rota optimizasyonu, teslimat takibi ve teslimat kaniti ile operasyonlarinizi tek yerden yonetin.",
+    description: "Rota optimizasyonu, teslimat takibi ve teslimat kanıtı ile operasyonlarınızı tek yerden yönetin.",
     type: "website",
     locale: "tr_TR",
     siteName: "YolPilot"

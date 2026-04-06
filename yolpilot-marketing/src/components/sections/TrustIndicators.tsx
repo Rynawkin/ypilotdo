@@ -8,27 +8,27 @@ const TrustIndicators: React.FC = () => {
   const safeguards = [
     {
       icon: ShieldCheck,
-      title: 'Rol bazli erisim',
-      description: 'Dispatcher, surucu ve yonetici gibi farkli roller icin ayri akislar kurgulanabilir.'
+      title: 'Rol bazlı erişim',
+      description: 'Dispatcher, sürücü ve yönetici gibi farklı roller için ayrı akışlar kurgulanabilir.'
     },
     {
       icon: DatabaseBackup,
-      title: 'Kayit ve arsiv yapisi',
-      description: 'Sefer, teslimat kaniti ve operasyon notlari ayni veri akisinda tutulur.'
+      title: 'Kayıt ve arşiv yapısı',
+      description: 'Sefer, teslimat kanıtı ve operasyon notları aynı veri akışında tutulur.'
     },
     {
       icon: UserRoundCog,
       title: 'Kurulumda rehberlik',
-      description: 'Mevcut operasyon modeline gore ilk kurulum ve gecis adimlari birlikte planlanir.'
+      description: 'Mevcut operasyon modeline göre ilk kurulum ve geçiş adımları birlikte planlanır.'
     },
     {
       icon: LifeBuoy,
-      title: 'Turkce destek',
-      description: 'Canli kullanim sirasinda ekipler sorularina Turkce destek ile karsilik bulur.'
+      title: 'Türkçe destek',
+      description: 'Canlı kullanım sırasında ekipler sorularına Türkçe destek ile karşılık bulur.'
     }
   ];
 
-  const checklist = ['Erisim ve rol kurgusu', 'Islem takibi ve kayit mantigi', 'Operasyona gore onboarding', 'Destek ve sureklilik'];
+  const checklist = ['Erişim ve rol kurgusu', 'İşlem takibi ve kayıt mantığı', 'Operasyona göre onboarding', 'Destek ve süreklilik'];
 
   return (
     <section className="border-b border-[color:var(--line)] bg-white py-16 lg:py-24">
@@ -41,12 +41,12 @@ const TrustIndicators: React.FC = () => {
             viewport={{ once: true }}
           >
             <div className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-[color:var(--brand-deep)]">
-              Gecis ve guven
+              Geçiş ve güven
             </div>
-            <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-950 lg:text-5xl">Yeni bir operasyon araci alirken sadece ozellige degil gecise de bakilir.</h2>
+            <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-950 lg:text-5xl">Yeni bir operasyon aracı alırken sadece özelliğe değil geçişe de bakılır.</h2>
             <p className="mt-5 text-lg leading-8 text-slate-600">
-              Pazarlama sayfalarinda en kolay kisim “guvenliyiz” demektir. Bizim odagimiz daha pratik: ekibin farkli
-              rolleri ayni sisteme nasil gececek, kayit mantigi nasil korunacak ve operasyon bozulmadan nasil devreye alinacak?
+              Pazarlama sayfalarında en kolay kısım “güvenliyiz” demektir. Bizim odağımız daha pratik: ekibin farklı
+              rolleri aynı sisteme nasıl geçecek, kayıt mantığı nasıl korunacak ve operasyon bozulmadan nasıl devreye alınacak?
             </p>
 
             <div className="mt-8 rounded-[2rem] bg-[#102d64] p-7 text-white shadow-xl shadow-blue-950/15">
@@ -55,8 +55,8 @@ const TrustIndicators: React.FC = () => {
                   <BadgeCheck className="h-5 w-5" />
                 </div>
                 <div>
-                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-100">YolPilot yaklasimi</div>
-                  <div className="mt-1 text-xl font-semibold">Urun kurulumu kadar operasyon gecisini de sahiplenir.</div>
+                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-100">YolPilot yaklaşımı</div>
+                  <div className="mt-1 text-xl font-semibold">Ürün kurulumu kadar operasyon geçişini de sahiplenir.</div>
                 </div>
               </div>
 

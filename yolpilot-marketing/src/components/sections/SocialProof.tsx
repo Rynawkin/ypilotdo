@@ -9,29 +9,29 @@ const SocialProof: React.FC = () => {
   const operatingModels = [
     {
       icon: Route,
-      title: 'Dagitim planlama ekipleri',
-      description: 'Durak siralama, teslimat sirasini degistirme ve ayni gun rota guncelleme ihtiyaci olan operasyonlar.',
-      bullets: ['Birden fazla rota yonetimi', 'Planlama degisikligine hizli tepki', 'Depoya donus senaryolari']
+      title: 'Dağıtım planlama ekipleri',
+      description: 'Durak sıralama, teslimat sırasını değiştirme ve aynı gün rota güncelleme ihtiyacı olan operasyonlar.',
+      bullets: ['Birden fazla rota yönetimi', 'Planlama değişikliğine hızlı tepki', 'Depoya dönüş senaryoları']
     },
     {
       icon: Smartphone,
-      title: 'Saha ve surucu ekipleri',
-      description: 'Mobil uygulama uzerinden gorev listesi, kanit toplama ve teslimat sonucu kaydi tutan saha ekipleri.',
-      bullets: ['Teslimat kaniti', 'Foto ve imza akisi', 'Durak bazli durum guncelleme']
+      title: 'Saha ve sürücü ekipleri',
+      description: 'Mobil uygulama üzerinden görev listesi, kanıt toplama ve teslimat sonucu kaydı tutan saha ekipleri.',
+      bullets: ['Teslimat kanıtı', 'Foto ve imza akışı', 'Durak bazlı durum güncelleme']
     },
     {
       icon: Truck,
-      title: 'Operasyon yoneticileri',
-      description: 'Rotalarin durumu, aktif seferler ve teslimat performansini tek ekrandan izlemek isteyen yoneticiler.',
-      bullets: ['Canli sefer gorunurlugu', 'Raporlama ve arsiv', 'Ekiplere gore erisim']
+      title: 'Operasyon yöneticileri',
+      description: 'Rotaların durumu, aktif seferler ve teslimat performansını tek ekrandan izlemek isteyen yöneticiler.',
+      bullets: ['Canlı sefer görünürlüğü', 'Raporlama ve arşiv', 'Ekiplere göre erişim']
     }
   ];
 
   const modules = [
     { title: 'Rota planlama', icon: Route },
     { title: 'Sefer takibi', icon: Truck },
-    { title: 'Mobil saha uygulamasi', icon: Smartphone },
-    { title: 'Teslimat kaniti', icon: PackageCheck }
+    { title: 'Mobil saha uygulaması', icon: Smartphone },
+    { title: 'Teslimat kanıtı', icon: PackageCheck }
   ];
 
   return (
@@ -45,14 +45,14 @@ const SocialProof: React.FC = () => {
           className="mx-auto max-w-3xl text-center"
         >
           <div className="mb-5 inline-flex rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-[color:var(--brand-deep)] shadow-sm">
-            Kimler icin uygun?
+            Kimler için uygun?
           </div>
           <h2 className="text-3xl font-bold tracking-tight text-slate-950 lg:text-5xl">
-            YolPilot, dagitimi kaotik degil kontrollu yonetmek isteyen ekipler icin tasarlandi.
+            YolPilot, dağıtımı kaotik değil kontrollü yönetmek isteyen ekipler için tasarlandı.
           </h2>
           <p className="mt-5 text-lg leading-8 text-slate-600">
-            Amaç daha “gosterisli” bir panel vermek degil; planlamadan teslimat kanitina kadar herkesin ayni operasyon
-            akisi uzerinden calismasini saglamak.
+            Amaç daha “gösterişli” bir panel vermek değil; planlamadan teslimat kanıtına kadar herkesin aynı operasyon
+            akışı üzerinden çalışmasını sağlamak.
           </p>
         </motion.div>
 
@@ -95,14 +95,14 @@ const SocialProof: React.FC = () => {
         >
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <div className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-soft)]">Platform kapsami</div>
-              <h3 className="mt-2 text-2xl font-semibold text-slate-950">Ayni operasyon dilini web panel ve mobilde korur.</h3>
+              <div className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-soft)]">Platform kapsamı</div>
+              <h3 className="mt-2 text-2xl font-semibold text-slate-950">Aynı operasyon dilini web panel ve mobilde korur.</h3>
             </div>
             <Link
               href="/features"
               className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--brand)] transition-colors hover:text-blue-700"
             >
-              Tum ozellikleri inceleyin
+              Tüm özellikleri inceleyin
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

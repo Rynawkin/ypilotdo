@@ -10,19 +10,19 @@ const Header: React.FC = () => {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
   const navItems = [
-    { name: 'Ozellikler', href: '/features' },
+    { name: 'Özellikler', href: '/features' },
     {
-      name: 'Cozumler',
+      name: 'Çözümler',
       submenu: [
-        { name: 'Kullanim Senaryolari', href: '/use-cases' },
+        { name: 'Kullanım Senaryoları', href: '/use-cases' },
         { name: 'E-ticaret', href: '/industries/ecommerce' },
         { name: 'Lojistik', href: '/industries/logistics' },
         { name: 'Entegrasyonlar', href: '/integrations' }
       ]
     },
-    { name: 'Guvenlik', href: '/security' },
+    { name: 'Güvenlik', href: '/security' },
     { name: 'ROI', href: '/roi-calculator' },
-    { name: 'Iletisim', href: '/contact' }
+    { name: 'İletişim', href: '/contact' }
   ];
 
   return (
@@ -86,11 +86,11 @@ const Header: React.FC = () => {
             href="/features"
             className="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition-colors duration-200 hover:border-slate-300 hover:bg-slate-50"
           >
-            Platformu Inceleyin
+            Platformu İnceleyin
           </Link>
           <Link
             href="/contact"
-            className="rounded-full bg-[color:var(--brand)] px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-blue-900/15 transition-all duration-200 hover:bg-blue-700"
+            className="rounded-full bg-[color:var(--brand)] px-5 py-2.5 text-sm font-semibold !text-white shadow-lg shadow-blue-900/15 transition-all duration-200 hover:bg-blue-700"
           >
             Demo Talep Edin
           </Link>
@@ -170,11 +170,11 @@ const Header: React.FC = () => {
                 className="block rounded-full border border-slate-200 px-6 py-3 text-center text-sm font-semibold text-slate-700 transition-colors duration-200 hover:bg-slate-50"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Platformu Inceleyin
+                Platformu İnceleyin
               </Link>
               <Link
                 href="/contact"
-                className="block rounded-full bg-[color:var(--brand)] px-6 py-3 text-center text-sm font-semibold text-white transition-all duration-200 hover:bg-blue-700"
+                className="block rounded-full bg-[color:var(--brand)] px-6 py-3 text-center text-sm font-semibold !text-white transition-all duration-200 hover:bg-blue-700"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Demo Talep Edin

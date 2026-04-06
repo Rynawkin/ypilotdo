@@ -21,12 +21,12 @@ const HeroSection: React.FC = () => {
     return () => clearInterval(interval);
   }, [mobileScreenshots.length, webScreenshots.length]);
 
-  const highlights = ['Rota optimizasyonu', 'Teslimat kaniti', 'Mobil surucu uygulamasi', 'Canli sefer gorunurlugu'];
+  const highlights = ['Rota optimizasyonu', 'Teslimat kanıtı', 'Mobil sürücü uygulaması', 'Canlı sefer görünürlüğü'];
 
   const evidence = [
     { label: 'Planlama', value: 'Web panel' },
     { label: 'Saha', value: 'Mobil uygulama' },
-    { label: 'Kontrol', value: 'Tek operasyon akisi' }
+    { label: 'Kontrol', value: 'Tek operasyon akışı' }
   ];
 
   return (
@@ -42,16 +42,16 @@ const HeroSection: React.FC = () => {
           className="text-center lg:text-left"
         >
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white/80 px-4 py-2 text-sm font-semibold text-[color:var(--brand-deep)] shadow-sm shadow-blue-950/5">
-            Turkiye&apos;deki dagitim ekipleri icin operasyon yazilimi
+            Türkiye&apos;deki dağıtım ekipleri için operasyon yazılımı
           </div>
 
           <h1 className="max-w-3xl text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl lg:text-6xl lg:leading-[1.05]">
-            Rotalari daha dogru planlayin, sahayi tek panelden yonetin.
+            Rotaları daha doğru planlayın, sahayı tek panelden yönetin.
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600 lg:mx-0 lg:text-xl">
-            YolPilot; rota planlama, sefer takibi, mobil surucu akisi ve teslimat kanitini ayni operasyon yapisinda
-            birlestirir. Dagitim ekipleri planlama ekranindan sahadaki son duraga kadar ayni veriyle calisir.
+            YolPilot; rota planlama, sefer takibi, mobil sürücü akışı ve teslimat kanıtını aynı operasyon yapısında
+            birleştirir. Dağıtım ekipleri planlama ekranından sahadaki son durağa kadar aynı veriyle çalışır.
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start">
@@ -68,7 +68,7 @@ const HeroSection: React.FC = () => {
           <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start">
             <Link
               href="/contact"
-              className="rounded-full bg-[color:var(--brand)] px-7 py-4 text-base font-semibold text-white shadow-xl shadow-blue-900/15 transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700"
+              className="rounded-full bg-[color:var(--brand)] px-7 py-4 text-base font-semibold !text-white shadow-xl shadow-blue-900/15 transition-all duration-200 hover:-translate-y-0.5 hover:bg-blue-700"
             >
               Demo Talep Edin
             </Link>
@@ -76,7 +76,7 @@ const HeroSection: React.FC = () => {
               href="/features"
               className="rounded-full border border-slate-300 bg-white px-7 py-4 text-base font-semibold text-slate-700 transition-colors duration-200 hover:border-slate-400 hover:bg-slate-50"
             >
-              Platformu Inceleyin
+              Platformu İnceleyin
             </Link>
           </div>
 
@@ -101,10 +101,10 @@ const HeroSection: React.FC = () => {
           <div className="relative rounded-[2rem] border border-white/70 bg-white/65 p-5 shadow-2xl shadow-slate-900/10 backdrop-blur">
             <div className="mb-5 flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 px-4 py-3">
               <div>
-                <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">Urun Gorunumu</div>
+                <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">Ürün görünümü</div>
                 <div className="mt-1 text-sm font-semibold text-slate-900">Web panel ve mobil uygulama birlikte</div>
               </div>
-              <div className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-[color:var(--brand)] shadow-sm">Canli ekranlar</div>
+              <div className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-[color:var(--brand)] shadow-sm">Canlı ekranlar</div>
             </div>
 
             <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:gap-7">
@@ -120,7 +120,7 @@ const HeroSection: React.FC = () => {
                     >
                       <Image
                         src={`/screenshots/${mobileScreenshots[currentMobileScreen]}`}
-                        alt="YolPilot mobil uygulama ekranlari"
+                        alt="YolPilot mobil uygulama ekranları"
                         fill
                         sizes="(min-width: 1024px) 224px, 208px"
                         className="object-cover object-top"
@@ -130,7 +130,7 @@ const HeroSection: React.FC = () => {
                   </div>
                 </div>
                 <div className="absolute -left-4 top-10 rounded-full bg-emerald-500 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-emerald-900/20">
-                  Mobil saha akisi
+                  Mobil saha akışı
                 </div>
               </div>
 
@@ -146,7 +146,7 @@ const HeroSection: React.FC = () => {
                     >
                       <Image
                         src={`/screenshots/${webScreenshots[currentWebScreen]}`}
-                        alt="YolPilot web panel ekranlari"
+                        alt="YolPilot web panel ekranları"
                         fill
                         sizes="(min-width: 1024px) 500px, (min-width: 640px) 420px, 320px"
                         className="object-fill"

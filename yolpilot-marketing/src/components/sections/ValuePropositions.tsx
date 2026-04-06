@@ -8,24 +8,24 @@ const ValuePropositions: React.FC = () => {
   const valueProps = [
     {
       icon: MapPinned,
-      title: 'Planlama ayni veriyle baslar',
+      title: 'Planlama aynı veriyle başlar',
       description:
-        'Depo, arac, surucu ve durak bilgileri tek akista bir araya gelir. Planlama, farkli Excel dosyalari ve mesaj gruplari arasina dagilmaz.',
-      details: ['Rota siralama', 'Depoya donus kurgusu', 'Durak bazli kural yonetimi']
+        'Depo, araç, sürücü ve durak bilgileri tek akışta bir araya gelir. Planlama, farklı Excel dosyaları ve mesaj grupları arasına dağılmaz.',
+      details: ['Rota sıralama', 'Depoya dönüş kurgusu', 'Durak bazlı kural yönetimi']
     },
     {
       icon: Clock3,
-      title: 'Sahadaki durum anlik gorunur',
+      title: 'Sahadaki durum anlık görünür',
       description:
-        'Sefer ilerlemesi, geciken duraklar ve teslimat sonuclari planlama ekranindan izlenir. Operasyon, rapor beklemeden ayni gun karar alabilir.',
-      details: ['Canli sefer durumu', 'Durak ilerleme bilgisi', 'Gecikme ve istisna takibi']
+        'Sefer ilerlemesi, geciken duraklar ve teslimat sonuçları planlama ekranından izlenir. Operasyon, rapor beklemeden aynı gün karar alabilir.',
+      details: ['Canlı sefer durumu', 'Durak ilerleme bilgisi', 'Gecikme ve istisna takibi']
     },
     {
       icon: BadgeCheck,
-      title: 'Teslimat sonu kayitlari tek yerde kalir',
+      title: 'Teslimat sonu kayıtları tek yerde kalır',
       description:
-        'Imza, fotograf, not ve teslimat sonucu kayitlari ayni siparis akisina baglanir. Arsiv, takip ve musteriye donus daha duzenli olur.',
-      details: ['Teslimat kaniti', 'Musteri bilgilendirme akisi', 'Rapor ve arsiv kayitlari']
+        'İmza, fotoğraf, not ve teslimat sonucu kayıtları aynı sipariş akışına bağlanır. Arşiv, takip ve müşteriye dönüş daha düzenli olur.',
+      details: ['Teslimat kanıtı', 'Müşteri bilgilendirme akışı', 'Rapor ve arşiv kayıtları']
     }
   ];
 
@@ -40,11 +40,11 @@ const ValuePropositions: React.FC = () => {
           className="mx-auto max-w-3xl text-center"
         >
           <div className="mb-5 inline-flex rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-[color:var(--brand-deep)]">
-            Neyi duzeltir?
+            Neyi düzeltir?
           </div>
-          <h2 className="text-3xl font-bold tracking-tight text-slate-950 lg:text-5xl">Operasyonun kritik kopukluklarini kapatir.</h2>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-950 lg:text-5xl">Operasyonun kritik kopukluklarını kapatır.</h2>
           <p className="mt-5 text-lg leading-8 text-slate-600">
-            YolPilot, planlama ile sahayi ayri sistemler gibi degil ayni operasyon zincirinin parcasi olarak ele alir.
+            YolPilot, planlama ile sahayı ayrı sistemler gibi değil aynı operasyon zincirinin parçası olarak ele alır.
           </p>
         </motion.div>
 
@@ -67,7 +67,7 @@ const ValuePropositions: React.FC = () => {
                 <h3 className="text-2xl font-semibold text-slate-950">{item.title}</h3>
                 <p className="mt-4 flex-1 text-base leading-7 text-slate-600">{item.description}</p>
                 <div className="mt-6 border-t border-slate-200 pt-5">
-                  <div className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">Bu baslikta</div>
+                  <div className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">Bu başlıkta</div>
                   <div className="flex flex-wrap gap-2">
                     {item.details.map((detail) => (
                       <span key={detail} className="rounded-full bg-white px-3 py-2 text-sm text-slate-700 shadow-sm">

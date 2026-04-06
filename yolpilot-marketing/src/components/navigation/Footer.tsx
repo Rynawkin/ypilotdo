@@ -9,13 +9,13 @@ const Footer: React.FC = () => {
     {
       title: 'Platform',
       links: [
-        { name: 'Ozellikler', href: '/features' },
-        { name: 'Kullanim Senaryolari', href: '/use-cases' },
-        { name: 'ROI Hesaplayici', href: '/roi-calculator' }
+        { name: 'Özellikler', href: '/features' },
+        { name: 'Kullanım Senaryoları', href: '/use-cases' },
+        { name: 'ROI Hesaplayıcı', href: '/roi-calculator' }
       ]
     },
     {
-      title: 'Sektorler',
+      title: 'Sektörler',
       links: [
         { name: 'E-ticaret', href: '/industries/ecommerce' },
         { name: 'Lojistik', href: '/industries/logistics' },
@@ -23,24 +23,24 @@ const Footer: React.FC = () => {
       ]
     },
     {
-      title: 'Sirket',
+      title: 'Şirket',
       links: [
-        { name: 'Hakkimizda', href: '/about' },
-        { name: 'Musteriler', href: '/customers' },
-        { name: 'Iletisim', href: '/contact' }
+        { name: 'Hakkımızda', href: '/about' },
+        { name: 'Müşteriler', href: '/customers' },
+        { name: 'İletişim', href: '/contact' }
       ]
     },
     {
       title: 'Destek',
       links: [
-        { name: 'Guvenlik', href: '/security' },
-        { name: 'Gizlilik Politikasi', href: '/privacy' },
-        { name: 'Kullanim Kosullari', href: '/terms' }
+        { name: 'Güvenlik', href: '/security' },
+        { name: 'Gizlilik Politikası', href: '/privacy' },
+        { name: 'Kullanım Koşulları', href: '/terms' }
       ]
     }
   ];
 
-  const trustItems = ['Web panel + mobil uygulama', 'Kurulumda rehberlik', 'Teslimat kaniti akisi', 'Turkce destek'];
+  const trustItems = ['Web panel + mobil uygulama', 'Kurulumda rehberlik', 'Teslimat kanıtı akışı', 'Türkçe destek'];
 
   return (
     <footer className="border-t border-[color:var(--line)] bg-[#0f1725] text-slate-300">
@@ -64,8 +64,8 @@ const Footer: React.FC = () => {
             </Link>
 
             <p className="max-w-md text-sm leading-7 text-slate-400">
-              Dagitim ekiplerinin planlama, saha yonetimi ve teslimat kaniti ihtiyacini tek panelde toplayan
-              operasyon yazilimi.
+              Dağıtım ekiplerinin planlama, saha yönetimi ve teslimat kanıtı ihtiyacını tek panelde toplayan
+              operasyon yazılımı.
             </p>
 
             <div className="mt-6 space-y-3 text-sm text-slate-400">
@@ -81,7 +81,7 @@ const Footer: React.FC = () => {
                   0850 756 62 67
                 </a>
               </div>
-              <div>Istanbul, Turkiye</div>
+              <div>İstanbul, Türkiye</div>
             </div>
           </div>
 
@@ -112,16 +112,16 @@ const Footer: React.FC = () => {
 
       <div className="border-t border-white/8 bg-black/10">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-5 text-sm text-slate-500 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
-          <div>(c) 2026 YolPilot. Tum haklari saklidir.</div>
+          <div>(c) 2026 YolPilot. Tüm hakları saklıdır.</div>
           <div className="flex flex-wrap gap-5">
             <Link href="/privacy" className="transition-colors hover:text-white">
-              Gizlilik Politikasi
+              Gizlilik Politikası
             </Link>
             <Link href="/terms" className="transition-colors hover:text-white">
-              Kullanim Kosullari
+              Kullanım Koşulları
             </Link>
             <Link href="/cookies" className="transition-colors hover:text-white">
-              Cerez Politikasi
+              Çerez Politikası
             </Link>
           </div>
         </div>

@@ -39,6 +39,11 @@ a {
   text-decoration: none;
 }
 
+a.bg-white,
+button.bg-white {
+  color: #1d4ed8;
+}
+
 ::selection {
   background: rgba(25, 85, 214, 0.14);
   color: var(--foreground);
