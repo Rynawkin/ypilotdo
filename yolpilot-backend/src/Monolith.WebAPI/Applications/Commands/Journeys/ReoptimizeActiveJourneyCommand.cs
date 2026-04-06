@@ -10,6 +10,7 @@ using Monolith.WebAPI.Hubs;
 using Monolith.WebAPI.Infrastructure;
 using Monolith.WebAPI.Responses.Journeys;
 using Monolith.WebAPI.Services.Members;
+using Monolith.WebAPI.Services.Optimization;
 
 namespace Monolith.WebAPI.Applications.Commands.Journeys;
 
@@ -42,6 +43,7 @@ public class ReoptimizeActiveJourneyCommandHandler : BaseAuthenticatedCommandHan
 {
     private readonly AppDbContext _context;
     private readonly GoogleApiService _googleApiService;
+    private readonly IOrderedRouteDetailsProvider _orderedRouteDetailsProvider;
     private readonly IHubContext<JourneyHub> _journeyHub;
     private readonly ILogger<ReoptimizeActiveJourneyCommandHandler> _logger;
 
@@ -49,11 +51,13 @@ public class ReoptimizeActiveJourneyCommandHandler : BaseAuthenticatedCommandHan
         AppDbContext context,
         IUserService userService,
         GoogleApiService googleApiService,
+        IOrderedRouteDetailsProvider orderedRouteDetailsProvider,
         IHubContext<JourneyHub> journeyHub,
         ILogger<ReoptimizeActiveJourneyCommandHandler> logger) : base(userService)
     {
         _context = context;
         _googleApiService = googleApiService;
+        _orderedRouteDetailsProvider = orderedRouteDetailsProvider;
         _journeyHub = journeyHub;
         _logger = logger;
     }
@@ -223,21 +227,12 @@ public class ReoptimizeActiveJourneyCommandHandler : BaseAuthenticatedCommandHan
 
         _logger.LogInformation($"[REOPTIMIZE] Final order count: {finalOrderedStops.Count}, Waypoints: {finalWaypoints.Count}");
 
-        var finalDirectionsResponse = await _googleApiService.GetDirections(
+        var finalRouteDetails = await _orderedRouteDetailsProvider.GetOrderedRouteAsync(
             origin,
             finalDestination,
             finalWaypoints,
-            optimize: false,
-            avoidTolls: journey.Route?.AvoidTolls ?? false
-        );
-
-        if (finalDirectionsResponse?.Routes == null || finalDirectionsResponse.Routes.Count == 0)
-        {
-            throw new ApiException("Google Maps'ten rota alinamadi", 500);
-        }
-
-        var finalRoute = finalDirectionsResponse.Routes.First();
-        var legs = finalRoute.Legs;
+            journey.Route?.AvoidTolls ?? false);
+        var legs = finalRouteDetails.Legs;
 
         // BUGFIX S3.15: Use transaction to ensure atomic updates (all or nothing)
         using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
@@ -280,9 +275,9 @@ public class ReoptimizeActiveJourneyCommandHandler : BaseAuthenticatedCommandHan
                     if (legs != null && i < legs.Count)
                     {
                         var leg = legs[i];
-                        travelTimeSeconds = leg.Duration?.Value ?? 0;
-                        distanceMeters = leg.Distance?.Value ?? 0;
-                        _logger.LogInformation($"[REOPTIMIZE] Stop #{i} using Google Directions data: {travelTimeSeconds}s, {distanceMeters}m");
+                        travelTimeSeconds = leg.DurationSeconds;
+                        distanceMeters = leg.DistanceMeters;
+                        _logger.LogInformation($"[REOPTIMIZE] Stop #{i} using ordered route details ({finalRouteDetails.ProviderName}): {travelTimeSeconds}s, {distanceMeters}m");
                     }
                     else
                     {
@@ -343,7 +338,7 @@ public class ReoptimizeActiveJourneyCommandHandler : BaseAuthenticatedCommandHan
                 }
 
                 // Polyline güncelle
-                journey.Polyline = finalRoute.OverviewPolyline?.Points;
+                journey.Polyline = finalRouteDetails.Polyline;
 
                 // Optimizasyon bayrağını kaldır
                 journey.NeedsReoptimization = false;
