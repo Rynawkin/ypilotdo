@@ -38,15 +38,6 @@ public class TrackingController : ControllerBase
     {
         try
         {
-            // Token doğrulama
-            var expectedToken = GenerateToken(journeyId, stopId);
-            if (string.IsNullOrEmpty(token) || !TokensMatch(token, expectedToken))
-            {
-                _logger.LogWarning($"Invalid token attempt for journey {journeyId}, stop {stopId}");
-                return Content(GenerateErrorPage("Geçersiz veya süresi dolmuş link"), "text/html; charset=utf-8");
-            }
-
-            // Multi-tenant güvenlik - workspace kontrolü ekle
             var journey = await _context.Journeys
                 .Include(j => j.Workspace)
                 .FirstOrDefaultAsync(j => j.Id == journeyId);
@@ -55,6 +46,12 @@ public class TrackingController : ControllerBase
             {
                 _logger.LogWarning($"Journey not found: {journeyId}");
                 return Content(GenerateErrorPage("Teslimat bilgisi bulunamadı"), "text/html; charset=utf-8");
+            }
+
+            if (!journey.WorkspaceId.HasValue || !ValidateTrackingToken(token, journeyId, stopId, journey.WorkspaceId.Value))
+            {
+                _logger.LogWarning("Invalid token attempt for journey {JourneyId}, stop {StopId}", journeyId, stopId);
+                return Content(GenerateErrorPage("Geçersiz veya süresi dolmuş link"), "text/html; charset=utf-8");
             }
 
             // En son journey status bilgisini al
@@ -608,17 +605,87 @@ public class TrackingController : ControllerBase
 </html>";
     }
 
-    private string GenerateToken(int journeyId, int stopId)
+    private string GenerateToken(int journeyId, int stopId, int workspaceId)
     {
-        // Journey'nin workspace ID'sini al
-        var journey = _context.Journeys.FirstOrDefault(j => j.Id == journeyId);
-        var workspaceId = journey?.WorkspaceId ?? 0;
-
         var secret = ResolveTrackingSecret();
-        var input = $"{journeyId}-{stopId}-{workspaceId}-{secret}";
+        var issuedAtTicks = DateTime.UtcNow.Ticks;
+        var tokenData = $"{workspaceId}|{journeyId}|{stopId}|{issuedAtTicks}";
+        var input = $"tracking-{tokenData}-{secret}";
         using var hmac = new System.Security.Cryptography.HMACSHA256(System.Text.Encoding.UTF8.GetBytes(secret));
         var hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(input));
-        return Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(hash);
+        var signature = Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(hash);
+        var encodedData = Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(System.Text.Encoding.UTF8.GetBytes(tokenData));
+        return $"{signature}.{encodedData}";
+    }
+
+    private bool ValidateTrackingToken(string? token, int journeyId, int stopId, int workspaceId)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            return false;
+        }
+
+        var secret = ResolveTrackingSecret();
+
+        // Backward compatibility for older deterministic links.
+        var legacyInput = $"{journeyId}-{stopId}-{workspaceId}-{secret}";
+        using var legacyHmac = new System.Security.Cryptography.HMACSHA256(System.Text.Encoding.UTF8.GetBytes(secret));
+        var legacyHash = legacyHmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(legacyInput));
+        var legacyToken = Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(legacyHash);
+        if (TokensMatch(token, legacyToken))
+        {
+            return true;
+        }
+
+        var parts = token.Split('.');
+        if (parts.Length != 2)
+        {
+            return false;
+        }
+
+        try
+        {
+            var providedSignature = parts[0];
+            var tokenData = System.Text.Encoding.UTF8.GetString(
+                Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlDecode(parts[1]));
+            var tokenParts = tokenData.Split('|');
+
+            if (tokenParts.Length != 4)
+            {
+                return false;
+            }
+
+            if (!int.TryParse(tokenParts[0], out var tokenWorkspaceId) ||
+                !int.TryParse(tokenParts[1], out var tokenJourneyId) ||
+                !int.TryParse(tokenParts[2], out var tokenStopId) ||
+                !long.TryParse(tokenParts[3], out var issuedAtTicks))
+            {
+                return false;
+            }
+
+            if (tokenWorkspaceId != workspaceId || tokenJourneyId != journeyId || tokenStopId != stopId)
+            {
+                return false;
+            }
+
+            var issuedAtUtc = new DateTime(issuedAtTicks, DateTimeKind.Utc);
+            var expiryHours = _configuration.GetValue<int?>("Tracking:PublicLinkExpiryHours") ?? 168;
+            if (DateTime.UtcNow - issuedAtUtc > TimeSpan.FromHours(expiryHours))
+            {
+                return false;
+            }
+
+            var expectedInput = $"tracking-{tokenData}-{secret}";
+            using var hmac = new System.Security.Cryptography.HMACSHA256(System.Text.Encoding.UTF8.GetBytes(secret));
+            var expectedSignature = Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(
+                hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(expectedInput)));
+
+            return TokensMatch(providedSignature, expectedSignature);
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private string ResolveTrackingSecret()

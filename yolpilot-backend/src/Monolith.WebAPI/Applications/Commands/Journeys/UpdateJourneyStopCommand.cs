@@ -1194,10 +1194,14 @@ public class UpdateJourneyStopCommandHandler : BaseAuthenticatedCommandHandler<U
     {
         var secret = ResolveTrackingSecret();
         var workspaceId = User.WorkspaceId;
-        var input = $"{journeyId}-{stopId}-{workspaceId}-{secret}";
+        var issuedAtTicks = DateTime.UtcNow.Ticks;
+        var tokenData = $"{workspaceId}|{journeyId}|{stopId}|{issuedAtTicks}";
+        var input = $"tracking-{tokenData}-{secret}";
         using var hmac = new System.Security.Cryptography.HMACSHA256(System.Text.Encoding.UTF8.GetBytes(secret));
         var hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(input));
-        return Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(hash);
+        var signature = Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(hash);
+        var encodedData = Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(System.Text.Encoding.UTF8.GetBytes(tokenData));
+        return $"{signature}.{encodedData}";
     }
 
     private string ResolveTrackingSecret()
@@ -2161,10 +2165,14 @@ public class FailJourneyStopCommandHandler : BaseAuthenticatedCommandHandler<Fai
     {
         var secret = ResolveTrackingSecret();
         var workspaceId = User.WorkspaceId;
-        var input = $"{journeyId}-{stopId}-{workspaceId}-{secret}";
+        var issuedAtTicks = DateTime.UtcNow.Ticks;
+        var tokenData = $"{workspaceId}|{journeyId}|{stopId}|{issuedAtTicks}";
+        var input = $"tracking-{tokenData}-{secret}";
         using var hmac = new System.Security.Cryptography.HMACSHA256(System.Text.Encoding.UTF8.GetBytes(secret));
         var hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(input));
-        return Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(hash);
+        var signature = Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(hash);
+        var encodedData = Microsoft.AspNetCore.WebUtilities.WebEncoders.Base64UrlEncode(System.Text.Encoding.UTF8.GetBytes(tokenData));
+        return $"{signature}.{encodedData}";
     }
 
     private string ResolveTrackingSecret()
