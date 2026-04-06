@@ -34,7 +34,7 @@ const HeroSection: React.FC = () => {
       <div className="marketing-grid absolute inset-0 opacity-60" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(25,85,214,0.14),transparent_34%),radial-gradient(circle_at_left_center,rgba(217,122,43,0.08),transparent_26%)]" />
 
-      <div className="relative mx-auto grid max-w-[1560px] gap-14 px-4 sm:px-6 lg:grid-cols-[minmax(560px,0.82fr)_minmax(0,1.18fr)] lg:items-center lg:px-8">
+      <div className="relative mx-auto grid max-w-[1420px] gap-14 px-4 sm:px-6 lg:grid-cols-[minmax(540px,0.9fr)_minmax(0,1.1fr)] lg:items-center lg:px-8">
         <motion.div
           initial={{ opacity: 0, x: -32 }}
           animate={{ opacity: 1, x: 0 }}
@@ -94,14 +94,14 @@ const HeroSection: React.FC = () => {
           initial={{ opacity: 0, x: 32 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative lg:pl-4"
+          className="relative lg:pl-2"
         >
           <div className="absolute inset-x-6 top-8 h-64 rounded-full bg-blue-600/12 blur-3xl lg:inset-x-10 lg:h-72" />
 
           <div className="relative flex flex-col gap-8 lg:items-end lg:gap-7">
             <div className="relative w-full">
-              <div className="mx-auto w-full max-w-[1180px] overflow-hidden rounded-[2.2rem] border border-slate-300 bg-slate-950 p-4 shadow-2xl shadow-slate-900/15 xl:max-w-[1260px]">
-                <div className="relative aspect-[16/9.2] w-full rounded-[1.7rem] bg-slate-950 xl:aspect-[16/8.8]">
+              <div className="mx-auto w-full max-w-[980px] overflow-hidden rounded-[2.05rem] border border-slate-300 bg-slate-950 p-3.5 shadow-2xl shadow-slate-900/15 xl:max-w-[1040px]">
+                <div className="relative aspect-[16/9.4] w-full rounded-[1.55rem] bg-slate-950">
                   <motion.div
                     key={currentWebScreen}
                     initial={{ opacity: 0, x: 24 }}
@@ -113,23 +113,23 @@ const HeroSection: React.FC = () => {
                       src={`/screenshots/${webScreenshots[currentWebScreen]}`}
                       alt="YolPilot web panel ekranları"
                       fill
-                      sizes="(min-width: 1536px) 1260px, (min-width: 1280px) 1180px, (min-width: 1024px) 980px, (min-width: 640px) 620px, 380px"
+                      sizes="(min-width: 1536px) 1040px, (min-width: 1280px) 980px, (min-width: 1024px) 860px, (min-width: 640px) 620px, 380px"
                       className="object-cover object-top"
                     />
                   </motion.div>
                 </div>
               </div>
 
-              <div className="mx-auto h-7 w-[28%] max-w-[320px] rounded-b-[1.7rem] bg-slate-700" />
-              <div className="mx-auto mt-1.5 h-2 w-[46%] max-w-[500px] rounded-full bg-slate-800" />
+              <div className="mx-auto h-6 w-[28%] max-w-[260px] rounded-b-[1.55rem] bg-slate-700" />
+              <div className="mx-auto mt-1.5 h-2 w-[44%] max-w-[420px] rounded-full bg-slate-800" />
 
               <div className="absolute right-1 top-5 rounded-full bg-[color:var(--brand)] px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-blue-900/20 lg:right-4">
                 Web operasyon paneli
               </div>
             </div>
 
-            <div className="relative mx-auto lg:mr-16 xl:mr-20">
-              <div className="relative h-[420px] w-52 rounded-[2.6rem] bg-slate-950 p-2 shadow-2xl shadow-slate-900/20 sm:h-[460px] sm:w-56 lg:h-[400px] lg:w-[182px] xl:h-[432px] xl:w-[196px]">
+            <div className="relative mx-auto lg:mr-12 xl:mr-16">
+              <div className="relative h-[420px] w-52 rounded-[2.6rem] bg-slate-950 p-2 shadow-2xl shadow-slate-900/20 sm:h-[460px] sm:w-56 lg:h-[380px] lg:w-[172px] xl:h-[410px] xl:w-[186px]">
                 <div className="relative h-full w-full overflow-hidden rounded-[2rem] bg-slate-900">
                   <motion.div
                     key={currentMobileScreen}
