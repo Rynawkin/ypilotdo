@@ -22,49 +22,55 @@ public class ConfigurableRouteMatrixProvider : IRouteMatrixProvider
     }
 
     public async Task<RouteMatrixResult> BuildMatrixAsync(
-        double depotLatitude,
-        double depotLongitude,
-        List<OptimizationStop> stops)
+        double originLatitude,
+        double originLongitude,
+        List<OptimizationStop> stops,
+        double? endLatitude = null,
+        double? endLongitude = null)
     {
         var preferredProvider = (_settings.MatrixProvider ?? "Osrm").Trim();
 
         if (preferredProvider.Equals("Google", StringComparison.OrdinalIgnoreCase))
         {
-            return await TryGoogleThenOsrm(depotLatitude, depotLongitude, stops);
+            return await TryGoogleThenOsrm(originLatitude, originLongitude, stops, endLatitude, endLongitude);
         }
 
-        return await TryOsrmThenGoogle(depotLatitude, depotLongitude, stops);
+        return await TryOsrmThenGoogle(originLatitude, originLongitude, stops, endLatitude, endLongitude);
     }
 
     private async Task<RouteMatrixResult> TryOsrmThenGoogle(
-        double depotLatitude,
-        double depotLongitude,
-        List<OptimizationStop> stops)
+        double originLatitude,
+        double originLongitude,
+        List<OptimizationStop> stops,
+        double? endLatitude,
+        double? endLongitude)
     {
         try
         {
-            return await _osrmProvider.BuildMatrixAsync(depotLatitude, depotLongitude, stops);
+            return await _osrmProvider.BuildMatrixAsync(originLatitude, originLongitude, stops, endLatitude, endLongitude);
         }
         catch (Exception ex) when (_settings.EnableGoogleFallback)
         {
             _logger.LogWarning(ex, "OSRM matrix failed, falling back to Google Distance Matrix.");
-            return await _googleProvider.BuildMatrixAsync(depotLatitude, depotLongitude, stops);
+            return await _googleProvider.BuildMatrixAsync(originLatitude, originLongitude, stops, endLatitude, endLongitude);
         }
     }
 
     private async Task<RouteMatrixResult> TryGoogleThenOsrm(
-        double depotLatitude,
-        double depotLongitude,
-        List<OptimizationStop> stops)
+        double originLatitude,
+        double originLongitude,
+        List<OptimizationStop> stops,
+        double? endLatitude,
+        double? endLongitude)
     {
         try
         {
-            return await _googleProvider.BuildMatrixAsync(depotLatitude, depotLongitude, stops);
+            return await _googleProvider.BuildMatrixAsync(originLatitude, originLongitude, stops, endLatitude, endLongitude);
         }
         catch (Exception ex) when (_osrmProvider.IsConfigured)
         {
             _logger.LogWarning(ex, "Google Distance Matrix failed, falling back to OSRM.");
-            return await _osrmProvider.BuildMatrixAsync(depotLatitude, depotLongitude, stops);
+            return await _osrmProvider.BuildMatrixAsync(originLatitude, originLongitude, stops, endLatitude, endLongitude);
         }
     }
 }

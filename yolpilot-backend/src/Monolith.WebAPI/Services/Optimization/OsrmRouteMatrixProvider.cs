@@ -28,16 +28,18 @@ public class OsrmRouteMatrixProvider
     public bool IsConfigured => !string.IsNullOrWhiteSpace(_settings.Osrm.BaseUrl);
 
     public async Task<RouteMatrixResult> BuildMatrixAsync(
-        double depotLatitude,
-        double depotLongitude,
-        List<OptimizationStop> stops)
+        double originLatitude,
+        double originLongitude,
+        List<OptimizationStop> stops,
+        double? endLatitude = null,
+        double? endLongitude = null)
     {
         if (!IsConfigured)
         {
             throw new InvalidOperationException("OSRM base URL is not configured.");
         }
 
-        var points = RouteMatrixEstimation.BuildPoints(depotLatitude, depotLongitude, stops);
+        var points = RouteMatrixEstimation.BuildPoints(originLatitude, originLongitude, stops, endLatitude, endLongitude);
         var coordinateSegment = string.Join(
             ";",
             points.Select(point => $"{point.Longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)},{point.Latitude.ToString(System.Globalization.CultureInfo.InvariantCulture)}"));

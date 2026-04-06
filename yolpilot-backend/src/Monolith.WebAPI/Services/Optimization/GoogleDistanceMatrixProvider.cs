@@ -20,11 +20,13 @@ public class GoogleDistanceMatrixProvider : IRouteMatrixProvider
     }
 
     public async Task<RouteMatrixResult> BuildMatrixAsync(
-        double depotLatitude,
-        double depotLongitude,
-        List<OptimizationStop> stops)
+        double originLatitude,
+        double originLongitude,
+        List<OptimizationStop> stops,
+        double? endLatitude = null,
+        double? endLongitude = null)
     {
-        var points = RouteMatrixEstimation.BuildPoints(depotLatitude, depotLongitude, stops);
+        var points = RouteMatrixEstimation.BuildPoints(originLatitude, originLongitude, stops, endLatitude, endLongitude);
         var coordinateStrings = points
             .Select(point => RouteMatrixEstimation.ToCoordinateString(point.Latitude, point.Longitude))
             .ToList();

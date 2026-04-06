@@ -5,16 +5,24 @@ namespace Monolith.WebAPI.Services.Optimization;
 internal static class RouteMatrixEstimation
 {
     public static List<(double Latitude, double Longitude)> BuildPoints(
-        double depotLatitude,
-        double depotLongitude,
-        List<OptimizationStop> stops)
+        double originLatitude,
+        double originLongitude,
+        List<OptimizationStop> stops,
+        double? endLatitude = null,
+        double? endLongitude = null)
     {
         var points = new List<(double Latitude, double Longitude)>(stops.Count + 1)
         {
-            (depotLatitude, depotLongitude)
+            (originLatitude, originLongitude)
         };
 
         points.AddRange(stops.Select(stop => (stop.Latitude, stop.Longitude)));
+
+        if (endLatitude.HasValue && endLongitude.HasValue)
+        {
+            points.Add((endLatitude.Value, endLongitude.Value));
+        }
+
         return points;
     }
 

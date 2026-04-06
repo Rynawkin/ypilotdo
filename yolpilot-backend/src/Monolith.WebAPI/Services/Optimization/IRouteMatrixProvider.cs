@@ -3,9 +3,11 @@ namespace Monolith.WebAPI.Services.Optimization;
 public interface IRouteMatrixProvider
 {
     Task<RouteMatrixResult> BuildMatrixAsync(
-        double depotLatitude,
-        double depotLongitude,
-        List<OptimizationStop> stops);
+        double originLatitude,
+        double originLongitude,
+        List<OptimizationStop> stops,
+        double? endLatitude = null,
+        double? endLongitude = null);
 }
 
 public class RouteMatrixResult

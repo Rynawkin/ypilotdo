@@ -151,6 +151,8 @@ public class AssignRouteCommandHandler : BaseAuthenticatedCommandHandler<AssignR
             }
         }
 
+        await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+
         // ✅ YENİ EKLENEN - Eğer özel isim varsa Journey'ye ata
         // NOT: Journey entity'sine Name property'si eklenmeli veya mevcut bir property kullanılmalı
         var journey = new Journey(request, route);
@@ -346,8 +348,11 @@ public class AssignRouteCommandHandler : BaseAuthenticatedCommandHandler<AssignR
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Journey optimization failed");
+                throw new ApiException("Sefer olusturuldu ancak optimizasyon basarisiz oldu. Lutfen rota verilerini kontrol edip tekrar deneyin.", 500);
             }
         }
+
+        await transaction.CommitAsync(cancellationToken);
         
         // Driver'a email ve notification gönder
         _logger.LogInformation($"Attempting to send notifications. Driver: {driver.Name}, Driver.User: {driver.User?.Id}, Driver.User.Email: {driver.User?.Email}");
