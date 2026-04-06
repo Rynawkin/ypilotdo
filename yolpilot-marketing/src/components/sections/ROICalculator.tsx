@@ -1,34 +1,47 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, Clock3, Fuel, Route } from 'lucide-react';
+import { ArrowRight, Calculator, Clock3, Fuel, Route } from 'lucide-react';
+
+const formatCurrency = (value: number) =>
+  new Intl.NumberFormat('tr-TR', {
+    style: 'currency',
+    currency: 'TRY',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(value);
 
 const ROICalculator: React.FC = () => {
-  const outcomes = [
-    {
-      icon: Route,
-      title: 'Planlama süresi kısalır',
-      description: 'Rotalar aynı gün içinde daha hızlı hazırlanır ve son dakika değişiklikleri daha kontrollü yönetilir.'
-    },
-    {
-      icon: Clock3,
-      title: 'Sahadaki belirsizlik azalır',
-      description: 'Aktif sefer, geciken durak ve teslimat sonucu aynı panelden görüldüğü için ekip içi telefon trafiği düşer.'
-    },
-    {
-      icon: Fuel,
-      title: 'Yakıt ve zaman kaybı görünür olur',
-      description: 'Tek tek tasarruf sözü vermek yerine, rota kalitesindeki farkı ve operasyon etkisini daha net izlersiniz.'
-    }
-  ];
+  const [deliveriesPerDay, setDeliveriesPerDay] = useState<number>(80);
+  const [vehicleCount, setVehicleCount] = useState<number>(6);
+  const [avgKmPerDelivery, setAvgKmPerDelivery] = useState<number>(12);
 
-  const exampleBreakdown = [
-    'Gün içinde manuel planlamaya ayrılan zamanın azalması',
-    'Tekrar arama ve durum sorma trafiğinin düşmesi',
-    'Teslimat kanıtı ve durak notlarının tek yerde toplanması'
-  ];
+  const estimate = useMemo(() => {
+    const workingDaysPerMonth = 22;
+    const fuelConsumptionPer100Km = 10;
+    const fuelPrice = 42;
+
+    const monthlyDeliveries = deliveriesPerDay * workingDaysPerMonth;
+    const monthlyKm = monthlyDeliveries * avgKmPerDelivery;
+    const monthlyFuelCost = ((monthlyKm * fuelConsumptionPer100Km) / 100) * fuelPrice;
+
+    const fuelSavingsMin = monthlyFuelCost * 0.05;
+    const fuelSavingsMax = monthlyFuelCost * 0.12;
+
+    const monthlyPlanningHoursMin = vehicleCount * 5;
+    const monthlyPlanningHoursMax = vehicleCount * 11;
+
+    return {
+      monthlyFuelSavingsMin: Math.round(fuelSavingsMin),
+      monthlyFuelSavingsMax: Math.round(fuelSavingsMax),
+      annualFuelSavingsMin: Math.round(fuelSavingsMin * 12),
+      annualFuelSavingsMax: Math.round(fuelSavingsMax * 12),
+      monthlyPlanningHoursMin,
+      monthlyPlanningHoursMax
+    };
+  }, [avgKmPerDelivery, deliveriesPerDay, vehicleCount]);
 
   return (
     <section className="bg-[#0f1725] py-16 text-white lg:py-24">
@@ -40,82 +53,197 @@ const ROICalculator: React.FC = () => {
           viewport={{ once: true }}
           className="mx-auto max-w-3xl text-center"
         >
-          <div className="mb-5 inline-flex rounded-full border border-white/10 bg-white/8 px-4 py-2 text-sm font-semibold text-blue-100">
-            Örnek etki alanları
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/8 px-4 py-2 text-sm font-semibold text-blue-100">
+            <Calculator className="h-4 w-4" />
+            Örnek etki hesaplayıcısı
           </div>
-          <h2 className="text-3xl font-bold tracking-tight lg:text-5xl">Her operasyonda aynı sayıyı vaat etmek doğru değil.</h2>
+          <h2 className="text-3xl font-bold tracking-tight lg:text-5xl">Net vaat yerine makul bir aralıkla konuşmayı tercih ediyoruz.</h2>
           <p className="mt-5 text-lg leading-8 text-slate-300">
-            Bu yüzden burada karmaşık bir tasarruf hesap makinesi yerine, YolPilot&apos;ın pratikte en hızlı etki ettiği
-            başlıkları özetliyoruz. Gerçek tabloyu demo sırasında kendi operasyon verinizle birlikte konuşuruz.
+            Aşağıdaki alan, operasyon büyüklüğüne göre oluşabilecek etkiyi yaklaşık bir aralıkta gösterir. Gerçek sonuç;
+            şehir dağılımı, zaman pencereleri, araç tipi ve saha disiplinine göre değişir.
           </p>
         </motion.div>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-3">
-          {outcomes.map((item, index) => {
-            const Icon = item.icon;
+        <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+          <motion.div
+            initial={{ opacity: 0, x: -24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true }}
+            className="rounded-[2rem] border border-white/10 bg-white/6 p-7 shadow-2xl shadow-black/10 backdrop-blur"
+          >
+            <div className="mb-8">
+              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-100">Senaryo girişi</div>
+              <h3 className="mt-2 text-2xl font-semibold">Operasyon yoğunluğunu seçin</h3>
+            </div>
 
-            return (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: index * 0.08 }}
-                viewport={{ once: true }}
-                className="rounded-[1.8rem] border border-white/10 bg-white/6 p-7 shadow-2xl shadow-black/10 backdrop-blur"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-blue-100">
-                  <Icon className="h-6 w-6" />
+            <div className="space-y-8">
+              <div>
+                <label className="mb-3 flex items-center justify-between text-sm font-semibold text-slate-100">
+                  <span>Günlük teslimat sayısı</span>
+                  <span>{deliveriesPerDay}</span>
+                </label>
+                <input
+                  type="range"
+                  min="20"
+                  max="300"
+                  value={deliveriesPerDay}
+                  onChange={(e) => setDeliveriesPerDay(Number(e.target.value))}
+                  className="slider h-3 w-full cursor-pointer appearance-none rounded-lg bg-white/15"
+                />
+              </div>
+
+              <div>
+                <label className="mb-3 flex items-center justify-between text-sm font-semibold text-slate-100">
+                  <span>Aktif araç sayısı</span>
+                  <span>{vehicleCount}</span>
+                </label>
+                <input
+                  type="range"
+                  min="2"
+                  max="25"
+                  value={vehicleCount}
+                  onChange={(e) => setVehicleCount(Number(e.target.value))}
+                  className="slider h-3 w-full cursor-pointer appearance-none rounded-lg bg-white/15"
+                />
+              </div>
+
+              <div>
+                <label className="mb-3 flex items-center justify-between text-sm font-semibold text-slate-100">
+                  <span>Teslimat başına ortalama km</span>
+                  <span>{avgKmPerDelivery} km</span>
+                </label>
+                <input
+                  type="range"
+                  min="5"
+                  max="35"
+                  value={avgKmPerDelivery}
+                  onChange={(e) => setAvgKmPerDelivery(Number(e.target.value))}
+                  className="slider h-3 w-full cursor-pointer appearance-none rounded-lg bg-white/15"
+                />
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 24 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            viewport={{ once: true }}
+            className="flex flex-col gap-6"
+          >
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div className="rounded-[2rem] border border-emerald-400/20 bg-emerald-400/8 p-6">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-400/18 text-emerald-200">
+                    <Fuel className="h-5 w-5" />
+                  </div>
+                  <div className="text-sm font-semibold text-emerald-100">Aylık yakıt etkisi</div>
                 </div>
-                <h3 className="mt-5 text-2xl font-semibold text-white">{item.title}</h3>
-                <p className="mt-4 text-base leading-7 text-slate-300">{item.description}</p>
-              </motion.div>
-            );
-          })}
+                <div className="mt-5 text-3xl font-bold text-emerald-200">
+                  {formatCurrency(estimate.monthlyFuelSavingsMin)} - {formatCurrency(estimate.monthlyFuelSavingsMax)}
+                </div>
+                <div className="mt-2 text-sm text-slate-300">Yaklaşık %5-%12 bandında potansiyel fark.</div>
+              </div>
+
+              <div className="rounded-[2rem] border border-amber-400/20 bg-amber-400/8 p-6">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-400/18 text-amber-200">
+                    <Clock3 className="h-5 w-5" />
+                  </div>
+                  <div className="text-sm font-semibold text-amber-100">Aylık planlama zamanı</div>
+                </div>
+                <div className="mt-5 text-3xl font-bold text-amber-200">
+                  {estimate.monthlyPlanningHoursMin} - {estimate.monthlyPlanningHoursMax} saat
+                </div>
+                <div className="mt-2 text-sm text-slate-300">Araç sayısına göre değişebilen yaklaşık kazanım.</div>
+              </div>
+            </div>
+
+            <div className="rounded-[2rem] border border-white/10 bg-white/6 p-7">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Yıllık yakıt etkisi</div>
+                  <div className="mt-3 text-3xl font-bold text-white">
+                    {formatCurrency(estimate.annualFuelSavingsMin)} - {formatCurrency(estimate.annualFuelSavingsMax)}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Beklenen operasyon etkisi</div>
+                  <div className="mt-3 text-2xl font-bold text-white">Daha az manuel planlama, daha net saha görünürlüğü</div>
+                </div>
+              </div>
+
+              <div className="mt-6 rounded-2xl border border-white/10 bg-black/10 p-4 text-sm leading-7 text-slate-300">
+                Bu hesaplama; genel dağıtım operasyonları için hazırlanmış yaklaşık bir aralıktır. Gerçek tabloyu demo
+                sırasında kendi rota yapınız, teslimat pencereleriniz ve şehir dağılımınız ile birlikte değerlendiririz.
+              </div>
+
+              <div className="mt-6 grid gap-3 text-sm text-slate-300 sm:grid-cols-3">
+                <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                  <div className="mb-2 flex items-center gap-2 text-white">
+                    <Route className="h-4 w-4" />
+                    Planlama kalitesi
+                  </div>
+                  Rota sırası, durak yoğunluğu ve depoya dönüş kurgusu.
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                  <div className="mb-2 flex items-center gap-2 text-white">
+                    <Fuel className="h-4 w-4" />
+                    Maliyet etkisi
+                  </div>
+                  Yakıt, boşa giden km ve tekrar planlama ihtiyacı.
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+                  <div className="mb-2 flex items-center gap-2 text-white">
+                    <Clock3 className="h-4 w-4" />
+                    Operasyon ritmi
+                  </div>
+                  Saha takibi, gecikme görünürlüğü ve ekip içi koordinasyon.
+                </div>
+              </div>
+
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold !text-slate-900 transition-colors hover:bg-slate-100"
+                >
+                  Demo Talep Edin
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/features"
+                  className="inline-flex items-center justify-center rounded-full border border-white/10 px-6 py-3 text-sm font-semibold !text-white transition-colors hover:bg-white/6"
+                >
+                  Özellikleri İnceleyin
+                </Link>
+              </div>
+            </div>
+          </motion.div>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.25 }}
-          viewport={{ once: true }}
-          className="mt-12 rounded-[2rem] border border-white/10 bg-white/6 p-7"
-        >
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-center">
-            <div>
-              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Demo sırasında netleştirilen başlıklar</div>
-              <h3 className="mt-3 text-2xl font-semibold">Etki hesabını sizin rota yapınıza göre birlikte çıkaralım.</h3>
-              <p className="mt-4 text-base leading-7 text-slate-300">
-                Operasyon tipi, teslimat yoğunluğu, şehir dağılımı ve saha akışına göre değişen gerçek tabloyu demo
-                sırasında kendi veriniz üzerinden değerlendirmek daha sağlıklıdır.
-              </p>
-            </div>
-
-            <div className="space-y-3">
-              {exampleBreakdown.map((item) => (
-                <div key={item} className="rounded-2xl border border-white/10 bg-black/10 px-4 py-4 text-sm text-slate-200">
-                  {item}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold !text-slate-900 transition-colors hover:bg-slate-100"
-            >
-              Demo Talep Edin
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/features"
-              className="inline-flex items-center justify-center rounded-full border border-white/10 px-6 py-3 text-sm font-semibold !text-white transition-colors hover:bg-white/6"
-            >
-              Özellikleri İnceleyin
-            </Link>
-          </div>
-        </motion.div>
       </div>
+
+      <style jsx>{`
+        .slider::-webkit-slider-thumb {
+          appearance: none;
+          width: 22px;
+          height: 22px;
+          border-radius: 9999px;
+          background: #ffffff;
+          cursor: pointer;
+          box-shadow: 0 6px 16px rgba(15, 23, 37, 0.3);
+        }
+
+        .slider::-moz-range-thumb {
+          width: 22px;
+          height: 22px;
+          border-radius: 9999px;
+          background: #ffffff;
+          cursor: pointer;
+          border: none;
+          box-shadow: 0 6px 16px rgba(15, 23, 37, 0.3);
+        }
+      `}</style>
     </section>
   );
 };
