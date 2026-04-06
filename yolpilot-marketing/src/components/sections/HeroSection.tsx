@@ -34,7 +34,7 @@ const HeroSection: React.FC = () => {
       <div className="marketing-grid absolute inset-0 opacity-60" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(25,85,214,0.14),transparent_34%),radial-gradient(circle_at_left_center,rgba(217,122,43,0.08),transparent_26%)]" />
 
-      <div className="relative mx-auto grid max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-center lg:px-8">
+      <div className="relative mx-auto grid max-w-7xl gap-14 px-4 sm:px-6 lg:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)] lg:items-center lg:px-8">
         <motion.div
           initial={{ opacity: 0, x: -32 }}
           animate={{ opacity: 1, x: 0 }}
@@ -94,13 +94,13 @@ const HeroSection: React.FC = () => {
           initial={{ opacity: 0, x: 32 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative lg:pl-6"
+          className="relative lg:pl-10"
         >
           <div className="absolute inset-x-6 top-8 h-64 rounded-full bg-blue-600/12 blur-3xl lg:inset-x-10 lg:h-72" />
 
-          <div className="relative flex flex-col gap-8 lg:min-h-[560px] lg:justify-center">
-            <div className="relative mx-auto lg:absolute lg:bottom-4 lg:left-0 lg:z-20 lg:mx-0">
-              <div className="relative h-[420px] w-52 rounded-[2.6rem] bg-slate-950 p-2 shadow-2xl shadow-slate-900/20 sm:h-[460px] sm:w-56">
+          <div className="relative flex flex-col gap-8 lg:min-h-[620px] lg:flex-row lg:items-end lg:gap-5">
+            <div className="relative mx-auto lg:mx-0 lg:mb-10 lg:w-[190px] xl:w-[205px]">
+              <div className="relative h-[420px] w-52 rounded-[2.6rem] bg-slate-950 p-2 shadow-2xl shadow-slate-900/20 sm:h-[460px] sm:w-56 lg:h-[430px] lg:w-[190px] xl:h-[468px] xl:w-[205px]">
                 <div className="relative h-full w-full overflow-hidden rounded-[2rem] bg-slate-900">
                   <motion.div
                     key={currentMobileScreen}
@@ -125,9 +125,9 @@ const HeroSection: React.FC = () => {
               </div>
             </div>
 
-            <div className="relative w-full lg:ml-16 xl:ml-24">
-              <div className="mx-auto w-full max-w-[860px] overflow-hidden rounded-[2rem] border border-slate-300 bg-slate-950 p-3 shadow-2xl shadow-slate-900/15">
-                <div className="relative aspect-[16/10] w-full rounded-[1.45rem] bg-slate-950 lg:aspect-[16/9]">
+            <div className="relative w-full lg:flex-1">
+              <div className="mx-auto w-full max-w-[980px] overflow-hidden rounded-[2.1rem] border border-slate-300 bg-slate-950 p-3.5 shadow-2xl shadow-slate-900/15 xl:max-w-[1060px]">
+                <div className="relative aspect-[16/10] w-full rounded-[1.55rem] bg-slate-950 lg:aspect-[16/9]">
                   <motion.div
                     key={currentWebScreen}
                     initial={{ opacity: 0, x: 24 }}
@@ -139,17 +139,17 @@ const HeroSection: React.FC = () => {
                       src={`/screenshots/${webScreenshots[currentWebScreen]}`}
                       alt="YolPilot web panel ekranları"
                       fill
-                      sizes="(min-width: 1280px) 860px, (min-width: 1024px) 760px, (min-width: 640px) 620px, 380px"
+                      sizes="(min-width: 1536px) 1060px, (min-width: 1280px) 980px, (min-width: 1024px) 860px, (min-width: 640px) 620px, 380px"
                       className="object-cover object-top"
                     />
                   </motion.div>
                 </div>
               </div>
 
-              <div className="mx-auto h-6 w-[34%] max-w-[280px] rounded-b-[1.6rem] bg-slate-700" />
-              <div className="mx-auto mt-1.5 h-2 w-[52%] max-w-[420px] rounded-full bg-slate-800" />
+              <div className="mx-auto h-6 w-[30%] max-w-[300px] rounded-b-[1.6rem] bg-slate-700" />
+              <div className="mx-auto mt-1.5 h-2 w-[48%] max-w-[440px] rounded-full bg-slate-800" />
 
-              <div className="absolute -right-3 bottom-14 rounded-full bg-[color:var(--brand)] px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-blue-900/20">
+              <div className="absolute -right-3 bottom-14 rounded-full bg-[color:var(--brand)] px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-blue-900/20 lg:right-2">
                 Web operasyon paneli
               </div>
             </div>
