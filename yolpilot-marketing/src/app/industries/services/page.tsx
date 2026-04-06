@@ -1,24 +1,24 @@
 import Link from 'next/link';
 
 const focus = [
-  'Randevu ve gorev planlamasi',
-  'Saha ekipleri icin net akis',
-  'Musteri bildirimleri',
-  'Islem ve servis kaniti'
+  'Randevu ve görev planlaması',
+  'Saha ekipleri için net akış',
+  'Müşteri bildirimleri',
+  'İşlem ve servis kanıtı'
 ];
 
 const approach = [
   {
     title: 'Planlama',
-    description: 'Randevu ve gorevler tek panelden planlanir.'
+    description: 'Randevu ve görevler tek panelden planlanır.'
   },
   {
     title: 'Saha',
-    description: 'Teknisyenler gorev listesini mobil uygulamada takip eder.'
+    description: 'Teknisyenler görev listesini mobil uygulamada takip eder.'
   },
   {
     title: 'Raporlama',
-    description: 'Saha islemleri ve notlar tek arsivde toplanir.'
+    description: 'Saha işlemleri ve notlar tek arşivde toplanır.'
   }
 ];
 
@@ -27,9 +27,9 @@ export default function ServicesIndustryPage() {
     <div className="min-h-screen bg-gray-50 pt-24">
       <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Hizmet Operasyonlari</h1>
+          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Hizmet Operasyonları</h1>
           <p className="text-blue-100 max-w-3xl mx-auto">
-            Teknik servis ve saha ekiplerinde planlama, takip ve dokumantasyonu tek akista birlestirin.
+            Teknik servis ve saha ekiplerinde planlama, takip ve dokümantasyonu tek akışta birleştirin.
           </p>
         </div>
       </section>
@@ -37,9 +37,9 @@ export default function ServicesIndustryPage() {
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktalari</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktaları</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Hizmet operasyonlarinda standardi ve gorunurlugu artirmaya odaklaniriz.
+              Hizmet operasyonlarında standardı ve görünürlüğü artırmaya odaklanırız.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
@@ -68,9 +68,9 @@ export default function ServicesIndustryPage() {
 
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Saha ekibiniz icin demo planlayin</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Saha ekibiniz için demo planlayın</h2>
           <p className="text-gray-600 mb-8">
-            Hizmet operasyonunuza uygun kurguyu birlikte olusturalim.
+            Hizmet operasyonunuza uygun kurguyu birlikte oluşturalım.
           </p>
           <Link
             href="/contact"

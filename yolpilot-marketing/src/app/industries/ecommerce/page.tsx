@@ -1,24 +1,24 @@
 import Link from 'next/link';
 
 const focus = [
-  'Cok durakli dagitim planlama',
-  'Musteri bilgilendirme senaryolari',
-  'Teslimat kaniti ve iade akisi',
+  'Çok duraklı dağıtım planlama',
+  'Müşteri bilgilendirme senaryoları',
+  'Teslimat kanıtı ve iade akışı',
   'Saha ekibi koordinasyonu'
 ];
 
 const approach = [
   {
     title: 'Planlama',
-    description: 'Siparisleri rota kurallarina gore hizla siralariz.'
+    description: 'Siparişleri rota kurallarına göre hızla sıralarız.'
   },
   {
     title: 'Saha',
-    description: 'Suruculer mobil uygulamadan gorev listesini takip eder.'
+    description: 'Sürücüler mobil uygulamadan görev listesini takip eder.'
   },
   {
-    title: 'Musteri',
-    description: 'Takip linki ve bildirimlerle musteriye net bilgi verilir.'
+    title: 'Müşteri',
+    description: 'Takip linki ve bildirimlerle müşteriye net bilgi verilir.'
   }
 ];
 
@@ -29,7 +29,7 @@ export default function EcommerceIndustryPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl lg:text-5xl font-bold mb-6">E-ticaret</h1>
           <p className="text-blue-100 max-w-3xl mx-auto">
-            Yogun siparis akisini planli ve gorunur hale getirmek icin YolPilot ile tek akisa gecin.
+            Yoğun sipariş akışını planlı ve görünür hale getirmek için YolPilot ile tek akışa geçin.
           </p>
         </div>
       </section>
@@ -37,9 +37,9 @@ export default function EcommerceIndustryPage() {
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktalari</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktaları</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              E-ticaret operasyonlari icin kritik olan surecleri netlestiriyoruz.
+              E-ticaret operasyonları için kritik olan süreçleri netleştiriyoruz.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
@@ -68,9 +68,9 @@ export default function EcommerceIndustryPage() {
 
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">E-ticaret ekibiniz icin demo planlayin</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">E-ticaret ekibiniz için demo planlayın</h2>
           <p className="text-gray-600 mb-8">
-            Siparis akisina uygun bir kurgu icin ekibimizle gorusun.
+            Sipariş akışına uygun bir kurgu için ekibimizle görüşün.
           </p>
           <Link
             href="/contact"

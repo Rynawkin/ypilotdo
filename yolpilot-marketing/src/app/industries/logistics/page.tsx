@@ -1,24 +1,24 @@
 import Link from 'next/link';
 
 const focus = [
-  'Filo ve depo gorunurlugu',
-  'Rota kurallari ve operasyon planlama',
+  'Filo ve depo görünürlüğü',
+  'Rota kuralları ve operasyon planlama',
   'Sefer durumu takibi',
-  'Teslimat kaniti arsivi'
+  'Teslimat kanıtı arşivi'
 ];
 
 const approach = [
   {
     title: 'Merkezden Planlama',
-    description: 'Depolar ve filolar icin ortak rota kurallari belirlenir.'
+    description: 'Depolar ve filolar için ortak rota kuralları belirlenir.'
   },
   {
-    title: 'Canli Takip',
+    title: 'Canlı Takip',
     description: 'Seferlerin durumu tek panelden izlenir.'
   },
   {
     title: 'Raporlama',
-    description: 'Sefer ozetleri ve operasyon notlari tek yerde toplanir.'
+    description: 'Sefer özetleri ve operasyon notları tek yerde toplanır.'
   }
 ];
 
@@ -29,7 +29,7 @@ export default function LogisticsIndustryPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl lg:text-5xl font-bold mb-6">Lojistik</h1>
           <p className="text-blue-100 max-w-3xl mx-auto">
-            Depo ve filo operasyonlarini tek merkezden yonetmek icin YolPilot ile planli bir akisa gecin.
+            Depo ve filo operasyonlarını tek merkezden yönetmek için YolPilot ile planlı bir akışa geçin.
           </p>
         </div>
       </section>
@@ -37,9 +37,9 @@ export default function LogisticsIndustryPage() {
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktalari</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktaları</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Lojistik sureclerinde gorunurluk ve kontrolu artiririz.
+              Lojistik süreçlerinde görünürlük ve kontrolü artırırız.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
@@ -68,9 +68,9 @@ export default function LogisticsIndustryPage() {
 
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Lojistik operasyonu icin demo planlayin</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Lojistik operasyonu için demo planlayın</h2>
           <p className="text-gray-600 mb-8">
-            Filo ve depo yapiniza uygun senaryoyu birlikte olusturalim.
+            Filo ve depo yapınıza uygun senaryoyu birlikte oluşturalım.
           </p>
           <Link
             href="/contact"

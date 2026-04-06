@@ -1,24 +1,24 @@
 import Link from 'next/link';
 
 const focus = [
-  'Depo cikis ve magaza sevkiyati',
-  'Bayi ve sube planlamasi',
+  'Depo çıkış ve mağaza sevkiyatı',
+  'Bayi ve şube planlaması',
   'Sefer durum takibi',
-  'Iade ve yeniden dagitim akisi'
+  'İade ve yeniden dağıtım akışı'
 ];
 
 const approach = [
   {
     title: 'Planlama',
-    description: 'Magaza ve bayi cikislarini kurallara gore planlariz.'
+    description: 'Mağaza ve bayi çıkışlarını kurallara göre planlarız.'
   },
   {
     title: 'Saha',
-    description: 'Surucu ekipleri teslimat adimlarini mobil uygulamada izler.'
+    description: 'Sürücü ekipleri teslimat adımlarını mobil uygulamada izler.'
   },
   {
     title: 'Raporlama',
-    description: 'Sefer ozetleri ve teslimat kaniti tek arsivde toplanir.'
+    description: 'Sefer özetleri ve teslimat kanıtı tek arşivde toplanır.'
   }
 ];
 
@@ -29,7 +29,7 @@ export default function RetailIndustryPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl lg:text-5xl font-bold mb-6">Perakende</h1>
           <p className="text-blue-100 max-w-3xl mx-auto">
-            Magaza ve bayi sevkiyatlarini tek panelde planlayip gorunur hale getirin.
+            Mağaza ve bayi sevkiyatlarını tek panelde planlayıp görünür hale getirin.
           </p>
         </div>
       </section>
@@ -37,9 +37,9 @@ export default function RetailIndustryPage() {
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktalari</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktaları</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Perakende sevkiyatinda surec ve gorunurluk kritik oldugunda yaninizdayiz.
+              Perakende sevkiyatında süreç ve görünürlük kritik olduğunda yanınızdayız.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
@@ -68,9 +68,9 @@ export default function RetailIndustryPage() {
 
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Perakende ekibiniz icin demo planlayin</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Perakende ekibiniz için demo planlayın</h2>
           <p className="text-gray-600 mb-8">
-            Magaza ve bayi operasyonunuza uygun akisi birlikte kuralim.
+            Mağaza ve bayi operasyonunuza uygun akışı birlikte kuralım.
           </p>
           <Link
             href="/contact"

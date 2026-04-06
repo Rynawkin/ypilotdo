@@ -1,24 +1,24 @@
 import Link from 'next/link';
 
 const focus = [
-  'Zaman penceresi ve teslimat kurallari',
-  'Saha takibi ve kanit kaydi',
-  'Depo cikis ve geri donus akislari',
-  'Raporlama ve arsivleme'
+  'Zaman penceresi ve teslimat kuralları',
+  'Saha takibi ve kanıt kaydı',
+  'Depo çıkış ve geri dönüş akışları',
+  'Raporlama ve arşivleme'
 ];
 
 const approach = [
   {
     title: 'Planlama',
-    description: 'Zaman hassas duraklari kurallara gore siralariz.'
+    description: 'Zaman hassas durakları kurallara göre sıralarız.'
   },
   {
     title: 'Saha',
     description: 'Teslimat adimlari mobil uygulamada takip edilir.'
   },
   {
-    title: 'Dokumantasyon',
-    description: 'Foto ve imza ile teslimat kaniti tek arsivde saklanir.'
+    title: 'Dokümantasyon',
+    description: 'Foto ve imza ile teslimat kanıtı tek arşivde saklanır.'
   }
 ];
 
@@ -27,9 +27,9 @@ export default function ColdChainIndustryPage() {
     <div className="min-h-screen bg-gray-50 pt-24">
       <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Soguk Zincir</h1>
+          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Soğuk Zincir</h1>
           <p className="text-blue-100 max-w-3xl mx-auto">
-            Zaman ve takip hassasiyetini artiran bir teslimat kurgusu icin YolPilot kullanin.
+            Zaman ve takip hassasiyetini artıran bir teslimat kurgusu için YolPilot kullanın.
           </p>
         </div>
       </section>
@@ -37,9 +37,9 @@ export default function ColdChainIndustryPage() {
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktalari</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktaları</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Soguk zincir operasyonlarinda zaman ve kanit yonetimini standartlastiririz.
+              Soğuk zincir operasyonlarında zaman ve kanıt yönetimini standartlaştırırız.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
@@ -68,9 +68,9 @@ export default function ColdChainIndustryPage() {
 
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Soguk zincir icin demo planlayin</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Soğuk zincir için demo planlayın</h2>
           <p className="text-gray-600 mb-8">
-            Operasyonunuza uygun teslimat kurgusunu birlikte olusturalim.
+            Operasyonunuza uygun teslimat kurgusunu birlikte oluşturalım.
           </p>
           <Link
             href="/contact"

@@ -7,52 +7,52 @@ import { motion } from 'framer-motion';
 export default function SecurityPage() {
   const securityAreas = [
     {
-      title: 'Veri Guvenligi',
-      description: 'Veri iletimi ve saklama sureclerinde erisim kontrolu yaklasimi.'
+      title: 'Veri Güvenliği',
+      description: 'Veri iletimi ve saklama süreçlerinde erişim kontrolü yaklaşımı.'
     },
     {
-      title: 'Kimlik Dogrulama',
-      description: 'Rol bazli yetkilendirme ve oturum guvenligi politikasi.'
+      title: 'Kimlik Doğrulama',
+      description: 'Rol bazlı yetkilendirme ve oturum güvenliği politikası.'
     },
     {
       title: 'Yedekleme',
-      description: 'Veri surekliligi icin yedekleme ve geri yukleme planlari.'
+      description: 'Veri sürekliliği için yedekleme ve geri yükleme planları.'
     },
     {
-      title: 'Izleme',
-      description: 'Operasyonel izleme ve olay yonetimi surecleri.'
+      title: 'İzleme',
+      description: 'Operasyonel izleme ve olay yönetimi süreçleri.'
     },
     {
-      title: 'KVKK Yaklasimi',
-      description: 'Gizlilik ve veri isleme surecleri icin KVKK odakli prensipler.'
+      title: 'KVKK Yaklaşımı',
+      description: 'Gizlilik ve veri işleme süreçleri için KVKK odaklı prensipler.'
     },
     {
       title: 'Denetim ve Loglama',
-      description: 'Islem kayitlariyla izlenebilirlik ve raporlama.'
+      description: 'İşlem kayıtlarıyla izlenebilirlik ve raporlama.'
     }
   ];
 
   const faqs = [
     {
-      q: 'Veriler nerede saklanir?',
-      a: 'Veriler yetkilendirilmis veri merkezlerinde saklanir. Detaylar talep uzerine paylasilir.'
+      q: 'Veriler nerede saklanır?',
+      a: 'Veriler yetkilendirilmiş veri merkezlerinde saklanır. Detaylar talep üzerine paylaşılır.'
     },
     {
-      q: 'Veri silme talepleri nasil yonetilir?',
-      a: 'KVKK kapsamindaki talepler icin belirli bir surec uygulanir. Iletisim sayfasindan bize ulasabilirsiniz.'
+      q: 'Veri silme talepleri nasıl yönetilir?',
+      a: 'KVKK kapsamındaki talepler için belirli bir süreç uygulanır. İletişim sayfasından bize ulaşabilirsiniz.'
     },
     {
-      q: 'Guvenlik bildirimi sureci nedir?',
-      a: 'Olay yonetimi ve bilgilendirme surecleri belirlenmis olup gerekli durumlarda paydaslara bilgilendirme yapilir.'
+      q: 'Güvenlik bildirimi süreci nedir?',
+      a: 'Olay yönetimi ve bilgilendirme süreçleri belirlenmiş olup gerekli durumlarda paydaşlara bilgilendirme yapılır.'
     }
   ];
 
-  const badges = ['Veri Guvenligi', 'Guvenli Iletisim', 'Yedekli Altyapi', 'Surec Izleme'];
+  const badges = ['Veri Güvenliği', 'Güvenli İletişim', 'Yedekli Altyapı', 'Süreç İzleme'];
 
   const documents = [
-    { title: 'KVKK Aydinlatma Metni', link: '/docs/kvkk' },
-    { title: 'Gizlilik Politikasi', link: '/privacy' },
-    { title: 'Kullanim Kosullari', link: '/terms' }
+    { title: 'KVKK Aydınlatma Metni', link: '/docs/kvkk' },
+    { title: 'Gizlilik Politikası', link: '/privacy' },
+    { title: 'Kullanım Koşulları', link: '/terms' }
   ];
 
   return (
@@ -65,9 +65,9 @@ export default function SecurityPage() {
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <h1 className="text-5xl font-bold mb-6">Guvenlik ve Gizlilik</h1>
+            <h1 className="text-5xl font-bold mb-6">Güvenlik ve Gizlilik</h1>
             <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto">
-              YolPilot, veri guvenligi ve gizlilik prensiplerini operasyonun merkezine alir. Sureclerimizi sizin ihtiyaciniza gore birlikte planlariz.
+              YolPilot, veri güvenliği ve gizlilik prensiplerini operasyonun merkezine alır. Süreçlerimizi sizin ihtiyacınıza göre birlikte planlarız.
             </p>
 
             <div className="flex flex-wrap justify-center gap-6 mt-12">
@@ -90,9 +90,9 @@ export default function SecurityPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Guvenlik Basliklari</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Güvenlik Başlıkları</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Asagidaki basliklar, teknik ve operasyonel guvenlik yaklasimimizin ozeti niteligindedir.
+              Aşağıdaki başlıklar, teknik ve operasyonel güvenlik yaklaşımımızın özeti niteliğindedir.
             </p>
           </motion.div>
 
@@ -123,9 +123,9 @@ export default function SecurityPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Politikalar ve Dokumanlar</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Politikalar ve Dokümanlar</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              KVKK, gizlilik ve kullanim kosullari hakkindaki dokumanlara buradan erisebilirsiniz.
+              KVKK, gizlilik ve kullanım koşulları hakkındaki dokümanlara buradan erişebilirsiniz.
             </p>
           </motion.div>
 
@@ -138,7 +138,7 @@ export default function SecurityPage() {
               >
                 <div>
                   <h3 className="font-bold text-gray-900">{item.title}</h3>
-                  <p className="text-gray-500 text-sm">Detaylari goruntuleyin</p>
+                  <p className="text-gray-500 text-sm">Detayları görüntüleyin</p>
                 </div>
               </Link>
             ))}
@@ -155,8 +155,8 @@ export default function SecurityPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Sik Sorulan Sorular</h2>
-            <p className="text-xl text-gray-600">Guvenlik ve gizlilik hakkinda genel sorular</p>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Sık Sorulan Sorular</h2>
+            <p className="text-xl text-gray-600">Güvenlik ve gizlilik hakkında genel sorular</p>
           </motion.div>
 
           <div className="space-y-6">

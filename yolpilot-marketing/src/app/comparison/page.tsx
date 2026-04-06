@@ -8,48 +8,48 @@ const ComparisonPage: React.FC = () => {
   const comparisonRows = [
     {
       title: 'Rota Planlama',
-      manual: 'Elle planlama, coklu dosya ve tekrarli is adimlari',
-      yolpilot: 'Tek panelden planlama ve otomatik rota onerileri',
-      benefit: 'Planlama surecinde daha net akis'
+      manual: 'Elle planlama, çoklu dosya ve tekrarlı iş adımları',
+      yolpilot: 'Tek panelden planlama ve otomatik rota önerileri',
+      benefit: 'Planlama sürecinde daha net akış'
     },
     {
-      title: 'Gorunurluk',
-      manual: 'Sahadan geri bildirim gec gelir',
-      yolpilot: 'Anlik durum guncellemeleri ve teslimat takibi',
+      title: 'Görünürlük',
+      manual: 'Sahadan geri bildirim geç gelir',
+      yolpilot: 'Anlık durum güncellemeleri ve teslimat takibi',
       benefit: 'Operasyonel netlik ve izlenebilirlik'
     },
     {
       title: 'Teslimat Kaniti',
-      manual: 'Fiziksel evrak veya daginik kanitlar',
-      yolpilot: 'Dijital imza ve fotograf akisi',
-      benefit: 'Daha duzenli kanit arsivi'
+      manual: 'Fiziksel evrak veya dağınık kanıtlar',
+      yolpilot: 'Dijital imza ve fotoğraf akışı',
+      benefit: 'Daha düzenli kanıt arşivi'
     },
     {
-      title: 'Musteri Bilgilendirme',
+      title: 'Müşteri Bilgilendirme',
       manual: 'Telefon veya manuel bildirim',
-      yolpilot: 'Otomatik bilgilendirme akislari',
-      benefit: 'Daha tutarli iletisim'
+      yolpilot: 'Otomatik bilgilendirme akışları',
+      benefit: 'Daha tutarlı iletişim'
     },
     {
       title: 'Raporlama',
-      manual: 'Manuel rapor ve excel islemleri',
-      yolpilot: 'Dashboard ve rapor ciktilari',
-      benefit: 'Hizli karar destegi'
+      manual: 'Manuel rapor ve Excel işlemleri',
+      yolpilot: 'Dashboard ve rapor çıktıları',
+      benefit: 'Hızlı karar desteği'
     }
   ];
 
   const highlights = [
     {
       title: 'Tek Platform',
-      description: 'Planlama, takip ve teslimat kaniti tek ekranda.'
+      description: 'Planlama, takip ve teslimat kanıtı tek ekranda.'
     },
     {
       title: 'Saha ve Ofis Senkronu',
-      description: 'Sahadan gelen bilgiler panelde toplanir.'
+      description: 'Sahadan gelen bilgiler panelde toplanır.'
     },
     {
       title: 'Operasyonel Kontrol',
-      description: 'Rota, surucu ve teslimat sureci net bir sekilde izlenir.'
+      description: 'Rota, sürücü ve teslimat süreci net bir şekilde izlenir.'
     }
   ];
 
@@ -66,7 +66,7 @@ const ComparisonPage: React.FC = () => {
               Manuel Planlama vs. YolPilot
             </h1>
             <p className="text-xl text-blue-100">
-              Rota planlama ve teslimat takibini tek bir panelde topladiginizda surecler daha net hale gelir.
+              Rota planlama ve teslimat takibini tek bir panelde topladığınızda süreçler daha net hale gelir.
             </p>
           </motion.div>
         </div>
@@ -85,10 +85,10 @@ const ComparisonPage: React.FC = () => {
 
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
             <div className="grid grid-cols-4 gap-0 border-b border-gray-200 text-sm font-semibold text-gray-700 bg-gray-50">
-              <div className="px-6 py-4">Baslik</div>
+              <div className="px-6 py-4">Başlık</div>
               <div className="px-6 py-4">Manuel</div>
               <div className="px-6 py-4">YolPilot</div>
-              <div className="px-6 py-4">Kazanim</div>
+              <div className="px-6 py-4">Kazanım</div>
             </div>
             {comparisonRows.map((row) => (
               <div key={row.title} className="grid grid-cols-4 gap-0 border-b border-gray-100 text-sm">

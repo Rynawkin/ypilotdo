@@ -2,23 +2,23 @@ import Link from 'next/link';
 
 const focus = [
   'Zaman hassas teslimat planlama',
-  'Sicak yemek ve urun takibi',
-  'Musteri bilgilendirme',
-  'Surucu koordinasyonu'
+  'Sıcak yemek ve ürün takibi',
+  'Müşteri bilgilendirme',
+  'Sürücü koordinasyonu'
 ];
 
 const approach = [
   {
     title: 'Planlama',
-    description: 'Siparisleri zaman pencerelerine gore rotalara dagitiriz.'
+    description: 'Siparişleri zaman pencerelerine göre rotalara dağıtırız.'
   },
   {
     title: 'Saha',
-    description: 'Suruculer teslimat siralarini mobil uygulamada gorur.'
+    description: 'Sürücüler teslimat sıralarını mobil uygulamada görür.'
   },
   {
-    title: 'Musteri',
-    description: 'Takip linki ve durum bildirimleri ile iletisim saglanir.'
+    title: 'Müşteri',
+    description: 'Takip linki ve durum bildirimleri ile iletişim sağlanır.'
   }
 ];
 
@@ -27,9 +27,9 @@ export default function FoodDeliveryIndustryPage() {
     <div className="min-h-screen bg-gray-50 pt-24">
       <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 text-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Yemek Teslimati</h1>
+          <h1 className="text-4xl lg:text-5xl font-bold mb-6">Yemek Teslimatı</h1>
           <p className="text-blue-100 max-w-3xl mx-auto">
-            Yemek teslimatinda hizli planlama ve net iletisim icin YolPilot kullanin.
+            Yemek teslimatında hızlı planlama ve net iletişim için YolPilot kullanın.
           </p>
         </div>
       </section>
@@ -37,9 +37,9 @@ export default function FoodDeliveryIndustryPage() {
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktalari</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Odak Noktaları</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Teslimat sureci, saha ekibi ve musteri bilgilendirmesini tek akista birlestiririz.
+              Teslimat süreci, saha ekibi ve müşteri bilgilendirmesini tek akışta birleştiririz.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
@@ -68,9 +68,9 @@ export default function FoodDeliveryIndustryPage() {
 
       <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Yemek teslimati icin demo planlayin</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Yemek teslimatı için demo planlayın</h2>
           <p className="text-gray-600 mb-8">
-            Siparis akisiniza uygun kurgu icin ekibimizle gorusun.
+            Sipariş akışınıza uygun kurgu için ekibimizle görüşün.
           </p>
           <Link
             href="/contact"

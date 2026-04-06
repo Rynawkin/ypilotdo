@@ -38,7 +38,7 @@ const ContactPage: React.FC = () => {
       });
 
       if (response.ok) {
-        showSuccess('Mesajiniz gonderildi', 'En kisa surede size donus yapacagiz.');
+        showSuccess('Mesajınız gönderildi', 'En kısa sürede size dönüş yapacağız.');
         setFormData({
           name: '',
           email: '',
@@ -48,7 +48,7 @@ const ContactPage: React.FC = () => {
           message: ''
         });
       } else {
-        let errorMessage = 'Bir hata olustu. Lutfen tekrar deneyin.';
+        let errorMessage = 'Bir hata oluştu. Lütfen tekrar deneyin.';
         try {
           const errorData = await response.json();
           errorMessage = errorData.message || errorMessage;
@@ -62,11 +62,11 @@ const ContactPage: React.FC = () => {
             // ignore
           }
         }
-        showError('Form gonderim hatasi', errorMessage);
+        showError('Form gönderim hatası', errorMessage);
       }
     } catch (error) {
       console.error('Form submission error:', error);
-      showError('Baglanti hatasi', 'Lutfen internet baglantinizi kontrol edip tekrar deneyin.');
+      showError('Bağlantı hatası', 'Lütfen internet bağlantınızı kontrol edip tekrar deneyin.');
     }
   };
 
@@ -89,10 +89,10 @@ const ContactPage: React.FC = () => {
             transition={{ duration: 0.8 }}
           >
             <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-              Isletmeniz icin dogru cozum
+              İşletmeniz için doğru çözüm
             </h1>
             <p className="text-xl text-blue-100">
-              Operasyonunuzu dinleyelim, size uygun akisi birlikte planlayalim.
+              Operasyonunuzu dinleyelim, size uygun akışı birlikte planlayalım.
             </p>
           </motion.div>
         </div>
@@ -123,7 +123,7 @@ const ContactPage: React.FC = () => {
                       value={formData.name}
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-500 text-gray-900"
-                      placeholder="Adiniz ve soyadiniz"
+                      placeholder="Adınız ve soyadınız"
                     />
                   </div>
 
@@ -147,7 +147,7 @@ const ContactPage: React.FC = () => {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
-                      Sirket Adi *
+                      Şirket Adı *
                     </label>
                     <input
                       type="text"
@@ -157,7 +157,7 @@ const ContactPage: React.FC = () => {
                       value={formData.company}
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-500 text-gray-900"
-                      placeholder="Sirket adiniz"
+                      placeholder="Şirket adınız"
                     />
                   </div>
 
@@ -179,7 +179,7 @@ const ContactPage: React.FC = () => {
 
                 <div>
                   <label htmlFor="vehicleCount" className="block text-sm font-medium text-gray-700 mb-2">
-                    Arac Sayisi
+                    Araç Sayısı
                   </label>
                   <select
                     id="vehicleCount"
@@ -188,11 +188,11 @@ const ContactPage: React.FC = () => {
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-gray-700"
                   >
-                    <option value="">Seciniz</option>
-                    <option value="1-5">1-5 arac</option>
-                    <option value="6-15">6-15 arac</option>
-                    <option value="16-30">16-30 arac</option>
-                    <option value="30+">30+ arac</option>
+                    <option value="">Seçiniz</option>
+                    <option value="1-5">1-5 araç</option>
+                    <option value="6-15">6-15 araç</option>
+                    <option value="16-30">16-30 araç</option>
+                    <option value="30+">30+ araç</option>
                   </select>
                 </div>
 
@@ -207,7 +207,7 @@ const ContactPage: React.FC = () => {
                     value={formData.message}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 placeholder-gray-500 text-gray-900"
-                    placeholder="Ihtiyacinizdan kisaca bahsedin"
+                    placeholder="İhtiyacınızdan kısaca bahsedin"
                   />
                 </div>
 
@@ -215,7 +215,7 @@ const ContactPage: React.FC = () => {
                   type="submit"
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                 >
-                  Talep Gonder
+                  Talep Gönder
                 </button>
               </form>
             </motion.div>
@@ -239,7 +239,7 @@ const ContactPage: React.FC = () => {
                       <p className="text-gray-600">info@yolpilot.com</p>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-500">Taleplerinizi en kisa surede yanitliyoruz</p>
+                  <p className="text-sm text-gray-500">Taleplerinizi en kısa sürede yanıtlıyoruz</p>
                 </div>
 
                 <div className="bg-white rounded-xl p-6 shadow-lg">
@@ -254,7 +254,7 @@ const ContactPage: React.FC = () => {
                       <p className="text-gray-600">0850 756 62 67</p>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-500">Hizli gorusme icin bizi arayabilirsiniz</p>
+                  <p className="text-sm text-gray-500">Hızlı görüşme için bizi arayabilirsiniz</p>
                 </div>
               </div>
 
@@ -262,12 +262,12 @@ const ContactPage: React.FC = () => {
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">Neden YolPilot?</h3>
                 <ul className="space-y-3">
                   {[
-                    'Demo planlama ve kurulum rehberligi',
-                    'Operasyona uygun akis tasarimi',
-                    'Turkce destek ekibi',
-                    'Esnek plan ve kullanici yapisi',
-                    'Guvenli veri isleme yaklasimi',
-                    'Hizli onboarding sureci'
+                    'Demo planlama ve kurulum rehberliği',
+                    'Operasyona uygun akış tasarımı',
+                    'Türkçe destek ekibi',
+                    'Esnek plan ve kullanıcı yapısı',
+                    'Güvenli veri işleme yaklaşımı',
+                    'Hızlı onboarding süreci'
                   ].map((benefit) => (
                     <li key={benefit} className="flex items-center gap-3">
                       <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">

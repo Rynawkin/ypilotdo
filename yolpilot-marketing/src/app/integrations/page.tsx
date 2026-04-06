@@ -2,51 +2,51 @@ import Link from 'next/link';
 
 const categories = [
   {
-    title: 'E-ticaret ve Siparis Sistemleri',
-    description: 'Siparis verisini rota planina aktarip teslimat akisina baglayin.'
+    title: 'E-ticaret ve Sipariş Sistemleri',
+    description: 'Sipariş verisini rota planına aktarıp teslimat akışına bağlayın.'
   },
   {
     title: 'ERP ve Muhasebe',
-    description: 'Sefer ve teslimat verisini mevcut kurumsal sistemlerle senkronize edin.'
+      description: 'Sefer ve teslimat verisini mevcut kurumsal sistemlerle senkronize edin.'
   },
   {
-    title: 'CRM ve Saha Satis',
-    description: 'Musteri bilgilerini tek yerden yonetip saha ekibine yansitin.'
+    title: 'CRM ve Saha Satış',
+    description: 'Müşteri bilgilerini tek yerden yönetip saha ekibine yansıtın.'
   },
   {
     title: 'Harita ve Navigasyon',
-    description: 'Harita servisleri ile adres arama ve navigasyon akisini netlestirin.'
+      description: 'Harita servisleri ile adres arama ve navigasyon akışını netleştirin.'
   },
   {
-    title: 'Bildirim Kanallari',
-    description: 'WhatsApp, e-posta ve SMS gibi kanallari senaryoya gore baglayin.'
+    title: 'Bildirim Kanalları',
+    description: 'WhatsApp, e-posta ve SMS gibi kanalları senaryoya göre bağlayın.'
   },
   {
-    title: 'Dosya Aktarimi',
-    description: 'CSV ve benzeri formatlarla toplu veri aktarimi yapin.'
+    title: 'Dosya Aktarımı',
+    description: 'CSV ve benzeri formatlarla toplu veri aktarımı yapın.'
   }
 ];
 
 const apiHighlights = [
-  'REST API ile siparis ve musteri aktarimi',
+  'REST API ile sipariş ve müşteri aktarımı',
   'Webhook ile durum tetikleme',
-  'Guvenli anahtar ve yetki yonetimi',
-  'Teknik dokumantasyon paylasimi',
-  'Test ortaminda dogrulama'
+  'Güvenli anahtar ve yetki yönetimi',
+  'Teknik dokümantasyon paylaşımı',
+  'Test ortamında doğrulama'
 ];
 
 const steps = [
   {
     title: 'Kesif',
-    description: 'Veri kaynaklari ve is akislarini birlikte belirleriz.'
+    description: 'Veri kaynaklarını ve iş akışlarını birlikte belirleriz.'
   },
   {
     title: 'Planlama',
-    description: 'Entegrasyon yontemi, veri eslestirme ve test senaryolari netlesir.'
+    description: 'Entegrasyon yöntemi, veri eşleştirme ve test senaryoları netleşir.'
   },
   {
-    title: 'Test ve Yayina Gecis',
-    description: 'Dogrulama yapilir, sonra canli ortama gecilir.'
+    title: 'Test ve Yayına Geçiş',
+    description: 'Doğrulama yapılır, sonra canlı ortama geçilir.'
   }
 ];
 
@@ -57,14 +57,14 @@ export default function IntegrationsPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl lg:text-5xl font-bold mb-6">Entegrasyonlar</h1>
           <p className="text-blue-100 max-w-3xl mx-auto">
-            YolPilot, mevcut sistemlerinize uyum saglamak icin esnek entegrasyon secenekleri sunar.
+            YolPilot, mevcut sistemlerinize uyum sağlamak için esnek entegrasyon seçenekleri sunar.
           </p>
           <div className="mt-8">
             <Link
               href="/contact"
               className="inline-flex items-center gap-2 bg-white text-blue-600 hover:bg-blue-50 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-200 shadow-lg"
             >
-              Entegrasyon Gorusun
+              Entegrasyon Görüşün
             </Link>
           </div>
         </div>
@@ -86,9 +86,9 @@ export default function IntegrationsPage() {
       <section className="py-16 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">API ve Veri Akisi</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">API ve Veri Akışı</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Sistemler arasinda saglam bir veri akisi kurarak operasyonu tek noktadan takip edin.
+              Sistemler arasında sağlam bir veri akışı kurarak operasyonu tek noktadan takip edin.
             </p>
           </div>
           <div className="grid sm:grid-cols-2 gap-4">
@@ -105,9 +105,9 @@ export default function IntegrationsPage() {
       <section className="py-16 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Entegrasyon Sureci</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Entegrasyon Süreci</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Entegrasyon kurulumunu sade ve takip edilebilir adimlara boluyoruz.
+              Entegrasyon kurulumunu sade ve takip edilebilir adımlara bölüyoruz.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
@@ -123,15 +123,15 @@ export default function IntegrationsPage() {
 
       <section className="py-16 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Entegrasyon ihtiyacinizi birlikte planlayalim</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Entegrasyon ihtiyacınızı birlikte planlayalım</h2>
           <p className="text-gray-600 mb-8">
-            Verinizin kaynagini ve hedefini birlikte netlestirip uygun yontemi belirleyelim.
+            Verinizin kaynağını ve hedefini birlikte netleştirip uygun yöntemi belirleyelim.
           </p>
           <Link
             href="/contact"
             className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg"
           >
-            Iletisim
+            İletişim
           </Link>
         </div>
       </section>
