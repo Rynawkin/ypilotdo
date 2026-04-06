@@ -3,169 +3,125 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { ArrowRight, PackageCheck, Route, Smartphone, Truck } from 'lucide-react';
 
 const SocialProof: React.FC = () => {
-  const testimonials = [
+  const operatingModels = [
     {
-      id: 1,
-      name: 'Operasyon Ekibi',
-      company: 'Lojistik',
-      role: 'Planlama ve Dagitim',
-      industry: 'Lojistik',
-      quote:
-        'Rota planlamasi tek ekrandan daha duzenli hale geldi. Ekip ici koordinasyon kolaylasti ve gecikmeler daha erken gorunur oldu.'
+      icon: Route,
+      title: 'Dagitim planlama ekipleri',
+      description: 'Durak siralama, teslimat sirasini degistirme ve ayni gun rota guncelleme ihtiyaci olan operasyonlar.',
+      bullets: ['Birden fazla rota yonetimi', 'Planlama degisikligine hizli tepki', 'Depoya donus senaryolari']
     },
     {
-      id: 2,
-      name: 'Saha Yonetimi',
-      company: 'Perakende Dagitim',
-      role: 'Saha Koordinasyonu',
-      industry: 'Perakende',
-      quote:
-        'Sahadaki sureci takip etmek ve teslimat kanitlarini toplamak artik daha duzenli ve izlenebilir.'
+      icon: Smartphone,
+      title: 'Saha ve surucu ekipleri',
+      description: 'Mobil uygulama uzerinden gorev listesi, kanit toplama ve teslimat sonucu kaydi tutan saha ekipleri.',
+      bullets: ['Teslimat kaniti', 'Foto ve imza akisi', 'Durak bazli durum guncelleme']
     },
     {
-      id: 3,
-      name: 'Musteri Deneyimi',
-      company: 'E-ticaret',
-      role: 'Musteri Iletisimi',
-      industry: 'E-ticaret',
-      quote:
-        'Teslimat bilgileri net paylasildigi icin musteri bilgilendirme surecimiz sadelesti.'
+      icon: Truck,
+      title: 'Operasyon yoneticileri',
+      description: 'Rotalarin durumu, aktif seferler ve teslimat performansini tek ekrandan izlemek isteyen yoneticiler.',
+      bullets: ['Canli sefer gorunurlugu', 'Raporlama ve arsiv', 'Ekiplere gore erisim']
     }
   ];
 
-  const highlights = [
-    {
-      title: 'Planlama',
-      description: 'Rota ve is emri yonetimi'
-    },
-    {
-      title: 'Gorunurluk',
-      description: 'Anlik izleme ve durum guncelleme'
-    },
-    {
-      title: 'Kanit',
-      description: 'Teslimat belgesi ve fotograf'
-    },
-    {
-      title: 'Iletisim',
-      description: 'Musteri bilgilendirme akisi'
-    }
+  const modules = [
+    { title: 'Rota planlama', icon: Route },
+    { title: 'Sefer takibi', icon: Truck },
+    { title: 'Mobil saha uygulamasi', icon: Smartphone },
+    { title: 'Teslimat kaniti', icon: PackageCheck }
   ];
 
   return (
-    <section className="py-16 lg:py-24 bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden opacity-5">
-        <svg className="absolute top-0 left-0 w-full h-full" viewBox="0 0 1200 800">
-          <circle cx="200" cy="200" r="300" fill="#3b82f6" />
-          <circle cx="1000" cy="600" r="250" fill="#10b981" />
-        </svg>
-      </div>
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="border-b border-[color:var(--line)] bg-[#f8fafc] py-16 lg:py-22">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.7 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="mx-auto max-w-3xl text-center"
         >
-          <div className="inline-flex items-center gap-2 bg-blue-100 px-4 py-2 rounded-full mb-6">
-            <span className="text-sm font-semibold text-blue-900">Musteri Deneyimi</span>
+          <div className="mb-5 inline-flex rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-[color:var(--brand-deep)] shadow-sm">
+            Kimler icin uygun?
           </div>
-
-          <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-6">
-            Farkli Ekiplerden Ortak Geri Bildirimler
+          <h2 className="text-3xl font-bold tracking-tight text-slate-950 lg:text-5xl">
+            YolPilot, dagitimi kaotik degil kontrollu yonetmek isteyen ekipler icin tasarlandi.
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Lojistik, e-ticaret ve saha ekipleri YolPilot ile surecleri daha net ve izlenebilir hale getiriyor.
+          <p className="mt-5 text-lg leading-8 text-slate-600">
+            Amaç daha “gosterisli” bir panel vermek degil; planlamadan teslimat kanitina kadar herkesin ayni operasyon
+            akisi uzerinden calismasini saglamak.
           </p>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          viewport={{ once: true }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16"
-        >
-          {highlights.map((item) => (
-            <motion.div
-              key={item.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-              className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 text-center border border-gray-100"
-            >
-              <div className="text-2xl font-bold text-blue-600 mb-2">{item.title}</div>
-              <div className="text-sm lg:text-base text-gray-600 font-medium">{item.description}</div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="bg-white rounded-3xl shadow-xl p-8 lg:p-12 mb-16 border border-gray-100"
-        >
-          <h3 className="text-2xl font-bold text-gray-900 text-center mb-6">Referans Paylasimi</h3>
-          <p className="text-center text-gray-600 max-w-2xl mx-auto">
-            Referans gorusmesi veya detayli ornek akislari icin bizimle iletisime gecin. Uygun oldugunda paylasim sagliyoruz.
-          </p>
-        </motion.div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={testimonial.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
-              viewport={{ once: true }}
-              className="bg-white rounded-2xl shadow-lg p-8 hover:shadow-2xl transition-all duration-300 border border-gray-100 flex flex-col"
-            >
-              <div className="inline-flex items-center gap-2 bg-blue-50 px-3 py-1 rounded-full text-sm font-medium text-blue-700 mb-4 self-start">
-                {testimonial.industry}
-              </div>
-
-              <p className="text-gray-700 leading-relaxed mb-6 flex-grow italic">
-                &quot;{testimonial.quote}&quot;
-              </p>
-
-              <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-xl flex-shrink-0 text-white">
-                  {testimonial.name.charAt(0)}
+        <div className="mt-12 grid gap-6 lg:grid-cols-3">
+          {operatingModels.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: index * 0.08 }}
+                viewport={{ once: true }}
+                className="rounded-[1.8rem] border border-slate-200 bg-white p-7 shadow-sm shadow-slate-900/5"
+              >
+                <div className="mb-5 flex h-13 w-13 items-center justify-center rounded-2xl bg-[color:var(--surface-muted)] text-[color:var(--brand)]">
+                  <Icon className="h-6 w-6" />
                 </div>
-                <div>
-                  <div className="font-bold text-gray-900">{testimonial.name}</div>
-                  <div className="text-sm text-gray-600">{testimonial.role}</div>
-                  <div className="text-sm text-blue-600 font-medium">{testimonial.company}</div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+                <h3 className="text-2xl font-semibold text-slate-950">{item.title}</h3>
+                <p className="mt-4 text-base leading-7 text-slate-600">{item.description}</p>
+                <ul className="mt-5 space-y-3">
+                  {item.bullets.map((bullet) => (
+                    <li key={bullet} className="flex items-start gap-3 text-sm text-slate-700">
+                      <span className="mt-1 h-2 w-2 rounded-full bg-[color:var(--accent)]" />
+                      <span>{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            );
+          })}
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
+          transition={{ duration: 0.7, delay: 0.25 }}
           viewport={{ once: true }}
-          className="mt-16 text-center"
+          className="mt-12 rounded-[2rem] border border-slate-200 bg-white px-6 py-8 shadow-sm shadow-slate-900/5 lg:px-8"
         >
-          <Link
-            href="/contact"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-          >
-            Demo Talep Edin
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </Link>
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <div className="text-sm font-semibold uppercase tracking-[0.18em] text-[color:var(--ink-soft)]">Platform kapsami</div>
+              <h3 className="mt-2 text-2xl font-semibold text-slate-950">Ayni operasyon dilini web panel ve mobilde korur.</h3>
+            </div>
+            <Link
+              href="/features"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--brand)] transition-colors hover:text-blue-700"
+            >
+              Tum ozellikleri inceleyin
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          <div className="mt-7 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {modules.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div key={item.title} className="rounded-2xl bg-[color:var(--surface-muted)] px-5 py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-[color:var(--brand)] shadow-sm">
+                      <Icon className="h-5 w-5" />
+                    </div>
+                    <div className="text-sm font-semibold text-slate-800">{item.title}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </motion.div>
       </div>
     </section>

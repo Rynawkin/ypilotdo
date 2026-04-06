@@ -2,97 +2,84 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { BadgeCheck, Clock3, MapPinned } from 'lucide-react';
 
 const ValuePropositions: React.FC = () => {
   const valueProps = [
     {
-      icon: 'RP',
-      title: 'Rota ve Sefer Planlama',
-      subtitle: 'Kurallar net, planlama hizli',
-      description: 'Durak siralama, zaman penceresi ve oncelikler tek panelde toplanir.',
-      color: 'from-blue-400 to-blue-600'
+      icon: MapPinned,
+      title: 'Planlama ayni veriyle baslar',
+      description:
+        'Depo, arac, surucu ve durak bilgileri tek akista bir araya gelir. Planlama, farkli Excel dosyalari ve mesaj gruplari arasina dagilmaz.',
+      details: ['Rota siralama', 'Depoya donus kurgusu', 'Durak bazli kural yonetimi']
     },
     {
-      icon: 'SA',
-      title: 'Saha Uygulamasi',
-      subtitle: 'Surucu akisi sade',
-      description: 'Mobil uygulama ile gorev listesi, teslimat notu ve kanit kaydi birlikte ilerler.',
-      color: 'from-green-400 to-green-600'
+      icon: Clock3,
+      title: 'Sahadaki durum anlik gorunur',
+      description:
+        'Sefer ilerlemesi, geciken duraklar ve teslimat sonuclari planlama ekranindan izlenir. Operasyon, rapor beklemeden ayni gun karar alabilir.',
+      details: ['Canli sefer durumu', 'Durak ilerleme bilgisi', 'Gecikme ve istisna takibi']
     },
     {
-      icon: 'RA',
-      title: 'Raporlama ve Arsiv',
-      subtitle: 'Gorunurluk ve takip',
-      description: 'Sefer ozetleri, teslimat kaniti ve operasyon notlari tek yerde saklanir.',
-      color: 'from-purple-400 to-purple-600'
+      icon: BadgeCheck,
+      title: 'Teslimat sonu kayitlari tek yerde kalir',
+      description:
+        'Imza, fotograf, not ve teslimat sonucu kayitlari ayni siparis akisina baglanir. Arsiv, takip ve musteriye donus daha duzenli olur.',
+      details: ['Teslimat kaniti', 'Musteri bilgilendirme akisi', 'Rapor ve arsiv kayitlari']
     }
   ];
 
   return (
-    <section className="py-16 lg:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="border-b border-[color:var(--line)] bg-white py-16 lg:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.7 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="mx-auto max-w-3xl text-center"
         >
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Operasyonunuzu netlestirin
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Planlama, saha ve musteri iletisimini tek akista birlestiren bir kurgu.
+          <div className="mb-5 inline-flex rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-[color:var(--brand-deep)]">
+            Neyi duzeltir?
+          </div>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-950 lg:text-5xl">Operasyonun kritik kopukluklarini kapatir.</h2>
+          <p className="mt-5 text-lg leading-8 text-slate-600">
+            YolPilot, planlama ile sahayi ayri sistemler gibi degil ayni operasyon zincirinin parcasi olarak ele alir.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {valueProps.map((prop, index) => (
-            <motion.div
-              key={prop.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: index * 0.2 }}
-              viewport={{ once: true }}
-              className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-gray-200"
-            >
-              <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${prop.color} flex items-center justify-center text-lg font-semibold text-white mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                {prop.icon}
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">{prop.title}</h3>
-              <p className="text-lg font-semibold text-blue-600 mb-4">{prop.subtitle}</p>
-              <p className="text-gray-600 leading-relaxed">{prop.description}</p>
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
-            </motion.div>
-          ))}
-        </div>
+        <div className="mt-12 grid gap-6 lg:grid-cols-3">
+          {valueProps.map((item, index) => {
+            const Icon = item.icon;
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          viewport={{ once: true }}
-          className="mt-16 pt-16 border-t border-gray-200"
-        >
-          <div className="grid md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-lg font-bold text-blue-600 mb-2">Mobil + Web + API</div>
-              <div className="text-gray-600">Tek platform deneyimi</div>
-            </div>
-            <div>
-              <div className="text-lg font-bold text-green-600 mb-2">Kurulum Rehberligi</div>
-              <div className="text-gray-600">Adim adim baslangic</div>
-            </div>
-            <div>
-              <div className="text-lg font-bold text-orange-600 mb-2">Turkce Destek</div>
-              <div className="text-gray-600">Sorulara hizli geri donus</div>
-            </div>
-            <div>
-              <div className="text-lg font-bold text-purple-600 mb-2">Teslimat Kaniti</div>
-              <div className="text-gray-600">Imza ve fotograf akisi</div>
-            </div>
-          </div>
-        </motion.div>
+            return (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: index * 0.08 }}
+                viewport={{ once: true }}
+                className="flex h-full flex-col rounded-[1.8rem] border border-slate-200 bg-[#fbfcfe] p-7 shadow-sm shadow-slate-900/5"
+              >
+                <div className="mb-5 flex h-13 w-13 items-center justify-center rounded-2xl bg-white text-[color:var(--brand)] shadow-sm">
+                  <Icon className="h-6 w-6" />
+                </div>
+                <h3 className="text-2xl font-semibold text-slate-950">{item.title}</h3>
+                <p className="mt-4 flex-1 text-base leading-7 text-slate-600">{item.description}</p>
+                <div className="mt-6 border-t border-slate-200 pt-5">
+                  <div className="mb-3 text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">Bu baslikta</div>
+                  <div className="flex flex-wrap gap-2">
+                    {item.details.map((detail) => (
+                      <span key={detail} className="rounded-full bg-white px-3 py-2 text-sm text-slate-700 shadow-sm">
+                        {detail}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

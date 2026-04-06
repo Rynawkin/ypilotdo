@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { ArrowRight, Calculator, Clock3, Fuel } from 'lucide-react';
 
 const ROICalculator: React.FC = () => {
   const [deliveriesPerDay, setDeliveriesPerDay] = useState<number>(50);
@@ -12,14 +14,15 @@ const ROICalculator: React.FC = () => {
 
   const [results, setResults] = useState({
     monthlyFuelSavings: 0,
-    yearlyFuelSavings: 0
+    yearlyFuelSavings: 0,
+    monthlyPlanningHoursSaved: 0,
+    yearlyPlanningHoursSaved: 0
   });
-
-  const [isCalculated, setIsCalculated] = useState(false);
 
   const calculateROI = useCallback(() => {
     const workingDaysPerMonth = 22;
     const fuelConsumptionPer100Km = 10;
+    const planningHoursSavedPerVehiclePerDay = 0.45;
 
     const monthlyDeliveries = deliveriesPerDay * workingDaysPerMonth;
     const monthlyKilometers = monthlyDeliveries * avgDistancePerDelivery;
@@ -28,231 +31,200 @@ const ROICalculator: React.FC = () => {
 
     const fuelSavings = currentFuelCost * (fuelSavingsPercent / 100);
     const yearlySavings = fuelSavings * 12;
+    const monthlyPlanningHoursSaved = vehicleCount * planningHoursSavedPerVehiclePerDay * workingDaysPerMonth;
 
     setResults({
       monthlyFuelSavings: Math.round(fuelSavings),
-      yearlyFuelSavings: Math.round(yearlySavings)
+      yearlyFuelSavings: Math.round(yearlySavings),
+      monthlyPlanningHoursSaved: Math.round(monthlyPlanningHoursSaved),
+      yearlyPlanningHoursSaved: Math.round(monthlyPlanningHoursSaved * 12)
     });
-
-    setIsCalculated(true);
-  }, [deliveriesPerDay, avgDistancePerDelivery, fuelPricePerLiter, fuelSavingsPercent]);
+  }, [avgDistancePerDelivery, deliveriesPerDay, fuelPricePerLiter, fuelSavingsPercent, vehicleCount]);
 
   useEffect(() => {
     calculateROI();
   }, [calculateROI]);
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('tr-TR', {
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat('tr-TR', {
       style: 'currency',
       currency: 'TRY',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
     }).format(value);
-  };
 
   return (
-    <section className="py-16 lg:py-24 bg-gradient-to-br from-blue-900 via-indigo-900 to-purple-900 text-white relative overflow-hidden">
-      <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:30px_30px]"></div>
-      <div className="absolute inset-0 overflow-hidden opacity-20">
-        <svg className="absolute top-0 left-0 w-full h-full" viewBox="0 0 1200 800">
-          <circle cx="100" cy="100" r="200" fill="#60a5fa" />
-          <circle cx="1100" cy="700" r="250" fill="#818cf8" />
-          <circle cx="600" cy="400" r="150" fill="#a78bfa" />
-        </svg>
-      </div>
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="bg-[#0f1725] py-16 text-white lg:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.7 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="mx-auto max-w-3xl text-center"
         >
-          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
-            <span className="text-2xl">ROI</span>
-            <span className="text-sm font-semibold">ROI Hesaplayici</span>
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/8 px-4 py-2 text-sm font-semibold text-blue-100">
+            <Calculator className="h-4 w-4" />
+            Ornek ROI hesaplayici
           </div>
-
-          <h2 className="text-3xl lg:text-5xl font-bold mb-6">Ornek Tasarruf Hesabi</h2>
-          <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-            Degerleri kendi operasyonunuza gore guncelleyerek ornek bir hesaplama yapin.
+          <h2 className="text-3xl font-bold tracking-tight lg:text-5xl">Kendi operasyonunuza yakin bir senaryo ile kabaca hesap yapin.</h2>
+          <p className="mt-5 text-lg leading-8 text-slate-300">
+            Bu alan satis vaadi degil, planlama icin bir ornek hesap aracidir. Gercek sonuc; teslimat yogunlugu, rota
+            yapisi ve operasyon duzenine gore degisir.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
+        <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -24 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.7 }}
             viewport={{ once: true }}
-            className="bg-white/10 backdrop-blur-md rounded-3xl p-8 lg:p-10 border border-white/20"
+            className="rounded-[2rem] border border-white/10 bg-white/6 p-7 shadow-2xl shadow-black/15 backdrop-blur"
           >
-            <h3 className="text-2xl font-bold mb-8">Isletme Bilgileriniz</h3>
-
             <div className="mb-8">
-              <label className="flex justify-between items-center mb-3">
-                <span className="text-lg font-semibold">Gunluk Teslimat Sayisi</span>
-                <span className="text-2xl font-bold text-blue-300">{deliveriesPerDay}</span>
-              </label>
-              <input
-                type="range"
-                min="10"
-                max="500"
-                value={deliveriesPerDay}
-                onChange={(e) => setDeliveriesPerDay(Number(e.target.value))}
-                className="w-full h-3 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
-              />
-              <div className="flex justify-between text-sm text-blue-200 mt-2">
-                <span>10</span>
-                <span>500</span>
+              <div className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-100">Senaryo girisi</div>
+              <h3 className="mt-2 text-2xl font-semibold">Temel operasyon degerleri</h3>
+            </div>
+
+            <div className="space-y-7">
+              <div>
+                <label className="mb-3 flex items-center justify-between text-sm font-semibold text-slate-100">
+                  <span>Gunluk teslimat sayisi</span>
+                  <span>{deliveriesPerDay}</span>
+                </label>
+                <input
+                  type="range"
+                  min="10"
+                  max="500"
+                  value={deliveriesPerDay}
+                  onChange={(e) => setDeliveriesPerDay(Number(e.target.value))}
+                  className="slider h-3 w-full cursor-pointer appearance-none rounded-lg bg-white/15"
+                />
               </div>
-            </div>
 
-            <div className="mb-8">
-              <label className="flex justify-between items-center mb-3">
-                <span className="text-lg font-semibold">Arac Sayisi</span>
-                <span className="text-2xl font-bold text-green-300">{vehicleCount}</span>
-              </label>
-              <input
-                type="range"
-                min="1"
-                max="50"
-                value={vehicleCount}
-                onChange={(e) => setVehicleCount(Number(e.target.value))}
-                className="w-full h-3 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
-              />
-              <div className="flex justify-between text-sm text-blue-200 mt-2">
-                <span>1</span>
-                <span>50</span>
+              <div>
+                <label className="mb-3 flex items-center justify-between text-sm font-semibold text-slate-100">
+                  <span>Arac sayisi</span>
+                  <span>{vehicleCount}</span>
+                </label>
+                <input
+                  type="range"
+                  min="1"
+                  max="50"
+                  value={vehicleCount}
+                  onChange={(e) => setVehicleCount(Number(e.target.value))}
+                  className="slider h-3 w-full cursor-pointer appearance-none rounded-lg bg-white/15"
+                />
               </div>
-            </div>
 
-            <div className="mb-8">
-              <label className="block mb-3">
-                <span className="text-lg font-semibold">Ortalama Mesafe / Teslimat (km)</span>
-              </label>
-              <input
-                type="number"
-                min="1"
-                max="100"
-                value={avgDistancePerDelivery}
-                onChange={(e) => setAvgDistancePerDelivery(Number(e.target.value))}
-                className="w-full px-4 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Orn: 15"
-              />
-            </div>
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label className="mb-3 block text-sm font-semibold text-slate-100">Ortalama mesafe / teslimat (km)</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="100"
+                    value={avgDistancePerDelivery}
+                    onChange={(e) => setAvgDistancePerDelivery(Number(e.target.value))}
+                    className="w-full rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-white outline-none ring-0 placeholder:text-slate-400"
+                  />
+                </div>
 
-            <div className="mb-8">
-              <label className="block mb-3">
-                <span className="text-lg font-semibold">Yakit Fiyati (TL/litre)</span>
-              </label>
-              <input
-                type="number"
-                min="10"
-                max="100"
-                value={fuelPricePerLiter}
-                onChange={(e) => setFuelPricePerLiter(Number(e.target.value))}
-                className="w-full px-4 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                placeholder="Orn: 40"
-              />
-            </div>
-
-            <div className="mb-8">
-              <label className="flex justify-between items-center mb-3">
-                <span className="text-lg font-semibold">Varsayilan Tasarruf Orani</span>
-                <span className="text-2xl font-bold text-purple-300">%{fuelSavingsPercent}</span>
-              </label>
-              <input
-                type="range"
-                min="5"
-                max="30"
-                value={fuelSavingsPercent}
-                onChange={(e) => setFuelSavingsPercent(Number(e.target.value))}
-                className="w-full h-3 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
-              />
-              <div className="flex justify-between text-sm text-blue-200 mt-2">
-                <span>%5</span>
-                <span>%30</span>
+                <div>
+                  <label className="mb-3 block text-sm font-semibold text-slate-100">Yakit fiyati (TL/litre)</label>
+                  <input
+                    type="number"
+                    min="10"
+                    max="100"
+                    value={fuelPricePerLiter}
+                    onChange={(e) => setFuelPricePerLiter(Number(e.target.value))}
+                    className="w-full rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-white outline-none ring-0 placeholder:text-slate-400"
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="bg-blue-500/20 backdrop-blur-sm rounded-xl p-4 border border-blue-400/30">
-              <div className="flex items-start gap-3">
-                <svg className="w-6 h-6 text-blue-300 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                </svg>
-                <p className="text-sm text-blue-100">
-                  Bu hesaplama ornek bir varsayima dayanir. Gercek sonuc operasyonunuza gore degisebilir.
-                </p>
+              <div>
+                <label className="mb-3 flex items-center justify-between text-sm font-semibold text-slate-100">
+                  <span>Varsayilan yakit tasarrufu orani</span>
+                  <span>%{fuelSavingsPercent}</span>
+                </label>
+                <input
+                  type="range"
+                  min="5"
+                  max="30"
+                  value={fuelSavingsPercent}
+                  onChange={(e) => setFuelSavingsPercent(Number(e.target.value))}
+                  className="slider h-3 w-full cursor-pointer appearance-none rounded-lg bg-white/15"
+                />
               </div>
             </div>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: 24 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
             viewport={{ once: true }}
-            className="space-y-6"
+            className="flex flex-col gap-6"
           >
-            <div className="bg-white rounded-3xl p-8 lg:p-10 shadow-2xl">
-              <h3 className="text-2xl font-bold text-gray-900 mb-8">Tahmini Yakit Tasarrufu</h3>
-
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={isCalculated ? { scale: 1, opacity: 1 } : {}}
-                transition={{ duration: 0.5, delay: 0.6 }}
-                className="mb-6 p-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border-2 border-green-200"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
-                    <span className="text-xl text-white">A</span>
+            <div className="grid gap-5 sm:grid-cols-2">
+              <div className="rounded-[2rem] border border-emerald-400/20 bg-emerald-400/8 p-6">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-400/18 text-emerald-200">
+                    <Fuel className="h-5 w-5" />
                   </div>
-                  <h4 className="text-lg font-semibold text-gray-700">Aylik Tasarruf</h4>
+                  <div className="text-sm font-semibold text-emerald-100">Aylik yakit tasarrufu</div>
                 </div>
-                <div className="text-4xl font-bold text-green-600 mt-4">
-                  {formatCurrency(results.monthlyFuelSavings)}
-                </div>
-                <p className="text-sm text-gray-600 mt-2">Varsayilan orana gore hesaplanir</p>
-              </motion.div>
+                <div className="mt-5 text-4xl font-bold text-emerald-200">{formatCurrency(results.monthlyFuelSavings)}</div>
+                <div className="mt-2 text-sm text-slate-300">Varsayilan tasarruf orani ile hesaplanir.</div>
+              </div>
 
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={isCalculated ? { scale: 1, opacity: 1 } : {}}
-                transition={{ duration: 0.5, delay: 0.8 }}
-                className="mb-6 p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl border-2 border-purple-200"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center">
-                    <span className="text-xl text-white">Y</span>
+              <div className="rounded-[2rem] border border-amber-400/20 bg-amber-400/8 p-6">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-400/18 text-amber-200">
+                    <Clock3 className="h-5 w-5" />
                   </div>
-                  <h4 className="text-lg font-semibold text-gray-700">Yillik Tasarruf</h4>
+                  <div className="text-sm font-semibold text-amber-100">Aylik planlama saati</div>
                 </div>
-                <div className="text-4xl font-bold text-purple-600 mt-4">
-                  {formatCurrency(results.yearlyFuelSavings)}
-                </div>
-                <p className="text-sm text-gray-600 mt-2">Aylik tasarrufun yillik karsiligi</p>
-              </motion.div>
+                <div className="mt-5 text-4xl font-bold text-amber-200">{results.monthlyPlanningHoursSaved} saat</div>
+                <div className="mt-2 text-sm text-slate-300">Arac basina gunluk planlama sure kazanimi varsayimiyla hesaplanir.</div>
+              </div>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isCalculated ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 1 }}
-              className="text-center"
-            >
-              <a
-                href="/contact"
-                className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 shadow-xl hover:shadow-2xl hover:scale-105"
-              >
-                <span>Demo Talep Edin</span>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </a>
-              <p className="text-sm text-blue-200 mt-4">Detayli analiz icin ekibimizle gorusebilirsiniz</p>
-            </motion.div>
+            <div className="rounded-[2rem] border border-white/10 bg-white/6 p-7">
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Yillik yaklasik tasarruf</div>
+                  <div className="mt-3 text-3xl font-bold text-white">{formatCurrency(results.yearlyFuelSavings)}</div>
+                </div>
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Yillik planlama zamani</div>
+                  <div className="mt-3 text-3xl font-bold text-white">{results.yearlyPlanningHoursSaved} saat</div>
+                </div>
+              </div>
+
+              <div className="mt-6 rounded-2xl border border-white/10 bg-black/10 p-4 text-sm leading-7 text-slate-300">
+                Bu hesaplayici tahmini fikir vermek icin vardir. Gercek sonuc rota yogunlugu, sehir dagilimi, yakit tuketimi,
+                teslimat pencereleri ve operasyon disiplinine gore degisir.
+              </div>
+
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-100"
+                >
+                  Demo talep edin
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/features"
+                  className="inline-flex items-center justify-center rounded-full border border-white/10 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/6"
+                >
+                  Ozellikleri inceleyin
+                </Link>
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>
@@ -260,22 +232,22 @@ const ROICalculator: React.FC = () => {
       <style jsx>{`
         .slider::-webkit-slider-thumb {
           appearance: none;
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+          width: 22px;
+          height: 22px;
+          border-radius: 9999px;
+          background: #ffffff;
           cursor: pointer;
-          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+          box-shadow: 0 6px 16px rgba(15, 23, 37, 0.3);
         }
 
         .slider::-moz-range-thumb {
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+          width: 22px;
+          height: 22px;
+          border-radius: 9999px;
+          background: #ffffff;
           cursor: pointer;
-          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
           border: none;
+          box-shadow: 0 6px 16px rgba(15, 23, 37, 0.3);
         }
       `}</style>
     </section>

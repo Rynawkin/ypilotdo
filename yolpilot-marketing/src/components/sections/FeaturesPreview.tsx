@@ -3,134 +3,118 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { ArrowRight, Camera, ChartNoAxesCombined, Map, Smartphone, Truck } from 'lucide-react';
 
 const FeaturesPreview: React.FC = () => {
   const features = [
     {
-      icon: 'RP',
-      title: 'Rota Planlama',
-      description: 'Durak siralama, zaman penceresi ve oncelik kurallari tek panelde.',
-      benefits: ['Rota kurallari', 'Durak siralama', 'Planlama akisi'],
-      gradient: 'from-blue-500 to-blue-700',
-      businessValue: 'Daha net planlama'
+      icon: Map,
+      title: 'Rota planlama',
+      description: 'Durak sirasini, depoya donus kurgusunu ve planlama kurallarini ayni ekranda yonetin.',
+      bullets: ['Durak ve rota kurgusu', 'Manuel ve otomatik duzenleme', 'Depoya donus takibi']
     },
     {
-      icon: 'TT',
-      title: 'Teslimat Takibi',
-      description: 'Teslimat durumlari, notlar ve kanitlar tek yerde toplanir.',
-      benefits: ['Durum takibi', 'Teslimat notlari', 'Kanit arsivi'],
-      gradient: 'from-green-500 to-green-700',
-      businessValue: 'Gorunurluk artisi'
+      icon: Smartphone,
+      title: 'Mobil saha uygulamasi',
+      description: 'Suruculer gorev listesini, notlarini ve teslimat sonucunu mobil uygulamadan yonetsin.',
+      bullets: ['Gorev listesi', 'Durum guncelleme', 'Offline kullanim destegi']
     },
     {
-      icon: 'SU',
-      title: 'Saha Uygulamasi',
-      description: 'Suruculer gorev listesini mobil uygulamada takip eder.',
-      benefits: ['Mobil gorevler', 'Navigasyon baglantisi', 'Offline mod'],
-      gradient: 'from-purple-500 to-purple-700',
-      businessValue: 'Saha uyumu'
+      icon: Camera,
+      title: 'Teslimat kaniti',
+      description: 'Imza, fotograf ve aciklama kayitlari siparis akisina bagli kalsin.',
+      bullets: ['Foto ve imza', 'Durak notlari', 'Arsivlenebilir kayit']
     },
     {
-      icon: 'RP',
-      title: 'Raporlama',
-      description: 'Sefer ozetleri ve operasyon gorunumleri tek ekranda.',
-      benefits: ['Sefer ozeti', 'Rapor filtreleri', 'Arsivleme'],
-      gradient: 'from-orange-500 to-orange-700',
-      businessValue: 'Karar destegi'
+      icon: ChartNoAxesCombined,
+      title: 'Rapor ve izleme',
+      description: 'Sefer performansi, gecikme alanlari ve operasyon ozetleri ayni panelden gorunsun.',
+      bullets: ['Sefer raporlari', 'Canli operasyon gorunurlugu', 'Gecikme analizi']
     }
   ];
 
   return (
-    <section className="py-16 lg:py-24 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="border-b border-[color:var(--line)] bg-[#f6f8fb] py-16 lg:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.7 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between"
         >
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Ihtiyaciniz olan araclar tek platformda
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-            Rota planlamadan teslimat kanitina kadar operasyonu sade tutan bir akis.
-          </p>
-          <Link href="/features" className="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold">
-            Tum ozellikleri kesfedin
-            <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
+          <div className="max-w-3xl">
+            <div className="mb-5 inline-flex rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-[color:var(--brand-deep)] shadow-sm">
+              Urun kapsami
+            </div>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-950 lg:text-5xl">Platformun ana parcalari ayni is akisi icin tasarlandi.</h2>
+            <p className="mt-5 text-lg leading-8 text-slate-600">
+              YolPilot sadece rota sirasini degil, sahadaki teslimat sonucunu ve operasyon kayitlarini da ayni zincire
+              baglar.
+            </p>
+          </div>
+          <Link
+            href="/features"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--brand)] transition-colors hover:text-blue-700"
+          >
+            Tum ozellikleri gorun
+            <ArrowRight className="h-4 w-4" />
           </Link>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {features.map((feature, index) => (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="group bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200 flex flex-col h-full relative"
-            >
-              <div className={`w-14 h-14 rounded-xl bg-gradient-to-r ${feature.gradient} flex items-center justify-center text-white text-sm font-semibold mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                {feature.icon}
-              </div>
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
+          {features.map((feature, index) => {
+            const Icon = feature.icon;
 
-              <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-200">
-                {feature.title}
-              </h3>
+            return (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: index * 0.08 }}
+                viewport={{ once: true }}
+                className="rounded-[1.8rem] border border-slate-200 bg-white p-7 shadow-sm shadow-slate-900/5"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex h-13 w-13 items-center justify-center rounded-2xl bg-[color:var(--surface-muted)] text-[color:var(--brand)]">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <div className="rounded-full border border-slate-200 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--ink-soft)]">
+                    Modul
+                  </div>
+                </div>
 
-              <p className="text-gray-600 mb-4 leading-relaxed">{feature.description}</p>
+                <h3 className="mt-6 text-2xl font-semibold text-slate-950">{feature.title}</h3>
+                <p className="mt-4 text-base leading-7 text-slate-600">{feature.description}</p>
 
-              <ul className="space-y-2 mb-4">
-                {feature.benefits.map((benefit) => (
-                  <li key={benefit} className="flex items-center text-sm text-gray-500">
-                    <svg className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                    {benefit}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="bg-blue-50 rounded-lg p-3 mt-auto">
-                <div className="text-xs text-blue-600 uppercase tracking-wide font-medium mb-1">Is Degeri</div>
-                <div className="text-sm text-blue-800 font-semibold">{feature.businessValue}</div>
-              </div>
-
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
-            </motion.div>
-          ))}
+                <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                  {feature.bullets.map((bullet) => (
+                    <div key={bullet} className="rounded-2xl bg-[color:var(--surface-muted)] px-4 py-3 text-sm font-medium text-slate-700">
+                      {bullet}
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: 0.7, delay: 0.25 }}
           viewport={{ once: true }}
-          className="mt-16 text-center bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-8 lg:p-12 text-white"
+          className="mt-12 rounded-[2rem] bg-[linear-gradient(135deg,#102d64,#153f8a)] px-6 py-8 text-white shadow-xl shadow-blue-950/15 lg:px-8"
         >
-          <h3 className="text-2xl lg:text-3xl font-bold mb-4">
-            Operasyonunuza uygun kurgu icin bizimle gorusun
-          </h3>
-          <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
-            Ihtiyaciniza uygun planlama ve kurulum adimlarini birlikte belirleyelim.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/contact"
-              className="bg-white text-blue-600 hover:bg-gray-50 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl"
-            >
-              Demo Talep Edin
-            </Link>
-            <Link
-              href="/features"
-              className="bg-blue-700 hover:bg-blue-800 text-white border-2 border-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl"
-            >
-              Ozellikleri Inceleyin
-            </Link>
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-3xl">
+              <div className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-blue-100">YolPilot akisi</div>
+              <h3 className="text-2xl font-semibold lg:text-3xl">Planlama, saha ve teslimat sonucu ayni veri yapisi uzerinden ilerler.</h3>
+            </div>
+            <div className="inline-flex items-center gap-3 rounded-full bg-white/10 px-5 py-3 text-sm font-medium text-blue-50">
+              <Truck className="h-4 w-4" />
+              Web panel ile mobil uygulama birlikte calisir
+            </div>
           </div>
         </motion.div>
       </div>

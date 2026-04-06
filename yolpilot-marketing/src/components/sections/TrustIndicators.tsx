@@ -2,178 +2,97 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { BadgeCheck, DatabaseBackup, LifeBuoy, ShieldCheck, UserRoundCog } from 'lucide-react';
 
 const TrustIndicators: React.FC = () => {
-  const indicators = [
+  const safeguards = [
     {
-      id: 1,
-      icon: 'G',
-      title: 'Veri Guvenligi',
-      description: 'Erisim kontrolu ve kayitlarla veri guvenligi odakli mimari',
-      color: 'from-green-500 to-green-600',
-      bgColor: 'bg-green-50'
+      icon: ShieldCheck,
+      title: 'Rol bazli erisim',
+      description: 'Dispatcher, surucu ve yonetici gibi farkli roller icin ayri akislar kurgulanabilir.'
     },
     {
-      id: 2,
-      icon: 'I',
-      title: 'Guvenli Iletisim',
-      description: 'Sifreli aktarim ve guvenli protokoller',
-      color: 'from-blue-500 to-blue-600',
-      bgColor: 'bg-blue-50'
+      icon: DatabaseBackup,
+      title: 'Kayit ve arsiv yapisi',
+      description: 'Sefer, teslimat kaniti ve operasyon notlari ayni veri akisinda tutulur.'
     },
     {
-      id: 3,
-      icon: 'D',
-      title: 'Turkce Destek',
-      description: 'Sorulariniz icin Turkce destek ekibi ile iletisim',
-      color: 'from-orange-500 to-orange-600',
-      bgColor: 'bg-orange-50'
+      icon: UserRoundCog,
+      title: 'Kurulumda rehberlik',
+      description: 'Mevcut operasyon modeline gore ilk kurulum ve gecis adimlari birlikte planlanir.'
     },
     {
-      id: 4,
-      icon: 'Y',
-      title: 'Duzenli Yedekleme',
-      description: 'Veri yedekleme ve geri yukleme surecleri',
-      color: 'from-purple-500 to-purple-600',
-      bgColor: 'bg-purple-50'
-    },
-    {
-      id: 5,
-      icon: 'A',
-      title: 'Yedekli Altyapi',
-      description: 'Izleme ve yedeklilik ile operasyon surekliligi',
-      color: 'from-yellow-500 to-yellow-600',
-      bgColor: 'bg-yellow-50'
-    },
-    {
-      id: 6,
-      icon: 'O',
-      title: 'Olceklenebilir Mimari',
-      description: 'Farkli ekip boyutlarina uyumlu esnek altyapi',
-      color: 'from-indigo-500 to-indigo-600',
-      bgColor: 'bg-indigo-50'
+      icon: LifeBuoy,
+      title: 'Turkce destek',
+      description: 'Canli kullanim sirasinda ekipler sorularina Turkce destek ile karsilik bulur.'
     }
   ];
 
-  const safeguards = [
-    'Erisim kontrolu',
-    'Loglama ve izleme',
-    'Veri saklama politikalari'
-  ];
-
-  const features = [
-    { title: 'Rol Bazli Erisim', description: 'Kullanici yetkilendirme sistemi' },
-    { title: 'Islem Loglari', description: 'Islem kayitlari ve izleme' },
-    { title: 'Yedekleme Politikasi', description: 'Veri geri yukleme yaklasimi' },
-    { title: 'Sistem Izleme', description: 'Operasyon gorunurlugu' }
-  ];
+  const checklist = ['Erisim ve rol kurgusu', 'Islem takibi ve kayit mantigi', 'Operasyona gore onboarding', 'Destek ve sureklilik'];
 
   return (
-    <section className="py-16 lg:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <div className="inline-flex items-center gap-2 bg-blue-100 px-4 py-2 rounded-full mb-6">
-            <span className="text-sm font-semibold text-blue-900">Guvenlik ve Sureklilik</span>
-          </div>
+    <section className="border-b border-[color:var(--line)] bg-white py-16 lg:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-start">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true }}
+          >
+            <div className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-[color:var(--brand-deep)]">
+              Gecis ve guven
+            </div>
+            <h2 className="mt-5 text-3xl font-bold tracking-tight text-slate-950 lg:text-5xl">Yeni bir operasyon araci alirken sadece ozellige degil gecise de bakilir.</h2>
+            <p className="mt-5 text-lg leading-8 text-slate-600">
+              Pazarlama sayfalarinda en kolay kisim “guvenliyiz” demektir. Bizim odagimiz daha pratik: ekibin farkli
+              rolleri ayni sisteme nasil gececek, kayit mantigi nasil korunacak ve operasyon bozulmadan nasil devreye alinacak?
+            </p>
 
-          <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-6">
-            Operasyonlariniz Icin Guvenli Altyapi
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Veri guvenligi, erisim kontrolu ve yedeklilik odakli altyapi yaklasimi.
-          </p>
-        </motion.div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {indicators.map((indicator, index) => (
-            <motion.div
-              key={indicator.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              className="group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 hover:border-gray-200"
-            >
-              <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${indicator.color} flex items-center justify-center text-white text-xl font-semibold mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                {indicator.icon}
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">{indicator.title}</h3>
-              <p className="text-gray-600 leading-relaxed">{indicator.description}</p>
-              <div className={`absolute inset-0 ${indicator.bgColor} rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-300 -z-10`}></div>
-            </motion.div>
-          ))}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          viewport={{ once: true }}
-          className="mt-16 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 rounded-3xl shadow-2xl p-8 lg:p-12 text-white relative overflow-hidden"
-        >
-          <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:30px_30px]"></div>
-          <div className="relative z-10">
-            <div className="grid lg:grid-cols-2 gap-8 items-center">
-              <div>
-                <h3 className="text-3xl lg:text-4xl font-bold mb-4">Guvenlik Odakli Yaklasim</h3>
-                <p className="text-blue-100 text-lg leading-relaxed mb-6">
-                  Veri gizliligi ve operasyon surekliligi icin sifreleme, yedekleme ve izleme sureclerini birlikte yurutuyoruz.
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  {safeguards.map((item) => (
-                    <div key={item} className="flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full">
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                      <span className="text-sm font-semibold">{item}</span>
-                    </div>
-                  ))}
+            <div className="mt-8 rounded-[2rem] bg-[#102d64] p-7 text-white shadow-xl shadow-blue-950/15">
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/12">
+                  <BadgeCheck className="h-5 w-5" />
+                </div>
+                <div>
+                  <div className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-100">YolPilot yaklasimi</div>
+                  <div className="mt-1 text-xl font-semibold">Urun kurulumu kadar operasyon gecisini de sahiplenir.</div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-6">
-                {[
-                  { title: 'Iletisim', label: 'Sifreli aktarim' },
-                  { title: 'Yedekleme', label: 'Veri saklama' },
-                  { title: 'Izleme', label: 'Durum takibi' },
-                  { title: 'Erisim', label: 'Yetki yonetimi' }
-                ].map((item) => (
-                  <div key={item.title} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                    <div className="text-2xl font-bold mb-2">{item.title}</div>
-                    <div className="text-blue-100">{item.label}</div>
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {checklist.map((item) => (
+                  <div key={item} className="rounded-2xl border border-white/10 bg-white/8 px-4 py-3 text-sm text-blue-50">
+                    {item}
                   </div>
                 ))}
               </div>
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          viewport={{ once: true }}
-          className="mt-16"
-        >
-          <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">Guvenlik Ozellikleri</h3>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature) => (
-              <div
-                key={feature.title}
-                className="text-center p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200"
-              >
-                <div className="font-bold text-gray-900 mb-2">{feature.title}</div>
-                <div className="text-sm text-gray-600">{feature.description}</div>
-              </div>
-            ))}
+          <div className="grid gap-5 sm:grid-cols-2">
+            {safeguards.map((item, index) => {
+              const Icon = item.icon;
+
+              return (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: index * 0.08 }}
+                  viewport={{ once: true }}
+                  className="rounded-[1.8rem] border border-slate-200 bg-[#f8fafc] p-7 shadow-sm shadow-slate-900/5"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[color:var(--brand)] shadow-sm">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="mt-5 text-xl font-semibold text-slate-950">{item.title}</h3>
+                  <p className="mt-3 text-base leading-7 text-slate-600">{item.description}</p>
+                </motion.div>
+              );
+            })}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
