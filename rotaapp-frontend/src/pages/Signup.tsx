@@ -19,9 +19,6 @@ interface SignupForm {
   adminPassword: string;
   adminPasswordConfirm: string;
   
-  // Plan seçimi
-  plan: 'trial' | 'starter' | 'growth' | 'professional' | 'business';
-  
   // Sözleşmeler
   termsAccepted: boolean;
   privacyAccepted: boolean;
@@ -44,7 +41,6 @@ const Signup: React.FC = () => {
     adminEmail: '',
     adminPassword: '',
     adminPasswordConfirm: '',
-    plan: 'trial',
     termsAccepted: false,
     privacyAccepted: false
   });
@@ -300,7 +296,7 @@ const Signup: React.FC = () => {
           <div className="flex justify-between mt-2">
             <span className="text-xs text-gray-600">Firma Bilgileri</span>
             <span className="text-xs text-gray-600">Yönetici Hesabı</span>
-            <span className="text-xs text-gray-600">Plan Seçimi</span>
+            <span className="text-xs text-gray-600">Deneme Başlangıcı</span>
           </div>
         </div>
       </div>
@@ -529,26 +525,33 @@ const Signup: React.FC = () => {
             </div>
           )}
 
-          {/* Step 3: Plan Seçimi */}
+          {/* Step 3: Deneme Başlangıcı */}
           {step === 3 && (
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Plan Seçimi</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">14 Günlük Deneme ile Başlayın</h2>
+              <p className="mb-6 text-sm leading-6 text-gray-600">
+                Tüm yeni hesaplar güvenli şekilde <strong>Deneme</strong> planı ile açılır.
+                Ücretli planlar hesabınızı oluşturduktan sonra panel içinden ödeme ile etkinleşir.
+              </p>
               
-              <div className="grid md:grid-cols-3 gap-4 mb-6">
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 mb-6">
                 {plans.map(plan => (
                   <div
                     key={plan.id}
-                    onClick={() => setFormData(prev => ({ ...prev, plan: plan.id as any }))}
                     className={`
-                      relative border-2 rounded-xl p-6 cursor-pointer transition-all
-                      ${formData.plan === plan.id 
-                        ? 'border-blue-600 bg-blue-50' 
-                        : 'border-gray-200 hover:border-gray-300'}
+                      relative rounded-xl border p-6 transition-all
+                      ${plan.id === 'trial'
+                        ? 'border-blue-600 bg-blue-50 shadow-sm'
+                        : 'border-gray-200 bg-white'}
                     `}
                   >
-                    {plan.popular && (
+                    {plan.id === 'trial' ? (
+                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-blue-600 px-3 py-1 text-xs text-white">
+                        Hesabınız bu planla açılır
+                      </span>
+                    ) : plan.popular && (
                       <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-3 py-1 rounded-full text-xs">
-                        Popüler
+                        Daha sonra yükseltebilirsiniz
                       </span>
                     )}
                     <h3 className="font-bold text-lg mb-2">{plan.name}</h3>

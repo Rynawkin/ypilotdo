@@ -7,6 +7,7 @@ using Monolith.WebAPI.Data;
 using Monolith.WebAPI.Data.Workspace;
 using Monolith.WebAPI.Responses.Workspace;
 using Monolith.WebAPI.Services.Members;
+using Monolith.WebAPI.Services.Subscription;
 
 namespace Monolith.WebAPI.Applications.Commands.Customers
 {
@@ -52,15 +53,22 @@ namespace Monolith.WebAPI.Applications.Commands.Customers
     public class CreateCustomerCommandHandler : BaseAuthenticatedCommandHandler<CreateCustomerCommand, CustomerResponse>
     {
         private readonly AppDbContext _context;
+        private readonly ISubscriptionService _subscriptionService;
 
-        public CreateCustomerCommandHandler(AppDbContext context, IUserService userService) 
+        public CreateCustomerCommandHandler(
+            AppDbContext context,
+            IUserService userService,
+            ISubscriptionService subscriptionService) 
             : base(userService)
         {
             _context = context;
+            _subscriptionService = subscriptionService;
         }
 
         protected override async Task<CustomerResponse> HandleCommand(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
+            await _subscriptionService.EnsureCustomerLimitNotExceeded(User.WorkspaceId);
+
             // Müşteri kodu otomatik oluştur (eğer belirtilmemişse)
             if (string.IsNullOrEmpty(request.Code))
             {

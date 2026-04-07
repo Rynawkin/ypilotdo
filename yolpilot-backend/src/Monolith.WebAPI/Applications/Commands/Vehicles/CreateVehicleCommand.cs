@@ -6,6 +6,7 @@ using Monolith.WebAPI.Data;
 using Monolith.WebAPI.Data.Workspace;
 using Monolith.WebAPI.Responses.Workspace;
 using Monolith.WebAPI.Services.Members;
+using Monolith.WebAPI.Services.Subscription;
 
 namespace Monolith.WebAPI.Applications.Commands.Vehicles;
 
@@ -71,14 +72,21 @@ public class CreateVehicleCommandValidator : AbstractValidator<CreateVehicleComm
 public class CreateVehicleCommandHandler : BaseAuthenticatedCommandHandler<CreateVehicleCommand, VehicleResponse>
 {
     private readonly AppDbContext _dbContext;
+    private readonly ISubscriptionService _subscriptionService;
 
-    public CreateVehicleCommandHandler(IUserService userService, AppDbContext dbContext) : base(userService)
+    public CreateVehicleCommandHandler(
+        IUserService userService,
+        AppDbContext dbContext,
+        ISubscriptionService subscriptionService) : base(userService)
     {
         _dbContext = dbContext;
+        _subscriptionService = subscriptionService;
     }
 
     protected override async Task<VehicleResponse> HandleCommand(CreateVehicleCommand request, CancellationToken cancellationToken)
     {
+        await _subscriptionService.EnsureVehicleLimitNotExceeded(User.WorkspaceId);
+
         var workspace = await _dbContext.Workspaces
             .Include(w => w.Vehicles)
             .FirstOrDefaultAsync(w => w.Id == User.WorkspaceId, cancellationToken);

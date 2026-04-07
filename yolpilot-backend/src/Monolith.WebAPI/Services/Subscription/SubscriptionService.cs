@@ -3,6 +3,7 @@
 using Microsoft.EntityFrameworkCore;
 using Monolith.WebAPI.Data;
 using Monolith.WebAPI.Data.Workspace;
+using Monolith.WebAPI.Infrastructure;
 
 namespace Monolith.WebAPI.Services.Subscription;
 
@@ -156,6 +157,78 @@ public class SubscriptionService : ISubscriptionService
         return true;
     }
 
+    public async Task EnsureDriverLimitNotExceeded(int workspaceId, int additionalCount = 1)
+    {
+        var workspace = await _context.Workspaces
+            .AsNoTracking()
+            .FirstOrDefaultAsync(w => w.Id == workspaceId);
+
+        if (workspace == null)
+            throw new ApiException("Workspace not found", 404);
+
+        var limits = GetPlanLimits(workspace.PlanType);
+        if (!limits.MaxDrivers.HasValue)
+            return;
+
+        var currentDriverCount = await _context.Users
+            .CountAsync(u => u.WorkspaceId == workspaceId && u.IsDriver);
+
+        if (currentDriverCount + additionalCount > limits.MaxDrivers.Value)
+        {
+            throw new ApiException(
+                $"{workspace.PlanType} planı en fazla {limits.MaxDrivers.Value} sürücü destekler.",
+                400);
+        }
+    }
+
+    public async Task EnsureVehicleLimitNotExceeded(int workspaceId, int additionalCount = 1)
+    {
+        var workspace = await _context.Workspaces
+            .AsNoTracking()
+            .FirstOrDefaultAsync(w => w.Id == workspaceId);
+
+        if (workspace == null)
+            throw new ApiException("Workspace not found", 404);
+
+        var limits = GetPlanLimits(workspace.PlanType);
+        if (!limits.MaxVehicles.HasValue)
+            return;
+
+        var currentVehicleCount = await _context.Vehicles
+            .CountAsync(v => v.WorkspaceId == workspaceId && !v.IsDeleted);
+
+        if (currentVehicleCount + additionalCount > limits.MaxVehicles.Value)
+        {
+            throw new ApiException(
+                $"{workspace.PlanType} planı en fazla {limits.MaxVehicles.Value} araç destekler.",
+                400);
+        }
+    }
+
+    public async Task EnsureCustomerLimitNotExceeded(int workspaceId, int additionalCount = 1)
+    {
+        var workspace = await _context.Workspaces
+            .AsNoTracking()
+            .FirstOrDefaultAsync(w => w.Id == workspaceId);
+
+        if (workspace == null)
+            throw new ApiException("Workspace not found", 404);
+
+        var limits = GetPlanLimits(workspace.PlanType);
+        if (!limits.MaxCustomers.HasValue)
+            return;
+
+        var currentCustomerCount = await _context.Customers
+            .CountAsync(c => c.WorkspaceId == workspaceId && !c.IsDeleted);
+
+        if (currentCustomerCount + additionalCount > limits.MaxCustomers.Value)
+        {
+            throw new ApiException(
+                $"{workspace.PlanType} planı en fazla {limits.MaxCustomers.Value} müşteri destekler.",
+                400);
+        }
+    }
+
     public async Task RecordStopUsage(int workspaceId, int count = 1)
     {
         var workspace = await _context.Workspaces
@@ -219,7 +292,7 @@ public class SubscriptionService : ISubscriptionService
         
         if (workspace == null) return false;
         
-        return workspace.PlanType != PlanType.Starter;
+        return GetPlanLimits(workspace.PlanType).HasTimeWindows;
     }
 
     public async Task<bool> CanUseCustomerSatisfactionReport(int workspaceId)
@@ -230,7 +303,7 @@ public class SubscriptionService : ISubscriptionService
         
         if (workspace == null) return false;
         
-        return workspace.PlanType != PlanType.Starter;
+        return GetPlanLimits(workspace.PlanType).HasCustomerSatisfactionReport;
     }
 
     public async Task<bool> CanUseCustomReports(int workspaceId)

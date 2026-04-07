@@ -5,6 +5,7 @@ using Monolith.WebAPI.Applications.Commands;
 using Monolith.WebAPI.Data;
 using Monolith.WebAPI.Data.Workspace;
 using Monolith.WebAPI.Services.Members;
+using Monolith.WebAPI.Services.Subscription;
 
 namespace Monolith.WebAPI.Applications.Commands.Customers
 {
@@ -18,11 +19,16 @@ namespace Monolith.WebAPI.Applications.Commands.Customers
     public class BulkImportCustomersCommandHandler : BaseAuthenticatedCommandHandler<BulkImportCustomersCommand, BulkImportResponse>
     {
         private readonly AppDbContext _context;
+        private readonly ISubscriptionService _subscriptionService;
 
-        public BulkImportCustomersCommandHandler(AppDbContext context, IUserService userService)
+        public BulkImportCustomersCommandHandler(
+            AppDbContext context,
+            IUserService userService,
+            ISubscriptionService subscriptionService)
             : base(userService)
         {
             _context = context;
+            _subscriptionService = subscriptionService;
         }
 
         protected override async Task<BulkImportResponse> HandleCommand(BulkImportCustomersCommand request, CancellationToken cancellationToken)
@@ -120,6 +126,8 @@ namespace Monolith.WebAPI.Applications.Commands.Customers
             // Bulk insert successful customers
             if (customersToAdd.Any())
             {
+                await _subscriptionService.EnsureCustomerLimitNotExceeded(User.WorkspaceId, customersToAdd.Count);
+
                 _context.Customers.AddRange(customersToAdd);
                 await _context.SaveChangesAsync(cancellationToken);
 

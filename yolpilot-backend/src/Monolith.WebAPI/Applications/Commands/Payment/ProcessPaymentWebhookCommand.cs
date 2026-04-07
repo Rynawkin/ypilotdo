@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Monolith.WebAPI.Data;
 using Monolith.WebAPI.Data.Workspace;
 using Monolith.WebAPI.Services.Payment;
+using Monolith.WebAPI.Services.Subscription;
 
 namespace Monolith.WebAPI.Applications.Commands.Payment;
 
@@ -26,15 +27,18 @@ public class ProcessPaymentWebhookCommandHandler : IRequestHandler<ProcessPaymen
     private readonly IPaymentService _paymentService;
     private readonly ILogger<ProcessPaymentWebhookCommandHandler> _logger;
     private readonly AppDbContext _context;
+    private readonly ISubscriptionService _subscriptionService;
 
     public ProcessPaymentWebhookCommandHandler(
         IPaymentService paymentService,
         ILogger<ProcessPaymentWebhookCommandHandler> logger,
-        AppDbContext context)
+        AppDbContext context,
+        ISubscriptionService subscriptionService)
     {
         _paymentService = paymentService;
         _logger = logger;
         _context = context;
+        _subscriptionService = subscriptionService;
     }
 
     public async Task<ProcessPaymentWebhookResponse> Handle(ProcessPaymentWebhookCommand request, CancellationToken cancellationToken)
@@ -117,9 +121,9 @@ public class ProcessPaymentWebhookCommandHandler : IRequestHandler<ProcessPaymen
                         .CountAsync(u => u.WorkspaceId == transaction.WorkspaceId &&
                                         u.IsDriver);
 
-                    var newPlanLimits = GetPlanLimits(planType);
+                    var newPlanLimits = _subscriptionService.GetPlanLimits(planType);
 
-                    if (activeDriversCount > newPlanLimits.MaxDrivers)
+                    if (newPlanLimits.MaxDrivers.HasValue && activeDriversCount > newPlanLimits.MaxDrivers.Value)
                     {
                         _logger.LogError(
                             "BUGFIX S3.14: Cannot downgrade to {NewPlan}. Active drivers ({ActiveCount}) exceeds limit ({Limit})",
@@ -140,7 +144,7 @@ public class ProcessPaymentWebhookCommandHandler : IRequestHandler<ProcessPaymen
                     var activeVehiclesCount = await _context.Vehicles
                         .CountAsync(v => v.WorkspaceId == transaction.WorkspaceId && !v.IsDeleted);
 
-                    if (activeVehiclesCount > newPlanLimits.MaxVehicles)
+                    if (newPlanLimits.MaxVehicles.HasValue && activeVehiclesCount > newPlanLimits.MaxVehicles.Value)
                     {
                         _logger.LogError(
                             "BUGFIX S3.14: Cannot downgrade to {NewPlan}. Active vehicles ({ActiveCount}) exceeds limit ({Limit})",
@@ -152,6 +156,25 @@ public class ProcessPaymentWebhookCommandHandler : IRequestHandler<ProcessPaymen
                             invoice.Status = InvoiceStatus.Cancelled;
                         }
                         transaction.ProviderResponse = $"Plan downgrade blocked: {activeVehiclesCount} active vehicles exceeds {planType} limit of {newPlanLimits.MaxVehicles}";
+                        await _context.SaveChangesAsync();
+                        return;
+                    }
+
+                    var activeCustomersCount = await _context.Customers
+                        .CountAsync(c => c.WorkspaceId == transaction.WorkspaceId && !c.IsDeleted);
+
+                    if (newPlanLimits.MaxCustomers.HasValue && activeCustomersCount > newPlanLimits.MaxCustomers.Value)
+                    {
+                        _logger.LogError(
+                            "BUGFIX S3.14: Cannot downgrade to {NewPlan}. Active customers ({ActiveCount}) exceeds limit ({Limit})",
+                            planType, activeCustomersCount, newPlanLimits.MaxCustomers.Value);
+
+                        transaction.Status = PaymentStatus.Failed;
+                        if (invoice != null)
+                        {
+                            invoice.Status = InvoiceStatus.Cancelled;
+                        }
+                        transaction.ProviderResponse = $"Plan downgrade blocked: {activeCustomersCount} active customers exceeds {planType} limit of {newPlanLimits.MaxCustomers.Value}";
                         await _context.SaveChangesAsync();
                         return;
                     }
@@ -203,16 +226,4 @@ public class ProcessPaymentWebhookCommandHandler : IRequestHandler<ProcessPaymen
                targetOrder < currentOrder;
     }
 
-    private static (int MaxDrivers, int MaxVehicles) GetPlanLimits(PlanType planType)
-    {
-        return planType switch
-        {
-            PlanType.Trial => (2, 2),
-            PlanType.Starter => (5, 5),
-            PlanType.Growth => (10, 10),
-            PlanType.Professional => (20, 20),
-            PlanType.Business => (int.MaxValue, int.MaxValue),
-            _ => (0, 0)
-        };
-    }
 }

@@ -9,6 +9,7 @@ using Monolith.WebAPI.Services.Members;
 using Monolith.WebAPI.Services.Email;
 using Monolith.WebAPI.Infrastructure;
 using Microsoft.Extensions.Logging;
+using Monolith.WebAPI.Services.Subscription;
 
 namespace Monolith.WebAPI.Applications.Commands.Drivers;
 
@@ -24,22 +25,27 @@ public class CreateDriverCommandHandler : BaseAuthenticatedCommandHandler<Create
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IEmailService _emailService;
     private readonly ILogger<CreateDriverCommandHandler> _logger;
+    private readonly ISubscriptionService _subscriptionService;
 
     public CreateDriverCommandHandler(
         AppDbContext context, 
         IUserService userService,
         UserManager<ApplicationUser> userManager,
         IEmailService emailService,
-        ILogger<CreateDriverCommandHandler> logger) : base(userService)
+        ILogger<CreateDriverCommandHandler> logger,
+        ISubscriptionService subscriptionService) : base(userService)
     {
         _context = context;
         _userManager = userManager;
         _emailService = emailService;
         _logger = logger;
+        _subscriptionService = subscriptionService;
     }
 
     protected override async Task<DriverResponse> HandleCommand(CreateDriverCommand request, CancellationToken cancellationToken)
     {
+        await _subscriptionService.EnsureDriverLimitNotExceeded(User.WorkspaceId);
+
         // Email zorunlu kontrolü
         if (string.IsNullOrWhiteSpace(request.Data.Email))
         {

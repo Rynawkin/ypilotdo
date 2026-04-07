@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Monolith.WebAPI.Data;
 using Monolith.WebAPI.Responses.Workspace;
 using Monolith.WebAPI.Services.Members;
+using Monolith.WebAPI.Services.Subscription;
 
 namespace Monolith.WebAPI.Applications.Commands.Drivers;
 
@@ -25,10 +26,15 @@ public class BulkImportResult
 public class BulkImportDriversCommandHandler : BaseAuthenticatedCommandHandler<BulkImportDriversCommand, BulkImportResult>
 {
     private readonly AppDbContext _context;
+    private readonly ISubscriptionService _subscriptionService;
 
-    public BulkImportDriversCommandHandler(AppDbContext context, IUserService userService) : base(userService)
+    public BulkImportDriversCommandHandler(
+        AppDbContext context,
+        IUserService userService,
+        ISubscriptionService subscriptionService) : base(userService)
     {
         _context = context;
+        _subscriptionService = subscriptionService;
     }
 
     protected override async Task<BulkImportResult> HandleCommand(BulkImportDriversCommand request, CancellationToken cancellationToken)
@@ -68,6 +74,8 @@ public class BulkImportDriversCommandHandler : BaseAuthenticatedCommandHandler<B
 
         if (driversToAdd.Any())
         {
+            await _subscriptionService.EnsureDriverLimitNotExceeded(User.WorkspaceId, driversToAdd.Count);
+
             _context.Set<Data.Workspace.Driver>().AddRange(driversToAdd);
             await _context.SaveChangesAsync(cancellationToken);
             

@@ -10,6 +10,9 @@ public interface ISubscriptionService
     
     // int workspaceId olarak değiştir
     Task<bool> CanAddStop(int workspaceId);
+    Task EnsureDriverLimitNotExceeded(int workspaceId, int additionalCount = 1);
+    Task EnsureVehicleLimitNotExceeded(int workspaceId, int additionalCount = 1);
+    Task EnsureCustomerLimitNotExceeded(int workspaceId, int additionalCount = 1);
     Task RecordStopUsage(int workspaceId, int count = 1);
     Task<bool> CanUseTimeWindows(int workspaceId);
     Task<bool> CanUseCustomerSatisfactionReport(int workspaceId);
