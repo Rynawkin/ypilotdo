@@ -1,9 +1,19 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { XCircle } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const PaymentFailed: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isSignupFlow = searchParams.get('flow') === 'signup';
+
+  useEffect(() => {
+    if (isSignupFlow) {
+      localStorage.removeItem('signupPaymentTransactionId');
+      localStorage.removeItem('signupPaymentToken');
+      localStorage.removeItem('signupPaymentPlan');
+    }
+  }, [isSignupFlow]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
@@ -17,10 +27,10 @@ const PaymentFailed: React.FC = () => {
         </p>
         <div className="flex items-center justify-center gap-3">
           <button
-            onClick={() => navigate('/settings')}
+            onClick={() => navigate(isSignupFlow ? '/signup' : '/settings')}
             className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
           >
-            Ayarlara Dön
+            {isSignupFlow ? 'Kayıta Dön' : 'Ayarlara Dön'}
           </button>
           <button
             onClick={() => navigate(-1)}

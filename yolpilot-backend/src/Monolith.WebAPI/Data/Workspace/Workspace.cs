@@ -29,7 +29,7 @@ public class Workspace : BaseEntity
         CostPerKm = null;
         CostPerHour = null;
         DefaultServiceTime = TimeSpan.FromMinutes(15);
-        MaximumDriverCount = 10;
+        MaximumDriverCount = 2;
         Active = true;
         
         // YENİ: Plan defaults - Start with Trial
@@ -200,6 +200,23 @@ public class Workspace : BaseEntity
     {
         PlanType = newPlan;
         PlanStartDate = DateTime.UtcNow;
+        if (newPlan != PlanType.Trial)
+        {
+            TrialEndDate = DateTime.UtcNow;
+            IsTrialUsed = true;
+        }
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void SyncLegacyDriverLimit(int? maxDrivers)
+    {
+        MaximumDriverCount = maxDrivers ?? int.MaxValue;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void SetActive(bool active)
+    {
+        Active = active;
         UpdatedAt = DateTime.UtcNow;
     }
     

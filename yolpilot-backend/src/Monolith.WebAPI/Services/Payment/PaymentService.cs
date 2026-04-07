@@ -145,6 +145,24 @@ public class PaymentService : IPaymentService
         {
             result.ProviderData["workspace_id"] = request.WorkspaceId;
         }
+
+        if (!string.IsNullOrWhiteSpace(request.SuccessUrl) && !result.ProviderData.ContainsKey("success_url"))
+        {
+            result.ProviderData["success_url"] = request.SuccessUrl;
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.FailUrl) && !result.ProviderData.ContainsKey("fail_url"))
+        {
+            result.ProviderData["fail_url"] = request.FailUrl;
+        }
+
+        foreach (var kvp in request.ExtraData)
+        {
+            if (!result.ProviderData.ContainsKey(kvp.Key))
+            {
+                result.ProviderData[kvp.Key] = kvp.Value;
+            }
+        }
     }
 
     private static Dictionary<string, object> MergeProviderData(string? existingJson, Dictionary<string, object> incoming)

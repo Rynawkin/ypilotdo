@@ -181,6 +181,38 @@ public class SubscriptionService : ISubscriptionService
         }
     }
 
+    public async Task EnsureUserLimitNotExceeded(int workspaceId, int additionalCount = 1, bool includePendingInvites = false)
+    {
+        var workspace = await _context.Workspaces
+            .AsNoTracking()
+            .FirstOrDefaultAsync(w => w.Id == workspaceId);
+
+        if (workspace == null)
+            throw new ApiException("Workspace not found", 404);
+
+        var limits = GetPlanLimits(workspace.PlanType);
+        if (!limits.MaxUsers.HasValue)
+            return;
+
+        var currentUserCount = await _context.Users
+            .CountAsync(u => u.WorkspaceId == workspaceId);
+
+        if (includePendingInvites)
+        {
+            var pendingInviteCount = await _context.TempMembers
+                .CountAsync(t => t.WorkspaceId == workspaceId && !t.IsSaved);
+
+            currentUserCount += pendingInviteCount;
+        }
+
+        if (currentUserCount + additionalCount > limits.MaxUsers.Value)
+        {
+            throw new ApiException(
+                $"{workspace.PlanType} planÄ± en fazla {limits.MaxUsers.Value} kullanÄ±cÄ± destekler.",
+                400);
+        }
+    }
+
     public async Task EnsureVehicleLimitNotExceeded(int workspaceId, int additionalCount = 1)
     {
         var workspace = await _context.Workspaces
@@ -314,7 +346,7 @@ public class SubscriptionService : ISubscriptionService
         
         if (workspace == null) return false;
         
-        return workspace.PlanType == PlanType.Business;
+        return GetPlanLimits(workspace.PlanType).HasCustomReports;
     }
 
     public async Task<bool> CanSendWhatsApp(int workspaceId)

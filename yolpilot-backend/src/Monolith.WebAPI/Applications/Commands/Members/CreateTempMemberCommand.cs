@@ -6,6 +6,7 @@ using Monolith.WebAPI.Data.Members;
 using Monolith.WebAPI.Data.Workspace;
 using Monolith.WebAPI.Infrastructure;
 using Monolith.WebAPI.Services.Members;
+using Monolith.WebAPI.Services.Subscription;
 using Monolith.WebAPI.Services.Workspace;
 
 namespace Monolith.WebAPI.Applications.Commands.Members;
@@ -39,11 +40,17 @@ public class AddMemberCommandValidator : AbstractValidator<CreateTempMemberComma
     }
 }
 
-public class AddMemberCommandHandler(AppDbContext context, IUserService userService, IWorkspaceService workspaceService)
+public class AddMemberCommandHandler(
+    AppDbContext context,
+    IUserService userService,
+    IWorkspaceService workspaceService,
+    ISubscriptionService subscriptionService)
     : BaseAuthenticatedCommandHandler<CreateTempMemberCommand, string>(userService)
 {
     override protected async Task<string> HandleCommand(CreateTempMemberCommand request, CancellationToken cancellationToken)
     {
+        await subscriptionService.EnsureUserLimitNotExceeded(User.WorkspaceId, includePendingInvites: true);
+
         if (request.Roles.Contains(MemberRole.Driver))
             await workspaceService.ThrowExceptionIfReachedToMaxDriverCountAsync(User.WorkspaceId, cancellationToken);
 

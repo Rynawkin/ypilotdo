@@ -125,6 +125,8 @@ public class UpgradePlanCommandHandler : BaseAuthenticatedCommandHandler<Upgrade
             if (result.Status == PaymentStatus.Completed)
             {
                 workspace.UpdatePlan(request.NewPlanType);
+                workspace.SyncLegacyDriverLimit(planLimits.MaxDrivers);
+                workspace.SetActive(true);
                 invoice.Status = InvoiceStatus.Paid;
                 invoice.PaidDate = DateTime.UtcNow;
                 await _context.SaveChangesAsync();

@@ -7,6 +7,7 @@ using Monolith.WebAPI.Data;
 using Monolith.WebAPI.Data.Members;
 using Monolith.WebAPI.Infrastructure;
 using Monolith.WebAPI.Services.Members;
+using Monolith.WebAPI.Services.Subscription;
 using Monolith.WebAPI.Services.Workspace;
 
 namespace Monolith.WebAPI.Applications.Commands.Members;
@@ -30,7 +31,8 @@ public class SaveMemberCommandHandler(
     AppDbContext context,
     UserManager<ApplicationUser> userManager,
     ITokenService tokenService,
-    IWorkspaceService workspaceService)
+    IWorkspaceService workspaceService,
+    ISubscriptionService subscriptionService)
     : IRequestHandler<SaveMemberCommand, TokenModel>
 {
     public async Task<TokenModel> Handle(SaveMemberCommand request, CancellationToken cancellationToken)
@@ -40,6 +42,8 @@ public class SaveMemberCommandHandler(
             .FirstOrDefaultAsync(x => x.Token == request.Token && !x.IsSaved, cancellationToken: cancellationToken);
         if (tempMember == null)
             throw new ApiException("Token is invalid", 400);
+
+        await subscriptionService.EnsureUserLimitNotExceeded(tempMember.WorkspaceId);
         
         if (tempMember.Roles.Contains((int)MemberRole.Driver))
             await workspaceService.ThrowExceptionIfReachedToMaxDriverCountAsync(tempMember.WorkspaceId, cancellationToken);

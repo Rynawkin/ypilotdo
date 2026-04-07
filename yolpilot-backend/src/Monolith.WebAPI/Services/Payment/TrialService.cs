@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Monolith.WebAPI.Data;
 using Monolith.WebAPI.Data.Workspace;
+using Monolith.WebAPI.Services.Subscription;
 
 namespace Monolith.WebAPI.Services.Payment;
 
@@ -19,6 +20,7 @@ public class TrialService : ITrialService
     private readonly AppDbContext _context;
     private readonly ILogger<TrialService> _logger;
     private readonly IConfiguration _configuration;
+    private readonly ISubscriptionService _subscriptionService;
 
     // Trial Limits - appsettings.json'dan okunacak
     private readonly int _trialDays;
@@ -27,11 +29,16 @@ public class TrialService : ITrialService
     private readonly int _maxDrivers;
     private readonly int _maxVehicles;
 
-    public TrialService(AppDbContext context, ILogger<TrialService> logger, IConfiguration configuration)
+    public TrialService(
+        AppDbContext context,
+        ILogger<TrialService> logger,
+        IConfiguration configuration,
+        ISubscriptionService subscriptionService)
     {
         _context = context;
         _logger = logger;
         _configuration = configuration;
+        _subscriptionService = subscriptionService;
 
         _trialDays = _configuration.GetValue<int>("Payment:TrialDays", 14);
         _maxStops = _configuration.GetValue<int>("Payment:TrialLimits:MaxStops", 100);
@@ -81,6 +88,8 @@ public class TrialService : ITrialService
         }
 
         workspace.PlanType = PlanType.Trial;
+        workspace.SyncLegacyDriverLimit(_subscriptionService.GetPlanLimits(PlanType.Trial).MaxDrivers);
+        workspace.SetActive(true);
         workspace.TrialStartDate = DateTime.UtcNow;
         workspace.TrialEndDate = DateTime.UtcNow.AddDays(_trialDays);
         workspace.IsTrialUsed = true;

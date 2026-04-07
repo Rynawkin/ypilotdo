@@ -1,6 +1,7 @@
 // src/services/payment.service.ts
 
 import { api } from './api';
+import type { TokenResponse } from './auth.service';
 
 // Payment Types
 export type PlanType = 'Trial' | 'Starter' | 'Growth' | 'Professional' | 'Business';
@@ -10,6 +11,20 @@ export interface UpgradePlanRequest {
   customerEmail: string;
   customerName: string;
   customerPhone: string;
+  referrerUrl?: string;
+  card: PaymentCard;
+  successUrl?: string;
+  failUrl?: string;
+}
+
+export interface SignupPaymentRequest {
+  planType: PlanType;
+  workspaceName: string;
+  workspaceEmail: string;
+  workspacePhone: string;
+  adminFullName: string;
+  adminEmail: string;
+  adminPassword: string;
   referrerUrl?: string;
   card: PaymentCard;
   successUrl?: string;
@@ -30,6 +45,20 @@ export interface UpgradePlanResponse {
   paymentUrl?: string;
   transactionId?: string;
   errorMessage?: string;
+}
+
+export interface SignupPaymentResponse extends UpgradePlanResponse {
+  signupToken?: string;
+  isCompleted?: boolean;
+  auth?: TokenResponse;
+}
+
+export interface SignupPaymentStatusResponse {
+  isSuccess: boolean;
+  isCompleted: boolean;
+  status: 'Pending' | 'Processing' | 'Completed' | 'Failed' | 'Cancelled' | 'Refunded';
+  errorMessage?: string;
+  auth?: TokenResponse;
 }
 
 export interface StartTrialResponse {
@@ -123,6 +152,19 @@ class PaymentService {
       console.error('Initiate plan upgrade error:', error);
       throw error;
     }
+  }
+
+  async initiateSignupPayment(request: SignupPaymentRequest): Promise<SignupPaymentResponse> {
+    const response = await api.post('/payment/initiate-signup', request);
+    return response.data;
+  }
+
+  async getSignupPaymentStatus(transactionId: string, signupToken: string): Promise<SignupPaymentStatusResponse> {
+    const response = await api.post('/payment/signup/status', {
+      transactionId,
+      signupToken
+    });
+    return response.data;
   }
 
   async getInvoices(): Promise<InvoiceResponse[]> {

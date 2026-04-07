@@ -1,38 +1,87 @@
-// src/pages/Signup.tsx
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { 
-  Building2, Mail, Lock, Phone, User, Loader2, 
-  AlertCircle, CheckCircle, ArrowRight, Truck, Info, X
-} from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { ArrowRight, Building2, CheckCircle, CreditCard, Info, Loader2, Lock, Mail, Phone, User } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { authService } from '@/services/auth.service';
+import { paymentService, type PlanType } from '@/services/payment.service';
 
 interface SignupForm {
-  // Workspace bilgileri
   workspaceName: string;
   workspaceEmail: string;
   workspacePhone: string;
-  
-  // Admin kullanıcı bilgileri
   adminFullName: string;
   adminEmail: string;
   adminPassword: string;
   adminPasswordConfirm: string;
-  
-  // Sözleşmeler
   termsAccepted: boolean;
   privacyAccepted: boolean;
 }
 
+interface CardForm {
+  cardHolderName: string;
+  cardNumber: string;
+  expiryMonth: string;
+  expiryYear: string;
+  cvv: string;
+  cardHolderPhone: string;
+}
+
+const planCards: Array<{
+  id: PlanType;
+  name: string;
+  price: string;
+  period: string;
+  description: string;
+  features: string[];
+  popular?: boolean;
+}> = [
+  {
+    id: 'Trial',
+    name: 'Deneme',
+    price: '0₺',
+    period: '14 gün',
+    description: 'Önce sistemi görün, sonra planınızı yükseltin.',
+    features: ['2 sürücü', '1 araç', '50 müşteri', '100 durak/ay', '25 WhatsApp mesajı']
+  },
+  {
+    id: 'Starter',
+    name: 'Başlangıç',
+    price: '850₺',
+    period: '/ay',
+    description: 'Küçük ekipler için temel operasyon paketi.',
+    features: ['3 sürücü', '3 araç', '100 müşteri', '2 kullanıcı', '500 durak/ay']
+  },
+  {
+    id: 'Growth',
+    name: 'Büyüme',
+    price: '1.250₺',
+    period: '/ay',
+    description: 'Gerçek operasyon ekibi için en dengeli paket.',
+    features: ['Sınırsız sürücü/araç', '1.000 müşteri', '10 kullanıcı', 'Zaman pencereleri', '100 WhatsApp'],
+    popular: true
+  },
+  {
+    id: 'Professional',
+    name: 'Profesyonel',
+    price: '2.400₺',
+    period: '/ay',
+    description: 'Yüksek hacimli ekipler için gelişmiş görünürlük.',
+    features: ['2.000 durak/ay', 'Memnuniyet raporları', '10 kullanıcı', 'Gelişmiş operasyon görünümü']
+  },
+  {
+    id: 'Business',
+    name: 'İşletme',
+    price: '5.900₺',
+    period: '/ay',
+    description: 'Büyük ekipler ve özel rapor ihtiyacı olanlar için.',
+    features: ['50 kullanıcı', '5.000 durak/ay', '500 WhatsApp', 'Özel raporlar', 'Uzun arşiv süresi']
+  }
+];
+
 const Signup: React.FC = () => {
-  const navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [selectedPlan, setSelectedPlan] = useState<PlanType>('Trial');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [passwordErrors, setPasswordErrors] = useState<string[]>([]);
-  const [showTermsModal, setShowTermsModal] = useState(false);
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
-  
   const [formData, setFormData] = useState<SignupForm>({
     workspaceName: '',
     workspaceEmail: '',
@@ -44,777 +93,399 @@ const Signup: React.FC = () => {
     termsAccepted: false,
     privacyAccepted: false
   });
+  const [cardData, setCardData] = useState<CardForm>({
+    cardHolderName: '',
+    cardNumber: '',
+    expiryMonth: '',
+    expiryYear: '',
+    cvv: '',
+    cardHolderPhone: ''
+  });
 
-  const plans = [
-    {
-      id: 'trial',
-      name: 'Deneme',
-      price: '0₺',
-      period: '14 gün',
-      features: ['2 Sürücü', '1 Araç', '100 Durak/Ay', '25 WhatsApp Mesajı', 'Rota Şablonları'],
-      popular: false
-    },
-    {
-      id: 'starter',
-      name: 'Başlangıç',
-      price: '850₺',
-      period: '/ay',
-      features: ['3 Sürücü', '3 Araç', '500 Durak/Ay', 'Temel Özellikler'],
-      popular: false
-    },
-    {
-      id: 'growth',
-      name: 'Büyüme',
-      price: '1.250₺',
-      period: '/ay',
-      features: ['Sınırsız Sürücü', 'Sınırsız Araç', '500 Durak/Ay', '100 WhatsApp', 'Zaman Pencereleri'],
-      popular: true
-    },
-    {
-      id: 'professional',
-      name: 'Profesyonel',
-      price: '2.400₺',
-      period: '/ay',
-      features: ['Sınırsız Sürücü/Araç', '2.000 Durak/Ay', 'Müşteri Memnuniyeti Raporu'],
-      popular: false
-    },
-    {
-      id: 'business',
-      name: 'İşletme',
-      price: '5.900₺',
-      period: '/ay',
-      features: ['Sınırsız Her Şey', '5.000 Durak/Ay', '500 WhatsApp', 'Özel Raporlar', 'API Erişimi'],
-      popular: false
-    }
-  ];
+  const passwordErrors = useMemo(() => validatePassword(formData.adminPassword), [formData.adminPassword]);
+  const requiresPayment = selectedPlan !== 'Trial';
 
-  // Şifre validation fonksiyonu
-  const validatePassword = (password: string): string[] => {
-    const errors: string[] = [];
-    
-    if (password.length < 6) {
-      errors.push('En az 6 karakter olmalı');
-    }
-    if (!/[A-Z]/.test(password)) {
-      errors.push('En az 1 büyük harf içermeli');
-    }
-    if (!/[a-z]/.test(password)) {
-      errors.push('En az 1 küçük harf içermeli');
-    }
-    if (!/[0-9]/.test(password)) {
-      errors.push('En az 1 rakam içermeli');
-    }
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-      errors.push('En az 1 özel karakter içermeli (!@#$% vb.)');
-    }
-    
-    return errors;
-  };
-
-  // Email validation fonksiyonu
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  // Türkiye telefon validation fonksiyonu
-  const validatePhone = (phone: string): boolean => {
-    // Sadece rakam, boşluk, tire, parantez, + işareti kabul et
-    const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-    if (!phoneRegex.test(phone)) return false;
-    
-    // Rakamları çıkar
-    const numbersOnly = phone.replace(/[^\d]/g, '');
-    
-    // Türkiye telefon formatları:
-    // 5xxxxxxxxx (10 rakam)
-    // 905xxxxxxxxx (12 rakam, +90 ile)
-    // 05xxxxxxxxx (11 rakam)
-    if (numbersOnly.length === 10 && numbersOnly.startsWith('5')) {
-      return true; // 5xx xxx xx xx
-    }
-    if (numbersOnly.length === 11 && numbersOnly.startsWith('05')) {
-      return true; // 05xx xxx xx xx
-    }
-    if (numbersOnly.length === 12 && numbersOnly.startsWith('905')) {
-      return true; // +90 5xx xxx xx xx
-    }
-    
-    return false;
-  };
+  const selectedPlanInfo = planCards.find(plan => plan.id === selectedPlan)!;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    
-    // Şifre değiştiğinde validation yap
-    if (name === 'adminPassword') {
-      const errors = validatePassword(value);
-      setPasswordErrors(errors);
-    }
-    
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
   };
 
-  const validateStep = (stepNum: number): boolean => {
-    switch(stepNum) {
-      case 1:
-        return !!(
-          formData.workspaceName && 
-          formData.workspaceEmail && 
-          validateEmail(formData.workspaceEmail) &&
-          formData.workspacePhone && 
-          validatePhone(formData.workspacePhone)
-        );
-      case 2:
-        const passwordValidation = validatePassword(formData.adminPassword);
-        return !!(
-          formData.adminFullName && 
-          formData.adminEmail && 
-          validateEmail(formData.adminEmail) &&
-          formData.adminPassword && 
-          passwordValidation.length === 0 &&
-          formData.adminPasswordConfirm &&
-          formData.adminPassword === formData.adminPasswordConfirm
-        );
-      case 3:
-        return formData.termsAccepted && formData.privacyAccepted;
-      default:
-        return false;
+  const handleCardChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCardData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const validateStep = (stepNumber: number) => {
+    if (stepNumber === 1) {
+      return (
+        formData.workspaceName.trim().length > 1 &&
+        validateEmail(formData.workspaceEmail) &&
+        validatePhone(formData.workspacePhone)
+      );
     }
-  };
 
-  // Modal handler functions
-  const handleTermsAccept = () => {
-    setFormData(prev => ({ ...prev, termsAccepted: true }));
-    setShowTermsModal(false);
-  };
-
-  const handlePrivacyAccept = () => {
-    setFormData(prev => ({ ...prev, privacyAccepted: true }));
-    setShowPrivacyModal(false);
-  };
-
-  // ESC key handler for modals
-  React.useEffect(() => {
-    const handleEsc = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setShowTermsModal(false);
-        setShowPrivacyModal(false);
-      }
-    };
-
-    if (showTermsModal || showPrivacyModal) {
-      document.addEventListener('keydown', handleEsc);
-      return () => document.removeEventListener('keydown', handleEsc);
+    if (stepNumber === 2) {
+      return (
+        formData.adminFullName.trim().length > 1 &&
+        validateEmail(formData.adminEmail) &&
+        passwordErrors.length === 0 &&
+        formData.adminPassword === formData.adminPasswordConfirm &&
+        formData.adminPasswordConfirm.length > 0
+      );
     }
-  }, [showTermsModal, showPrivacyModal]);
+
+    const legalAccepted = formData.termsAccepted && formData.privacyAccepted;
+    if (!requiresPayment) {
+      return legalAccepted;
+    }
+
+    return (
+      legalAccepted &&
+      !!(cardData.cardHolderName || formData.adminFullName) &&
+      cardData.cardNumber.replace(/\s/g, '').length >= 16 &&
+      cardData.expiryMonth.length >= 2 &&
+      cardData.expiryYear.length >= 2 &&
+      cardData.cvv.length >= 3
+    );
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
     setError('');
 
     try {
-      // Gerçek API çağrısı - tüm firma bilgilerini gönder
-      const response = await authService.register(
-        formData.adminEmail,
-        formData.adminPassword,
-        formData.adminFullName,
-        formData.workspaceName,
-        formData.workspaceEmail,
-        formData.workspacePhone
-      );
-      
-      console.log('Register successful:', response);
-      
-      // Token ve user bilgileri authService.register içinde zaten localStorage'a kaydedildi
-      // Başarılı kayıt sonrası direkt dashboard'a yönlendir (login sayfasına değil!)
-      window.location.href = '/dashboard';
-      
-    } catch (err: any) {
-      console.error('Register error:', err);
-      
-      // API interceptor'dan gelen kullanıcı dostu mesajı kullan
-      let errorMessage = err.userFriendlyMessage || 'Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.';
-      
-      // Fallback: eski error handling mantığı
-      if (!err.userFriendlyMessage) {
-        if (err.response?.data?.message) {
-          errorMessage = err.response.data.message;
-        } else if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
-          errorMessage = err.response.data.errors.join(', ');
-        } else if (err.message) {
-          errorMessage = err.message;
-        }
+      if (!requiresPayment) {
+        await authService.register(
+          formData.adminEmail,
+          formData.adminPassword,
+          formData.adminFullName,
+          formData.workspaceName,
+          formData.workspaceEmail,
+          formData.workspacePhone
+        );
+
+        window.location.href = '/dashboard';
+        return;
       }
-      
-      setError(errorMessage);
+
+      const result = await paymentService.initiateSignupPayment({
+        planType: selectedPlan,
+        workspaceName: formData.workspaceName,
+        workspaceEmail: formData.workspaceEmail,
+        workspacePhone: formData.workspacePhone,
+        adminFullName: formData.adminFullName,
+        adminEmail: formData.adminEmail,
+        adminPassword: formData.adminPassword,
+        referrerUrl: window.location.href,
+        successUrl: `${window.location.origin}/payment/success?flow=signup`,
+        failUrl: `${window.location.origin}/payment/failed?flow=signup`,
+        card: {
+          cardHolderName: cardData.cardHolderName || formData.adminFullName,
+          cardNumber: cardData.cardNumber,
+          expiryMonth: cardData.expiryMonth,
+          expiryYear: cardData.expiryYear,
+          cvv: cardData.cvv,
+          cardHolderPhone: cardData.cardHolderPhone || formData.workspacePhone
+        }
+      });
+
+      if (!result.isSuccess || !result.paymentUrl || !result.transactionId || !result.signupToken) {
+        throw new Error(result.errorMessage || 'Ödeme başlatılamadı');
+      }
+
+      localStorage.setItem('signupPaymentTransactionId', result.transactionId);
+      localStorage.setItem('signupPaymentToken', result.signupToken);
+      localStorage.setItem('signupPaymentPlan', selectedPlan);
+
+      window.location.href = result.paymentUrl;
+    } catch (err: any) {
+      setError(err.userFriendlyMessage || err.response?.data?.message || err.message || 'Kayıt sırasında bir hata oluştu');
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center">
-              <img 
-                src="/yolpilot-logo.png" 
-                alt="YolPilot" 
-                className="h-10 w-auto"
-              />
-            </Link>
-            <Link to="/login" className="text-sm text-gray-600 hover:text-gray-900">
-              Zaten hesabınız var mı? <span className="text-blue-600">Giriş yapın</span>
-            </Link>
-          </div>
+    <div className="min-h-screen bg-slate-50">
+      <div className="border-b bg-white">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+          <Link to="/" className="flex items-center">
+            <img src="/yolpilot-logo.png" alt="YolPilot" className="h-10 w-auto" />
+          </Link>
+          <Link to="/login" className="text-sm text-slate-600 hover:text-slate-900">
+            Zaten hesabınız var mı? <span className="font-medium text-blue-600">Giriş yapın</span>
+          </Link>
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="bg-white border-b">
-        <div className="max-w-3xl mx-auto px-4 py-4">
+      <div className="border-b bg-white">
+        <div className="mx-auto max-w-4xl px-4 py-5 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center">
-                <div className={`
-                  w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium
-                  ${step >= i ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}
-                `}>
-                  {step > i ? <CheckCircle className="w-5 h-5" /> : i}
+            {[1, 2, 3].map(index => (
+              <div key={index} className="flex items-center">
+                <div className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold ${step >= index ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-600'}`}>
+                  {index}
                 </div>
-                {i < 3 && (
-                  <div className={`w-24 lg:w-32 h-1 ${step > i ? 'bg-blue-600' : 'bg-gray-200'}`} />
-                )}
+                {index < 3 && <div className={`h-1 w-20 sm:w-28 ${step > index ? 'bg-blue-600' : 'bg-slate-200'}`} />}
               </div>
             ))}
           </div>
-          <div className="flex justify-between mt-2">
-            <span className="text-xs text-gray-600">Firma Bilgileri</span>
-            <span className="text-xs text-gray-600">Yönetici Hesabı</span>
-            <span className="text-xs text-gray-600">Deneme Başlangıcı</span>
+          <div className="mt-2 flex justify-between text-xs text-slate-500">
+            <span>Firma</span>
+            <span>Yönetici</span>
+            <span>Plan ve Ödeme</span>
           </div>
         </div>
       </div>
 
-      {/* Form Content */}
-      <div className="max-w-3xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+      <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start">
-              <AlertCircle className="w-5 h-5 text-red-600 mr-2 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-red-800">{error}</p>
+            <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {error}
             </div>
           )}
 
-          {/* Step 1: Firma Bilgileri */}
           {step === 1 && (
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Firma Bilgileri</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Firma Adı *
-                  </label>
-                  <div className="relative">
-                    <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      name="workspaceName"
-                      value={formData.workspaceName}
-                      onChange={handleInputChange}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Örn: ABC Lojistik"
-                    />
-                  </div>
-                </div>
+            <section className="space-y-6">
+              <div>
+                <h1 className="text-2xl font-semibold text-slate-950">Firma Bilgileri</h1>
+                <p className="mt-2 text-sm text-slate-600">Önce operasyonu yönetecek şirket hesabını oluşturalım.</p>
+              </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Firma E-posta *
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="email"
-                      name="workspaceEmail"
-                      value={formData.workspaceEmail}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        formData.workspaceEmail && !validateEmail(formData.workspaceEmail) 
-                          ? 'border-red-500' 
-                          : 'border-gray-300'
-                      }`}
-                      placeholder="info@firma.com"
-                    />
-                  </div>
-                  {formData.workspaceEmail && !validateEmail(formData.workspaceEmail) && (
-                    <p className="text-xs text-red-600 mt-1">Geçerli bir email adresi giriniz</p>
-                  )}
-                </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Firma Adı *" icon={<Building2 className="h-5 w-5" />}>
+                  <input name="workspaceName" value={formData.workspaceName} onChange={handleInputChange} className={inputClassName} placeholder="Örn: ABC Lojistik" />
+                </Field>
+                <Field label="Firma E-posta *" icon={<Mail className="h-5 w-5" />}>
+                  <input name="workspaceEmail" type="email" value={formData.workspaceEmail} onChange={handleInputChange} className={inputClassName} placeholder="info@firma.com" />
+                </Field>
+                <Field label="Firma Telefon *" icon={<Phone className="h-5 w-5" />}>
+                  <input name="workspacePhone" value={formData.workspacePhone} onChange={handleInputChange} className={inputClassName} placeholder="0532 123 45 67" />
+                </Field>
+              </div>
+            </section>
+          )}
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Firma Telefon *
-                  </label>
-                  <div className="relative">
-                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="tel"
-                      name="workspacePhone"
-                      value={formData.workspacePhone}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        formData.workspacePhone && !validatePhone(formData.workspacePhone) 
-                          ? 'border-red-500' 
-                          : 'border-gray-300'
-                      }`}
-                      placeholder="0532 123 45 67"
-                    />
-                  </div>
-                  {formData.workspacePhone && !validatePhone(formData.workspacePhone) && (
-                    <p className="text-xs text-red-600 mt-1">Geçerli bir Türkiye telefon numarası giriniz (örn: 0532 123 45 67)</p>
-                  )}
+          {step === 2 && (
+            <section className="space-y-6">
+              <div>
+                <h1 className="text-2xl font-semibold text-slate-950">Yönetici Hesabı</h1>
+                <p className="mt-2 text-sm text-slate-600">İlk giriş yapacak yönetici kullanıcının bilgilerini girin.</p>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field label="Ad Soyad *" icon={<User className="h-5 w-5" />}>
+                  <input name="adminFullName" value={formData.adminFullName} onChange={handleInputChange} className={inputClassName} placeholder="Adınız Soyadınız" />
+                </Field>
+                <Field label="Yönetici E-posta *" icon={<Mail className="h-5 w-5" />}>
+                  <input name="adminEmail" type="email" value={formData.adminEmail} onChange={handleInputChange} className={inputClassName} placeholder="yonetici@firma.com" />
+                </Field>
+                <Field label="Şifre *" icon={<Lock className="h-5 w-5" />}>
+                  <input name="adminPassword" type="password" value={formData.adminPassword} onChange={handleInputChange} className={inputClassName} placeholder="••••••••" />
+                </Field>
+                <Field label="Şifre Tekrar *" icon={<Lock className="h-5 w-5" />}>
+                  <input name="adminPasswordConfirm" type="password" value={formData.adminPasswordConfirm} onChange={handleInputChange} className={inputClassName} placeholder="••••••••" />
+                </Field>
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-700">
+                  <Info className="h-4 w-4" />
+                  Şifre gereksinimleri
+                </div>
+                <div className="grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
+                  <PasswordRule ok={formData.adminPassword.length >= 6} text="En az 6 karakter" />
+                  <PasswordRule ok={/[A-Z]/.test(formData.adminPassword)} text="En az 1 büyük harf" />
+                  <PasswordRule ok={/[a-z]/.test(formData.adminPassword)} text="En az 1 küçük harf" />
+                  <PasswordRule ok={/[0-9]/.test(formData.adminPassword)} text="En az 1 rakam" />
+                  <PasswordRule ok={/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(formData.adminPassword)} text="En az 1 özel karakter" />
+                  <PasswordRule ok={formData.adminPassword === formData.adminPasswordConfirm && formData.adminPasswordConfirm.length > 0} text="Şifreler eşleşmeli" />
                 </div>
               </div>
-            </div>
+            </section>
           )}
 
-          {/* Step 2: Yönetici Hesabı */}
-          {step === 2 && (
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Yönetici Hesabı</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Ad Soyad *
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      name="adminFullName"
-                      value={formData.adminFullName}
-                      onChange={handleInputChange}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Adınız Soyadınız"
-                    />
-                  </div>
-                </div>
+          {step === 3 && (
+            <section className="space-y-6">
+              <div>
+                <h1 className="text-2xl font-semibold text-slate-950">Plan Seçimi</h1>
+                <p className="mt-2 text-sm text-slate-600">
+                  Deneme ile başlayabilir veya ödemeyi şimdi yaparak doğrudan seçtiğiniz planla açabilirsiniz.
+                </p>
+              </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    E-posta *
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="email"
-                      name="adminEmail"
-                      value={formData.adminEmail}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        formData.adminEmail && !validateEmail(formData.adminEmail) 
-                          ? 'border-red-500' 
-                          : 'border-gray-300'
-                      }`}
-                      placeholder="admin@firma.com"
-                    />
-                  </div>
-                  {formData.adminEmail && !validateEmail(formData.adminEmail) && (
-                    <p className="text-xs text-red-600 mt-1">Geçerli bir email adresi giriniz</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Şifre *
-                  </label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="password"
-                      name="adminPassword"
-                      value={formData.adminPassword}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        formData.adminPassword && passwordErrors.length > 0 
-                          ? 'border-red-500' 
-                          : 'border-gray-300'
-                      }`}
-                      placeholder="••••••••"
-                    />
-                  </div>
-                  
-                  {/* Şifre kuralları */}
-                  {formData.adminPassword && (
-                    <div className="mt-2 p-3 bg-gray-50 rounded-lg">
-                      <div className="flex items-start space-x-2">
-                        <Info className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" />
-                        <div className="text-xs space-y-1">
-                          <p className="font-medium text-gray-700 mb-1">Şifre gereksinimleri:</p>
-                          <div className={`flex items-center ${formData.adminPassword.length >= 6 ? 'text-green-600' : 'text-gray-500'}`}>
-                            {formData.adminPassword.length >= 6 ? 
-                              <CheckCircle className="w-3 h-3 mr-1" /> : 
-                              <div className="w-3 h-3 mr-1 border border-gray-400 rounded-full" />
-                            }
-                            En az 6 karakter
+              <div className="grid gap-4 lg:grid-cols-2">
+                {planCards.map(plan => {
+                  const isSelected = selectedPlan === plan.id;
+                  return (
+                    <button
+                      key={plan.id}
+                      type="button"
+                      onClick={() => setSelectedPlan(plan.id)}
+                      className={`rounded-2xl border p-5 text-left transition ${isSelected ? 'border-blue-500 bg-blue-50 shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300'}`}
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-lg font-semibold text-slate-950">{plan.name}</h3>
+                            {plan.popular && <span className="rounded-full bg-blue-600 px-2 py-1 text-xs font-medium text-white">Önerilen</span>}
                           </div>
-                          <div className={`flex items-center ${/[A-Z]/.test(formData.adminPassword) ? 'text-green-600' : 'text-gray-500'}`}>
-                            {/[A-Z]/.test(formData.adminPassword) ? 
-                              <CheckCircle className="w-3 h-3 mr-1" /> : 
-                              <div className="w-3 h-3 mr-1 border border-gray-400 rounded-full" />
-                            }
-                            En az 1 büyük harf
-                          </div>
-                          <div className={`flex items-center ${/[a-z]/.test(formData.adminPassword) ? 'text-green-600' : 'text-gray-500'}`}>
-                            {/[a-z]/.test(formData.adminPassword) ? 
-                              <CheckCircle className="w-3 h-3 mr-1" /> : 
-                              <div className="w-3 h-3 mr-1 border border-gray-400 rounded-full" />
-                            }
-                            En az 1 küçük harf
-                          </div>
-                          <div className={`flex items-center ${/[0-9]/.test(formData.adminPassword) ? 'text-green-600' : 'text-gray-500'}`}>
-                            {/[0-9]/.test(formData.adminPassword) ? 
-                              <CheckCircle className="w-3 h-3 mr-1" /> : 
-                              <div className="w-3 h-3 mr-1 border border-gray-400 rounded-full" />
-                            }
-                            En az 1 rakam
-                          </div>
-                          <div className={`flex items-center ${/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(formData.adminPassword) ? 'text-green-600' : 'text-gray-500'}`}>
-                            {/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(formData.adminPassword) ? 
-                              <CheckCircle className="w-3 h-3 mr-1" /> : 
-                              <div className="w-3 h-3 mr-1 border border-gray-400 rounded-full" />
-                            }
-                            En az 1 özel karakter (!@#$% vb.)
-                          </div>
+                          <p className="mt-1 text-sm text-slate-600">{plan.description}</p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-2xl font-semibold text-slate-950">{plan.price}</div>
+                          <div className="text-sm text-slate-500">{plan.period}</div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Şifre Tekrar *
-                  </label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="password"
-                      name="adminPasswordConfirm"
-                      value={formData.adminPasswordConfirm}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                        formData.adminPasswordConfirm && formData.adminPassword !== formData.adminPasswordConfirm 
-                          ? 'border-red-500' 
-                          : 'border-gray-300'
-                      }`}
-                      placeholder="••••••••"
-                    />
-                  </div>
-                  {formData.adminPasswordConfirm && formData.adminPassword !== formData.adminPasswordConfirm && (
-                    <p className="text-xs text-red-600 mt-1">Şifreler eşleşmiyor!</p>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Step 3: Deneme Başlangıcı */}
-          {step === 3 && (
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">14 Günlük Deneme ile Başlayın</h2>
-              <p className="mb-6 text-sm leading-6 text-gray-600">
-                Tüm yeni hesaplar güvenli şekilde <strong>Deneme</strong> planı ile açılır.
-                Ücretli planlar hesabınızı oluşturduktan sonra panel içinden ödeme ile etkinleşir.
-              </p>
-              
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 mb-6">
-                {plans.map(plan => (
-                  <div
-                    key={plan.id}
-                    className={`
-                      relative rounded-xl border p-6 transition-all
-                      ${plan.id === 'trial'
-                        ? 'border-blue-600 bg-blue-50 shadow-sm'
-                        : 'border-gray-200 bg-white'}
-                    `}
-                  >
-                    {plan.id === 'trial' ? (
-                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-blue-600 px-3 py-1 text-xs text-white">
-                        Hesabınız bu planla açılır
-                      </span>
-                    ) : plan.popular && (
-                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-3 py-1 rounded-full text-xs">
-                        Daha sonra yükseltebilirsiniz
-                      </span>
-                    )}
-                    <h3 className="font-bold text-lg mb-2">{plan.name}</h3>
-                    <div className="mb-4">
-                      <span className="text-3xl font-bold">{plan.price}</span>
-                      <span className="text-gray-600">{plan.period}</span>
-                    </div>
-                    <ul className="space-y-2">
-                      {plan.features.map((feature, i) => (
-                        <li key={i} className="flex items-center text-sm">
-                          <CheckCircle className="w-4 h-4 text-green-500 mr-2 flex-shrink-0" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+                      <ul className="mt-4 space-y-2 text-sm text-slate-700">
+                        {plan.features.map(feature => (
+                          <li key={feature} className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4 text-green-500" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </button>
+                  );
+                })}
               </div>
 
-              <div className="space-y-3 border-t pt-4">
-                <label className="flex items-start">
-                  <input
-                    type="checkbox"
-                    name="termsAccepted"
-                    checked={formData.termsAccepted}
-                    onChange={handleInputChange}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded mt-0.5"
-                  />
-                  <span className="ml-2 text-sm text-gray-600">
-                    <button 
-                      type="button"
-                      onClick={() => setShowTermsModal(true)}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Kullanım koşullarını
-                    </button> okudum ve kabul ediyorum.
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <div className="text-sm font-medium text-slate-950">Seçilen plan: {selectedPlanInfo.name}</div>
+                    <div className="mt-1 text-sm text-slate-600">
+                      {requiresPayment
+                        ? `Bu plan için ödeme şimdi alınır ve hesabınız ${selectedPlanInfo.name} planıyla açılır.`
+                        : 'Hesabınız 14 günlük deneme ile açılır. Daha sonra panel içinden yükseltebilirsiniz.'}
+                    </div>
+                  </div>
+                  {requiresPayment && <CreditCard className="h-5 w-5 text-slate-500" />}
+                </div>
+              </div>
+
+              {requiresPayment && (
+                <div className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-5 sm:grid-cols-2">
+                  <Field label="Kart Üzerindeki İsim *" icon={<User className="h-5 w-5" />}>
+                    <input name="cardHolderName" value={cardData.cardHolderName} onChange={handleCardChange} className={inputClassName} placeholder={formData.adminFullName || 'Kart üzerindeki isim'} />
+                  </Field>
+                  <Field label="Kart Numarası *" icon={<CreditCard className="h-5 w-5" />}>
+                    <input name="cardNumber" value={cardData.cardNumber} onChange={handleCardChange} className={inputClassName} placeholder="4242 4242 4242 4242" inputMode="numeric" />
+                  </Field>
+                  <Field label="Son Kullanma Ay *" icon={<CreditCard className="h-5 w-5" />}>
+                    <input name="expiryMonth" value={cardData.expiryMonth} onChange={handleCardChange} className={inputClassName} placeholder="MM" inputMode="numeric" />
+                  </Field>
+                  <Field label="Son Kullanma Yıl *" icon={<CreditCard className="h-5 w-5" />}>
+                    <input name="expiryYear" value={cardData.expiryYear} onChange={handleCardChange} className={inputClassName} placeholder="YYYY" inputMode="numeric" />
+                  </Field>
+                  <Field label="CVV *" icon={<Lock className="h-5 w-5" />}>
+                    <input name="cvv" type="password" value={cardData.cvv} onChange={handleCardChange} className={inputClassName} placeholder="123" inputMode="numeric" />
+                  </Field>
+                  <Field label="Kart Sahibi Telefon" icon={<Phone className="h-5 w-5" />}>
+                    <input name="cardHolderPhone" value={cardData.cardHolderPhone} onChange={handleCardChange} className={inputClassName} placeholder={formData.workspacePhone || '5xx xxx xx xx'} />
+                  </Field>
+                </div>
+              )}
+
+              <div className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+                <label className="flex items-start gap-3">
+                  <input type="checkbox" name="termsAccepted" checked={formData.termsAccepted} onChange={handleInputChange} className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600" />
+                  <span>
+                    <Link to="/terms" target="_blank" className="font-medium text-blue-600 hover:underline">Kullanım koşullarını</Link> okudum ve kabul ediyorum.
                   </span>
                 </label>
-
-                <label className="flex items-start">
-                  <input
-                    type="checkbox"
-                    name="privacyAccepted"
-                    checked={formData.privacyAccepted}
-                    onChange={handleInputChange}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded mt-0.5"
-                  />
-                  <span className="ml-2 text-sm text-gray-600">
-                    <button 
-                      type="button"
-                      onClick={() => setShowPrivacyModal(true)}
-                      className="text-blue-600 hover:underline"
-                    >
-                      Gizlilik politikasını
-                    </button> okudum ve kabul ediyorum.
+                <label className="flex items-start gap-3">
+                  <input type="checkbox" name="privacyAccepted" checked={formData.privacyAccepted} onChange={handleInputChange} className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600" />
+                  <span>
+                    <Link to="/privacy" target="_blank" className="font-medium text-blue-600 hover:underline">Gizlilik politikasını</Link> okudum ve kabul ediyorum.
                   </span>
                 </label>
               </div>
-            </div>
+            </section>
           )}
 
-          {/* Buttons */}
-          <div className="flex justify-between mt-8">
-            {step > 1 && (
-              <button
-                onClick={() => setStep(step - 1)}
-                className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
-              >
+          <div className="mt-8 flex items-center justify-between">
+            {step > 1 ? (
+              <button type="button" onClick={() => setStep(step - 1)} className="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
                 Geri
               </button>
-            )}
-            
+            ) : <div />}
+
             {step < 3 ? (
               <button
+                type="button"
                 onClick={() => setStep(step + 1)}
                 disabled={!validateStep(step)}
-                className={`
-                  px-6 py-2 rounded-lg font-medium flex items-center ml-auto
-                  ${validateStep(step)
-                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'}
-                `}
+                className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-300"
               >
                 İleri
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="h-4 w-4" />
               </button>
             ) : (
               <button
+                type="button"
                 onClick={handleSubmit}
                 disabled={loading || !validateStep(3)}
-                className={`
-                  px-6 py-2 rounded-lg font-medium flex items-center ml-auto
-                  ${validateStep(3) && !loading
-                    ? 'bg-green-600 text-white hover:bg-green-700' 
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'}
-                `}
+                className="inline-flex items-center gap-2 rounded-xl bg-green-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-slate-300"
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Hesap oluşturuluyor...
-                  </>
-                ) : (
-                  <>
-                    Hesabı Oluştur
-                    <CheckCircle className="w-4 h-4 ml-2" />
-                  </>
-                )}
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle className="h-4 w-4" />}
+                {loading ? 'İşleniyor...' : requiresPayment ? 'Ödemeye Geç ve Hesabı Aç' : 'Hesabı Oluştur'}
               </button>
             )}
           </div>
         </div>
       </div>
-
-      {/* Terms Modal */}
-      {showTermsModal && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-          onClick={() => setShowTermsModal(false)}
-        >
-          <div 
-            className="bg-white rounded-lg max-w-2xl max-h-[80vh] w-full mx-4 overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between p-6 border-b">
-              <h3 className="text-lg font-semibold">Kullanım Koşulları</h3>
-              <button
-                onClick={() => setShowTermsModal(false)}
-                className="p-2 hover:bg-gray-100 rounded-lg"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="p-6 overflow-y-auto max-h-[50vh]">
-              <div className="space-y-4 text-gray-700">
-                <h4 className="font-semibold">1. Hizmet Tanımı</h4>
-                <p>
-                  RotaApp, araç rota planlaması ve yönetimi hizmeti sunan bir yazılım platformudur. 
-                  Bu platform üzerinden araç rotalarınızı optimize edebilir, sürücülerinizi takip edebilir 
-                  ve müşterilerinize daha iyi hizmet verebilirsiniz.
-                </p>
-                
-                <h4 className="font-semibold">2. Kullanım Şartları</h4>
-                <p>
-                  Bu hizmeti kullanarak, yasal düzenlemelere uygun hareket etmeyi ve platformu 
-                  sadece meşru amaçlar için kullanmayı kabul etmektesiniz. Hizmetin kötüye kullanılması 
-                  durumunda hesabınız askıya alınabilir veya kapatılabilir.
-                </p>
-                
-                <h4 className="font-semibold">3. Veri Sorumluluğu</h4>
-                <p>
-                  Sisteme girdiğiniz veriler sizin sorumluluğunuzdadır. Müşteri bilgileri, araç bilgileri 
-                  ve diğer operasyonel verilerin doğruluğu ve güncelliği size aittir.
-                </p>
-                
-                <h4 className="font-semibold">4. Fiyatlandırma ve Ödemeler</h4>
-                <p>
-                  Abonelik ücretleri seçtiğiniz pakete göre belirlenir. Ödemeler aylık olarak tahsil edilir. 
-                  Fiyat değişiklikleri önceden bildirilir.
-                </p>
-                
-                <h4 className="font-semibold">5. Hizmet Kesintileri</h4>
-                <p>
-                  Bakım ve güncellemeler nedeniyle kısa süreli hizmet kesintileri yaşanabilir. 
-                  Bu durumlar önceden duyurulmaya çalışılır.
-                </p>
-                
-                <h4 className="font-semibold">6. Sorumluluk Sınırlaması</h4>
-                <p>
-                  RotaApp, hizmet kullanımından kaynaklanan dolaylı zararlardan sorumlu değildir. 
-                  Kullanıcılar hizmeti kendi risk ve sorumluluklarında kullanır.
-                </p>
-              </div>
-            </div>
-            <div className="flex justify-end p-6 border-t bg-gray-50">
-              <button
-                onClick={handleTermsAccept}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Okudum ve Kabul Ediyorum
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Privacy Modal */}
-      {showPrivacyModal && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-          onClick={() => setShowPrivacyModal(false)}
-        >
-          <div 
-            className="bg-white rounded-lg max-w-2xl max-h-[80vh] w-full mx-4 overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between p-6 border-b">
-              <h3 className="text-lg font-semibold">Gizlilik Politikası</h3>
-              <button
-                onClick={() => setShowPrivacyModal(false)}
-                className="p-2 hover:bg-gray-100 rounded-lg"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="p-6 overflow-y-auto max-h-[50vh]">
-              <div className="space-y-4 text-gray-700">
-                <h4 className="font-semibold">1. Toplanan Bilgiler</h4>
-                <p>
-                  RotaApp olarak, hizmetimizi sunabilmek için gerekli olan kişisel verileri topluyoruz. 
-                  Bu veriler arasında firma bilgileri, iletişim bilgileri, araç bilgileri ve rota verileri bulunur.
-                </p>
-                
-                <h4 className="font-semibold">2. Verilerin Kullanımı</h4>
-                <p>
-                  Toplanan veriler sadece hizmet sunumu, müşteri desteği ve yasal yükümlülüklerin 
-                  yerine getirilmesi amacıyla kullanılır. Verileriniz üçüncü şahıslarla paylaşılmaz.
-                </p>
-                
-                <h4 className="font-semibold">3. Veri Güvenliği</h4>
-                <p>
-                  Verilerinizin güvenliği için endüstri standardı güvenlik önlemleri alınmıştır. 
-                  SSL şifreleme, güvenli veri merkezleri ve düzenli güvenlik denetimleri yapılmaktadır.
-                </p>
-                
-                <h4 className="font-semibold">4. Çerez Politikası</h4>
-                <p>
-                  Platformumuz, kullanıcı deneyimini iyileştirmek için çerezler kullanır. 
-                  Bu çerezler oturum yönetimi ve tercih saklama amaçlıdır.
-                </p>
-                
-                <h4 className="font-semibold">5. Veri Saklama Süresi</h4>
-                <p>
-                  Verileriniz, hizmet sunumu için gerekli olduğu sürece saklanır. 
-                  Hesap kapatma durumunda veriler yasal saklama süreleri dikkate alınarak silinir.
-                </p>
-                
-                <h4 className="font-semibold">6. Kullanıcı Hakları</h4>
-                <p>
-                  KVKK kapsamında verilerinize erişim, düzeltme, silme ve işleme itiraz hakınız bulunur. 
-                  Bu haklarınızı kullanmak için bizimle iletişime geçebilirsiniz.
-                </p>
-                
-                <h4 className="font-semibold">7. İletişim</h4>
-                <p>
-                  Gizlilik politikası ile ilgili sorularınız için info@rotaapp.com adresinden 
-                  bizimle iletişime geçebilirsiniz.
-                </p>
-              </div>
-            </div>
-            <div className="flex justify-end p-6 border-t bg-gray-50">
-              <button
-                onClick={handlePrivacyAccept}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Okudum ve Kabul Ediyorum
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
+
+const Field: React.FC<{ label: string; icon: React.ReactNode; children: React.ReactNode }> = ({ label, icon, children }) => (
+  <label className="space-y-1.5">
+    <span className="block text-sm font-medium text-slate-700">{label}</span>
+    <div className="relative">
+      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">{icon}</div>
+      {children}
+    </div>
+  </label>
+);
+
+const PasswordRule: React.FC<{ ok: boolean; text: string }> = ({ ok, text }) => (
+  <div className={`flex items-center gap-2 ${ok ? 'text-green-600' : 'text-slate-500'}`}>
+    <CheckCircle className={`h-4 w-4 ${ok ? 'opacity-100' : 'opacity-30'}`} />
+    <span>{text}</span>
+  </div>
+);
+
+const inputClassName =
+  'w-full rounded-xl border border-slate-300 bg-white py-2.5 pl-10 pr-3 text-sm text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100';
+
+function validatePassword(password: string): string[] {
+  const errors: string[] = [];
+  if (password.length < 6) errors.push('En az 6 karakter');
+  if (!/[A-Z]/.test(password)) errors.push('En az 1 büyük harf');
+  if (!/[a-z]/.test(password)) errors.push('En az 1 küçük harf');
+  if (!/[0-9]/.test(password)) errors.push('En az 1 rakam');
+  if (!/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) errors.push('En az 1 özel karakter');
+  return errors;
+}
+
+function validateEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function validatePhone(phone: string) {
+  const numbersOnly = phone.replace(/[^\d]/g, '');
+  if (numbersOnly.length === 10 && numbersOnly.startsWith('5')) return true;
+  if (numbersOnly.length === 11 && numbersOnly.startsWith('05')) return true;
+  return numbersOnly.length === 12 && numbersOnly.startsWith('905');
+}
 
 export default Signup;

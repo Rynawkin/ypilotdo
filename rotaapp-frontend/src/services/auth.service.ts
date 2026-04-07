@@ -1,5 +1,3 @@
-// frontend/src/services/auth.service.ts
-
 import { api } from './api';
 
 interface MeUserModel {
@@ -25,65 +23,59 @@ interface TokenResponse {
 }
 
 export const authService = {
+  setSession(response: TokenResponse) {
+    if (!response?.bearerToken || !response.me) {
+      throw new Error('Geçersiz sunucu yanıtı');
+    }
+
+    localStorage.setItem('token', response.bearerToken);
+    localStorage.setItem('user', JSON.stringify(response.me));
+    localStorage.setItem('isAuthenticated', 'true');
+
+    if (response.refreshToken) {
+      localStorage.setItem('refreshToken', response.refreshToken);
+    }
+
+    if (response.me.workspaceId) {
+      localStorage.setItem('workspaceId', response.me.workspaceId.toString());
+    }
+
+    api.defaults.headers.common['Authorization'] = `Bearer ${response.bearerToken}`;
+  },
+
   async login(email: string, password: string): Promise<TokenResponse> {
     try {
-      console.log('Login request:', { email });
-      
-      // Backend'in beklediği format
       const response = await api.post<TokenResponse>('/me/login', {
         Email: email,
         Password: password
       });
-      
-      console.log('Login response:', response.data);
-      
-      // Response kontrolü
-      if (!response.data || !response.data.bearerToken || !response.data.me) {
+
+      if (!response.data?.bearerToken || !response.data.me) {
         throw new Error('Geçersiz sunucu yanıtı');
       }
-      
-      // Token ve user bilgilerini localStorage'a kaydet
-      localStorage.setItem('token', response.data.bearerToken);
-      localStorage.setItem('user', JSON.stringify(response.data.me));
-      localStorage.setItem('isAuthenticated', 'true');
 
-      // BUGFIX S5.5: Save refresh token
-      if (response.data.refreshToken) {
-        localStorage.setItem('refreshToken', response.data.refreshToken);
-      }
-
-      // WorkspaceId'yi ayrıca sakla
-      if (response.data.me.workspaceId) {
-        localStorage.setItem('workspaceId', response.data.me.workspaceId.toString());
-      }
-      
-      // Axios header'ı güncelle
-      api.defaults.headers.common['Authorization'] = `Bearer ${response.data.bearerToken}`;
-      
-      console.log('Login successful, user:', response.data.me);
-      
+      this.setSession(response.data);
       return response.data;
     } catch (error: any) {
-      console.error('Login error:', error);
-      
       if (error.response) {
-        console.error('Server error:', error.response.data);
-        const message = error.response.data?.message || 'Giriş başarısız';
-        throw new Error(message);
-      } else if (error.request) {
-        console.error('No response:', error.request);
-        throw new Error('Sunucuya bağlanılamıyor. Lütfen internet bağlantınızı kontrol edin.');
-      } else {
-        console.error('Error:', error.message);
-        throw new Error(error.message || 'Giriş yapılırken bir hata oluştu');
+        throw new Error(error.response.data?.message || 'Giriş başarısız');
       }
+      if (error.request) {
+        throw new Error('Sunucuya bağlanılamıyor. Lütfen internet bağlantınızı kontrol edin.');
+      }
+      throw new Error(error.message || 'Giriş yapılırken bir hata oluştu');
     }
   },
 
-  async register(email: string, password: string, fullName: string, companyName?: string, companyEmail?: string, companyPhone?: string): Promise<TokenResponse> {
+  async register(
+    email: string,
+    password: string,
+    fullName: string,
+    companyName?: string,
+    companyEmail?: string,
+    companyPhone?: string
+  ): Promise<TokenResponse> {
     try {
-      console.log('Register request:', { email, fullName, companyName });
-      
       const response = await api.post<TokenResponse>('/me/register', {
         Email: email,
         Password: password,
@@ -92,114 +84,65 @@ export const authService = {
         CompanyEmail: companyEmail,
         CompanyPhone: companyPhone
       });
-      
-      console.log('Register response:', response.data);
-      
-      // Response kontrolü
-      if (!response.data || !response.data.bearerToken || !response.data.me) {
+
+      if (!response.data?.bearerToken || !response.data.me) {
         throw new Error('Geçersiz sunucu yanıtı');
       }
-      
-      // Token ve user bilgilerini localStorage'a kaydet
-      localStorage.setItem('token', response.data.bearerToken);
-      localStorage.setItem('user', JSON.stringify(response.data.me));
-      localStorage.setItem('isAuthenticated', 'true');
 
-      // BUGFIX S5.5: Save refresh token
-      if (response.data.refreshToken) {
-        localStorage.setItem('refreshToken', response.data.refreshToken);
-      }
-
-      // WorkspaceId'yi ayrıca sakla
-      if (response.data.me.workspaceId) {
-        localStorage.setItem('workspaceId', response.data.me.workspaceId.toString());
-      }
-      
-      // Axios header'ı güncelle
-      api.defaults.headers.common['Authorization'] = `Bearer ${response.data.bearerToken}`;
-      
-      console.log('Register successful, user:', response.data.me);
-      
+      this.setSession(response.data);
       return response.data;
     } catch (error: any) {
-      console.error('Register error:', error);
-      
       if (error.response) {
-        console.error('Server error:', error.response.data);
-        const message = error.response.data?.message || 'Kayıt başarısız';
-        throw new Error(message);
-      } else if (error.request) {
-        console.error('No response:', error.request);
-        throw new Error('Sunucuya bağlanılamıyor');
-      } else {
-        console.error('Error:', error.message);
-        throw new Error(error.message || 'Kayıt olurken bir hata oluştu');
+        throw new Error(error.response.data?.message || 'Kayıt başarısız');
       }
+      if (error.request) {
+        throw new Error('Sunucuya bağlanılamıyor');
+      }
+      throw new Error(error.message || 'Kayıt olurken bir hata oluştu');
     }
   },
 
   async forgotPassword(email: string): Promise<void> {
     try {
-      console.log('Forgot password request:', { email });
-      
-      await api.post('/me/forgot-password', { 
-          Email: email  // ✅ Büyük E ile
+      await api.post('/me/forgot-password', {
+        Email: email
       });
-        
-        console.log('Forgot password email sent successfully');
     } catch (error: any) {
-      console.error('Forgot password error:', error);
-      
       if (error.response) {
-          const message = error.response.data?.message || 'Şifre sıfırlama bağlantısı gönderilemedi';
-          throw new Error(message);
-      } else if (error.request) {
-          throw new Error('Sunucuya bağlanılamıyor. Lütfen internet bağlantınızı kontrol edin.');
-      } else {
-          throw new Error(error.message || 'Şifre sıfırlama işlemi sırasında bir hata oluştu');
+        throw new Error(error.response.data?.message || 'Şifre sıfırlama bağlantısı gönderilemedi');
       }
+      if (error.request) {
+        throw new Error('Sunucuya bağlanılamıyor. Lütfen internet bağlantınızı kontrol edin.');
+      }
+      throw new Error(error.message || 'Şifre sıfırlama işlemi sırasında bir hata oluştu');
     }
-},
+  },
 
   async resetPassword(email: string, token: string, newPassword: string): Promise<void> {
     try {
-      console.log('Reset password request:', { email, token: '***' });
-      
-      await api.post('/me/reset-password', { 
-        Email: email, 
-        Token: token, 
+      await api.post('/me/reset-password', {
+        Email: email,
+        Token: token,
         NewPassword: newPassword
       });
-      
-      console.log('Password reset successfully');
     } catch (error: any) {
-      console.error('Reset password error:', error);
-      
       if (error.response) {
-        const message = error.response.data?.message || 'Şifre sıfırlama başarısız';
-        throw new Error(message);
-      } else if (error.request) {
-        throw new Error('Sunucuya bağlanılamıyor. Lütfen internet bağlantınızı kontrol edin.');
-      } else {
-        throw new Error(error.message || 'Şifre sıfırlama işlemi sırasında bir hata oluştu');
+        throw new Error(error.response.data?.message || 'Şifre sıfırlama başarısız');
       }
+      if (error.request) {
+        throw new Error('Sunucuya bağlanılamıyor. Lütfen internet bağlantınızı kontrol edin.');
+      }
+      throw new Error(error.message || 'Şifre sıfırlama işlemi sırasında bir hata oluştu');
     }
   },
 
   logout() {
-    console.log('Logging out...');
-
-    // LocalStorage'ı temizle
     localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken'); // BUGFIX S5.5
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('workspaceId');
-
-    // Axios header'ı temizle
     delete api.defaults.headers.common['Authorization'];
-
-    // Ana sayfaya yönlendir
     window.location.href = '/login';
   },
 
@@ -207,8 +150,7 @@ export const authService = {
     try {
       const userStr = localStorage.getItem('user');
       return userStr ? JSON.parse(userStr) : null;
-    } catch (error) {
-      console.error('Error parsing user from localStorage:', error);
+    } catch {
       return null;
     }
   },
@@ -227,11 +169,9 @@ export const authService = {
     return localStorage.getItem('workspaceId');
   },
 
-  // Rol kontrol helper'ları
   getUserRole(): string {
     const user = this.getUser();
     if (!user) return 'guest';
-    
     if (user.isSuperAdmin) return 'superadmin';
     if (user.isAdmin) return 'admin';
     if (user.isDispatcher) return 'dispatcher';
@@ -240,8 +180,7 @@ export const authService = {
   },
 
   isSuperAdmin(): boolean {
-    const user = this.getUser();
-    return user?.isSuperAdmin === true;
+    return this.getUser()?.isSuperAdmin === true;
   },
 
   isAdmin(): boolean {
@@ -255,43 +194,27 @@ export const authService = {
   },
 
   isDriver(): boolean {
-    const user = this.getUser();
-    return user?.isDriver === true;
+    return this.getUser()?.isDriver === true;
   },
 
-  // BUGFIX S5.5: Refresh token mechanism
   async refreshToken(): Promise<boolean> {
     try {
       const refreshToken = localStorage.getItem('refreshToken');
       if (!refreshToken) {
-        console.log('No refresh token available');
         return false;
       }
 
-      console.log('Attempting to refresh token...');
       const response = await api.post<TokenResponse>('/me/refresh-token', {
         RefreshToken: refreshToken
       });
 
-      if (!response.data || !response.data.bearerToken || !response.data.me) {
+      if (!response.data?.bearerToken || !response.data.me) {
         throw new Error('Invalid refresh response');
       }
 
-      // Update tokens
-      localStorage.setItem('token', response.data.bearerToken);
-      localStorage.setItem('user', JSON.stringify(response.data.me));
-      if (response.data.refreshToken) {
-        localStorage.setItem('refreshToken', response.data.refreshToken);
-      }
-
-      // Update axios header
-      api.defaults.headers.common['Authorization'] = `Bearer ${response.data.bearerToken}`;
-
-      console.log('Token refreshed successfully');
+      this.setSession(response.data);
       return true;
-    } catch (error: any) {
-      console.error('Token refresh failed:', error);
-      // Clear auth data on refresh failure
+    } catch {
       this.logout();
       return false;
     }
@@ -301,18 +224,11 @@ export const authService = {
     return localStorage.getItem('refreshToken');
   },
 
-  // Get current user from backend (for token validation)
   async me(): Promise<MeUserModel> {
-    try {
-      const response = await api.get<MeUserModel>('/me');
-      return response.data;
-    } catch (error: any) {
-      console.error('Failed to fetch current user:', error);
-      throw error;
-    }
+    const response = await api.get<MeUserModel>('/me');
+    return response.data;
   },
 
-  // Debug helper
   debugAuth() {
     console.log('=== Auth Debug Info ===');
     console.log('Token:', this.getToken());
@@ -324,13 +240,8 @@ export const authService = {
     console.log('Is Admin:', this.isAdmin());
     console.log('Is Dispatcher:', this.isDispatcher());
     console.log('Is Driver:', this.isDriver());
-    console.log('LocalStorage:', {
-      token: localStorage.getItem('token'),
-      user: localStorage.getItem('user'),
-      workspaceId: localStorage.getItem('workspaceId'),
-      isAuthenticated: localStorage.getItem('isAuthenticated')
-    });
-    console.log('Axios Headers:', api.defaults.headers.common);
     console.log('=====================');
   }
 };
+
+export type { MeUserModel, TokenResponse };

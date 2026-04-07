@@ -6,6 +6,7 @@ using Monolith.WebAPI.Data.Workspace;
 using Monolith.WebAPI.Infrastructure;
 using Monolith.WebAPI.Responses.Admin;
 using Monolith.WebAPI.Services.Members;
+using Monolith.WebAPI.Services.Subscription;
 
 namespace Monolith.WebAPI.Applications.Commands.Admin;
 
@@ -20,11 +21,13 @@ public class UpdateWorkspacePlanCommand : BaseAuthenticatedCommand<WorkspaceDeta
 public class UpdateWorkspacePlanCommandHandler : BaseAuthenticatedCommandHandler<UpdateWorkspacePlanCommand, WorkspaceDetailResponse>
 {
     private readonly AppDbContext _context;
+    private readonly ISubscriptionService _subscriptionService;
 
-    public UpdateWorkspacePlanCommandHandler(IUserService userService, AppDbContext context)
+    public UpdateWorkspacePlanCommandHandler(IUserService userService, AppDbContext context, ISubscriptionService subscriptionService)
         : base(userService)
     {
         _context = context;
+        _subscriptionService = subscriptionService;
     }
 
     protected override async Task<WorkspaceDetailResponse> HandleCommand(UpdateWorkspacePlanCommand request, CancellationToken cancellationToken)
@@ -43,7 +46,9 @@ public class UpdateWorkspacePlanCommandHandler : BaseAuthenticatedCommandHandler
 
         // Plan güncelle
         workspace.UpdatePlan(request.NewPlanType);
-        
+        workspace.SyncLegacyDriverLimit(_subscriptionService.GetPlanLimits(request.NewPlanType).MaxDrivers);
+        workspace.SetActive(true);
+
         await _context.SaveChangesAsync(cancellationToken);
 
         return new WorkspaceDetailResponse
