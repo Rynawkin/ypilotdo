@@ -7,6 +7,7 @@ namespace Monolith.WebAPI.Services.Payment;
 public interface IPaymentService
 {
     Task<PaymentResult> InitiatePaymentAsync(PaymentRequest request);
+    Task<StoredPaymentMethodResult> StorePaymentMethodAsync(StorePaymentMethodRequest request);
     Task<PaymentResult> ChargeStoredPaymentMethodAsync(StoredPaymentChargeRequest request);
     Task<PaymentResult> ProcessWebhookAsync(string provider, string payload, Dictionary<string, string> headers);
     Task<PaymentTransaction> CreatePaymentTransactionAsync(PaymentRequest request, PaymentResult result);
@@ -60,6 +61,29 @@ public class PaymentService : IPaymentService
             EnsureProviderDataDefaults(request, result);
             var transaction = await CreatePaymentTransactionAsync(request, result);
             result.InternalTransactionId = transaction.Id;
+        }
+
+        return result;
+    }
+
+    public async Task<StoredPaymentMethodResult> StorePaymentMethodAsync(StorePaymentMethodRequest request)
+    {
+        var providerName = _configuration["Payment:Provider"]?.ToLower() ?? "paytr";
+
+        if (!_providers.TryGetValue(providerName, out var provider))
+        {
+            _logger.LogError("Payment provider {Provider} not found for payment-method storage", providerName);
+            return new StoredPaymentMethodResult
+            {
+                IsSuccess = false,
+                ErrorMessage = "Payment provider not available"
+            };
+        }
+
+        var result = await provider.StorePaymentMethodAsync(request);
+        if (!result.IsSuccess)
+        {
+            _logger.LogWarning("Payment-method storage failed via {Provider}: {Error}", providerName, result.ErrorMessage);
         }
 
         return result;

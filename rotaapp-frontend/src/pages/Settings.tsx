@@ -47,6 +47,7 @@ import { Package, MessageSquare, Calendar } from 'lucide-react';
 import { TrialBanner } from '@/components/payment/TrialBanner';
 import { UpgradePlan } from '@/components/payment/UpgradePlan';
 import { PaymentHistory } from '@/components/payment/PaymentHistory';
+import { PaymentMethodSettings } from '@/components/payment/PaymentMethodSettings';
 import { UsageStats } from '@/components/payment/UsageStats';
 import { paymentService } from '@/services/payment.service';
 
@@ -1863,6 +1864,10 @@ const Settings: React.FC = () => {
 
                 {/* Payment Content Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div className="lg:col-span-2">
+                    <PaymentMethodSettings />
+                  </div>
+
                   {/* Usage Statistics */}
                   <div className="lg:col-span-2">
                     <UsageStats />

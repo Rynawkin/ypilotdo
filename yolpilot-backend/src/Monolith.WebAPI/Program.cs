@@ -718,6 +718,7 @@ void AddDependencies()
     // Payment services
     builder.Services.AddScoped<Monolith.WebAPI.Services.Payment.IPaymentService, Monolith.WebAPI.Services.Payment.PaymentService>();
     builder.Services.AddScoped<Monolith.WebAPI.Services.Payment.IPaymentProvisioningService, Monolith.WebAPI.Services.Payment.PaymentProvisioningService>();
+    builder.Services.AddScoped<Monolith.WebAPI.Services.Payment.IPaymentMethodService, Monolith.WebAPI.Services.Payment.PaymentMethodService>();
     builder.Services.AddScoped<Monolith.WebAPI.Services.Payment.ITrialService, Monolith.WebAPI.Services.Payment.TrialService>();
     builder.Services.AddScoped<Monolith.WebAPI.Services.Payment.IPaymentProvider, Monolith.WebAPI.Services.Payment.PayTRProvider>();
     builder.Services.AddScoped<Monolith.WebAPI.Services.Payment.IPaymentProvider, Monolith.WebAPI.Services.Payment.ParamPOSProvider>();

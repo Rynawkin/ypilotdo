@@ -28,6 +28,7 @@ public class PaymentController : ControllerBase
     private readonly IPaymentService _paymentService;
     private readonly ITrialService _trialService;
     private readonly IPaymentProvisioningService _paymentProvisioningService;
+    private readonly IPaymentMethodService _paymentMethodService;
     private readonly ISubscriptionService _subscriptionService;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ITokenService _tokenService;
@@ -40,6 +41,7 @@ public class PaymentController : ControllerBase
         IPaymentService paymentService,
         ITrialService trialService,
         IPaymentProvisioningService paymentProvisioningService,
+        IPaymentMethodService paymentMethodService,
         ISubscriptionService subscriptionService,
         UserManager<ApplicationUser> userManager,
         ITokenService tokenService,
@@ -51,6 +53,7 @@ public class PaymentController : ControllerBase
         _paymentService = paymentService;
         _trialService = trialService;
         _paymentProvisioningService = paymentProvisioningService;
+        _paymentMethodService = paymentMethodService;
         _subscriptionService = subscriptionService;
         _userManager = userManager;
         _tokenService = tokenService;
@@ -485,6 +488,133 @@ public class PaymentController : ControllerBase
     }
 
     /// <summary>
+    /// Get current billing status and default payment method
+    /// </summary>
+    [HttpGet("billing-status")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
+    [SwaggerOperation(Summary = "Get current billing status")]
+    public async Task<ActionResult<BillingStatusResponse>> GetBillingStatus()
+    {
+        var workspaceId = User.GetWorkspaceId();
+        var workspace = await _context.Workspaces
+            .AsNoTracking()
+            .FirstOrDefaultAsync(w => w.Id == workspaceId);
+
+        if (workspace == null)
+        {
+            return NotFound(new BillingStatusResponse
+            {
+                IsSuccess = false,
+                ErrorMessage = "Workspace bulunamadı."
+            });
+        }
+
+        var defaultPaymentMethod = await _paymentMethodService.GetDefaultAsync(workspaceId);
+        var openInvoice = await _context.Invoices
+            .AsNoTracking()
+            .Where(i => i.WorkspaceId == workspaceId && (i.Status == InvoiceStatus.Pending || i.Status == InvoiceStatus.Overdue))
+            .OrderByDescending(i => i.CreatedAt)
+            .FirstOrDefaultAsync();
+
+        return Ok(new BillingStatusResponse
+        {
+            IsSuccess = true,
+            CurrentPlan = workspace.PlanType,
+            Active = workspace.Active,
+            PlanStartDate = workspace.PlanStartDate,
+            PlanEndDate = workspace.PlanEndDate,
+            HasDefaultPaymentMethod = defaultPaymentMethod != null,
+            PaymentMethod = defaultPaymentMethod == null ? null : new PaymentMethodSummaryResponse
+            {
+                Provider = defaultPaymentMethod.Provider,
+                LastFourDigits = defaultPaymentMethod.LastFourDigits,
+                CardHolderName = defaultPaymentMethod.CardHolderName,
+                ExpiryMonth = defaultPaymentMethod.ExpiryMonth,
+                ExpiryYear = defaultPaymentMethod.ExpiryYear,
+                BrandName = defaultPaymentMethod.BrandName,
+                IsDefault = defaultPaymentMethod.IsDefault,
+                IsActive = defaultPaymentMethod.IsActive
+            },
+            GraceStatus = openInvoice == null ? null : new BillingGraceStatusResponse
+            {
+                InvoiceId = openInvoice.Id,
+                Status = openInvoice.Status,
+                DueDate = openInvoice.DueDate,
+                PaidDate = openInvoice.PaidDate,
+                Amount = openInvoice.Amount,
+                Total = openInvoice.Total,
+                RemainingGraceHours = openInvoice.DueDate > DateTime.UtcNow
+                    ? Math.Max(0, (int)Math.Ceiling((openInvoice.DueDate - DateTime.UtcNow).TotalHours))
+                    : 0
+            }
+        });
+    }
+
+    /// <summary>
+    /// Save or update default payment method for automatic renewals
+    /// </summary>
+    [HttpPost("payment-methods/default")]
+    [Authorize(Roles = "Admin,SuperAdmin")]
+    [SwaggerOperation(Summary = "Save default payment method for automatic renewal")]
+    public async Task<ActionResult<SavePaymentMethodResponse>> SaveDefaultPaymentMethod([FromBody] SavePaymentMethodRequest request)
+    {
+        var workspaceId = User.GetWorkspaceId();
+        var workspace = await _context.Workspaces
+            .AsNoTracking()
+            .FirstOrDefaultAsync(w => w.Id == workspaceId);
+
+        if (workspace == null)
+        {
+            return NotFound(new SavePaymentMethodResponse
+            {
+                IsSuccess = false,
+                ErrorMessage = "Workspace bulunamadı."
+            });
+        }
+
+        var user = await _userManager.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == User.GetId());
+
+        var result = await _paymentService.StorePaymentMethodAsync(new StorePaymentMethodRequest
+        {
+            WorkspaceId = workspaceId,
+            CustomerName = request.Card.CardHolderName ?? user?.FullName ?? workspace.Name,
+            CustomerPhone = request.Card.CardHolderPhone ?? workspace.PhoneNumber ?? user?.PhoneNumber ?? string.Empty,
+            Alias = string.IsNullOrWhiteSpace(request.Alias) ? (request.Card.CardHolderName ?? user?.FullName ?? workspace.Name) : request.Alias,
+            ExternalReference = $"workspace-{workspaceId}",
+            Card = request.Card
+        });
+
+        if (!result.IsSuccess)
+        {
+            return BadRequest(new SavePaymentMethodResponse
+            {
+                IsSuccess = false,
+                ErrorMessage = result.ErrorMessage
+            });
+        }
+
+        var paymentMethod = await _paymentMethodService.UpsertFromProviderDataAsync(workspaceId, result.ProviderData, HttpContext.RequestAborted);
+
+        return Ok(new SavePaymentMethodResponse
+        {
+            IsSuccess = true,
+            PaymentMethod = paymentMethod == null ? null : new PaymentMethodSummaryResponse
+            {
+                Provider = paymentMethod.Provider,
+                LastFourDigits = paymentMethod.LastFourDigits,
+                CardHolderName = paymentMethod.CardHolderName,
+                ExpiryMonth = paymentMethod.ExpiryMonth,
+                ExpiryYear = paymentMethod.ExpiryYear,
+                BrandName = paymentMethod.BrandName,
+                IsDefault = paymentMethod.IsDefault,
+                IsActive = paymentMethod.IsActive
+            }
+        });
+    }
+
+    /// <summary>
     /// Get trial status
     /// </summary>
     [HttpGet("trial-status")]
@@ -755,6 +885,55 @@ public class InvoiceResponse
     public DateTime PeriodStart { get; set; }
     public DateTime PeriodEnd { get; set; }
     public DateTime CreatedAt { get; set; }
+}
+
+public class SavePaymentMethodRequest
+{
+    public string? Alias { get; set; }
+    public PaymentCard Card { get; set; } = new();
+}
+
+public class SavePaymentMethodResponse
+{
+    public bool IsSuccess { get; set; }
+    public string? ErrorMessage { get; set; }
+    public PaymentMethodSummaryResponse? PaymentMethod { get; set; }
+}
+
+public class BillingStatusResponse
+{
+    public bool IsSuccess { get; set; }
+    public string? ErrorMessage { get; set; }
+    public PlanType CurrentPlan { get; set; }
+    public bool Active { get; set; }
+    public DateTime? PlanStartDate { get; set; }
+    public DateTime? PlanEndDate { get; set; }
+    public bool HasDefaultPaymentMethod { get; set; }
+    public PaymentMethodSummaryResponse? PaymentMethod { get; set; }
+    public BillingGraceStatusResponse? GraceStatus { get; set; }
+}
+
+public class PaymentMethodSummaryResponse
+{
+    public string? Provider { get; set; }
+    public string? LastFourDigits { get; set; }
+    public string? CardHolderName { get; set; }
+    public string? ExpiryMonth { get; set; }
+    public string? ExpiryYear { get; set; }
+    public string? BrandName { get; set; }
+    public bool IsDefault { get; set; }
+    public bool IsActive { get; set; }
+}
+
+public class BillingGraceStatusResponse
+{
+    public int InvoiceId { get; set; }
+    public InvoiceStatus Status { get; set; }
+    public DateTime DueDate { get; set; }
+    public DateTime? PaidDate { get; set; }
+    public decimal Amount { get; set; }
+    public decimal Total { get; set; }
+    public int RemainingGraceHours { get; set; }
 }
 
 public class TrialStatusResponse

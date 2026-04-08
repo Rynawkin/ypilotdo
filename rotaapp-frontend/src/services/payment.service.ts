@@ -98,6 +98,50 @@ export interface TrialStatusResponse {
   limits?: TrialLimits;
 }
 
+export interface PaymentMethodSummary {
+  provider?: string;
+  lastFourDigits?: string;
+  cardHolderName?: string;
+  expiryMonth?: string;
+  expiryYear?: string;
+  brandName?: string;
+  isDefault: boolean;
+  isActive: boolean;
+}
+
+export interface BillingGraceStatus {
+  invoiceId: number;
+  status: 'Pending' | 'Paid' | 'Overdue' | 'Cancelled' | 'Refunded';
+  dueDate: string;
+  paidDate?: string;
+  amount: number;
+  total: number;
+  remainingGraceHours: number;
+}
+
+export interface BillingStatusResponse {
+  isSuccess: boolean;
+  errorMessage?: string;
+  currentPlan: PlanType;
+  active: boolean;
+  planStartDate?: string;
+  planEndDate?: string;
+  hasDefaultPaymentMethod: boolean;
+  paymentMethod?: PaymentMethodSummary;
+  graceStatus?: BillingGraceStatus;
+}
+
+export interface SavePaymentMethodRequest {
+  alias?: string;
+  card: PaymentCard;
+}
+
+export interface SavePaymentMethodResponse {
+  isSuccess: boolean;
+  errorMessage?: string;
+  paymentMethod?: PaymentMethodSummary;
+}
+
 export interface WorkspaceUsageDto {
   workspaceId: number;
   workspaceName: string;
@@ -185,6 +229,16 @@ class PaymentService {
       console.error('Get trial status error:', error);
       throw error;
     }
+  }
+
+  async getBillingStatus(): Promise<BillingStatusResponse> {
+    const response = await api.get('/payment/billing-status');
+    return response.data;
+  }
+
+  async saveDefaultPaymentMethod(request: SavePaymentMethodRequest): Promise<SavePaymentMethodResponse> {
+    const response = await api.post('/payment/payment-methods/default', request);
+    return response.data;
   }
 
   async getCurrentUsage(): Promise<WorkspaceUsageDto> {
