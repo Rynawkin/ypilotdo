@@ -51,7 +51,6 @@ public class ProcessPaymentWebhookCommandHandler : IRequestHandler<ProcessPaymen
             if (result.IsSuccess && result.Status == PaymentStatus.Completed && !string.IsNullOrEmpty(result.TransactionId))
             {
                 var transaction = await _context.PaymentTransactions
-                    .Include(t => t.Workspace)
                     .FirstOrDefaultAsync(t => t.ProviderTransactionId == result.TransactionId, cancellationToken);
 
                 if (transaction != null)

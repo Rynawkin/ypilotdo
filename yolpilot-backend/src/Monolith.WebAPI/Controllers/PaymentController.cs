@@ -240,7 +240,6 @@ public class PaymentController : ControllerBase
         if (result.Status == PaymentStatus.Completed && result.InternalTransactionId.HasValue)
         {
             var transaction = await _context.PaymentTransactions
-                .Include(t => t.Workspace)
                 .FirstOrDefaultAsync(t => t.Id == result.InternalTransactionId.Value);
 
             if (transaction != null)
@@ -281,7 +280,6 @@ public class PaymentController : ControllerBase
     public async Task<ActionResult<SignupPaymentStatusResponse>> GetSignupStatus([FromBody] SignupPaymentStatusRequest request)
     {
         var transaction = await _context.PaymentTransactions
-            .Include(t => t.Workspace)
             .FirstOrDefaultAsync(t => t.ProviderTransactionId == request.TransactionId);
 
         if (transaction == null)
