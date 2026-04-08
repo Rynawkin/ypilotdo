@@ -7,6 +7,7 @@ namespace Monolith.WebAPI.Services.Payment;
 public interface IPaymentService
 {
     Task<PaymentResult> InitiatePaymentAsync(PaymentRequest request);
+    Task<PaymentResult> ChargeStoredPaymentMethodAsync(StoredPaymentChargeRequest request);
     Task<PaymentResult> ProcessWebhookAsync(string provider, string payload, Dictionary<string, string> headers);
     Task<PaymentTransaction> CreatePaymentTransactionAsync(PaymentRequest request, PaymentResult result);
     Task UpdatePaymentTransactionAsync(string transactionId, PaymentResult result);
@@ -58,6 +59,51 @@ public class PaymentService : IPaymentService
         {
             EnsureProviderDataDefaults(request, result);
             var transaction = await CreatePaymentTransactionAsync(request, result);
+            result.InternalTransactionId = transaction.Id;
+        }
+
+        return result;
+    }
+
+    public async Task<PaymentResult> ChargeStoredPaymentMethodAsync(StoredPaymentChargeRequest request)
+    {
+        var providerName = _configuration["Payment:Provider"]?.ToLower() ?? "paytr";
+
+        if (!_providers.TryGetValue(providerName, out var provider))
+        {
+            _logger.LogError("Payment provider {Provider} not found for stored-card charge", providerName);
+            return new PaymentResult
+            {
+                IsSuccess = false,
+                Status = PaymentStatus.Failed,
+                ErrorMessage = "Payment provider not available"
+            };
+        }
+
+        var result = await provider.ChargeStoredPaymentMethodAsync(request);
+        if (!result.IsSuccess)
+        {
+            _logger.LogWarning("Stored-card charge failed via {Provider}: {Error}", providerName, result.ErrorMessage);
+        }
+
+        if (!string.IsNullOrWhiteSpace(result.TransactionId))
+        {
+            EnsureProviderDataDefaults(request, result);
+            var transaction = await CreatePaymentTransactionAsync(new PaymentRequest
+            {
+                WorkspaceId = request.WorkspaceId,
+                Amount = request.Amount,
+                Currency = request.Currency,
+                Description = request.Description,
+                CustomerEmail = request.CustomerEmail,
+                CustomerName = request.CustomerName,
+                CustomerPhone = request.CustomerPhone,
+                ClientIp = request.ClientIp,
+                ReferrerUrl = request.ReferrerUrl,
+                PlanType = request.PlanType,
+                ExtraData = request.ExtraData
+            }, result);
+
             result.InternalTransactionId = transaction.Id;
         }
 
@@ -154,6 +200,27 @@ public class PaymentService : IPaymentService
         if (!string.IsNullOrWhiteSpace(request.FailUrl) && !result.ProviderData.ContainsKey("fail_url"))
         {
             result.ProviderData["fail_url"] = request.FailUrl;
+        }
+
+        foreach (var kvp in request.ExtraData)
+        {
+            if (!result.ProviderData.ContainsKey(kvp.Key))
+            {
+                result.ProviderData[kvp.Key] = kvp.Value;
+            }
+        }
+    }
+
+    private void EnsureProviderDataDefaults(StoredPaymentChargeRequest request, PaymentResult result)
+    {
+        if (request.PlanType.HasValue && !result.ProviderData.ContainsKey("plan_type"))
+        {
+            result.ProviderData["plan_type"] = request.PlanType.Value.ToString();
+        }
+
+        if (!result.ProviderData.ContainsKey("workspace_id"))
+        {
+            result.ProviderData["workspace_id"] = request.WorkspaceId;
         }
 
         foreach (var kvp in request.ExtraData)

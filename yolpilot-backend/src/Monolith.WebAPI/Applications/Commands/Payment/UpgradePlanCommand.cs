@@ -38,17 +38,20 @@ public class UpgradePlanResponse
 public class UpgradePlanCommandHandler : BaseAuthenticatedCommandHandler<UpgradePlanCommand, UpgradePlanResponse>
 {
     private readonly IPaymentService _paymentService;
+    private readonly IPaymentProvisioningService _paymentProvisioningService;
     private readonly ISubscriptionService _subscriptionService;
     private readonly AppDbContext _context;
 
     public UpgradePlanCommandHandler(
         IPaymentService paymentService, 
+        IPaymentProvisioningService paymentProvisioningService,
         ISubscriptionService subscriptionService,
         AppDbContext context,
         IUserService userService)
         : base(userService)
     {
         _paymentService = paymentService;
+        _paymentProvisioningService = paymentProvisioningService;
         _subscriptionService = subscriptionService;
         _context = context;
     }
@@ -107,7 +110,10 @@ public class UpgradePlanCommandHandler : BaseAuthenticatedCommandHandler<Upgrade
             {
                 ["workspace_id"] = User.WorkspaceId,
                 ["user_id"] = User.Id,
-                ["upgrade_from"] = workspace.PlanType.ToString()
+                ["upgrade_from"] = workspace.PlanType.ToString(),
+                ["store_payment_method"] = true,
+                ["stored_card_alias"] = request.CustomerName,
+                ["stored_card_reference"] = $"workspace-{User.WorkspaceId}"
             }
         };
 
@@ -124,12 +130,13 @@ public class UpgradePlanCommandHandler : BaseAuthenticatedCommandHandler<Upgrade
 
             if (result.Status == PaymentStatus.Completed)
             {
-                workspace.UpdatePlan(request.NewPlanType);
-                workspace.SyncLegacyDriverLimit(planLimits.MaxDrivers);
-                workspace.SetActive(true);
-                invoice.Status = InvoiceStatus.Paid;
-                invoice.PaidDate = DateTime.UtcNow;
-                await _context.SaveChangesAsync();
+                var transaction = await _context.PaymentTransactions
+                    .FirstOrDefaultAsync(t => t.Id == result.InternalTransactionId.Value, cancellationToken);
+
+                if (transaction != null)
+                {
+                    await _paymentProvisioningService.EnsureProvisionedAsync(transaction, cancellationToken);
+                }
             }
 
             return new UpgradePlanResponse

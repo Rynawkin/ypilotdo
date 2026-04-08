@@ -200,11 +200,35 @@ public class Workspace : BaseEntity
     {
         PlanType = newPlan;
         PlanStartDate = DateTime.UtcNow;
+        PlanEndDate = newPlan == PlanType.Trial ? TrialEndDate : DateTime.UtcNow.AddMonths(1);
         if (newPlan != PlanType.Trial)
         {
             TrialEndDate = DateTime.UtcNow;
             IsTrialUsed = true;
         }
+        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void RenewPlanCycle(PlanType planType, DateTime? billedAt = null)
+    {
+        var now = billedAt ?? DateTime.UtcNow;
+        var cycleStart = PlanEndDate.HasValue && PlanEndDate.Value > now
+            ? PlanEndDate.Value
+            : now;
+
+        PlanType = planType;
+        PlanStartDate = cycleStart;
+        PlanEndDate = cycleStart.AddMonths(1);
+        TrialEndDate = now;
+        IsTrialUsed = true;
+        Active = true;
+        UpdatedAt = now;
+    }
+
+    public void SetPlanPeriod(DateTime start, DateTime end)
+    {
+        PlanStartDate = start;
+        PlanEndDate = end;
         UpdatedAt = DateTime.UtcNow;
     }
 

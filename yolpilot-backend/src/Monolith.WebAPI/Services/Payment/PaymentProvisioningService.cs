@@ -122,6 +122,7 @@ public class PaymentProvisioningService : IPaymentProvisioningService
         workspace.UpdatePlan(planType);
         workspace.SyncLegacyDriverLimit(_subscriptionService.GetPlanLimits(planType).MaxDrivers);
         workspace.SetActive(true);
+        await UpsertPaymentMethodAsync(workspace.Id, providerData, cancellationToken);
 
         if (invoice == null)
         {
@@ -216,6 +217,7 @@ public class PaymentProvisioningService : IPaymentProvisioningService
         workspace.UpdatePlan(planType);
         workspace.SyncLegacyDriverLimit(_subscriptionService.GetPlanLimits(planType).MaxDrivers);
         workspace.SetActive(true);
+        await UpsertPaymentMethodAsync(workspace.Id, providerData, cancellationToken);
 
         transaction.WorkspaceId = workspace.Id;
 
@@ -233,6 +235,60 @@ public class PaymentProvisioningService : IPaymentProvisioningService
         invoice.PaidDate = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task UpsertPaymentMethodAsync(int workspaceId, Dictionary<string, object> providerData, CancellationToken cancellationToken)
+    {
+        var providerMethodId = GetString(providerData, "payment_method_provider_id");
+        if (string.IsNullOrWhiteSpace(providerMethodId))
+        {
+            return;
+        }
+
+        var provider = GetString(providerData, "provider_name") ?? GetString(providerData, "provider") ?? "ParamPOS";
+        var existing = await _context.PaymentMethods
+            .FirstOrDefaultAsync(x => x.WorkspaceId == workspaceId && x.ProviderMethodId == providerMethodId, cancellationToken);
+
+        if (existing == null)
+        {
+            var currentDefaults = await _context.PaymentMethods
+                .Where(x => x.WorkspaceId == workspaceId && x.IsDefault)
+                .ToListAsync(cancellationToken);
+
+            foreach (var currentDefault in currentDefaults)
+            {
+                currentDefault.IsDefault = false;
+                currentDefault.UpdatedAt = DateTime.UtcNow;
+            }
+
+            existing = new PaymentMethodEntity
+            {
+                WorkspaceId = workspaceId,
+                Type = PaymentMethodType.CreditCard,
+                IsDefault = true,
+                Provider = provider,
+                ProviderMethodId = providerMethodId,
+                LastFourDigits = GetString(providerData, "payment_method_last4"),
+                CardHolderName = GetString(providerData, "payment_method_holder"),
+                ExpiryMonth = GetString(providerData, "payment_method_expiry_month"),
+                ExpiryYear = GetString(providerData, "payment_method_expiry_year"),
+                BrandName = GetString(providerData, "payment_method_brand"),
+                IsActive = true
+            };
+
+            _context.PaymentMethods.Add(existing);
+            return;
+        }
+
+        existing.IsActive = true;
+        existing.IsDefault = true;
+        existing.Provider = provider;
+        existing.LastFourDigits = GetString(providerData, "payment_method_last4") ?? existing.LastFourDigits;
+        existing.CardHolderName = GetString(providerData, "payment_method_holder") ?? existing.CardHolderName;
+        existing.ExpiryMonth = GetString(providerData, "payment_method_expiry_month") ?? existing.ExpiryMonth;
+        existing.ExpiryYear = GetString(providerData, "payment_method_expiry_year") ?? existing.ExpiryYear;
+        existing.BrandName = GetString(providerData, "payment_method_brand") ?? existing.BrandName;
+        existing.UpdatedAt = DateTime.UtcNow;
     }
 
     private async Task BlockDowngradeAsync(

@@ -145,7 +145,7 @@ public class PaymentController : ControllerBase
             return BadRequest(new SignupPaymentResponse
             {
                 IsSuccess = false,
-                ErrorMessage = "Bu e-posta adresi zaten kullanÄ±lÄ±yor."
+                ErrorMessage = "Bu e-posta adresi zaten kullanılıyor."
             });
         }
 
@@ -214,6 +214,9 @@ public class PaymentController : ControllerBase
             ExtraData = new Dictionary<string, object>
             {
                 ["signup_mode"] = true,
+                ["store_payment_method"] = true,
+                ["stored_card_alias"] = request.AdminFullName,
+                ["stored_card_reference"] = $"workspace-{workspace.Id}",
                 ["signup_token"] = signupToken,
                 ["admin_email"] = request.AdminEmail,
                 ["admin_full_name"] = request.AdminFullName,
@@ -287,7 +290,7 @@ public class PaymentController : ControllerBase
             return NotFound(new SignupPaymentStatusResponse
             {
                 IsSuccess = false,
-                ErrorMessage = "Ödeme iÅŸlemi bulunamadÄ±."
+                ErrorMessage = "Ödeme işlemi bulunamadı."
             });
         }
 
@@ -298,7 +301,7 @@ public class PaymentController : ControllerBase
             return Unauthorized(new SignupPaymentStatusResponse
             {
                 IsSuccess = false,
-                ErrorMessage = "Signup doğrulama bilgisi geÃ§ersiz."
+                ErrorMessage = "Kayıt doğrulama bilgisi geçersiz."
             });
         }
 

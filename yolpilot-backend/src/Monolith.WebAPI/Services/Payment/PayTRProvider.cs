@@ -162,6 +162,25 @@ public class PayTRProvider : IPaymentProvider
         };
     }
 
+    public Task<StoredPaymentMethodResult> StorePaymentMethodAsync(StorePaymentMethodRequest request)
+    {
+        return Task.FromResult(new StoredPaymentMethodResult
+        {
+            IsSuccess = false,
+            ErrorMessage = "Stored payment methods are not implemented for PayTR."
+        });
+    }
+
+    public Task<PaymentResult> ChargeStoredPaymentMethodAsync(StoredPaymentChargeRequest request)
+    {
+        return Task.FromResult(new PaymentResult
+        {
+            IsSuccess = false,
+            Status = PaymentStatus.Failed,
+            ErrorMessage = "Recurring stored-card charges are not implemented for PayTR."
+        });
+    }
+
     private string GeneratePayTRToken(string merchantId, string merchantKey, string merchantSalt, 
         string merchantOid, decimal amount, string currency, string userBasket, string email)
     {

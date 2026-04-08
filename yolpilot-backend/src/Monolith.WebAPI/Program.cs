@@ -727,4 +727,5 @@ void AddDependencies()
     // ============= BACKGROUND JOBS - YENI EKLENEN =============
     builder.Services.AddHostedService<MaintenanceReminderJob>();
     builder.Services.AddHostedService<RouteOptimizationJobWorker>();
+    builder.Services.AddHostedService<SubscriptionRenewalJob>();
 }

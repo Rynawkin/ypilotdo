@@ -39,6 +39,30 @@ public class ParamPOSProvider : IPaymentProvider
                 };
             }
 
+            StoredPaymentMethodResult? storedMethod = null;
+            if (ShouldStorePaymentMethod(request))
+            {
+                storedMethod = await StorePaymentMethodAsync(new StorePaymentMethodRequest
+                {
+                    WorkspaceId = request.WorkspaceId,
+                    CustomerName = request.CustomerName,
+                    CustomerPhone = request.CustomerPhone,
+                    Card = request.Card,
+                    Alias = GetStoredCardAlias(request),
+                    ExternalReference = GetStoredCardReference(request)
+                });
+
+                if (!storedMethod.IsSuccess || string.IsNullOrWhiteSpace(storedMethod.ProviderMethodId))
+                {
+                    return new PaymentResult
+                    {
+                        IsSuccess = false,
+                        Status = PaymentStatus.Failed,
+                        ErrorMessage = storedMethod.ErrorMessage ?? "Card could not be stored for automatic renewal."
+                    };
+                }
+            }
+
             if (request.Card == null ||
                 string.IsNullOrWhiteSpace(request.Card.CardNumber) ||
                 string.IsNullOrWhiteSpace(request.Card.Cvv) ||
@@ -146,6 +170,11 @@ public class ParamPOSProvider : IPaymentProvider
                 ["fail_url"] = request.FailUrl ?? string.Empty
             };
 
+            if (storedMethod != null)
+            {
+                MergeStoredMethodData(providerData, storedMethod);
+            }
+
             if (string.Equals(ucdHtml, "NONSECURE", StringComparison.OrdinalIgnoreCase))
             {
                 return new PaymentResult
@@ -174,6 +203,176 @@ public class ParamPOSProvider : IPaymentProvider
             {
                 IsSuccess = false,
                 ErrorMessage = "Payment initiation failed"
+            };
+        }
+    }
+
+    public async Task<StoredPaymentMethodResult> StorePaymentMethodAsync(StorePaymentMethodRequest request)
+    {
+        try
+        {
+            var settings = GetSettings();
+            if (!settings.IsValid || string.IsNullOrWhiteSpace(settings.CardStorageServiceUrl))
+            {
+                return new StoredPaymentMethodResult
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "ParamPOS card storage configuration is missing."
+                };
+            }
+
+            var cardNumber = NormalizeCardNumber(request.Card.CardNumber);
+            var cardMonth = NormalizeMonth(request.Card.ExpiryMonth);
+            var cardYear = NormalizeYear(request.Card.ExpiryYear);
+            var cardHolderName = string.IsNullOrWhiteSpace(request.Card.CardHolderName)
+                ? request.CustomerName
+                : request.Card.CardHolderName;
+
+            var body = new XElement(settings.XmlNamespace + "KS_Kart_Ekle",
+                BuildSecurityNode(settings),
+                new XElement(settings.XmlNamespace + "GUID", settings.Guid),
+                new XElement(settings.XmlNamespace + "KK_Sahibi", cardHolderName),
+                new XElement(settings.XmlNamespace + "KK_No", cardNumber),
+                new XElement(settings.XmlNamespace + "KK_SK_Ay", cardMonth),
+                new XElement(settings.XmlNamespace + "KK_SK_Yil", cardYear),
+                new XElement(settings.XmlNamespace + "KK_Kart_Adi", request.Alias ?? request.CustomerName),
+                new XElement(settings.XmlNamespace + "KK_Islem_ID", request.ExternalReference ?? string.Empty)
+            );
+
+            var responseDoc = await SendSoapRequestAsync(settings, "KS_Kart_Ekle", body, settings.CardStorageServiceUrl);
+            var sonuc = GetInt(responseDoc, "Sonuc");
+            var sonucStr = GetString(responseDoc, "Sonuc_Str");
+            var ksGuid = GetString(responseDoc, "KS_GUID");
+
+            if (sonuc <= 0 || string.IsNullOrWhiteSpace(ksGuid))
+            {
+                return new StoredPaymentMethodResult
+                {
+                    IsSuccess = false,
+                    ErrorMessage = sonucStr ?? "ParamPOS card storage failed."
+                };
+            }
+
+            return new StoredPaymentMethodResult
+            {
+                IsSuccess = true,
+                ProviderMethodId = ksGuid,
+                CardHolderName = cardHolderName,
+                LastFourDigits = cardNumber.Length >= 4 ? cardNumber[^4..] : cardNumber,
+                ExpiryMonth = cardMonth,
+                ExpiryYear = cardYear,
+                ProviderData = new Dictionary<string, object>
+                {
+                ["payment_method_provider_id"] = ksGuid,
+                    ["provider_name"] = ProviderName,
+                    ["payment_method_last4"] = cardNumber.Length >= 4 ? cardNumber[^4..] : cardNumber,
+                    ["payment_method_holder"] = cardHolderName,
+                    ["payment_method_expiry_month"] = cardMonth,
+                    ["payment_method_expiry_year"] = cardYear
+                }
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "ParamPOS card storage failed for workspace {WorkspaceId}", request.WorkspaceId);
+            return new StoredPaymentMethodResult
+            {
+                IsSuccess = false,
+                ErrorMessage = "Card could not be stored for automatic renewal."
+            };
+        }
+    }
+
+    public async Task<PaymentResult> ChargeStoredPaymentMethodAsync(StoredPaymentChargeRequest request)
+    {
+        try
+        {
+            var settings = GetSettings();
+            if (!settings.IsValid || string.IsNullOrWhiteSpace(settings.CardStorageServiceUrl))
+            {
+                return new PaymentResult
+                {
+                    IsSuccess = false,
+                    Status = PaymentStatus.Failed,
+                    ErrorMessage = "ParamPOS card storage configuration is missing."
+                };
+            }
+
+            var orderId = GenerateOrderId(request.WorkspaceId);
+            var amountStr = FormatAmount(request.Amount);
+            var phone = NormalizePhone(request.CustomerPhone);
+            var clientIp = request.ClientIp ?? settings.FallbackClientIp;
+
+            var body = new XElement(settings.XmlNamespace + "KS_Tahsilat",
+                BuildSecurityNode(settings),
+                new XElement(settings.XmlNamespace + "GUID", settings.Guid),
+                new XElement(settings.XmlNamespace + "KS_GUID", request.ProviderMethodId),
+                new XElement(settings.XmlNamespace + "CVV", string.Empty),
+                new XElement(settings.XmlNamespace + "KK_Sahibi_GSM", phone),
+                new XElement(settings.XmlNamespace + "Hata_URL", BuildReturnUrl(settings.ApiBaseUrl, "fail")),
+                new XElement(settings.XmlNamespace + "Basarili_URL", BuildReturnUrl(settings.ApiBaseUrl, "success")),
+                new XElement(settings.XmlNamespace + "Siparis_ID", orderId),
+                new XElement(settings.XmlNamespace + "Siparis_Aciklama", request.Description),
+                new XElement(settings.XmlNamespace + "Taksit", "1"),
+                new XElement(settings.XmlNamespace + "Islem_Tutar", amountStr),
+                new XElement(settings.XmlNamespace + "Toplam_Tutar", amountStr),
+                new XElement(settings.XmlNamespace + "Islem_Guvenlik_Tip", "NS"),
+                new XElement(settings.XmlNamespace + "Islem_ID", string.Empty),
+                new XElement(settings.XmlNamespace + "IPAdr", clientIp),
+                new XElement(settings.XmlNamespace + "Ref_URL", request.ReferrerUrl ?? settings.AppBaseUrl),
+                new XElement(settings.XmlNamespace + "Data1", request.WorkspaceId.ToString(CultureInfo.InvariantCulture)),
+                new XElement(settings.XmlNamespace + "Data2", request.PlanType?.ToString() ?? string.Empty),
+                new XElement(settings.XmlNamespace + "Data3", request.CustomerEmail),
+                new XElement(settings.XmlNamespace + "Data4", request.CustomerPhone)
+            );
+
+            var responseDoc = await SendSoapRequestAsync(settings, "KS_Tahsilat", body, settings.CardStorageServiceUrl);
+            var sonuc = GetInt(responseDoc, "Sonuc");
+            var sonucStr = GetString(responseDoc, "Sonuc_Str");
+            var ucdUrl = GetString(responseDoc, "UCD_URL");
+            var islemId = GetString(responseDoc, "Islem_ID");
+
+            var providerData = new Dictionary<string, object>
+            {
+                ["order_id"] = orderId,
+                ["provider_name"] = ProviderName,
+                ["stored_method_id"] = request.ProviderMethodId,
+                ["ucd_url"] = ucdUrl ?? string.Empty,
+                ["islem_id"] = islemId ?? string.Empty
+            };
+
+            if (sonuc > 0 &&
+                string.Equals(ucdUrl, "NONSECURE", StringComparison.OrdinalIgnoreCase) &&
+                long.TryParse(islemId, out var islemNumeric) &&
+                islemNumeric > 0)
+            {
+                return new PaymentResult
+                {
+                    IsSuccess = true,
+                    TransactionId = orderId,
+                    Status = PaymentStatus.Completed,
+                    ProcessedAt = DateTime.UtcNow,
+                    ProviderData = providerData
+                };
+            }
+
+            return new PaymentResult
+            {
+                IsSuccess = false,
+                TransactionId = orderId,
+                Status = PaymentStatus.Failed,
+                ErrorMessage = sonucStr ?? "Recurring charge failed.",
+                ProviderData = providerData
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "ParamPOS recurring charge failed for workspace {WorkspaceId}", request.WorkspaceId);
+            return new PaymentResult
+            {
+                IsSuccess = false,
+                Status = PaymentStatus.Failed,
+                ErrorMessage = "Recurring charge failed."
             };
         }
     }
@@ -377,6 +576,11 @@ public class ParamPOSProvider : IPaymentProvider
 
     private async Task<XDocument> SendSoapRequestAsync(ParamPosSettings settings, string methodName, XElement body)
     {
+        return await SendSoapRequestAsync(settings, methodName, body, settings.ServiceUrl);
+    }
+
+    private async Task<XDocument> SendSoapRequestAsync(ParamPosSettings settings, string methodName, XElement body, string serviceUrl)
+    {
         var envelope = new XDocument(
             new XElement(XName.Get("Envelope", "http://schemas.xmlsoap.org/soap/envelope/"),
                 new XElement(XName.Get("Body", "http://schemas.xmlsoap.org/soap/envelope/"), body)
@@ -394,7 +598,7 @@ public class ParamPOSProvider : IPaymentProvider
                 : $"{soapActionBase.TrimEnd('/')}/{methodName}");
         var soapActionHeader = $"\"{soapAction}\"";
 
-        using var request = new HttpRequestMessage(HttpMethod.Post, settings.ServiceUrl);
+        using var request = new HttpRequestMessage(HttpMethod.Post, serviceUrl);
         request.Headers.TryAddWithoutValidation("SOAPAction", soapActionHeader);
         request.Content = content;
 
@@ -558,12 +762,20 @@ public class ParamPOSProvider : IPaymentProvider
     {
         var testMode = _configuration.GetValue<bool>("Payment:ParamPOS:TestMode");
         var serviceUrl = _configuration["Payment:ParamPOS:ServiceUrl"];
+        var cardStorageServiceUrl = _configuration["Payment:ParamPOS:CardStorageServiceUrl"];
 
         if (string.IsNullOrWhiteSpace(serviceUrl))
         {
             serviceUrl = testMode
                 ? _configuration["Payment:ParamPOS:ServiceUrlTest"]
                 : _configuration["Payment:ParamPOS:ServiceUrlLive"];
+        }
+
+        if (string.IsNullOrWhiteSpace(cardStorageServiceUrl))
+        {
+            cardStorageServiceUrl = testMode
+                ? _configuration["Payment:ParamPOS:CardStorageServiceUrlTest"]
+                : _configuration["Payment:ParamPOS:CardStorageServiceUrlLive"];
         }
 
         var apiBaseUrl = _configuration["AppUrl"] ?? _configuration["Tracking:ApiBaseUrl"] ?? string.Empty;
@@ -585,6 +797,7 @@ public class ParamPOSProvider : IPaymentProvider
             ClientPassword = _configuration["Payment:ParamPOS:ClientPassword"] ?? string.Empty,
             Guid = _configuration["Payment:ParamPOS:Guid"] ?? string.Empty,
             ServiceUrl = serviceUrl ?? string.Empty,
+            CardStorageServiceUrl = cardStorageServiceUrl ?? string.Empty,
             SoapActionBase = soapActionBase,
             XmlNamespace = XNamespace.Get(xmlNamespace),
             ApiBaseUrl = apiBaseUrl,
@@ -592,6 +805,54 @@ public class ParamPOSProvider : IPaymentProvider
             FallbackClientIp = "127.0.0.1",
             IsValid = isValid
         };
+    }
+
+    private static bool ShouldStorePaymentMethod(PaymentRequest request)
+    {
+        if (request.Card == null)
+        {
+            return false;
+        }
+
+        if (!request.ExtraData.TryGetValue("store_payment_method", out var raw) || raw == null)
+        {
+            return false;
+        }
+
+        return raw switch
+        {
+            bool boolValue => boolValue,
+            string stringValue when bool.TryParse(stringValue, out var parsed) => parsed,
+            _ => false
+        };
+    }
+
+    private static string GetStoredCardAlias(PaymentRequest request)
+    {
+        if (request.ExtraData.TryGetValue("stored_card_alias", out var alias) && alias != null)
+        {
+            return alias.ToString() ?? request.CustomerName;
+        }
+
+        return request.CustomerName;
+    }
+
+    private static string GetStoredCardReference(PaymentRequest request)
+    {
+        if (request.ExtraData.TryGetValue("stored_card_reference", out var reference) && reference != null)
+        {
+            return reference.ToString() ?? string.Empty;
+        }
+
+        return $"workspace-{request.WorkspaceId}";
+    }
+
+    private static void MergeStoredMethodData(Dictionary<string, object> providerData, StoredPaymentMethodResult storedMethod)
+    {
+        foreach (var kvp in storedMethod.ProviderData)
+        {
+            providerData[kvp.Key] = kvp.Value;
+        }
     }
 
     private static string BuildReturnUrl(string apiBaseUrl, string result)
@@ -607,6 +868,7 @@ public class ParamPOSProvider : IPaymentProvider
         public string ClientPassword { get; init; } = string.Empty;
         public string Guid { get; init; } = string.Empty;
         public string ServiceUrl { get; init; } = string.Empty;
+        public string CardStorageServiceUrl { get; init; } = string.Empty;
         public string SoapActionBase { get; init; } = DefaultXmlNamespace;
         public XNamespace XmlNamespace { get; init; } = XNamespace.Get(DefaultXmlNamespace);
         public string ApiBaseUrl { get; init; } = string.Empty;
