@@ -21,6 +21,7 @@ public class UpgradePlanCommand : BaseAuthenticatedCommand<UpgradePlanResponse>
     public string? ClientIp { get; set; }
     public string? ReferrerUrl { get; set; }
     public PaymentCard? Card { get; set; }
+    public bool AutoRenewalAccepted { get; set; }
     
     public override bool RequiresDriver => false;
 }
@@ -71,6 +72,15 @@ public class UpgradePlanCommandHandler : BaseAuthenticatedCommandHandler<Upgrade
             {
                 IsSuccess = false,
                 ErrorMessage = "Cannot upgrade to Trial plan"
+            };
+        }
+
+        if (!request.AutoRenewalAccepted)
+        {
+            return new UpgradePlanResponse
+            {
+                IsSuccess = false,
+                ErrorMessage = "Ücretli plana geçmek için kart saklama ve otomatik yenileme onayı zorunludur."
             };
         }
 

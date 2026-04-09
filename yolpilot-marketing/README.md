@@ -4,17 +4,21 @@ YolPilot marketing sitesi, `Next.js App Router` ile geliştirilmiş ürün anlat
 
 ## Amaç
 
-Site üç temel hedefi destekler:
+Site dört temel hedefi destekler:
 
 1. YolPilot ürününü ve kullanım senaryolarını anlatmak
 2. Demo ve teklif taleplerini toplamak
-3. Reklam ve organik trafik performansını ölçmek
+3. Fiyatlandırma ve satın alma mantığını şeffaf şekilde göstermek
+4. Reklam ve organik trafik performansını ölçmek
 
 ## Ana akışlar
 
 - Ana dönüşüm hedefi: `Demo Talep Edin`
 - Form hedefi: `/contact?intent=demo`
-- İkincil keşif hedefi: `/features`
+- İkincil keşif hedefleri:
+  - `/features`
+  - `/pricing`
+  - `/faq`
 - Reklam ve içerik sayfaları için sektör bazlı landing page yapısı bulunur
 
 ## Ölçümleme
@@ -50,6 +54,8 @@ Yüksek öncelikli satış sayfaları:
 
 - `/`
 - `/features`
+- `/pricing`
+- `/faq`
 - `/use-cases`
 - `/industries/ecommerce`
 - `/industries/logistics`
@@ -65,7 +71,7 @@ Yüksek öncelikli satış sayfaları:
 
 ## SEO
 
-Site şu SEO yapılarını içerir:
+Site şu SEO yapıları içerir:
 
 - Global metadata
 - Per-page metadata helper
@@ -85,3 +91,4 @@ npm run dev
 - Vercel Root Directory: `yolpilot-marketing`
 - Form eventleri backend tarafında `MarketingLead` ve `MarketingAnalyticsEvent` tablolarına gider
 - Super admin analytics ekranı `app.yolpilot.com` içinde ayrı panelden görüntülenir
+- Pricing sayfası ve reklam SSS sayfası doğrudan kampanya trafiğini karşılayacak şekilde canlıdır

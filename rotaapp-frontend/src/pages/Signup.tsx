@@ -1,8 +1,21 @@
-import React, { useMemo, useState } from 'react';
-import { ArrowRight, Building2, CheckCircle, CreditCard, Info, Loader2, Lock, Mail, Phone, User } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  ArrowRight,
+  Building2,
+  CheckCircle,
+  CreditCard,
+  Info,
+  Loader2,
+  Lock,
+  Mail,
+  Phone,
+  ShieldCheck,
+  User
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { authService } from '@/services/auth.service';
-import { paymentService, type PlanType } from '@/services/payment.service';
+import { paymentService, type PlanLimits, type PlanType } from '@/services/payment.service';
+import { getPlanCardData } from '@/lib/billingPlans';
 
 interface SignupForm {
   workspaceName: string;
@@ -14,6 +27,7 @@ interface SignupForm {
   adminPasswordConfirm: string;
   termsAccepted: boolean;
   privacyAccepted: boolean;
+  autoRenewalAccepted: boolean;
 }
 
 interface CardForm {
@@ -25,63 +39,15 @@ interface CardForm {
   cardHolderPhone: string;
 }
 
-const planCards: Array<{
-  id: PlanType;
-  name: string;
-  price: string;
-  period: string;
-  description: string;
-  features: string[];
-  popular?: boolean;
-}> = [
-  {
-    id: 'Trial',
-    name: 'Deneme',
-    price: '0₺',
-    period: '14 gün',
-    description: 'Önce sistemi görün, sonra planınızı yükseltin.',
-    features: ['2 sürücü', '1 araç', '50 müşteri', '100 durak/ay', '25 WhatsApp mesajı']
-  },
-  {
-    id: 'Starter',
-    name: 'Başlangıç',
-    price: '850₺',
-    period: '/ay',
-    description: 'Küçük ekipler için temel operasyon paketi.',
-    features: ['3 sürücü', '3 araç', '100 müşteri', '2 kullanıcı', '500 durak/ay']
-  },
-  {
-    id: 'Growth',
-    name: 'Büyüme',
-    price: '1.250₺',
-    period: '/ay',
-    description: 'Gerçek operasyon ekibi için en dengeli paket.',
-    features: ['Sınırsız sürücü/araç', '1.000 müşteri', '10 kullanıcı', 'Zaman pencereleri', '100 WhatsApp'],
-    popular: true
-  },
-  {
-    id: 'Professional',
-    name: 'Profesyonel',
-    price: '2.400₺',
-    period: '/ay',
-    description: 'Yüksek hacimli ekipler için gelişmiş görünürlük.',
-    features: ['2.000 durak/ay', 'Memnuniyet raporları', '10 kullanıcı', 'Gelişmiş operasyon görünümü']
-  },
-  {
-    id: 'Business',
-    name: 'İşletme',
-    price: '5.900₺',
-    period: '/ay',
-    description: 'Büyük ekipler ve özel rapor ihtiyacı olanlar için.',
-    features: ['50 kullanıcı', '5.000 durak/ay', '500 WhatsApp', 'Özel raporlar', 'Uzun arşiv süresi']
-  }
-];
+const planOrder: PlanType[] = ['Trial', 'Starter', 'Growth', 'Professional', 'Business'];
 
 const Signup: React.FC = () => {
   const [step, setStep] = useState(1);
   const [selectedPlan, setSelectedPlan] = useState<PlanType>('Trial');
   const [loading, setLoading] = useState(false);
+  const [plansLoading, setPlansLoading] = useState(true);
   const [error, setError] = useState('');
+  const [planLimits, setPlanLimits] = useState<Record<PlanType, PlanLimits> | null>(null);
   const [formData, setFormData] = useState<SignupForm>({
     workspaceName: '',
     workspaceEmail: '',
@@ -91,7 +57,8 @@ const Signup: React.FC = () => {
     adminPassword: '',
     adminPasswordConfirm: '',
     termsAccepted: false,
-    privacyAccepted: false
+    privacyAccepted: false,
+    autoRenewalAccepted: false
   });
   const [cardData, setCardData] = useState<CardForm>({
     cardHolderName: '',
@@ -102,22 +69,56 @@ const Signup: React.FC = () => {
     cardHolderPhone: ''
   });
 
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadPlanLimits = async () => {
+      setPlansLoading(true);
+      try {
+        const entries = await Promise.all(
+          planOrder.map(async (plan) => [plan, await paymentService.getPlanLimits(plan)] as const)
+        );
+
+        if (!cancelled) {
+          setPlanLimits(Object.fromEntries(entries) as Record<PlanType, PlanLimits>);
+        }
+      } catch (loadError) {
+        if (!cancelled) {
+          setError('Plan bilgileri yüklenemedi. Lütfen sayfayı yenileyip tekrar deneyin.');
+        }
+      } finally {
+        if (!cancelled) {
+          setPlansLoading(false);
+        }
+      }
+    };
+
+    void loadPlanLimits();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const passwordErrors = useMemo(() => validatePassword(formData.adminPassword), [formData.adminPassword]);
   const requiresPayment = selectedPlan !== 'Trial';
+  const selectedPlanInfo =
+    planLimits?.[selectedPlan] ? getPlanCardData(selectedPlan, planLimits[selectedPlan]) : null;
+  const renderedPlans = planOrder
+    .filter((plan) => planLimits?.[plan])
+    .map((plan) => getPlanCardData(plan, planLimits![plan]));
 
-  const selectedPlanInfo = planCards.find(plan => plan.id === selectedPlan)!;
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = event.target;
+    setFormData((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
   };
 
-  const handleCardChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setCardData(prev => ({
+  const handleCardChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setCardData((prev) => ({
       ...prev,
       [name]: value
     }));
@@ -149,11 +150,13 @@ const Signup: React.FC = () => {
 
     return (
       legalAccepted &&
+      formData.autoRenewalAccepted &&
       !!(cardData.cardHolderName || formData.adminFullName) &&
       cardData.cardNumber.replace(/\s/g, '').length >= 16 &&
       cardData.expiryMonth.length >= 2 &&
       cardData.expiryYear.length >= 2 &&
-      cardData.cvv.length >= 3
+      cardData.cvv.length >= 3 &&
+      validatePhone(cardData.cardHolderPhone || formData.workspacePhone)
     );
   };
 
@@ -187,6 +190,7 @@ const Signup: React.FC = () => {
         referrerUrl: window.location.href,
         successUrl: `${window.location.origin}/payment/success?flow=signup`,
         failUrl: `${window.location.origin}/payment/failed?flow=signup`,
+        autoRenewalAccepted: formData.autoRenewalAccepted,
         card: {
           cardHolderName: cardData.cardHolderName || formData.adminFullName,
           cardNumber: cardData.cardNumber,
@@ -198,7 +202,7 @@ const Signup: React.FC = () => {
       });
 
       if (!result.isSuccess || !result.paymentUrl || !result.transactionId || !result.signupToken) {
-        throw new Error(result.errorMessage || 'Ödeme başlatılamadı');
+        throw new Error(result.errorMessage || 'Ödeme başlatılamadı.');
       }
 
       localStorage.setItem('signupPaymentTransactionId', result.transactionId);
@@ -206,8 +210,14 @@ const Signup: React.FC = () => {
       localStorage.setItem('signupPaymentPlan', selectedPlan);
 
       window.location.href = result.paymentUrl;
-    } catch (err: any) {
-      setError(err.userFriendlyMessage || err.response?.data?.message || err.message || 'Kayıt sırasında bir hata oluştu');
+    } catch (submitError: any) {
+      setError(
+        submitError.userFriendlyMessage ||
+          submitError.response?.data?.errorMessage ||
+          submitError.response?.data?.message ||
+          submitError.message ||
+          'Kayıt sırasında bir hata oluştu.'
+      );
       setLoading(false);
     }
   };
@@ -228,9 +238,13 @@ const Signup: React.FC = () => {
       <div className="border-b bg-white">
         <div className="mx-auto max-w-4xl px-4 py-5 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
-            {[1, 2, 3].map(index => (
+            {[1, 2, 3].map((index) => (
               <div key={index} className="flex items-center">
-                <div className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold ${step >= index ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-600'}`}>
+                <div
+                  className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold ${
+                    step >= index ? 'bg-blue-600 text-white' : 'bg-slate-200 text-slate-600'
+                  }`}
+                >
                   {index}
                 </div>
                 {index < 3 && <div className={`h-1 w-20 sm:w-28 ${step > index ? 'bg-blue-600' : 'bg-slate-200'}`} />}
@@ -240,7 +254,7 @@ const Signup: React.FC = () => {
           <div className="mt-2 flex justify-between text-xs text-slate-500">
             <span>Firma</span>
             <span>Yönetici</span>
-            <span>Plan ve Ödeme</span>
+            <span>Plan ve ödeme</span>
           </div>
         </div>
       </div>
@@ -256,19 +270,38 @@ const Signup: React.FC = () => {
           {step === 1 && (
             <section className="space-y-6">
               <div>
-                <h1 className="text-2xl font-semibold text-slate-950">Firma Bilgileri</h1>
+                <h1 className="text-2xl font-semibold text-slate-950">Firma bilgileri</h1>
                 <p className="mt-2 text-sm text-slate-600">Önce operasyonu yönetecek şirket hesabını oluşturalım.</p>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Firma Adı *" icon={<Building2 className="h-5 w-5" />}>
-                  <input name="workspaceName" value={formData.workspaceName} onChange={handleInputChange} className={inputClassName} placeholder="Örn: ABC Lojistik" />
+                <Field label="Firma adı *" icon={<Building2 className="h-5 w-5" />}>
+                  <input
+                    name="workspaceName"
+                    value={formData.workspaceName}
+                    onChange={handleInputChange}
+                    className={inputClassName}
+                    placeholder="Örn: ABC Lojistik"
+                  />
                 </Field>
-                <Field label="Firma E-posta *" icon={<Mail className="h-5 w-5" />}>
-                  <input name="workspaceEmail" type="email" value={formData.workspaceEmail} onChange={handleInputChange} className={inputClassName} placeholder="info@firma.com" />
+                <Field label="Firma e-posta *" icon={<Mail className="h-5 w-5" />}>
+                  <input
+                    name="workspaceEmail"
+                    type="email"
+                    value={formData.workspaceEmail}
+                    onChange={handleInputChange}
+                    className={inputClassName}
+                    placeholder="info@firma.com"
+                  />
                 </Field>
-                <Field label="Firma Telefon *" icon={<Phone className="h-5 w-5" />}>
-                  <input name="workspacePhone" value={formData.workspacePhone} onChange={handleInputChange} className={inputClassName} placeholder="0532 123 45 67" />
+                <Field label="Firma telefon *" icon={<Phone className="h-5 w-5" />}>
+                  <input
+                    name="workspacePhone"
+                    value={formData.workspacePhone}
+                    onChange={handleInputChange}
+                    className={inputClassName}
+                    placeholder="0532 123 45 67"
+                  />
                 </Field>
               </div>
             </section>
@@ -277,22 +310,51 @@ const Signup: React.FC = () => {
           {step === 2 && (
             <section className="space-y-6">
               <div>
-                <h1 className="text-2xl font-semibold text-slate-950">Yönetici Hesabı</h1>
-                <p className="mt-2 text-sm text-slate-600">İlk giriş yapacak yönetici kullanıcının bilgilerini girin.</p>
+                <h1 className="text-2xl font-semibold text-slate-950">Yönetici hesabı</h1>
+                <p className="mt-2 text-sm text-slate-600">
+                  İlk giriş yapacak yönetici kullanıcının bilgilerini girin.
+                </p>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Ad Soyad *" icon={<User className="h-5 w-5" />}>
-                  <input name="adminFullName" value={formData.adminFullName} onChange={handleInputChange} className={inputClassName} placeholder="Adınız Soyadınız" />
+                <Field label="Ad soyad *" icon={<User className="h-5 w-5" />}>
+                  <input
+                    name="adminFullName"
+                    value={formData.adminFullName}
+                    onChange={handleInputChange}
+                    className={inputClassName}
+                    placeholder="Adınız Soyadınız"
+                  />
                 </Field>
-                <Field label="Yönetici E-posta *" icon={<Mail className="h-5 w-5" />}>
-                  <input name="adminEmail" type="email" value={formData.adminEmail} onChange={handleInputChange} className={inputClassName} placeholder="yonetici@firma.com" />
+                <Field label="Yönetici e-posta *" icon={<Mail className="h-5 w-5" />}>
+                  <input
+                    name="adminEmail"
+                    type="email"
+                    value={formData.adminEmail}
+                    onChange={handleInputChange}
+                    className={inputClassName}
+                    placeholder="yonetici@firma.com"
+                  />
                 </Field>
                 <Field label="Şifre *" icon={<Lock className="h-5 w-5" />}>
-                  <input name="adminPassword" type="password" value={formData.adminPassword} onChange={handleInputChange} className={inputClassName} placeholder="••••••••" />
+                  <input
+                    name="adminPassword"
+                    type="password"
+                    value={formData.adminPassword}
+                    onChange={handleInputChange}
+                    className={inputClassName}
+                    placeholder="••••••••"
+                  />
                 </Field>
-                <Field label="Şifre Tekrar *" icon={<Lock className="h-5 w-5" />}>
-                  <input name="adminPasswordConfirm" type="password" value={formData.adminPasswordConfirm} onChange={handleInputChange} className={inputClassName} placeholder="••••••••" />
+                <Field label="Şifre tekrar *" icon={<Lock className="h-5 w-5" />}>
+                  <input
+                    name="adminPasswordConfirm"
+                    type="password"
+                    value={formData.adminPasswordConfirm}
+                    onChange={handleInputChange}
+                    className={inputClassName}
+                    placeholder="••••••••"
+                  />
                 </Field>
               </div>
 
@@ -306,8 +368,14 @@ const Signup: React.FC = () => {
                   <PasswordRule ok={/[A-Z]/.test(formData.adminPassword)} text="En az 1 büyük harf" />
                   <PasswordRule ok={/[a-z]/.test(formData.adminPassword)} text="En az 1 küçük harf" />
                   <PasswordRule ok={/[0-9]/.test(formData.adminPassword)} text="En az 1 rakam" />
-                  <PasswordRule ok={/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(formData.adminPassword)} text="En az 1 özel karakter" />
-                  <PasswordRule ok={formData.adminPassword === formData.adminPasswordConfirm && formData.adminPasswordConfirm.length > 0} text="Şifreler eşleşmeli" />
+                  <PasswordRule
+                    ok={/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(formData.adminPassword)}
+                    text="En az 1 özel karakter"
+                  />
+                  <PasswordRule
+                    ok={formData.adminPassword === formData.adminPasswordConfirm && formData.adminPasswordConfirm.length > 0}
+                    text="Şifreler eşleşmeli"
+                  />
                 </div>
               </div>
             </section>
@@ -316,108 +384,221 @@ const Signup: React.FC = () => {
           {step === 3 && (
             <section className="space-y-6">
               <div>
-                <h1 className="text-2xl font-semibold text-slate-950">Plan Seçimi</h1>
+                <h1 className="text-2xl font-semibold text-slate-950">Plan seçimi</h1>
                 <p className="mt-2 text-sm text-slate-600">
                   Deneme ile başlayabilir veya ödemeyi şimdi yaparak doğrudan seçtiğiniz planla açabilirsiniz.
                 </p>
               </div>
 
-              <div className="grid gap-4 lg:grid-cols-2">
-                {planCards.map(plan => {
-                  const isSelected = selectedPlan === plan.id;
-                  return (
-                    <button
-                      key={plan.id}
-                      type="button"
-                      onClick={() => setSelectedPlan(plan.id)}
-                      className={`rounded-2xl border p-5 text-left transition ${isSelected ? 'border-blue-500 bg-blue-50 shadow-sm' : 'border-slate-200 bg-white hover:border-slate-300'}`}
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h3 className="text-lg font-semibold text-slate-950">{plan.name}</h3>
-                            {plan.popular && <span className="rounded-full bg-blue-600 px-2 py-1 text-xs font-medium text-white">Önerilen</span>}
-                          </div>
-                          <p className="mt-1 text-sm text-slate-600">{plan.description}</p>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-2xl font-semibold text-slate-950">{plan.price}</div>
-                          <div className="text-sm text-slate-500">{plan.period}</div>
-                        </div>
-                      </div>
-                      <ul className="mt-4 space-y-2 text-sm text-slate-700">
-                        {plan.features.map(feature => (
-                          <li key={feature} className="flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4 text-green-500" />
-                            <span>{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </button>
-                  );
-                })}
-              </div>
-
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <div className="text-sm font-medium text-slate-950">Seçilen plan: {selectedPlanInfo.name}</div>
-                    <div className="mt-1 text-sm text-slate-600">
-                      {requiresPayment
-                        ? `Bu plan için ödeme şimdi alınır ve hesabınız ${selectedPlanInfo.name} planıyla açılır.`
-                        : 'Hesabınız 14 günlük deneme ile açılır. Daha sonra panel içinden yükseltebilirsiniz.'}
-                    </div>
-                  </div>
-                  {requiresPayment && <CreditCard className="h-5 w-5 text-slate-500" />}
+              {plansLoading ? (
+                <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-600">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Plan bilgileri yükleniyor...
                 </div>
-              </div>
+              ) : (
+                <div className="grid gap-4 lg:grid-cols-2">
+                  {renderedPlans.map((plan) => {
+                    const isSelected = selectedPlan === plan.id;
+                    return (
+                      <button
+                        key={plan.id}
+                        type="button"
+                        onClick={() => setSelectedPlan(plan.id)}
+                        className={`rounded-2xl border p-5 text-left transition ${
+                          isSelected
+                            ? 'border-blue-500 bg-blue-50 shadow-sm'
+                            : 'border-slate-200 bg-white hover:border-slate-300'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <h3 className="text-lg font-semibold text-slate-950">{plan.name}</h3>
+                              {plan.popular && (
+                                <span className="rounded-full bg-blue-600 px-2 py-1 text-xs font-medium text-white">
+                                  Önerilen
+                                </span>
+                              )}
+                            </div>
+                            <p className="mt-1 text-sm text-slate-600">{plan.description}</p>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-2xl font-semibold text-slate-950">{plan.price}</div>
+                            <div className="text-sm text-slate-500">{plan.period}</div>
+                          </div>
+                        </div>
+                        <ul className="mt-4 space-y-2 text-sm text-slate-700">
+                          {plan.features.map((feature) => (
+                            <li key={feature} className="flex items-center gap-2">
+                              <CheckCircle className="h-4 w-4 text-green-500" />
+                              <span>{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              {selectedPlanInfo && (
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <div className="text-sm font-medium text-slate-950">Seçilen plan: {selectedPlanInfo.name}</div>
+                      <div className="mt-1 text-sm text-slate-600">
+                        {requiresPayment
+                          ? `Bu plan için ödeme şimdi alınır ve hesabınız ${selectedPlanInfo.name} planıyla açılır.`
+                          : 'Hesabınız 14 günlük deneme ile açılır. Daha sonra panel içinden yükseltebilirsiniz.'}
+                      </div>
+                    </div>
+                    {requiresPayment && <CreditCard className="h-5 w-5 text-slate-500" />}
+                  </div>
+                </div>
+              )}
 
               {requiresPayment && (
-                <div className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-5 sm:grid-cols-2">
-                  <Field label="Kart Üzerindeki İsim *" icon={<User className="h-5 w-5" />}>
-                    <input name="cardHolderName" value={cardData.cardHolderName} onChange={handleCardChange} className={inputClassName} placeholder={formData.adminFullName || 'Kart üzerindeki isim'} />
-                  </Field>
-                  <Field label="Kart Numarası *" icon={<CreditCard className="h-5 w-5" />}>
-                    <input name="cardNumber" value={cardData.cardNumber} onChange={handleCardChange} className={inputClassName} placeholder="4242 4242 4242 4242" inputMode="numeric" />
-                  </Field>
-                  <Field label="Son Kullanma Ay *" icon={<CreditCard className="h-5 w-5" />}>
-                    <input name="expiryMonth" value={cardData.expiryMonth} onChange={handleCardChange} className={inputClassName} placeholder="MM" inputMode="numeric" />
-                  </Field>
-                  <Field label="Son Kullanma Yıl *" icon={<CreditCard className="h-5 w-5" />}>
-                    <input name="expiryYear" value={cardData.expiryYear} onChange={handleCardChange} className={inputClassName} placeholder="YYYY" inputMode="numeric" />
-                  </Field>
-                  <Field label="CVV *" icon={<Lock className="h-5 w-5" />}>
-                    <input name="cvv" type="password" value={cardData.cvv} onChange={handleCardChange} className={inputClassName} placeholder="123" inputMode="numeric" />
-                  </Field>
-                  <Field label="Kart Sahibi Telefon" icon={<Phone className="h-5 w-5" />}>
-                    <input name="cardHolderPhone" value={cardData.cardHolderPhone} onChange={handleCardChange} className={inputClassName} placeholder={formData.workspacePhone || '5xx xxx xx xx'} />
-                  </Field>
-                </div>
+                <>
+                  <div className="rounded-2xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-950">
+                    <div className="flex items-start gap-3">
+                      <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-blue-700" />
+                      <div>
+                        <div className="font-medium">Otomatik yenileme için kart saklama zorunludur</div>
+                        <p className="mt-1 leading-6 text-blue-900/80">
+                          İlk ödeme sırasında kartınız güvenli ödeme sağlayıcısında saklanır. Aboneliğiniz her ay
+                          otomatik yenilenir. Tahsilat başarısız olursa 3 gün sonunda erişim kapanır.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-5 sm:grid-cols-2">
+                    <Field label="Kart üzerindeki isim *" icon={<User className="h-5 w-5" />}>
+                      <input
+                        name="cardHolderName"
+                        value={cardData.cardHolderName}
+                        onChange={handleCardChange}
+                        className={inputClassName}
+                        placeholder={formData.adminFullName || 'Kart üzerindeki isim'}
+                      />
+                    </Field>
+                    <Field label="Kart numarası *" icon={<CreditCard className="h-5 w-5" />}>
+                      <input
+                        name="cardNumber"
+                        value={cardData.cardNumber}
+                        onChange={handleCardChange}
+                        className={inputClassName}
+                        placeholder="4242 4242 4242 4242"
+                        inputMode="numeric"
+                      />
+                    </Field>
+                    <Field label="Son kullanma ay *" icon={<CreditCard className="h-5 w-5" />}>
+                      <input
+                        name="expiryMonth"
+                        value={cardData.expiryMonth}
+                        onChange={handleCardChange}
+                        className={inputClassName}
+                        placeholder="MM"
+                        inputMode="numeric"
+                      />
+                    </Field>
+                    <Field label="Son kullanma yıl *" icon={<CreditCard className="h-5 w-5" />}>
+                      <input
+                        name="expiryYear"
+                        value={cardData.expiryYear}
+                        onChange={handleCardChange}
+                        className={inputClassName}
+                        placeholder="YYYY"
+                        inputMode="numeric"
+                      />
+                    </Field>
+                    <Field label="CVV *" icon={<Lock className="h-5 w-5" />}>
+                      <input
+                        name="cvv"
+                        type="password"
+                        value={cardData.cvv}
+                        onChange={handleCardChange}
+                        className={inputClassName}
+                        placeholder="123"
+                        inputMode="numeric"
+                      />
+                    </Field>
+                    <Field label="Kart sahibi telefonu *" icon={<Phone className="h-5 w-5" />}>
+                      <input
+                        name="cardHolderPhone"
+                        value={cardData.cardHolderPhone}
+                        onChange={handleCardChange}
+                        className={inputClassName}
+                        placeholder={formData.workspacePhone || '05xx xxx xx xx'}
+                      />
+                    </Field>
+                  </div>
+                </>
               )}
 
               <div className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
                 <label className="flex items-start gap-3">
-                  <input type="checkbox" name="termsAccepted" checked={formData.termsAccepted} onChange={handleInputChange} className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600" />
+                  <input
+                    type="checkbox"
+                    name="termsAccepted"
+                    checked={formData.termsAccepted}
+                    onChange={handleInputChange}
+                    className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600"
+                  />
                   <span>
-                    <Link to="/terms" target="_blank" className="font-medium text-blue-600 hover:underline">Kullanım koşullarını</Link> okudum ve kabul ediyorum.
+                    <Link to="/terms" target="_blank" className="font-medium text-blue-600 hover:underline">
+                      Kullanım koşullarını
+                    </Link>{' '}
+                    okudum ve kabul ediyorum.
                   </span>
                 </label>
                 <label className="flex items-start gap-3">
-                  <input type="checkbox" name="privacyAccepted" checked={formData.privacyAccepted} onChange={handleInputChange} className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600" />
+                  <input
+                    type="checkbox"
+                    name="privacyAccepted"
+                    checked={formData.privacyAccepted}
+                    onChange={handleInputChange}
+                    className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600"
+                  />
                   <span>
-                    <Link to="/privacy" target="_blank" className="font-medium text-blue-600 hover:underline">Gizlilik politikasını</Link> okudum ve kabul ediyorum.
+                    <Link to="/privacy" target="_blank" className="font-medium text-blue-600 hover:underline">
+                      Gizlilik politikasını
+                    </Link>{' '}
+                    okudum ve kabul ediyorum.
                   </span>
                 </label>
+                {requiresPayment && (
+                  <label className="flex items-start gap-3">
+                    <input
+                      type="checkbox"
+                      name="autoRenewalAccepted"
+                      checked={formData.autoRenewalAccepted}
+                      onChange={handleInputChange}
+                      className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600"
+                    />
+                    <span>
+                      Kartımın güvenli ödeme sağlayıcısında saklanmasını, aylık abonelik ücretinin otomatik
+                      tahsil edilmesini ve başarısız tahsilatta 3 gün sonunda erişimin durdurulacağını kabul
+                      ediyorum.
+                    </span>
+                  </label>
+                )}
               </div>
             </section>
           )}
 
           <div className="mt-8 flex items-center justify-between">
             {step > 1 ? (
-              <button type="button" onClick={() => setStep(step - 1)} className="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
+              <button
+                type="button"
+                onClick={() => setStep(step - 1)}
+                className="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+              >
                 Geri
               </button>
-            ) : <div />}
+            ) : (
+              <div />
+            )}
 
             {step < 3 ? (
               <button
@@ -433,7 +614,7 @@ const Signup: React.FC = () => {
               <button
                 type="button"
                 onClick={handleSubmit}
-                disabled={loading || !validateStep(3)}
+                disabled={loading || !validateStep(3) || plansLoading}
                 className="inline-flex items-center gap-2 rounded-xl bg-green-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-slate-300"
               >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle className="h-4 w-4" />}
@@ -447,7 +628,11 @@ const Signup: React.FC = () => {
   );
 };
 
-const Field: React.FC<{ label: string; icon: React.ReactNode; children: React.ReactNode }> = ({ label, icon, children }) => (
+const Field: React.FC<{ label: string; icon: React.ReactNode; children: React.ReactNode }> = ({
+  label,
+  icon,
+  children
+}) => (
   <label className="space-y-1.5">
     <span className="block text-sm font-medium text-slate-700">{label}</span>
     <div className="relative">

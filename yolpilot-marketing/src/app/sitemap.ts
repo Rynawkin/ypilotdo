@@ -4,6 +4,8 @@ import { SITE_URL } from '@/lib/marketing';
 const routes = [
   '',
   '/features',
+  '/pricing',
+  '/faq',
   '/contact',
   '/customers',
   '/comparison',
@@ -31,6 +33,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${SITE_URL}${route}`,
     lastModified: now,
     changeFrequency: route === '' ? 'weekly' : 'monthly',
-    priority: route === '' ? 1 : route === '/contact' || route === '/features' ? 0.9 : 0.7
+    priority:
+      route === ''
+        ? 1
+        : route === '/contact' || route === '/features' || route === '/pricing' || route === '/faq'
+          ? 0.9
+          : 0.7
   }));
 }

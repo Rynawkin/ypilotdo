@@ -10,16 +10,16 @@ const Footer: React.FC = () => {
       title: 'Platform',
       links: [
         { name: 'Özellikler', href: '/features' },
-        { name: 'Kullanım Senaryoları', href: '/use-cases' },
-        { name: 'ROI Hesaplayıcı', href: '/roi-calculator' }
+        { name: 'Fiyatlandırma', href: '/pricing' },
+        { name: 'Sık Sorulan Sorular', href: '/faq' }
       ]
     },
     {
-      title: 'Sektörler',
+      title: 'Çözümler',
       links: [
+        { name: 'Kullanım Senaryoları', href: '/use-cases' },
         { name: 'E-ticaret', href: '/industries/ecommerce' },
-        { name: 'Lojistik', href: '/industries/logistics' },
-        { name: 'Perakende', href: '/industries/retail' }
+        { name: 'Lojistik', href: '/industries/logistics' }
       ]
     },
     {

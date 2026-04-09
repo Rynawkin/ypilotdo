@@ -1,8 +1,7 @@
-// src/components/payment/UpgradePlan.tsx
-
-import React, { useState, useEffect } from 'react';
-import { Check, Loader2, X, Star, Zap, Shield, Crown } from 'lucide-react';
-import { paymentService, type PlanType, type PlanLimits, type UpgradePlanRequest } from '../../services/payment.service';
+import React, { useEffect, useMemo, useState } from 'react';
+import { AlertCircle, Check, CreditCard, Loader2, ShieldCheck, Star, X } from 'lucide-react';
+import { paymentService, type PlanLimits, type PlanType, type UpgradePlanRequest } from '../../services/payment.service';
+import { getPlanCardData } from '@/lib/billingPlans';
 
 interface UpgradePlanProps {
   onClose?: () => void;
@@ -10,63 +9,7 @@ interface UpgradePlanProps {
   className?: string;
 }
 
-const planFeatures = {
-  Starter: {
-    icon: <Zap className="h-6 w-6" />,
-    color: 'blue',
-    features: [
-      '3 sürücü, 3 araç',
-      '100 müşteri',
-      '2 kullanıcı',
-      '500 durak/ay (ek 3₺)',
-      'WhatsApp yok',
-      'Rota şablonları',
-      '30 gün kanıt arşivi'
-    ]
-  },
-  Growth: {
-    icon: <Star className="h-6 w-6" />,
-    color: 'green',
-    features: [
-      'Sınırsız sürücü & araç',
-      '1.000 müşteri',
-      '10 kullanıcı',
-      '500 durak/ay (ek 3₺)',
-      '100 WhatsApp/ay (ek 0,50₺)',
-      'Zaman penceresi',
-      'Müşteri memnuniyet raporu',
-      '90 gün kanıt arşivi'
-    ]
-  },
-  Professional: {
-    icon: <Shield className="h-6 w-6" />,
-    color: 'purple',
-    features: [
-      'Sınırsız sürücü & araç',
-      '1.000 müşteri',
-      '10 kullanıcı',
-      '2.000 durak/ay (ek 2₺)',
-      '100 WhatsApp/ay (ek 0,50₺)',
-      'Gelişmiş özellikler',
-      'Öncelik desteği',
-      '90 gün kanıt arşivi'
-    ]
-  },
-  Business: {
-    icon: <Crown className="h-6 w-6" />,
-    color: 'yellow',
-    features: [
-      'Sınırsız her şey',
-      'Sınırsız müşteri',
-      '50 kullanıcı',
-      '5.000 durak/ay (ek 1,5₺)',
-      '500 WhatsApp/ay (ek 0,30₺)',
-      'Özel raporlar',
-      'Özel entegrasyon',
-      '365 gün kanıt arşivi'
-    ]
-  }
-};
+const paidPlans: PlanType[] = ['Starter', 'Growth', 'Professional', 'Business'];
 
 export const UpgradePlan: React.FC<UpgradePlanProps> = ({
   onClose,
@@ -74,10 +17,11 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
   className = ''
 }) => {
   const [selectedPlan, setSelectedPlan] = useState<PlanType>('Growth');
-  const [planLimits, setPlanLimits] = useState<Record<PlanType, PlanLimits>>({} as any);
+  const [planLimits, setPlanLimits] = useState<Record<PlanType, PlanLimits>>({} as Record<PlanType, PlanLimits>);
   const [loading, setLoading] = useState(true);
   const [upgrading, setUpgrading] = useState(false);
   const [step, setStep] = useState<1 | 2>(1);
+  const [error, setError] = useState('');
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     email: '',
@@ -91,40 +35,52 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
     cvv: '',
     cardHolderPhone: ''
   });
+  const [autoRenewalAccepted, setAutoRenewalAccepted] = useState(false);
 
   useEffect(() => {
-    loadPlanLimits();
+    void loadPlanLimits();
   }, []);
 
+  const selectedPlanCard = useMemo(() => {
+    const limits = planLimits[selectedPlan];
+    return limits ? getPlanCardData(selectedPlan, limits) : null;
+  }, [planLimits, selectedPlan]);
+
   const loadPlanLimits = async () => {
+    setLoading(true);
+    setError('');
     try {
-      const plans: PlanType[] = ['Starter', 'Growth', 'Professional', 'Business'];
-      const limits: Record<string, PlanLimits> = {};
-      
-      for (const plan of plans) {
-        const planLimit = await paymentService.getPlanLimits(plan);
-        limits[plan] = planLimit;
-      }
-      
-      setPlanLimits(limits as Record<PlanType, PlanLimits>);
-    } catch (error) {
-      console.error('Error loading plan limits:', error);
+      const entries = await Promise.all(
+        paidPlans.map(async (plan) => [plan, await paymentService.getPlanLimits(plan)] as const)
+      );
+      setPlanLimits(Object.fromEntries(entries) as Record<PlanType, PlanLimits>);
+    } catch (loadError: any) {
+      setError(loadError?.response?.data?.errorMessage || 'Plan bilgileri yüklenemedi.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleUpgrade = async () => {
+    setError('');
+
     if (step === 1) {
       if (!customerInfo.name || !customerInfo.email || !customerInfo.phone) {
-        alert('Lütfen tüm bilgileri doldurun');
+        setError('Lütfen tüm fatura bilgilerini doldurun.');
         return;
       }
       setStep(2);
       return;
     }
-    if (!cardInfo.cardNumber || !cardInfo.expiryMonth || !cardInfo.expiryYear || !cardInfo.cvv) {
-      alert('Lütfen kart bilgilerini doldurun');
+
+    if (
+      !cardInfo.cardNumber ||
+      !cardInfo.expiryMonth ||
+      !cardInfo.expiryYear ||
+      !cardInfo.cvv ||
+      !autoRenewalAccepted
+    ) {
+      setError('Kart bilgilerini tamamlayın ve otomatik yenileme onayını verin.');
       return;
     }
 
@@ -138,6 +94,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
         customerEmail: customerInfo.email,
         customerName: customerInfo.name,
         customerPhone: customerInfo.phone,
+        autoRenewalAccepted,
         referrerUrl: window.location.href,
         card: {
           cardHolderName,
@@ -152,40 +109,23 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
       };
 
       const result = await paymentService.initiatePlanUpgrade(request);
-      
+
       if (result.isSuccess && result.paymentUrl) {
-        // Redirect to payment provider
         window.location.href = result.paymentUrl;
-      } else {
-        alert(result.errorMessage || 'Ödeme başlatılamadı');
+        return;
       }
-    } catch (error: any) {
-      console.error('Upgrade error:', error);
-      const errorMessage = error.userFriendlyMessage || error.response?.data?.message || 'Bir hata oluştu. Lütfen tekrar deneyin.';
-      alert(errorMessage);
+
+      setError(result.errorMessage || 'Ödeme başlatılamadı.');
+    } catch (upgradeError: any) {
+      setError(
+        upgradeError.userFriendlyMessage ||
+          upgradeError.response?.data?.errorMessage ||
+          upgradeError.response?.data?.message ||
+          'Bir hata oluştu. Lütfen tekrar deneyin.'
+      );
     } finally {
       setUpgrading(false);
     }
-  };
-
-  const getColorClasses = (color: string, selected: boolean) => {
-    const colors = {
-      blue: selected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300',
-      green: selected ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300',
-      purple: selected ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-purple-300',
-      yellow: selected ? 'border-yellow-500 bg-yellow-50' : 'border-gray-200 hover:border-yellow-300'
-    };
-    return colors[color as keyof typeof colors] || colors.blue;
-  };
-
-  const getIconColor = (color: string) => {
-    const colors = {
-      blue: 'text-blue-600',
-      green: 'text-green-600',
-      purple: 'text-purple-600',
-      yellow: 'text-yellow-600'
-    };
-    return colors[color as keyof typeof colors] || colors.blue;
   };
 
   if (loading) {
@@ -196,250 +136,222 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
     );
   }
 
-  const availablePlans: PlanType[] = ['Starter', 'Growth', 'Professional', 'Business'];
-
   return (
-    <div className={`bg-white rounded-lg shadow-lg ${className}`}>
-      {/* Header */}
-      <div className="flex items-center justify-between p-6 border-b">
+    <div className={`rounded-lg bg-white shadow-lg ${className}`}>
+      <div className="flex items-center justify-between border-b p-6">
         <div>
-          <h2 className="text-xl font-semibold text-gray-900">Planınızı Yükseltin</h2>
-          <p className="text-sm text-gray-600 mt-1">
-            İhtiyaçlarınıza uygun planı seçin ve daha fazla özellikten yararlanın
+          <h2 className="text-xl font-semibold text-gray-900">Planınızı yükseltin</h2>
+          <p className="mt-1 text-sm text-gray-600">
+            İhtiyacınıza uygun paketi seçin. Ücretli planlarda kart kaydı ve otomatik yenileme zorunludur.
           </p>
         </div>
         {onClose && (
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
-          >
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
             <X className="h-6 w-6" />
           </button>
         )}
       </div>
 
       <div className="p-6">
-        {/* Plan Selection */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {availablePlans.map((plan) => {
-            const planInfo = planFeatures[plan];
+        {error && (
+          <div className="mb-6 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
+            {error}
+          </div>
+        )}
+
+        <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {paidPlans.map((plan) => {
             const limits = planLimits[plan];
+            const planCard = limits ? getPlanCardData(plan, limits) : null;
             const isSelected = selectedPlan === plan;
             const isCurrent = currentPlan === plan;
 
+            if (!planCard) {
+              return null;
+            }
+
             return (
-              <div
+              <button
                 key={plan}
-                className={`relative p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                  getColorClasses(planInfo.color, isSelected)
-                } ${isCurrent ? 'opacity-50 cursor-not-allowed' : ''}`}
+                type="button"
+                className={`relative rounded-2xl border p-5 text-left transition ${
+                  isSelected ? 'border-blue-500 bg-blue-50 shadow-sm' : 'border-gray-200 bg-white hover:border-gray-300'
+                } ${isCurrent ? 'cursor-not-allowed opacity-50' : ''}`}
                 onClick={() => !isCurrent && setSelectedPlan(plan)}
               >
                 {isCurrent && (
-                  <div className="absolute top-2 right-2">
-                    <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">
-                      Mevcut
-                    </span>
-                  </div>
+                  <span className="absolute right-4 top-4 rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700">
+                    Mevcut plan
+                  </span>
                 )}
-
-                <div className="flex items-center space-x-2 mb-3">
-                  <div className={getIconColor(planInfo.color)}>
-                    {planInfo.icon}
-                  </div>
-                  <h3 className="font-semibold">{paymentService.getPlanDisplayName(plan)}</h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-semibold text-gray-900">{planCard.name}</h3>
+                  {planCard.popular && (
+                    <span className="rounded-full bg-blue-600 px-2 py-1 text-xs font-medium text-white">Önerilen</span>
+                  )}
                 </div>
-
-                {limits && (
-                  <div className="mb-3">
-                    <div className="text-2xl font-bold text-gray-900">
-                      {paymentService.formatPrice(limits.monthlyPrice)}
-                    </div>
-                    <div className="text-sm text-gray-600">aylık</div>
-                  </div>
-                )}
-
-                <ul className="space-y-1 text-sm">
-                  {planInfo.features.map((feature, index) => (
-                    <li key={index} className="flex items-start space-x-2">
-                      <Check className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-700">{feature}</span>
+                <p className="mt-2 text-sm text-gray-600">{planCard.description}</p>
+                <div className="mt-4">
+                  <div className="text-2xl font-bold text-gray-900">{planCard.price}</div>
+                  <div className="text-sm text-gray-500">{planCard.period}</div>
+                </div>
+                <ul className="mt-4 space-y-2 text-sm text-gray-700">
+                  {planCard.features.slice(0, 6).map((feature) => (
+                    <li key={feature} className="flex items-start gap-2">
+                      <Check className="mt-0.5 h-4 w-4 shrink-0 text-green-500" />
+                      <span>{feature}</span>
                     </li>
                   ))}
                 </ul>
-              </div>
+              </button>
             );
           })}
         </div>
 
-        {/* Customer Information */}
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
-          <h3 className="font-medium text-gray-900 mb-3">Fatura Bilgileri</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Ad Soyad *
-              </label>
-              <input
-                type="text"
-                value={customerInfo.name}
-                onChange={(e) => setCustomerInfo(prev => ({ ...prev, name: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="John Doe"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                E-posta *
-              </label>
-              <input
-                type="email"
-                value={customerInfo.email}
-                onChange={(e) => setCustomerInfo(prev => ({ ...prev, email: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="john@example.com"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Telefon *
-              </label>
-              <input
-                type="tel"
-                value={customerInfo.phone}
-                onChange={(e) => setCustomerInfo(prev => ({ ...prev, phone: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="+90 555 123 45 67"
-              />
+        <div className="mb-6 rounded-2xl border border-blue-200 bg-blue-50 p-4">
+          <div className="flex items-start gap-3">
+            <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-blue-700" />
+            <div className="text-sm text-blue-950">
+              <div className="font-medium">Seçilen plan: {selectedPlanCard?.name}</div>
+              <p className="mt-1 leading-6 text-blue-900/80">
+                İlk ödeme şimdi alınır. Kartınız güvenli ödeme sağlayıcısında saklanır ve aboneliğiniz her ay
+                otomatik yenilenir. Tahsilat başarısız olursa 3 gün sonra erişim kapanır.
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Card Information */}
+        <div className="mb-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <div className="mb-4 flex items-center gap-2">
+            <Star className="h-4 w-4 text-slate-600" />
+            <h3 className="text-sm font-semibold text-slate-900">Fatura bilgileri</h3>
+          </div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <input
+              type="text"
+              value={customerInfo.name}
+              onChange={(event) => setCustomerInfo((prev) => ({ ...prev, name: event.target.value }))}
+              className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500"
+              placeholder="Ad Soyad"
+            />
+            <input
+              type="email"
+              value={customerInfo.email}
+              onChange={(event) => setCustomerInfo((prev) => ({ ...prev, email: event.target.value }))}
+              className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500"
+              placeholder="ornek@firma.com"
+            />
+            <input
+              type="tel"
+              value={customerInfo.phone}
+              onChange={(event) => setCustomerInfo((prev) => ({ ...prev, phone: event.target.value }))}
+              className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500"
+              placeholder="05xx xxx xx xx"
+            />
+          </div>
+        </div>
+
         {step === 2 && (
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
-          <h3 className="font-medium text-gray-900 mb-3">Kart Bilgileri</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Kart Üzerindeki İsim *
-              </label>
+          <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-5">
+            <div className="mb-4 flex items-center gap-2">
+              <CreditCard className="h-4 w-4 text-slate-600" />
+              <h3 className="text-sm font-semibold text-slate-900">Kart bilgileri</h3>
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <input
                 type="text"
                 value={cardInfo.cardHolderName}
-                onChange={(e) => setCardInfo(prev => ({ ...prev, cardHolderName: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="John Doe"
+                onChange={(event) => setCardInfo((prev) => ({ ...prev, cardHolderName: event.target.value }))}
+                className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500"
+                placeholder="Kart üzerindeki isim"
               />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Kart Numarası *
-              </label>
               <input
                 type="text"
                 value={cardInfo.cardNumber}
-                onChange={(e) => setCardInfo(prev => ({ ...prev, cardNumber: e.target.value.replace(/[^0-9 ]/g, '') }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(event) =>
+                  setCardInfo((prev) => ({ ...prev, cardNumber: event.target.value.replace(/[^0-9 ]/g, '') }))
+                }
+                className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500"
                 placeholder="4242 4242 4242 4242"
                 inputMode="numeric"
                 autoComplete="cc-number"
               />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Son Kullanma Ay *
-                </label>
+              <div className="grid grid-cols-3 gap-4 md:col-span-2">
                 <input
                   type="text"
                   value={cardInfo.expiryMonth}
-                  onChange={(e) => setCardInfo(prev => ({ ...prev, expiryMonth: e.target.value.replace(/[^0-9]/g, '') }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(event) =>
+                    setCardInfo((prev) => ({ ...prev, expiryMonth: event.target.value.replace(/[^0-9]/g, '') }))
+                  }
+                  className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500"
                   placeholder="MM"
                   inputMode="numeric"
                   maxLength={2}
                   autoComplete="cc-exp-month"
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Son Kullanma Yıl *
-                </label>
                 <input
                   type="text"
                   value={cardInfo.expiryYear}
-                  onChange={(e) => setCardInfo(prev => ({ ...prev, expiryYear: e.target.value.replace(/[^0-9]/g, '') }))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onChange={(event) =>
+                    setCardInfo((prev) => ({ ...prev, expiryYear: event.target.value.replace(/[^0-9]/g, '') }))
+                  }
+                  className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500"
                   placeholder="YYYY"
                   inputMode="numeric"
                   maxLength={4}
                   autoComplete="cc-exp-year"
                 />
+                <input
+                  type="password"
+                  value={cardInfo.cvv}
+                  onChange={(event) =>
+                    setCardInfo((prev) => ({ ...prev, cvv: event.target.value.replace(/[^0-9]/g, '') }))
+                  }
+                  className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500"
+                  placeholder="CVV"
+                  inputMode="numeric"
+                  maxLength={4}
+                  autoComplete="cc-csc"
+                />
               </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                CVV *
-              </label>
-              <input
-                type="password"
-                value={cardInfo.cvv}
-                onChange={(e) => setCardInfo(prev => ({ ...prev, cvv: e.target.value.replace(/[^0-9]/g, '') }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="123"
-                inputMode="numeric"
-                maxLength={4}
-                autoComplete="cc-csc"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Kart Sahibi Telefon
-              </label>
               <input
                 type="tel"
                 value={cardInfo.cardHolderPhone}
-                onChange={(e) => setCardInfo(prev => ({ ...prev, cardHolderPhone: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="5xx xxx xx xx"
+                onChange={(event) => setCardInfo((prev) => ({ ...prev, cardHolderPhone: event.target.value }))}
+                className="w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-blue-500 md:col-span-2"
+                placeholder="Kart sahibinin telefonu"
               />
             </div>
-          </div>
-        </div>
 
-        )}
-        {/* Selected Plan Summary */}
-        {planLimits[selectedPlan] && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-medium text-blue-900">
-                  {paymentService.getPlanDisplayName(selectedPlan)} Planı
-                </h3>
-                <p className="text-sm text-blue-700">
-                  Aylık {paymentService.formatPrice(planLimits[selectedPlan].monthlyPrice)}
-                </p>
-              </div>
-              <div className="text-blue-600">
-                {planFeatures[selectedPlan].icon}
-              </div>
-            </div>
+            <label className="mt-5 flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+              <input
+                type="checkbox"
+                checked={autoRenewalAccepted}
+                onChange={(event) => setAutoRenewalAccepted(event.target.checked)}
+                className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600"
+              />
+              <span>
+                Kartımın güvenli ödeme sağlayıcısında saklanmasını, aylık abonelik ücretinin otomatik tahsil
+                edilmesini ve başarısız tahsilatta 3 gün sonra erişimin kapanacağını kabul ediyorum.
+              </span>
+            </label>
           </div>
         )}
 
-        {/* Action Buttons */}
         {step === 1 && (
-          <p className="text-xs text-gray-500 mb-2">
-            Kart bilgileri bir sonraki adımda alınır. Bankanın 3D sayfasına yönlendirileceksiniz.
-            Kart bilgileriniz sistemde saklanmaz.
-          </p>
+          <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+            <span>
+              Bir sonraki adımda kart bilgileri alınır. Kart kaydı olmadan ücretli plan başlatılamaz.
+            </span>
+          </div>
         )}
-        <div className="flex items-center justify-end space-x-3">
+
+        <div className="flex items-center justify-end gap-3">
           {onClose && (
             <button
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
               disabled={upgrading}
             >
               İptal
@@ -448,7 +360,7 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
           {step === 2 && (
             <button
               onClick={() => setStep(1)}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
               disabled={upgrading}
             >
               Geri
@@ -457,10 +369,10 @@ export const UpgradePlan: React.FC<UpgradePlanProps> = ({
           <button
             onClick={handleUpgrade}
             disabled={upgrading || currentPlan === selectedPlan}
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {upgrading && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-            {upgrading ? "Yönlendiriliyor..." : step === 1 ? "Kart Bilgilerine Geç" : "Ödemeye Geç"}
+            {upgrading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {upgrading ? 'Yönlendiriliyor...' : step === 1 ? 'Kart Bilgilerine Geç' : 'Ödemeye Geç'}
           </button>
         </div>
       </div>

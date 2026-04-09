@@ -11,6 +11,7 @@ export interface UpgradePlanRequest {
   customerEmail: string;
   customerName: string;
   customerPhone: string;
+  autoRenewalAccepted: boolean;
   referrerUrl?: string;
   card: PaymentCard;
   successUrl?: string;
@@ -25,6 +26,7 @@ export interface SignupPaymentRequest {
   adminFullName: string;
   adminEmail: string;
   adminPassword: string;
+  autoRenewalAccepted: boolean;
   referrerUrl?: string;
   card: PaymentCard;
   successUrl?: string;

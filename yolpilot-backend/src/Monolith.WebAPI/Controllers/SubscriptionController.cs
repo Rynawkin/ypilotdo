@@ -123,6 +123,7 @@ public class SubscriptionController : ControllerBase
     }
 
     [HttpGet("plan-limits/{planType}")]
+    [AllowAnonymous]
     public IActionResult GetPlanLimits(string planType)
     {
         // PlanType enum'ını parse et

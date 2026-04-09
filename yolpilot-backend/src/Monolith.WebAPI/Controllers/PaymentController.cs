@@ -93,6 +93,15 @@ public class PaymentController : ControllerBase
     [Authorize(Roles = "Admin,SuperAdmin")]
     public async Task<ActionResult<UpgradePlanResponse>> InitiateUpgrade([FromBody] UpgradePlanRequest request)
     {
+        if (!request.AutoRenewalAccepted)
+        {
+            return BadRequest(new UpgradePlanResponse
+            {
+                IsSuccess = false,
+                ErrorMessage = "Ücretli plana geçmek için kart saklama ve otomatik yenileme onayı zorunludur."
+            });
+        }
+
         var clientIp = GetClientIp();
         var referrerUrl = request.ReferrerUrl;
         if (string.IsNullOrWhiteSpace(referrerUrl))
@@ -112,7 +121,8 @@ public class PaymentController : ControllerBase
             FailUrl = request.FailUrl,
             ClientIp = clientIp,
             ReferrerUrl = referrerUrl,
-            Card = request.Card
+            Card = request.Card,
+            AutoRenewalAccepted = request.AutoRenewalAccepted
         };
 
         var result = await _sender.Send(command);
@@ -133,6 +143,15 @@ public class PaymentController : ControllerBase
     [SwaggerOperation(Summary = "Initiate payment for paid signup")]
     public async Task<ActionResult<SignupPaymentResponse>> InitiateSignup([FromBody] SignupPaymentRequest request)
     {
+        if (!request.AutoRenewalAccepted)
+        {
+            return BadRequest(new SignupPaymentResponse
+            {
+                IsSuccess = false,
+                ErrorMessage = "Ücretli planla başlamak için kart saklama ve otomatik yenileme onayı vermelisiniz."
+            });
+        }
+
         if (request.PlanType == PlanType.Trial)
         {
             return BadRequest(new SignupPaymentResponse
@@ -825,6 +844,7 @@ public class UpgradePlanRequest
     public string? FailUrl { get; set; }
     public string? ReferrerUrl { get; set; }
     public PaymentCard? Card { get; set; }
+    public bool AutoRenewalAccepted { get; set; }
 }
 
 public class SignupPaymentRequest
@@ -841,6 +861,7 @@ public class SignupPaymentRequest
     public string? FailUrl { get; set; }
     public string? ReferrerUrl { get; set; }
     public PaymentCard? Card { get; set; }
+    public bool AutoRenewalAccepted { get; set; }
 }
 
 public class SignupPaymentResponse

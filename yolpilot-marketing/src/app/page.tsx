@@ -2,6 +2,8 @@ import HeroSection from '@/components/sections/HeroSection';
 import SocialProof from '@/components/sections/SocialProof';
 import ValuePropositions from '@/components/sections/ValuePropositions';
 import FeaturesPreview from '@/components/sections/FeaturesPreview';
+import PricingPreview from '@/components/sections/PricingPreview';
+import FaqPreview from '@/components/sections/FaqPreview';
 import TrustIndicators from '@/components/sections/TrustIndicators';
 import ROICalculator from '@/components/sections/ROICalculator';
 import { createPageMetadata } from '@/lib/seo';
@@ -21,6 +23,8 @@ export default function Home() {
       <SocialProof />
       <ValuePropositions />
       <FeaturesPreview />
+      <PricingPreview />
+      <FaqPreview />
       <TrustIndicators />
       <ROICalculator />
     </div>
