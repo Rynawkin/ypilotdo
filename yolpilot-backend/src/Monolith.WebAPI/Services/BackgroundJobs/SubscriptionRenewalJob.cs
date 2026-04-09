@@ -96,6 +96,7 @@ internal sealed class SubscriptionRenewalProcessor
             else
             {
                 workspace.UpdatePlan(workspace.PlanType);
+                workspace.SetActive(true);
             }
         }
 
@@ -117,6 +118,34 @@ internal sealed class SubscriptionRenewalProcessor
             var workspace = await _context.Workspaces.FirstOrDefaultAsync(w => w.Id == invoice.WorkspaceId, cancellationToken);
             if (workspace == null)
             {
+                continue;
+            }
+
+            var hasNewerPlanCycle =
+                workspace.PlanStartDate.HasValue &&
+                workspace.PlanEndDate.HasValue &&
+                workspace.PlanEndDate.Value > now &&
+                invoice.PeriodEnd <= workspace.PlanStartDate.Value;
+
+            if (hasNewerPlanCycle)
+            {
+                if (invoice.Status != InvoiceStatus.Cancelled)
+                {
+                    invoice.Status = InvoiceStatus.Cancelled;
+                    invoice.UpdatedAt = now;
+                }
+
+                if (!workspace.Active)
+                {
+                    workspace.SetActive(true);
+                }
+
+                _logger.LogInformation(
+                    "Cancelled stale invoice {InvoiceId} for workspace {WorkspaceId} because a newer active plan cycle exists",
+                    invoice.Id,
+                    workspace.Id);
+
+                await _context.SaveChangesAsync(cancellationToken);
                 continue;
             }
 
