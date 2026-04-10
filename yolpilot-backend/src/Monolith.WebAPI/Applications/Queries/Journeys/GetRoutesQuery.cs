@@ -8,18 +8,15 @@ namespace Monolith.WebAPI.Applications.Queries.Journeys;
 
 public record GetRoutesQuery(
     int WorkspaceId,
-    int? Limit = 100,           // Default 100 route limit
-    int? DaysBack = 90          // Default last 90 days
+    int? Limit = null,
+    int? DaysBack = null
 ) : IRequest<IEnumerable<RouteResponse>>;
 
 public class GetRoutesQueryHandler(AppDbContext context) : IRequestHandler<GetRoutesQuery, IEnumerable<RouteResponse>>
 {
     public async Task<IEnumerable<RouteResponse>> Handle(GetRoutesQuery request, CancellationToken cancellationToken)
     {
-        // Date filter - only recent routes
-        var cutoffDate = DateTime.UtcNow.AddDays(-(request.DaysBack ?? 90));
-
-        var routes = await context.Routes
+        var query = context.Routes
             .Include(x => x.Depot)
             .Include(x => x.Driver)
             .Include(x => x.Vehicle)
@@ -27,14 +24,28 @@ public class GetRoutesQueryHandler(AppDbContext context) : IRequestHandler<GetRo
             .Include(x => x.StartDetails)
             .Include(x => x.EndDetails)
             .Where(x => x.WorkspaceId == request.WorkspaceId
-                && !x.IsDeleted
-                && x.Date >= cutoffDate)  // PERFORMANCE: Only recent routes
+                && !x.IsDeleted)
             .AsNoTracking()
-            .AsSplitQuery()
+            .AsSplitQuery();
+
+        if (request.DaysBack.HasValue)
+        {
+            var cutoffDate = DateTime.UtcNow.AddDays(-request.DaysBack.Value);
+            query = query.Where(x => x.Date >= cutoffDate);
+        }
+
+        var orderedQuery = query
             .OrderByDescending(x => x.Date)
-            .ThenByDescending(x => x.Id)
-            .Take(request.Limit ?? 100)  // PERFORMANCE: Limit results
-            .ToListAsync(cancellationToken);
+            .ThenByDescending(x => x.Id);
+
+        IQueryable<Data.Journeys.Route> finalQuery = orderedQuery;
+
+        if (request.Limit.HasValue)
+        {
+            finalQuery = orderedQuery.Take(request.Limit.Value);
+        }
+
+        var routes = await finalQuery.ToListAsync(cancellationToken);
 
         var responses = new List<RouteResponse>();
         

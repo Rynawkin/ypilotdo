@@ -64,12 +64,6 @@ public class GetJourneysQueryHandler : BaseAuthenticatedCommandHandler<GetJourne
             query = query.Where(x => x.Date <= request.To.Value);
         }
         
-        if (!request.From.HasValue && !request.To.HasValue)
-        {
-            var thirtyDaysAgo = DateTime.Now.AddDays(-30);
-            query = query.Where(x => x.Date >= thirtyDaysAgo);
-        }
-
         // Status filtrelemesi - Journey.Status bir enum
 if (!string.IsNullOrEmpty(request.Status))
 {
