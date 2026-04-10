@@ -13,7 +13,7 @@ export const pricingPlans: MarketingPlan[] = [
   {
     id: 'starter',
     name: 'Başlangıç',
-    monthlyPrice: 990,
+    monthlyPrice: 1490,
     summary: 'Küçük ekipler için temel rota ve saha operasyon paketi.',
     audience: '3 sürücüye kadar küçük dağıtım ekipleri',
     features: [
@@ -28,7 +28,7 @@ export const pricingPlans: MarketingPlan[] = [
   {
     id: 'growth',
     name: 'Büyüme',
-    monthlyPrice: 1790,
+    monthlyPrice: 2490,
     summary: 'Büyüyen ekipler için en dengeli operasyon paketi.',
     audience: 'Birden fazla rota ve saha ekibi yöneten operasyonlar',
     popular: true,
@@ -45,7 +45,7 @@ export const pricingPlans: MarketingPlan[] = [
   {
     id: 'professional',
     name: 'Profesyonel',
-    monthlyPrice: 3490,
+    monthlyPrice: 4490,
     summary: 'Yüksek hacimli ekipler için derin görünürlük ve raporlama.',
     audience: 'Birden fazla depo veya yoğun teslimat hacmi olan ekipler',
     features: [
@@ -61,7 +61,7 @@ export const pricingPlans: MarketingPlan[] = [
   {
     id: 'business',
     name: 'İşletme',
-    monthlyPrice: 7900,
+    monthlyPrice: 8900,
     summary: 'Kurumsal ekipler için en geniş kapsam ve özel raporlama.',
     audience: 'Büyük filo, çoklu ekip ve özel süreç ihtiyacı olan yapılar',
     features: [

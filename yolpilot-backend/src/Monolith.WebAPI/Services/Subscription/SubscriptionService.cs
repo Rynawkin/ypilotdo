@@ -44,7 +44,7 @@ public class SubscriptionService : ISubscriptionService
             PlanType.Starter => new PlanLimits
             {
                 PlanType = PlanType.Starter,
-                MonthlyPrice = 990,
+                MonthlyPrice = 1490,
                 MaxDrivers = 3,
                 MaxVehicles = 3,
                 MaxCustomers = 150,
@@ -63,7 +63,7 @@ public class SubscriptionService : ISubscriptionService
             PlanType.Growth => new PlanLimits
             {
                 PlanType = PlanType.Growth,
-                MonthlyPrice = 1790,
+                MonthlyPrice = 2490,
                 MaxDrivers = null,
                 MaxVehicles = null,
                 MaxCustomers = 1500,
@@ -82,7 +82,7 @@ public class SubscriptionService : ISubscriptionService
             PlanType.Professional => new PlanLimits
             {
                 PlanType = PlanType.Professional,
-                MonthlyPrice = 3490,
+                MonthlyPrice = 4490,
                 MaxDrivers = null,
                 MaxVehicles = null,
                 MaxCustomers = 5000,
@@ -101,7 +101,7 @@ public class SubscriptionService : ISubscriptionService
             PlanType.Business => new PlanLimits
             {
                 PlanType = PlanType.Business,
-                MonthlyPrice = 7900,
+                MonthlyPrice = 8900,
                 MaxDrivers = null,
                 MaxVehicles = null,
                 MaxCustomers = null,
