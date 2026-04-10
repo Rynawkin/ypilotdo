@@ -49,9 +49,6 @@ public class GetJourneysSummaryQueryHandler : BaseAuthenticatedCommandHandler<Ge
             };
         }
 
-        var fromDate = EnsureUtc(request.FromDate ?? DateTime.UtcNow.Date.AddDays(-30)); // Son 30 g??n
-        var toDate = EnsureUtc(request.ToDate ?? DateTime.UtcNow.Date.AddDays(1).AddSeconds(-1)); // Bug??n 23:59:59
-
         // Base query
         var query = _context.Journeys
             .Include(j => j.Route)
@@ -60,9 +57,19 @@ public class GetJourneysSummaryQueryHandler : BaseAuthenticatedCommandHandler<Ge
                 .ThenInclude(r => r.Vehicle)
             .Include(j => j.Driver)
             .Include(j => j.Stops)
-            .Where(j => j.Route.WorkspaceId == User.WorkspaceId &&
-                       j.CreatedAt >= fromDate &&
-                       j.CreatedAt <= toDate);
+            .Where(j => j.Route.WorkspaceId == User.WorkspaceId);
+
+        if (request.FromDate.HasValue)
+        {
+            var fromDate = EnsureUtc(request.FromDate.Value);
+            query = query.Where(j => j.Date >= fromDate);
+        }
+
+        if (request.ToDate.HasValue)
+        {
+            var toDate = EnsureUtc(request.ToDate.Value);
+            query = query.Where(j => j.Date <= toDate);
+        }
 
         // Driver ise sadece kendi journey'lerini görebilir
         if (User.IsDriver && !User.IsDispatcher && !User.IsAdmin && !User.IsSuperAdmin)
@@ -92,14 +99,15 @@ public class GetJourneysSummaryQueryHandler : BaseAuthenticatedCommandHandler<Ge
         }
 
         var journeys = await query
-            .OrderByDescending(j => j.CreatedAt)
+            .OrderByDescending(j => j.Date)
+            .ThenByDescending(j => j.CreatedAt)
             .Select(j => new JourneySummaryResponse
             {
                 Id = j.Id,
                 RouteId = j.RouteId,
                 Name = j.Name,
                 RouteName = j.Route.Name,
-                Date = j.CreatedAt.ToString("yyyy-MM-dd"),
+                Date = j.Date.ToString("yyyy-MM-dd"),
                 
                 // Driver bilgileri
                 DriverId = j.Driver != null ? j.Driver.Id.ToString() : (j.Route.Driver != null ? j.Route.Driver.Id.ToString() : null),
