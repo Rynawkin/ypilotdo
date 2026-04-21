@@ -820,6 +820,21 @@ const RouteForm: React.FC<RouteFormProps> = ({
       try {
         await routeService.update(routeId, {
           ...currentRoute,
+          depotId: formData.depotId ?? currentRoute.depotId,
+          depot: selectedDepot,
+          startDetails: {
+            startTime: timeStringToTimeSpan(startTime),
+            name: selectedDepot.name,
+            address: selectedDepot.address,
+            latitude: selectedDepot.latitude,
+            longitude: selectedDepot.longitude
+          },
+          endDetails: {
+            name: selectedDepot.name,
+            address: selectedDepot.address,
+            latitude: selectedDepot.latitude,
+            longitude: selectedDepot.longitude
+          },
           stops: updatedStops
         });
         console.log('✅ OrderTypes updated successfully');
